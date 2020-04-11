@@ -34,13 +34,13 @@ class SiteHeader extends React.Component {
                                 <Image src='kabada_logo.png' style={{ 'width': '170px'}}></Image>
                             </Menu.Item>
                             <Menu.Menu position='right'>
-                                <Menu.Item name='videos' as={Link} to='/videos'>
+                                <Menu.Item name='about' as={Link} to='/'>
                                     <Header as='h4' className='header-items'>About</Header>
                                 </Menu.Item>                                
-                                <Menu.Item name='login' onClick={this.onAuthClicked.bind(this)} as={Link} to='#'>
+                                <Menu.Item name='login' as={Link} to='/login'>
                                     <Header as='h4' className='header-items'>Login</Header>
                                 </Menu.Item>
-                                <Menu.Item name='books' as={Link} to='/books'>
+                                <Menu.Item name='books'>
                                     <Header as='h4' className='header-items'> <Flag name='gb' />EN</Header>
                                 </Menu.Item>
                             </Menu.Menu>
