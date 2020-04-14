@@ -9,6 +9,8 @@ import {
   Divider,
 } from "semantic-ui-react";
 import GoogleLogin from "react-google-login";
+import FacebookLogin from "react-facebook-login";
+//import TiSocialFacebookCircular from "react-icons/lib/ti/social-facebook-circular";
 
 class Login extends React.Component {
   constructor(props) {
@@ -120,12 +122,18 @@ class Login extends React.Component {
                 </Form>
                 <div>
                   <Divider horizontal>Or Sign Up Using </Divider>
+                  <FacebookLogin
+                    icon="fa-facebook"
+                    textButton=" Facebook"
+                    cssClass="ui fluid facebook button"
+                  />
                   <GoogleLogin
-                    clientId=""
-                    buttonText="Google"
-                    onSuccess={this.responseGoogle.bind(this)}
-                    onFailure={this.responseGoogle.bind(this)}
-                    cookiePolicy={"single_host_origin"}
+                    render={(renderProps) => (
+                      <button className="ui fluid google plus button">
+                        <i aria-hidden="true" className="google plus icon"></i>
+                        Google
+                      </button>
+                    )}
                   />
                 </div>
                 <Divider inverted />
