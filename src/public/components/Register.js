@@ -12,13 +12,13 @@ class Register extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            firstName: "",
-            lastName: "",
+            fullName: "",
+            userName: "",
             email: "",
             password: "",
             passwordConfirmation: "",
-            nameMessage: false,
-            surenameMessage: false,
+            fullNameMessage: false,
+            userNameMessage: false,
             emailMessage: false,
             passwordMassage: false,
             passwordConfirmationMessage: false
@@ -29,17 +29,17 @@ class Register extends React.Component {
     };
     handleSubmit = (event) => {
         event.preventDefault();
-        if (this.state.firstName.length < 3) {
-            this.messageChange("First name must be at least 3 characters")
+        if (this.state.fullName.length < 3) {
+            this.fullNamemessageChange("Full name must be at least 3 characters")
         }
         else {
-            this.messageChange(false)
+            this.fullNamemessageChange(false)
         }
-        if (this.state.lastName.length < 3) {
-            this.surenameMessageChange("Last name must be at least 3 characters")
+        if (this.state.userName.length < 3) {
+            this.userNameMessageChange("Username must be at least 3 characters")
         }
         else {
-            this.surenameMessageChange(false)
+            this.userNameMessageChange(false)
         }
         if ((this.state.email.length <= 0) || (!emailRegex.test(this.state.email))) {
             this.emailMessageChange("Invalid email")
@@ -62,19 +62,19 @@ class Register extends React.Component {
 
 
     }
-    messageChange = (text) => {
+    fullNamemessageChange = (text) => {
 
         this.setState({
-            nameMessage: text
+            fullNameMessage: text
 
 
 
         })
     };
-    surenameMessageChange = (text) => {
+    userNameMessageChange = (text) => {
 
         this.setState({
-            surenameMessage: text
+            userNameMessage: text
 
 
 
@@ -98,18 +98,18 @@ class Register extends React.Component {
             passwordConfirmationMessage: text
         })
     };
-    firstNameChange = (event) => {
+    fullNameChange = (event) => {
         event.preventDefault();
         this.setState({
-            firstName: event.target.value
+            fullName: event.target.value
 
         })
 
     }
-    lastNameChange = (event) => {
+    userNameChange = (event) => {
         event.preventDefault();
 
-        this.setState({ lastName: event.target.value })
+        this.setState({ userName: event.target.value })
     }
     passwordChange = (event) => {
         event.preventDefault();
@@ -133,19 +133,19 @@ class Register extends React.Component {
                                 <Form>
                                     <Form.Field
                                         control={Input}
-                                        label="First name"
-                                        placeholder="enter your first name"
-                                        value={this.state.firstName}
-                                        onChange={this.firstNameChange.bind(this)}
-                                        error={this.state.nameMessage}
+                                        label="Full name"
+                                        placeholder="enter your full name"
+                                        value={this.state.fullName}
+                                        onChange={this.fullNameChange.bind(this)}
+                                        error={this.state.fullNameMessage}
                                     ></Form.Field>
                                     <Form.Field
                                         control={Input}
-                                        label="Last name"
-                                        placeholder="enter your last name"
-                                        value={this.state.lastname}
-                                        onChange={this.lastNameChange.bind(this)}
-                                        error={this.state.surenameMessage}
+                                        label="Username"
+                                        placeholder="enter your username"
+                                        value={this.state.userName}
+                                        onChange={this.userNameChange.bind(this)}
+                                        error={this.state.userNameMessage}
                                     ></Form.Field>
                                     <Form.Field
                                         control={Input}
@@ -167,7 +167,7 @@ class Register extends React.Component {
                                     <Form.Field
                                         label="Confirm password"
                                         control={Input}
-                                        placeholder="Confirm your password"
+                                        placeholder="confirm your password"
                                         onChange={this.passwordConfirmationChange.bind(this)}
                                         value={this.state.passwordConfirmation}
                                         type="password"
