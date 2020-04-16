@@ -9,6 +9,7 @@ import {
   Divider,
 } from "semantic-ui-react";
 import GoogleLogin from "react-google-login";
+import FacebookLogin from "react-facebook-login";
 
 class Login extends React.Component {
   constructor(props) {
@@ -20,8 +21,35 @@ class Login extends React.Component {
       response: true,
       usernameError: false,
       passwordError: false,
+      login: false,
+      setLogin: false,
+      data: "",
+      name: "",
+      picture: "",
+      setPicture: "",
+      googleSignup: "",
     };
   }
+
+  responseGoogle = (response) => {
+    console.log(response);
+    var res = response.profileObj;
+    console.log(res);
+    debugger;
+    this.setState({ signup: response });
+  };
+
+  responseFacebook = (response) => {
+    console.log("Facebook response: ");
+    console.log(response);
+    this.setState({ data: response });
+    this.setState({ picture: response.picture.data.url });
+    if (response.accessToken) {
+      this.setState({ login: true });
+    } else {
+      this.setState({ login: false });
+    }
+  };
 
   handleCheckBoxChange = (event) => {
     if (this.state.RememberMecheckBox === true) {
@@ -63,7 +91,7 @@ class Login extends React.Component {
   };
 
   responseGoogle = (response) => {
-    console.log(response);
+    console.log("Google Response: " + response);
   };
 
   responseFacebook = (response) => {
@@ -73,6 +101,7 @@ class Login extends React.Component {
   componentClicked = () => {};
 
   render() {
+    console.log(this.state.data);
     return (
       <div>
         <Container>
@@ -120,12 +149,35 @@ class Login extends React.Component {
                 </Form>
                 <div>
                   <Divider horizontal>Or Sign Up Using </Divider>
+                  {!this.login && (
+                    <FacebookLogin
+                      appId="243803703658185"
+                      autoLoad="false"
+                      fields="name, email, picture"
+                      scope="public_profile"
+                      callback={this.responseFacebook.bind(this)}
+                      icon="fa-facebook"
+                      textButton=" Facebook"
+                      cssClass="ui fluid facebook button"
+                      onClick={this.responseFacebook.bind(this)}
+                    />
+                  )}
                   <GoogleLogin
-                    clientId=""
-                    buttonText="Google"
+                    clientId="959683655410-qvc3ilj5rppsntbv68lnkcp95i3t8d29.apps.googleusercontent.com"
+                    render={(renderProps) => (
+                      <button
+                        className="ui fluid google plus button"
+                        onClick={renderProps.onClick}
+                      >
+                        <i aria-hidden="true" className="google plus icon"></i>
+                        Google
+                      </button>
+                    )}
+                    cookiePolicy={"single_host_origin"}
+                    scope="profile"
+                    autoLoad="false"
                     onSuccess={this.responseGoogle.bind(this)}
                     onFailure={this.responseGoogle.bind(this)}
-                    cookiePolicy={"single_host_origin"}
                   />
                 </div>
                 <Divider inverted />
