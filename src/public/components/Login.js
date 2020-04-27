@@ -10,6 +10,7 @@ import {
 } from "semantic-ui-react";
 import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login";
+import axios from 'axios';
 
 class Login extends React.Component {
   constructor(props) {
@@ -60,7 +61,7 @@ class Login extends React.Component {
     console.log("CheckeBox: " + this.state.RememberMecheckBox);
   };
 
-  handleLogin = () => {
+  handleLogin = async () => {
     var pass = this.state.password;
     var name = this.state.username;
     if (pass < 1) {
@@ -74,6 +75,10 @@ class Login extends React.Component {
       console.log("Password: " + this.state.password);
       console.log("Remember me: " + this.state.RememberMecheckBox);
     }
+
+    const response = await axios.post('https://localhost:5001/api/authentication/users/all');
+     
+    console.log(response.data);
   };
 
   handlePasswordChange = (event) => {
