@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Grid, Menu, Image, Header, Flag } from 'semantic-ui-react';
+import { Grid, Menu, Image, Header } from 'semantic-ui-react';
 import '../../css/header.css';
+import LanguageBar from '../components/LanguageBar';
 
 class SiteHeader extends React.Component {
 
@@ -40,8 +41,8 @@ class SiteHeader extends React.Component {
                                 <Menu.Item name='login' as={Link} to='/login'>
                                     <Header as='h4' className='header-items'>Login</Header>
                                 </Menu.Item>
-                                <Menu.Item name='books'>
-                                    <Header as='h4' className='header-items'> <Flag name='gb' />EN</Header>
+                                <Menu.Item style={{ width: '150px'}}>
+                                    <LanguageBar />
                                 </Menu.Item>
                             </Menu.Menu>
                         </Menu>                       
