@@ -1,5 +1,7 @@
 import React from 'react';
 import { Icon, Dropdown } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import { changeLanguage } from '../../appStore/actions/languageActions';
 
 const languageOptions = [
     { key: 'en', value: 'en', text: 'English' },
@@ -12,28 +14,17 @@ const languageOptions = [
 
 class LanguageBar extends React.Component {
 
-    constructor(props) {
-        super(props);
-
-        this.state={
-            text: ''
-        }
-    }
-
     onSelectionChanged(e, data) {
-        this.setState({
-            text: data.value
-        });
+        this.props.changeLanguage(data.value);
     }
 
     render() {
-        console.log(this.state.text)
         return (
             <div style={{ color: 'black'}}>
                 <Icon name='world' />
                 <Dropdown
                     inline
-                    defaultValue='en'
+                    defaultValue={this.props.language}
                     options={languageOptions}
                     onChange={this.onSelectionChanged.bind(this)}
                 />
@@ -42,4 +33,10 @@ class LanguageBar extends React.Component {
     }
 }
 
-export default LanguageBar;
+const mapStateToProps = (state) => {
+    return {
+        language: state.language
+    };
+}
+
+export default connect(mapStateToProps, { changeLanguage })(LanguageBar);
