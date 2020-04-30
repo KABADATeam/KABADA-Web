@@ -9,7 +9,7 @@ class App extends React.Component {
 	}
 
 	render() {
-		if (this.isUserAuthenticated() === false) {
+		if (this.isUserAuthenticated() === true) {
 			return <PublicApp />
 		} else {
 			return <PrivateApp />
