@@ -1,7 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Grid, Menu, Image, Header, Flag } from 'semantic-ui-react';
+import { Grid, Menu, Image, Header } from 'semantic-ui-react';
 import '../../css/header.css';
+import LanguageBar from '../components/LanguageBar';
+import { connect } from 'react-redux';
+import mainMenuDictionary from '../../dictionaries/MainMenuDictionary';
 
 class SiteHeader extends React.Component {
 
@@ -25,6 +28,7 @@ class SiteHeader extends React.Component {
     }
 
     render() {
+        const translation = mainMenuDictionary[this.props.language];
         return (
             <Grid>
                 <Grid.Row columns={1} only='computer tablet'>
@@ -35,13 +39,13 @@ class SiteHeader extends React.Component {
                             </Menu.Item>
                             <Menu.Menu position='right'>
                                 <Menu.Item name='about' as={Link} to='/'>
-                                    <Header as='h4' className='header-items'>About</Header>
+                                    <Header as='h4' className='header-items'>{translation.about}</Header>
                                 </Menu.Item>                                
                                 <Menu.Item name='login' as={Link} to='/login'>
-                                    <Header as='h4' className='header-items'>Login</Header>
+                                    <Header as='h4' className='header-items'>{translation.login}</Header>
                                 </Menu.Item>
-                                <Menu.Item name='books'>
-                                    <Header as='h4' className='header-items'> <Flag name='gb' />EN</Header>
+                                <Menu.Item style={{ width: '150px'}}>
+                                    <LanguageBar />
                                 </Menu.Item>
                             </Menu.Menu>
                         </Menu>                       
@@ -53,4 +57,10 @@ class SiteHeader extends React.Component {
     }
 }
 
-export default SiteHeader;
+const mapStateToProps = (state) => {
+    return {
+        language: state.language
+    };
+}
+
+export default connect(mapStateToProps, null)(SiteHeader);

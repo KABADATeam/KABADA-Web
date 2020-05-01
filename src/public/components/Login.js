@@ -1,66 +1,59 @@
 import React from "react";
-import {
-  Button,
-  Checkbox,
-  Form,
-  Container,
-  Grid,
-  Input,
-  Divider,
-} from "semantic-ui-react";
+import { Button, Checkbox, Form, Container, Grid, Input, Divider } from "semantic-ui-react";
 import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login";
+<<<<<<< HEAD
 import axios from 'axios';
+=======
+import loginDictionary from '../../dictionaries/LoginDictionary';
+import { connect } from 'react-redux';
+>>>>>>> 808c56cc8242d5f4c07d3c194cb4340bccb225f3
 
 class Login extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      password: "",
-      username: "",
-      RememberMecheckBox: true,
-      response: true,
-      usernameError: false,
-      passwordError: false,
-      login: false,
-      setLogin: false,
-      data: "",
-      name: "",
-      picture: "",
-      setPicture: "",
-      googleSignup: "",
-    };
-  }
+	constructor(props) {
+		super(props);
+		this.state = {
+			password: "",
+			username: "",
+			RememberMecheckBox: true,
+			response: true,
+			usernameError: false,
+			passwordError: false,
+			login: false,
+			setLogin: false,
+			data: "",
+			name: "",
+			picture: "",
+			setPicture: "",
+			googleSignup: "",
+		};
+	}
 
-  responseGoogle = (response) => {
-    console.log(response);
-    var res = response.profileObj;
-    console.log(res);
-    debugger;
-    this.setState({ signup: response });
-  };
+	responseGoogle = (response) => {
+		var res = response.profileObj;
+		debugger;
+		this.setState({ signup: response });
+	};
 
-  responseFacebook = (response) => {
-    console.log("Facebook response: ");
-    console.log(response);
-    this.setState({ data: response });
-    this.setState({ picture: response.picture.data.url });
-    if (response.accessToken) {
-      this.setState({ login: true });
-    } else {
-      this.setState({ login: false });
-    }
-  };
+	responseFacebook = (response) => {
+		this.setState({ data: response });
+		this.setState({ picture: response.picture.data.url });
+		if (response.accessToken) {
+			this.setState({ login: true });
+		} else {
+			this.setState({ login: false });
+		}
+	};
 
-  handleCheckBoxChange = (event) => {
-    if (this.state.RememberMecheckBox === true) {
-      this.setState({ RememberMecheckBox: false });
-    } else if (this.state.RememberMecheckBox === false) {
-      this.setState({ RememberMecheckBox: true });
-    }
-    console.log("CheckeBox: " + this.state.RememberMecheckBox);
-  };
+	handleCheckBoxChange = (event) => {
+		if (this.state.RememberMecheckBox === true) {
+			this.setState({ RememberMecheckBox: false });
+		} else if (this.state.RememberMecheckBox === false) {
+			this.setState({ RememberMecheckBox: true });
+		}
+	};
 
+<<<<<<< HEAD
   handleLogin = async () => {
     var pass = this.state.password;
     var name = this.state.username;
@@ -79,6 +72,19 @@ class Login extends React.Component {
     
     console.log(response.data);
   }
+=======
+	handleLogin = async () => {
+		var pass = this.state.password;
+		var name = this.state.username;
+		if (pass < 1) {
+			this.setState({ passwordError: true });
+		}
+		if (name < 1) {
+			this.setState({ usernameError: true });
+		}
+	};
+
+>>>>>>> 808c56cc8242d5f4c07d3c194cb4340bccb225f3
   handlePasswordChange = (event) => {
     this.setState({ password: event.target.value });
     if (this.state.password.length > 0) {
@@ -104,7 +110,7 @@ class Login extends React.Component {
   componentClicked = () => {};
 
   render() {
-    console.log(this.state.data);
+	const translation = loginDictionary[this.props.language];
     return (
       <div>
         <Container>
@@ -112,22 +118,14 @@ class Login extends React.Component {
             <Grid.Row centered>
               <Grid.Column width={6}>
                 <Form>
-                  <Form.Field
-                    icon="user"
-                    iconPosition="left"
-                    control={Input}
-                    label="Username"
-                    placeholder="Username"
-                    value={this.state.username}
-                    onChange={this.handleUsernameChange.bind(this)}
-                    error={this.state.usernameError}
-                  ></Form.Field>
+                  <Form.Field icon="user" iconPosition="left" control={Input} label={translation.username} placeholder={translation.username}
+                    value={this.state.username} onChange={this.handleUsernameChange.bind(this)} error={this.state.usernameError}></Form.Field>
                   <Form.Field
                     icon="lock"
                     iconPosition="left"
-                    label="Password"
+                    label={translation.password}
                     control={Input}
-                    placeholder="Password"
+                    placeholder={translation.password}
                     onChange={this.handlePasswordChange.bind(this)}
                     name="password"
                     value={this.state.password}
@@ -136,7 +134,7 @@ class Login extends React.Component {
                   ></Form.Field>
                   <Form.Field>
                     <Checkbox
-                      label="Keep me signed in"
+                      label={translation.keepMe}
                       name="RememberMecheckBox"
                       checked={this.state.RememberMecheckBox}
                       onChange={this.handleCheckBoxChange.bind(this)}
@@ -147,15 +145,15 @@ class Login extends React.Component {
                     type="submit"
                     onClick={this.handleLogin.bind(this)}
                   >
-                    Login
+                    {translation.login}
                   </Button>
                 </Form>
                 <div>
-                  <Divider horizontal>Or Sign Up Using </Divider>
+                  <Divider horizontal>{translation.alternativeLogin}</Divider>
                   {!this.login && (
                     <FacebookLogin
                       appId="243803703658185"
-                      autoLoad="false"
+                      autoLoad={false}
                       fields="name, email, picture"
                       scope="public_profile"
                       callback={this.responseFacebook.bind(this)}
@@ -165,6 +163,8 @@ class Login extends React.Component {
                       onClick={this.responseFacebook.bind(this)}
                     />
                   )}
+				  </div>
+				  <div style={{ marginTop: '5px'}}>
                   <GoogleLogin
                     clientId="959683655410-qvc3ilj5rppsntbv68lnkcp95i3t8d29.apps.googleusercontent.com"
                     render={(renderProps) => (
@@ -178,19 +178,20 @@ class Login extends React.Component {
                     )}
                     cookiePolicy={"single_host_origin"}
                     scope="profile"
-                    autoLoad="false"
+                    autoLoad={false}
                     onSuccess={this.responseGoogle.bind(this)}
                     onFailure={this.responseGoogle.bind(this)}
                   />
                 </div>
                 <Divider inverted />
-                <div>
-                  Don't have account, yet? Follow the{" "}
-                  <a href="register">Registration</a> link to create one
+                <div style={{ textAlign: 'justify'}}>
+                	{translation.registerText}
+					<a href="register">{translation.register}</a> 
                 </div>
-                <div>
-                  Forgot password? Follow the <a href="reset">Password reset</a>{" "}
-                  link to get new one
+				<Divider inverted />
+                <div style={{ textAlign: 'justify'}}>
+					{translation.resetText}
+					<a href="reset">{translation.reset}</a>
                 </div>
               </Grid.Column>
             </Grid.Row>
@@ -201,4 +202,10 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+const mapStateToProps = (state) => {
+    return {
+        language: state.language
+    };
+}
+
+export default connect(mapStateToProps, null)(Login);

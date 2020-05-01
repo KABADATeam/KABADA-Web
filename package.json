@@ -11,10 +11,18 @@
     "react-dom": "^16.13.1",
     "react-facebook-login": "^4.1.1",
     "react-google-login": "^5.1.3",
+<<<<<<< HEAD
     "react-map-gl": "^5.2.5",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
     "react-uuid": "^1.0.2",
+=======
+    "react-redux": "^7.2.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.4.1",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
+>>>>>>> 808c56cc8242d5f4c07d3c194cb4340bccb225f3
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.2"
   },
