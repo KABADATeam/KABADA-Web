@@ -2,12 +2,9 @@ import React from "react";
 import { Button, Checkbox, Form, Container, Grid, Input, Divider } from "semantic-ui-react";
 import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login";
-<<<<<<< HEAD
 import axios from 'axios';
-=======
 import loginDictionary from '../../dictionaries/LoginDictionary';
 import { connect } from 'react-redux';
->>>>>>> 808c56cc8242d5f4c07d3c194cb4340bccb225f3
 
 class Login extends React.Component {
 	constructor(props) {
@@ -53,26 +50,6 @@ class Login extends React.Component {
 		}
 	};
 
-<<<<<<< HEAD
-  handleLogin = async () => {
-    var pass = this.state.password;
-    var name = this.state.username;
-    if (pass < 1) {
-      this.setState({ passwordError: true });
-    }
-    if (name < 1) {
-      this.setState({ usernameError: true });
-    }
-    if (pass.length > 1 && name.length > 1) {
-      console.log("Username: " + this.state.username);
-      console.log("Password: " + this.state.password);
-      console.log("Remember me: " + this.state.RememberMecheckBox);
-    }
-    const response = await axios.get('https://localhost:5001/api/authentication/users/all');
-    
-    console.log(response.data);
-  }
-=======
 	handleLogin = async () => {
 		var pass = this.state.password;
 		var name = this.state.username;
@@ -84,7 +61,6 @@ class Login extends React.Component {
 		}
 	};
 
->>>>>>> 808c56cc8242d5f4c07d3c194cb4340bccb225f3
   handlePasswordChange = (event) => {
     this.setState({ password: event.target.value });
     if (this.state.password.length > 0) {
