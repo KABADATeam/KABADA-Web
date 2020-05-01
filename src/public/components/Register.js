@@ -1,128 +1,97 @@
 import React from 'react';
-import {
-    Button,
-    Form,
-    Container,
-    Grid,
-    Divider,
-    Input,
-} from "semantic-ui-react";
+import { Button, Form, Container, Grid, Divider, Input } from "semantic-ui-react";
+
 const emailRegex = RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/);
+
 class Register extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             fullName: "",
-            userName: "",
             email: "",
             password: "",
             passwordConfirmation: "",
             fullNameMessage: false,
-            userNameMessage: false,
             emailMessage: false,
             passwordMassage: false,
             passwordConfirmationMessage: false
-
-
         }
-
     };
+
     handleSubmit = (event) => {
         event.preventDefault();
         if (this.state.fullName.length < 3) {
-            this.fullNamemessageChange("Full name must be at least 3 characters")
+            this.fullNamemessageChange("Full name must be at least 3 characters");
         }
         else {
-            this.fullNamemessageChange(false)
-        }
-        if (this.state.userName.length < 3) {
-            this.userNameMessageChange("Username must be at least 3 characters")
-        }
-        else {
-            this.userNameMessageChange(false)
+            this.fullNamemessageChange(false);
         }
         if ((this.state.email.length <= 0) || (!emailRegex.test(this.state.email))) {
-            this.emailMessageChange("Invalid email")
+            this.emailMessageChange("Invalid email");
         }
         else {
-            this.emailMessageChange(false)
+            this.emailMessageChange(false);
         }
         if (this.state.password.length < 5) {
             this.passwordMessageChange("Password must contain at least 6 characters")
         }
         else {
-            this.passwordMessageChange(false)
+            this.passwordMessageChange(false);
         }
         if (this.state.password !== this.state.passwordConfirmation) {
-            this.passwordConfirmationMessageChange("Pasword must match")
+            this.passwordConfirmationMessageChange("Pasword must match");
         }
         else {
-            this.passwordConfirmationMessageChange(false)
+            this.passwordConfirmationMessageChange(false);
         }
-
-
     }
-    fullNamemessageChange = (text) => {
 
+    fullNamemessageChange = (text) => {
         this.setState({
             fullNameMessage: text
-
-
-
-        })
+        });
     };
-    userNameMessageChange = (text) => {
 
-        this.setState({
-            userNameMessage: text
-
-
-
-        })
-    };
     emailMessageChange = (text) => {
-
         this.setState({
             emailMessage: text
-        })
+        });
     };
-    passwordMessageChange = (text) => {
 
+    passwordMessageChange = (text) => {
         this.setState({
             passwordMessage: text
-        })
+        });
     };
-    passwordConfirmationMessageChange = (text) => {
 
+    passwordConfirmationMessageChange = (text) => {
         this.setState({
             passwordConfirmationMessage: text
-        })
+        });
     };
+
     fullNameChange = (event) => {
         event.preventDefault();
         this.setState({
             fullName: event.target.value
-
-        })
-
+        });
     }
-    userNameChange = (event) => {
-        event.preventDefault();
 
-        this.setState({ userName: event.target.value })
-    }
     passwordChange = (event) => {
         event.preventDefault();
-        this.setState({ password: event.target.value })
+        this.setState({ password: event.target.value });
     }
+
     passwordConfirmationChange = (event) => {
         event.preventDefault();
-        this.setState({ passwordConfirmation: event.target.value })
+        this.setState({ passwordConfirmation: event.target.value });
     }
+
     emailChange = (event) => {
         event.preventDefault();
-        this.setState({ email: event.target.value })
+        this.setState({ email: event.target.value });
     }
+
     render() {
         return (
             <div>
@@ -138,14 +107,6 @@ class Register extends React.Component {
                                         value={this.state.fullName}
                                         onChange={this.fullNameChange.bind(this)}
                                         error={this.state.fullNameMessage}
-                                    ></Form.Field>
-                                    <Form.Field
-                                        control={Input}
-                                        label="Username"
-                                        placeholder="enter your username"
-                                        value={this.state.userName}
-                                        onChange={this.userNameChange.bind(this)}
-                                        error={this.state.userNameMessage}
                                     ></Form.Field>
                                     <Form.Field
                                         control={Input}
