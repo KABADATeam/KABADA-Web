@@ -13,7 +13,6 @@ const JSON = [
 ]
 class InitialStage extends Component {
     state = {
-        persons: [],
         countries: []
     }
     componentDidMount() {
@@ -23,11 +22,7 @@ class InitialStage extends Component {
             this.setState({ countries });
           })
       }
-      setCountry = () => {
-          let salis = navigator.language
-          console.log(salis);
 
-      }
     
  /*   async findCountry() {
         const response = await axios.get('https://restcountries.eu/rest/v2/all')
@@ -79,7 +74,7 @@ class InitialStage extends Component {
                             />
                         </Grid.Column>
                         <Grid.Column>
-                        
+                            <Map/>
                         </Grid.Column>
                         <Grid.Column>
                             

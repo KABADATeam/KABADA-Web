@@ -31,40 +31,35 @@ class Map extends Component {
       })
     }
 
-      setUserLocation = () => {
-        navigator.geolocation.getCurrentPosition(position => {
-            let setUserLocation = {
-              lat: position.coords.latitude,
-              long: position.coords.longitude
-            };
+      /*setUserLocation = (newlatitude, newlongitude) => {
+
             let newViewport = {
                 height: "40vh",
                 width: "35vw",
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
+                latitude: this.props.newlatitude,
+                longitude: this.props.newlongitude,
                 zoom: 12
             }
             this.setState({
                 viewport: newViewport,
-                userLocation: setUserLocation
             })
-        })
-    }
+        }*/
+    
     render() {
         return (
             <GridColumn>
-                            <ReactMapGL {...this.state.viewport} mapStyle="mapbox://styles/mapbox/outdoors-v11"
-                            onViewportChange={(viewport=> this.setState({viewport}))}
-                            mapboxApiAccessToken="pk.eyJ1IjoianVzdGluYXMiLCJhIjoiY2s5bWNsczExMDM5ZTNlcDlvbHl5ZXY0aSJ9.L4-k6fuXGbaUcoQCKDEqZQ">
-                                <Marker
-                                latitude={this.state.viewport.latitude}
-                                longitude={this.state.viewport.longitude}
-                                >
-                                    <div>I'm here now</div>
-                            </Marker>
+              <ReactMapGL {...this.state.viewport} mapStyle="mapbox://styles/mapbox/outdoors-v11"
+                onViewportChange={(viewport=> this.setState({viewport}))}
+                mapboxApiAccessToken="pk.eyJ1IjoianVzdGluYXMiLCJhIjoiY2s5bWNsczExMDM5ZTNlcDlvbHl5ZXY0aSJ9.L4-k6fuXGbaUcoQCKDEqZQ">
+                <Marker
+                  latitude={this.state.viewport.latitude}
+                  longitude={this.state.viewport.longitude}
+                >
+                  <i class="map marker icon"></i>
+                </Marker>
 
-                            </ReactMapGL>
-                        </GridColumn>
+              </ReactMapGL>
+            </GridColumn>
         )
     }
 }
