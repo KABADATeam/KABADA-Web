@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Checkbox, Form, Container, Grid, Input, Divider } from "semantic-ui-react";
 import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login";
+import axios from 'axios';
 import loginDictionary from '../../dictionaries/LoginDictionary';
 import { connect } from 'react-redux';
 
