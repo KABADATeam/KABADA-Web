@@ -1,10 +1,10 @@
 import React from "react";
-import { Button, Checkbox, Form, Container, Grid, Input, Divider } from "semantic-ui-react";
+import { Button, Checkbox, Form, Container, Grid, Input, Divider, Message } from "semantic-ui-react";
 import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login";
-import axios from 'axios';
 import loginDictionary from '../../dictionaries/LoginDictionary';
 import { connect } from 'react-redux';
+import { login } from '../../appStore/actions/authenticationActions';
 
 class Login extends React.Component {
 	constructor(props) {
@@ -27,8 +27,6 @@ class Login extends React.Component {
 	}
 
 	responseGoogle = (response) => {
-		var res = response.profileObj;
-		debugger;
 		this.setState({ signup: response });
 	};
 
@@ -58,7 +56,10 @@ class Login extends React.Component {
 		}
 		if (name < 1) {
 			this.setState({ usernameError: true });
-		}
+    }
+    
+    this.props.login(name, pass);
+
 	};
 
   handlePasswordChange = (event) => {
@@ -118,11 +119,13 @@ class Login extends React.Component {
                   </Form.Field>
                   <Button
                     fluid
-                    type="submit"
+					type="submit"
+					loading={this.props.loading}
                     onClick={this.handleLogin.bind(this)}
                   >
                     {translation.login}
                   </Button>
+                  {this.props.error !== '' ? <Message negative>{this.props.error}</Message>: ''}
                 </Form>
                 <div>
                   <Divider horizontal>{translation.alternativeLogin}</Divider>
@@ -180,8 +183,10 @@ class Login extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        language: state.language
+        language: state.language,
+        loading: state.loading,
+        error: state.error
     };
 }
 
-export default connect(mapStateToProps, null)(Login);
+export default connect(mapStateToProps, { login })(Login);

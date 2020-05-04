@@ -1,5 +1,8 @@
 import React from 'react';
-import { Button, Form, Container, Grid, Divider, Input } from "semantic-ui-react";
+import { connect } from 'react-redux';
+import { withRouter } from "react-router-dom";
+import { Button, Form, Container, Grid, Divider, Input, Message } from "semantic-ui-react";
+import { register } from '../../appStore/actions/authenticationActions';
 
 const emailRegex = RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/);
 
@@ -44,6 +47,10 @@ class Register extends React.Component {
         else {
             this.passwordConfirmationMessageChange(false);
         }
+
+        this.props.register(this.state.fullName, this.state.email, this.state.password, () => {
+            this.props.history.push("/login");
+        });
     }
 
     fullNamemessageChange = (text) => {
@@ -138,9 +145,12 @@ class Register extends React.Component {
                                         fluid
                                         type="submit"
                                         onClick={this.handleSubmit.bind(this)}
+                                        loading={this.props.loading}
                                     >
                                         Create account
                                      </Button>
+                                     {this.props.error !== '' ? <Message negative>{this.props.error}</Message>: ''}
+        
                                 </Form>
                                 <Divider inverted />
                 <center><div >
@@ -157,4 +167,11 @@ class Register extends React.Component {
     }
 }
 
-export default Register;
+const mapStateToProps = (state) => {
+    return {
+        loading: state.loading,
+        error: state.error
+    };
+}
+
+export default connect(mapStateToProps, { register })(withRouter(Register));
