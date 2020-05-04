@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {Grid, Form, Dropdown} from 'semantic-ui-react';
 //import ReactMapGL, {Marker} from 'react-map-gl';
-import Map from '../components/Map';
+//import Map from '../components/Map';
 import axios from 'axios';
-import uuid from 'react-uuid'
+//import uuid from 'react-uuid'
 
 const JSON = [
     {key: 1, value: 'Arvydas Sabonis', text: 'Arvydas Sabonis'},
@@ -12,26 +12,40 @@ const JSON = [
     {key: 4, value: 'Saras', text: 'Saras'}
 ]
 class InitialStage extends Component {
-    state = {
-        countries: []
+    constructor(props){
+        super(props)
+            this.state = {
+                countries: [], 
+                industries: [],
+                activities: [],
+                industrySelectedValue: null
+            }
     }
     componentDidMount() {
-        axios.get('https://restcountries.eu/rest/v2/all')
+        axios.get('https://localhost:5001/api/countries/all')
           .then(res => {
             const countries = res.data;
             this.setState({ countries });
           })
+        axios.get('https://localhost:5001/api/NACE/industry/all')
+          .then(res => {
+            const industries = res.data;
+            this.setState({ industries });
+          })  
+        axios.get('https://localhost:5001/api/NACE/activity/all/')
+          .then(res => {
+            const activities = res.data;
+            this.setState({ activities });
+          })       
       }
 
-    
- /*   async findCountry() {
-        const response = await axios.get('https://restcountries.eu/rest/v2/all')
-            this.setState({countries: response.data.results })
-            console.log(response.data.results);
-    }*/
+
+      
     render()
         {
-            const options = this.state.countries.map(({name}) => ({key: uuid(), value: name, text: name}))
+            const countries = this.state.countries.map(({id, countryName}) => ({key: id, value: countryName, text: countryName}))
+            const industries = this.state.industries.map(({id, code, title }) => ({key: id, value: code, text: title}));
+            const activities = this.state.activities.map(({ id, code, title }) => ({key: id, value: code, text: title}));
             return(
                 <Grid divide='vertically'>
                     <Grid.Row columns={2}>
@@ -53,7 +67,9 @@ class InitialStage extends Component {
                                 fluid
                                 search
                                 selection
-                                options={JSON}
+                                
+                                options={industries}
+                                
                             />
                             <label>Select NACE clasification</label>
                             <Dropdown
@@ -61,7 +77,7 @@ class InitialStage extends Component {
                                 fluid
                                 search
                                 selection
-                                options={JSON}
+                                options={activities}
                             />
                             <label>Select country</label>
                             <Dropdown
@@ -69,12 +85,11 @@ class InitialStage extends Component {
                                 fluid
                                 search
                                 selection
-                                options={options}
-                                onChange={this.setCountry}
+                                options={countries}
                             />
                         </Grid.Column>
                         <Grid.Column>
-                            <Map/>
+                            
                         </Grid.Column>
                         <Grid.Column>
                             
