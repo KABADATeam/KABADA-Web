@@ -38,7 +38,17 @@ class InitialStage extends Component {
             this.setState({ activities });
           })       
       }
-
+    
+      handleChangeActivities = async (event, data) =>{
+        console.log(data.value);
+        this.setState({industrySelectedValue: data.value}) 
+        const url = `https://localhost:5001/api/NACE/activity/all/${data.value}`
+        await axios.get(url)
+        .then(res => {
+          const activities = res.data;
+          this.setState({ activities });
+        })  
+    }
 
       
     render()
@@ -67,9 +77,9 @@ class InitialStage extends Component {
                                 fluid
                                 search
                                 selection
-                                
+                                value={this.state.industrySelectedValue}
                                 options={industries}
-                                
+                                onChange={this.handleChangeActivities}
                             />
                             <label>Select NACE clasification</label>
                             <Dropdown
