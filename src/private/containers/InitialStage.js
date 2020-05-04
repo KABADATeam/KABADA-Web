@@ -1,16 +1,11 @@
 import React, {Component} from 'react';
 import {Grid, Form, Dropdown} from 'semantic-ui-react';
 //import ReactMapGL, {Marker} from 'react-map-gl';
-//import Map from '../components/Map';
+import Map from '../components/Map';
 import axios from 'axios';
 //import uuid from 'react-uuid'
 
-const JSON = [
-    {key: 1, value: 'Arvydas Sabonis', text: 'Arvydas Sabonis'},
-    {key: 2, value: 'Domantas Sabonis', text: 'Domantas Sabonis'},
-    {key: 3, value: 'Jonas Valanciunas', text: 'Jonas Valanciunas'},
-    {key: 4, value: 'Saras', text: 'Saras'}
-]
+
 class InitialStage extends Component {
     constructor(props){
         super(props)
@@ -18,7 +13,10 @@ class InitialStage extends Component {
                 countries: [], 
                 industries: [],
                 activities: [],
-                industrySelectedValue: null
+                industrySelectedValue: null,
+                countrySelectedValue: null,
+                latitude: null,
+                longitude: null
             }
     }
     componentDidMount() {
@@ -48,6 +46,28 @@ class InitialStage extends Component {
           const activities = res.data;
           this.setState({ activities });
         })  
+    }
+
+    handleChangeCountry = async (event, data) =>{
+        console.log(data.value);
+        this.setState({countrySelectedValue: data.value}) 
+        const urlLatitude = `https://localhost:5001/api/countries/latitude/${data.value}`
+        const urlLongitude = `https://localhost:5001/api/countries/longitude/${data.value}`
+        await axios.get(urlLatitude)
+        .then(res => {
+          const newlatitude = res.data;
+          this.setState({ latitude: newlatitude
+        });
+        })
+        console.log(this.state.latitude); 
+
+        await axios.get(urlLongitude)
+        .then(res => {
+          const newlongitude = res.data;
+          this.setState({ longitude: newlongitude
+        });
+        })
+        console.log(this.state.longitude); 
     }
 
       
@@ -95,11 +115,13 @@ class InitialStage extends Component {
                                 fluid
                                 search
                                 selection
+                                value={this.state.countrySelectedValue}
                                 options={countries}
+                                onChange={this.handleChangeCountry}
                             />
                         </Grid.Column>
                         <Grid.Column>
-                            
+                            <Map/>
                         </Grid.Column>
                         <Grid.Column>
                             
