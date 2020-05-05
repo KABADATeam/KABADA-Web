@@ -1,30 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Grid, Menu, Image, Header, Flag } from 'semantic-ui-react';
+import { Grid, Menu, Image, Header } from 'semantic-ui-react';
+import LanguageBar from '../../public/components/LanguageBar';
 import '../../css/header.css';
+import { connect } from 'react-redux';
+import mainMenuDictionary from '../../dictionaries/MainMenuDictionary';
+import { logout } from '../../appStore/actions/authenticationActions';
 
 class SiteHeader extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            authWindowOpen: false
-        }
-    }
-
-    onAuthClicked() {
-        this.setState({ 
-            authWindowOpen: true 
-        });
-    }
-
-    onAuthWindowClose = () => {
-        this.setState({ 
-            authWindowOpen: false 
-        });
+    onLogoutClick() {
+        this.props.logout();
     }
 
     render() {
+        const translation = mainMenuDictionary[this.props.language];
         return (
             <Grid>
                 <Grid.Row columns={1} only='computer tablet'>
@@ -35,13 +25,13 @@ class SiteHeader extends React.Component {
                             </Menu.Item>
                             <Menu.Menu position='right'>
                                 <Menu.Item name='about' as={Link} to='/'>
-                                    <Header as='h4' className='header-items'>About</Header>
+                                    <Header as='h4' className='header-items'>{translation.about}</Header>
                                 </Menu.Item>                                
-                                <Menu.Item name='login' as={Link} to='/login'>
-                                    <Header as='h4' className='header-items'>Logout</Header>
+                                <Menu.Item name='logout' onClick={this.onLogoutClick.bind(this)}>
+                                    <Header as='h4' className='header-items'>{translation.logout}</Header>
                                 </Menu.Item>
-                                <Menu.Item name='books'>
-                                    <Header as='h4' className='header-items'> <Flag name='gb' />EN</Header>
+                                <Menu.Item style={{ width: '150px'}}>
+                                    <LanguageBar />
                                 </Menu.Item>
                             </Menu.Menu>
                         </Menu>                       
@@ -53,4 +43,10 @@ class SiteHeader extends React.Component {
     }
 }
 
-export default SiteHeader;
+const mapStateToProps = (state) => {
+    return {
+        language: state.language
+    };
+}
+
+export default connect(mapStateToProps, { logout })(SiteHeader);

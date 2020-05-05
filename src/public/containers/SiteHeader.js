@@ -8,25 +8,6 @@ import mainMenuDictionary from '../../dictionaries/MainMenuDictionary';
 
 class SiteHeader extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            authWindowOpen: false
-        }
-    }
-
-    onAuthClicked() {
-        this.setState({ 
-            authWindowOpen: true 
-        });
-    }
-
-    onAuthWindowClose = () => {
-        this.setState({ 
-            authWindowOpen: false 
-        });
-    }
-
     render() {
         const translation = mainMenuDictionary[this.props.language];
         return (

@@ -1,11 +1,15 @@
 import React from 'react';
 import PublicApp from './public/PublicApp';
 import PrivateApp from './private/PrivateApp';
+import { connect } from 'react-redux';
 
 class App extends React.Component {
 
 	isUserAuthenticated() {
-		return false;
+		if (this.props.user.access_token === undefined || this.props.user.access_token === null)
+			return false;
+		else
+			return true;
 	}
 
 	render() {
@@ -17,4 +21,10 @@ class App extends React.Component {
 	}
 }
 
-export default App;
+const mapStateToProps = (state) => {
+    return {
+        user: state.user
+    };
+}
+
+export default connect(mapStateToProps, null)(App);

@@ -1,27 +1,33 @@
 const mainMenuDictionary = {
     "en": {
         login: "Login",
-        about: "About"
+        about: "About",
+        logout: "Logout"
     },
     "cz": {
         login: "Přihlásit se",
-        about: "O"
+        about: "O",
+        logout: "Odhlásit se"
     },
     "it": {
         login: "Accedi",
-        about: "Di"
+        about: "Di",
+        logout: "Disconnettersi"
     },
     "lv": {
         login: "Pierakstieties",
-        about: "Par"
+        about: "Par",
+        logout: "Izlogoties"
     },
     "lt": {
         login: "Prisijungti",
-        about: "Apie"
+        about: "Apie",
+        logout: "Atsijungti"
     },
     "pt": {
         login: "Iniciar sessão",
-        about: "Sobre"
+        about: "Sobre",
+        logout: "Sair"
     }
 }
 
