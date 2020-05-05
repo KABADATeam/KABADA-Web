@@ -5,6 +5,7 @@ import FacebookLogin from "react-facebook-login";
 import loginDictionary from '../../dictionaries/LoginDictionary';
 import { connect } from 'react-redux';
 import { login } from '../../appStore/actions/authenticationActions';
+import { withRouter } from "react-router-dom";
 
 class Login extends React.Component {
 	constructor(props) {
@@ -189,4 +190,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { login })(Login);
+export default connect(mapStateToProps, { login })(withRouter(Login));

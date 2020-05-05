@@ -5,6 +5,13 @@ import InitialStage from './containers/InitialStage';
 import MainWindow from './containers/MainWindow';
 
 class PrivateApp extends React.Component {
+    constructor(props) {
+		super(props);
+		if (window.location.pathname === '/login') {
+            window.location.replace("/");
+        }
+    }
+    
     render() {
         return (
             <Router>

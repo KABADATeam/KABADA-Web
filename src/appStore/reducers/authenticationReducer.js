@@ -8,6 +8,14 @@ export default (state = initState(), action) => {
             };
             saveToStorage(user);
             return user;
+        case 'LOGOUT_USER_SUCCESS':
+            wipeStorage();
+            const _user = { 
+                access_token: null,
+                name: null,
+                email: null
+            };
+            return _user;
         default:
             return state;
     }
@@ -27,4 +35,11 @@ function saveToStorage(authObject) {
     localStorage.setItem('access_token', authObject.access_token);
     localStorage.setItem('email', authObject.email);
     localStorage.setItem('name', authObject.name);
+}
+
+function wipeStorage() {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('email');
+    localStorage.removeItem('name');
+    
 }

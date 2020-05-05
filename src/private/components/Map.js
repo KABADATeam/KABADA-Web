@@ -55,7 +55,7 @@ class Map extends Component {
                   latitude={this.state.viewport.latitude}
                   longitude={this.state.viewport.longitude}
                 >
-                  <i class="map marker icon"></i>
+                  <i className="map marker icon"></i>
                 </Marker>
 
               </ReactMapGL>

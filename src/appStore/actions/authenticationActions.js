@@ -6,7 +6,7 @@ export const login = (email, password) => {
         try
         {
             const response = await kabadaAPI.post('api/auth/login', { 'Email': email, 'Password': password});
-            dispatch({ type: 'LOGIN_SUCCESS', payload: response.data });        
+            dispatch({ type: 'LOGIN_SUCCESS', payload: response.data });       
         } catch (error) {
             if (error.response === undefined) {
                 dispatch({ type: 'ERROR', payload: { message: 'Oopsie... System error. Try again, later' } });
@@ -41,5 +41,11 @@ export const register = (name, email, password, callback) => {
         } finally {
             dispatch({ type: 'LOADING', payload: false });
         }
+    }
+};
+
+export const logout = () => {
+    return async (dispatch, getState) => {
+        dispatch({ type: 'LOGOUT_USER_SUCCESS', payload: {} });
     }
 };
