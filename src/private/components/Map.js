@@ -1,19 +1,19 @@
 import React, {Component} from 'react';
 import {GridColumn} from 'semantic-ui-react';
-import ReactMapGL, {Marker} from 'react-map-gl';
+import ReactMapGL, {Marker, FlyToInterpolator} from 'react-map-gl';
 
 class Map extends Component {
     constructor(props) {
         super(props);
+        console.log(this.props)
           this.state = {
             viewport: {
               width: "40vw",
               height: "35vh",
-              latitude: 0,
-              longitude: 0,
+              latitude: this.props.latitude,
+              longitude: this.props.longitude,
               zoom: 16
-            },
-            userLocation: { }
+            }
           }
       }
       componentDidMount(){
@@ -30,32 +30,26 @@ class Map extends Component {
             })
       })
     }
+    handleViewportChange = viewport => {
+        this.setState({
+          viewport: { ...this.state.viewport, ...viewport }
+        })
+      } 
 
-      /*setUserLocation = (newlatitude, newlongitude) => {
-
-            let newViewport = {
-                height: "40vh",
-                width: "35vw",
-                latitude: this.props.newlatitude,
-                longitude: this.props.newlongitude,
-                zoom: 12
-            }
-            this.setState({
-                viewport: newViewport,
-            })
-        }*/
-    
     render() {
+        console.log(this.props)
         return (
             <GridColumn>
-              <ReactMapGL {...this.state.viewport} mapStyle="mapbox://styles/mapbox/outdoors-v11"
-                onViewportChange={(viewport=> this.setState({viewport}))}
+              <ReactMapGL {...this.state.viewport} 
+                mapStyle="mapbox://styles/mapbox/outdoors-v11"
+                onViewportChange={this.handleViewportChange
+                }
                 mapboxApiAccessToken="pk.eyJ1IjoianVzdGluYXMiLCJhIjoiY2s5bWNsczExMDM5ZTNlcDlvbHl5ZXY0aSJ9.L4-k6fuXGbaUcoQCKDEqZQ">
                 <Marker
                   latitude={this.state.viewport.latitude}
                   longitude={this.state.viewport.longitude}
                 >
-                  <i class="map marker icon"></i>
+                  <i className="map marker icon"></i>
                 </Marker>
 
               </ReactMapGL>

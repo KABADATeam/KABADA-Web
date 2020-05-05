@@ -15,8 +15,8 @@ class InitialStage extends Component {
                 activities: [],
                 industrySelectedValue: null,
                 countrySelectedValue: null,
-                latitude: null,
-                longitude: null
+                latitude: 0,
+                longitude: 0
             }
     }
     componentDidMount() {
@@ -121,7 +121,7 @@ class InitialStage extends Component {
                             />
                         </Grid.Column>
                         <Grid.Column>
-                            <Map/>
+                            <Map latitude={this.state.latitude} longitude={this.state.longitude}/>
                         </Grid.Column>
                         <Grid.Column>
                             
