@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {GridColumn} from 'semantic-ui-react';
-import ReactMapGL, {Marker, FlyToInterpolator} from 'react-map-gl';
+import ReactMapGL, {Marker} from 'react-map-gl';
 
 class Map extends Component {
     constructor(props) {
@@ -8,8 +8,8 @@ class Map extends Component {
         console.log(this.props)
           this.state = {
             viewport: {
-              width: "40vw",
-              height: "35vh",
+              width: "100vw",
+              height: "100vh",
               latitude: this.props.latitude,
               longitude: this.props.longitude,
               zoom: 16
@@ -19,8 +19,8 @@ class Map extends Component {
       componentDidMount(){
         navigator.geolocation.getCurrentPosition(position => {
             let newViewport = {
-                height: "40vh",
-                width: "35vw",
+                height: "30vh",
+                width: "22.5vw",
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,
                 zoom: 12

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Grid, Form, Dropdown} from 'semantic-ui-react';
+import {Grid, Form, Dropdown, Button, Label, Input, SegmentInline, GridColumn, Container} from 'semantic-ui-react';
 //import ReactMapGL, {Marker} from 'react-map-gl';
 import Map from '../components/Map';
 import axios from 'axios';
@@ -77,58 +77,77 @@ class InitialStage extends Component {
             const industries = this.state.industries.map(({id, code, title }) => ({key: id, value: code, text: title}));
             const activities = this.state.activities.map(({ id, code, title }) => ({key: id, value: code, text: title}));
             return(
-                <Grid divide='vertically'>
-                    <Grid.Row columns={2}>
-                        <Grid.Column>
-                            <Form>
-                                <Form.Field>
-                                    <label>Name of Business Plan</label>
-                                    <input placeholder='Name of Business Plan'/>
-                                </Form.Field>
-                            </Form>
-                        </Grid.Column>
-                    </Grid.Row>
+                <div>
+                    <Container>
+                        <Grid style={{height: '80vh', width: '80vw'}}>
+                            <Grid.Row style={{height: '10vh', width: '800vw'}}>
+                                <Grid.Column width={8} >
+                                    <Form>
+                                        <Form.Field>
+                                            <SegmentInline>
+                                            <Label pointing='below' size={"large"}>Name of Business Plan</Label>
+                                            <Input focus placeholder='Name of Business Plan' />
+                                            </SegmentInline>
+                                        </Form.Field>
+                                    </Form>
+                                </Grid.Column>
+                               
+                            </Grid.Row>
 
-                    <Grid.Row columns={3}>
-                        <Grid.Column>
-                            <label>Select Industry</label>
-                            <Dropdown
-                                placeholder='Select Industry '
-                                fluid
-                                search
-                                selection
-                                value={this.state.industrySelectedValue}
-                                options={industries}
-                                onChange={this.handleChangeActivities}
-                            />
-                            <label>Select NACE clasification</label>
-                            <Dropdown
-                                placeholder='Select NACE clasification'
-                                fluid
-                                search
-                                selection
-                                options={activities}
-                            />
-                            <label>Select country</label>
-                            <Dropdown
-                                placeholder='Country '
-                                fluid
-                                search
-                                selection
-                                value={this.state.countrySelectedValue}
-                                options={countries}
-                                onChange={this.handleChangeCountry}
-                            />
-                        </Grid.Column>
-                        <Grid.Column>
-                            <Map latitude={this.state.latitude} longitude={this.state.longitude}/>
-                        </Grid.Column>
-                        <Grid.Column>
-                            
-                        </Grid.Column>
-                    </Grid.Row>
+                            <Grid.Row centered style={{height: '60vh', width: '40vw'}}>
+                                <Grid.Column width={8} style={{justifyContent: 'space-between'}}>
 
-                </Grid>
+                                    <SegmentInline>
+                                        <Label pointing='below' size={"large"}>Select Industry</Label>
+                                        <Dropdown
+                                            placeholder='Select Industry '
+                                            fluid
+                                            search
+                                            selection
+                                            value={this.state.industrySelectedValue}
+                                            options={industries}
+                                            onChange={this.handleChangeActivities}
+                                        />
+                                    </SegmentInline>
+
+                                    <SegmentInline>
+                                        <Label pointing='below' size={"large"}>Select NACE clasification</Label>
+                                        <Dropdown
+                                            placeholder='Select NACE clasification'
+                                            fluid
+                                            search
+                                            selection
+                                            options={activities}
+                                        />
+                                    </SegmentInline>
+
+                                    <SegmentInline>
+                                        <Label pointing='below' size={"large"}>Select country</Label>
+                                        <Dropdown
+                                            placeholder='Country '
+                                            fluid
+                                            search
+                                            selection
+                                            value={this.state.countrySelectedValue}
+                                            options={countries}
+                                            onChange={this.handleChangeCountry}
+                                        />
+                                    </SegmentInline>
+
+                                    <SegmentInline>
+                                        <Button size='medium'>Next</Button>
+                                    </SegmentInline>
+                                                    
+                                </Grid.Column>
+                                <Grid.Column style={{ width: '40vw'}}>
+                                    <Map latitude={this.state.latitude} longitude={this.state.longitude}/>
+                                </Grid.Column>
+                            </Grid.Row>
+
+                        </Grid>
+                    </Container>
+                </div>
+                
             )
         }
 }
