@@ -1,17 +1,15 @@
 import React, {Component} from 'react';
-import {Grid, Form, Dropdown, Button, Label, Input, SegmentInline, GridColumn, Container} from 'semantic-ui-react';
-//import ReactMapGL, {Marker} from 'react-map-gl';
+import {Grid, Form, Dropdown, Button, Label, Input, Icon } from 'semantic-ui-react';
 import Map from '../components/Map';
 import axios from 'axios';
-//import uuid from 'react-uuid'
-
+import { connect } from 'react-redux';
+import { getIndustries, getActivities } from '../../appStore/actions/naceActions';
 
 class InitialStage extends Component {
     constructor(props){
         super(props)
             this.state = {
                 countries: [], 
-                industries: [],
                 activities: [],
                 industrySelectedValue: null,
                 countrySelectedValue: null,
@@ -25,27 +23,27 @@ class InitialStage extends Component {
             const countries = res.data;
             this.setState({ countries });
           })
-        axios.get('https://localhost:5001/api/NACE/industry/all')
-          .then(res => {
-            const industries = res.data;
-            this.setState({ industries });
-          })  
-        axios.get('https://localhost:5001/api/NACE/activity/all/')
-          .then(res => {
-            const activities = res.data;
-            this.setState({ activities });
-          })       
-      }
+ 
+        //axios.get('https://localhost:5001/api/NACE/activity/all/')
+        //  .then(res => {
+        //    const activities = res.data;
+        //    this.setState({ activities });
+        //  })    
+          
+          this.props.getIndustries(this.props.language);
+    }
     
-      handleChangeActivities = async (event, data) =>{
+      handleChangeIndustry = (event, data) =>{
         console.log(data.value);
-        this.setState({industrySelectedValue: data.value}) 
-        const url = `https://localhost:5001/api/NACE/activity/all/${data.value}`
-        await axios.get(url)
-        .then(res => {
-          const activities = res.data;
-          this.setState({ activities });
-        })  
+        //this.setState({industrySelectedValue: data.value}) 
+        //const url = `https://localhost:5001/api/NACE/activity/all/${data.value}`
+        //await axios.get(url)
+        //.then(res => {
+        //  const activities = res.data;
+        //  this.setState({ activities });
+        //})  
+
+        this.props.getActivities(this.props.language, data.value);
     }
 
     handleChangeCountry = async (event, data) =>{
@@ -71,33 +69,26 @@ class InitialStage extends Component {
     }
 
       
-    render()
-        {
-            const countries = this.state.countries.map(({id, countryName}) => ({key: id, value: countryName, text: countryName}))
-            const industries = this.state.industries.map(({id, code, title }) => ({key: id, value: code, text: title}));
-            const activities = this.state.activities.map(({ id, code, title }) => ({key: id, value: code, text: title}));
-            return(
-                <div>
-                    <Container>
-                        <Grid style={{height: '80vh', width: '80vw'}}>
-                            <Grid.Row style={{height: '10vh', width: '800vw'}}>
-                                <Grid.Column width={8} >
-                                    <Form>
-                                        <Form.Field>
-                                            <SegmentInline>
-                                            <Label pointing='below' size={"large"}>Name of Business Plan</Label>
-                                            <Input focus placeholder='Name of Business Plan' />
-                                            </SegmentInline>
-                                        </Form.Field>
-                                    </Form>
-                                </Grid.Column>
-                               
-                            </Grid.Row>
-
-                            <Grid.Row centered style={{height: '60vh', width: '40vw'}}>
-                                <Grid.Column width={8} style={{justifyContent: 'space-between'}}>
-
-                                    <SegmentInline>
+    render() {
+        const countries = this.state.countries.map(({id, countryName}) => ({key: id, value: countryName, text: countryName}))
+        const industries = this.props.industries.map(({id, code, title }) => ({key: id, value: code, text: code + ' ' + title}));
+        const activities = this.props.activities.map(({ id, code, title }) => ({key: id, value: code, text: code + ' ' + title}));
+        console.log(this.props);
+        return(
+            <div style={{ textAlign: "center"}}>
+                <div style={{ width: "70%", margin: "0 auto", textAlign: "left" }}>
+                    <div style={{ width: "100%", margin: "0 auto", textAlign: "center" }}>
+                        <h2>New business plan creation</h2>
+                    </div>
+                    <Grid style={{ marginTop: "3vh"}}>
+                        <Grid.Row columns={2}>
+                            <Grid.Column width={8}>
+                                <Form textAlign="left">
+                                    <Form.Field>
+                                        <Label pointing='below' size={"large"}>Name of Business Plan</Label>
+                                        <Input focus placeholder='Name of Business Plan' fluid />
+                                    </Form.Field>
+                                    <Form.Field>
                                         <Label pointing='below' size={"large"}>Select Industry</Label>
                                         <Dropdown
                                             placeholder='Select Industry '
@@ -106,11 +97,10 @@ class InitialStage extends Component {
                                             selection
                                             value={this.state.industrySelectedValue}
                                             options={industries}
-                                            onChange={this.handleChangeActivities}
+                                            onChange={this.handleChangeIndustry}
                                         />
-                                    </SegmentInline>
-
-                                    <SegmentInline>
+                                    </Form.Field>
+                                    <Form.Field>
                                         <Label pointing='below' size={"large"}>Select NACE clasification</Label>
                                         <Dropdown
                                             placeholder='Select NACE clasification'
@@ -119,9 +109,8 @@ class InitialStage extends Component {
                                             selection
                                             options={activities}
                                         />
-                                    </SegmentInline>
-
-                                    <SegmentInline>
+                                    </Form.Field>
+                                    <Form.Field>
                                         <Label pointing='below' size={"large"}>Select country</Label>
                                         <Dropdown
                                             placeholder='Country '
@@ -132,25 +121,34 @@ class InitialStage extends Component {
                                             options={countries}
                                             onChange={this.handleChangeCountry}
                                         />
-                                    </SegmentInline>
-
-                                    <SegmentInline>
-                                        <Button size='medium'>Next</Button>
-                                    </SegmentInline>
-                                                    
-                                </Grid.Column>
-                                <Grid.Column style={{ width: '40vw'}}>
-                                    <Map latitude={this.state.latitude} longitude={this.state.longitude}/>
-                                </Grid.Column>
-                            </Grid.Row>
-
-                        </Grid>
-                    </Container>
+                                    </Form.Field>
+                                </Form>
+                            </Grid.Column>
+                            <Grid.Column width={8} style={{ overflow: "hidden" }}>
+                                <Map latitude={this.state.latitude} longitude={this.state.longitude}/>
+                            </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row columns={1}>
+                            <Grid.Column textAlign="right">
+                                <Button style={{ marginTop: "3vh"}} icon labelPosition='right'>
+                                    Next
+                                    <Icon name='right arrow' />
+                                </Button>
+                            </Grid.Column>
+                        </Grid.Row>
+                    </Grid>
                 </div>
-                
-            )
-        }
+            </div>
+        )
+    }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        activities: state.activities,
+        industries: state.industries,
+        language: state.language
+    };
+}
 
-export default InitialStage;
+export default connect(mapStateToProps, { getActivities, getIndustries })(InitialStage);

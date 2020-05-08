@@ -19,8 +19,8 @@ class Map extends Component {
       componentDidMount(){
         navigator.geolocation.getCurrentPosition(position => {
             let newViewport = {
-                height: "30vh",
-                width: "22.5vw",
+                height: "43vh",
+                width: "50vw",
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,
                 zoom: 12
@@ -42,8 +42,7 @@ class Map extends Component {
             <GridColumn>
               <ReactMapGL {...this.state.viewport} 
                 mapStyle="mapbox://styles/mapbox/outdoors-v11"
-                onViewportChange={this.handleViewportChange
-                }
+                onViewportChange={this.handleViewportChange}
                 mapboxApiAccessToken="pk.eyJ1IjoianVzdGluYXMiLCJhIjoiY2s5bWNsczExMDM5ZTNlcDlvbHl5ZXY0aSJ9.L4-k6fuXGbaUcoQCKDEqZQ">
                 <Marker
                   latitude={this.state.viewport.latitude}
