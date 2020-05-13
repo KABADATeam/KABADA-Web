@@ -6,7 +6,7 @@ import { getIndustries, getActivities } from '../../appStore/actions/naceActions
 import {getCountries,changeCountry} from  '../../appStore/actions/countriesActions';
 import { Link } from 'react-router-dom';
 import uuid from 'react-uuid';
-
+import '../../css/Dropdown.css';
 class InitialStage extends Component {
     constructor(props){
         super(props)
@@ -45,8 +45,16 @@ class InitialStage extends Component {
       
     render() {
         const countries = this.props.countries.map(({id, countryName}) => ({key: uuid(), value: countryName, text: countryName}))
-        const industries = this.props.industries.map(({id, code, title }) => ({key: id, value: code, text: code + ' ' + title}));
-        const activities = this.props.activities.map(({ id, code, title }) => ({key: id, value: code, text: code + ' ' + title}));
+        const industries = this.props.industries.map(({id, code, title }) => ({key: id, value: code, text: 
+            <div >
+            <div className='row'>{code}</div>
+            <div className='rows'>{title}</div>
+            </div>}));
+        const activities = this.props.activities.map(({ id, code, title }) => ({key: id, value: code, text:
+        <div >
+            <div className='row'>{code}</div>
+            <div className='rows'>{title}</div>
+        </div>}));
         console.log(this.props);
         return(
             <div style={{ textAlign: "center"}}>
@@ -97,7 +105,7 @@ class InitialStage extends Component {
                                 </Form>
                             </Grid.Column>
                             <Grid.Column width={8} style={{ overflow: "hidden" }}>
-                                <Map latitude={this.state.latitude} longitude={this.state.longitude}/>
+                                
                             </Grid.Column>
                         </Grid.Row>
                         <Grid.Row columns={1}>
