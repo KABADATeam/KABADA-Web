@@ -4,6 +4,7 @@ import authenticationReducer from './authenticationReducer';
 import loadingReducer from './loadingReducer';
 import errorReducer from './errorReducer';
 import { industryReducer, activityReducer } from './naceReducer';
+import {countryReducer, countriesReducer} from './countryReducer';
 
 export default combineReducers({
     activities: activityReducer,
@@ -11,5 +12,7 @@ export default combineReducers({
     industries: industryReducer,
     language: languageReducer,
     loading: loadingReducer,
-    user: authenticationReducer
+    user: authenticationReducer,
+    countries: countriesReducer,
+    selectedCountry:countryReducer
 });
