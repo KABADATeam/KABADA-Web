@@ -4,6 +4,7 @@ import Map from '../components/Map';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { getIndustries, getActivities } from '../../appStore/actions/naceActions';
+import { Link } from 'react-router-dom';
 
 class InitialStage extends Component {
     constructor(props){
@@ -130,7 +131,7 @@ class InitialStage extends Component {
                         </Grid.Row>
                         <Grid.Row columns={1}>
                             <Grid.Column textAlign="right">
-                                <Button style={{ marginTop: "3vh"}} icon labelPosition='right'>
+                                <Button style={{ marginTop: "3vh"}} icon labelPosition='right' as={Link} to='riskAnalysis'>
                                     Next
                                     <Icon name='right arrow' />
                                 </Button>

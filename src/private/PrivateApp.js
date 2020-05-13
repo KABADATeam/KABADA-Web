@@ -4,6 +4,7 @@ import SiteHeader from './containers/SiteHeader';
 import InitialStage from './containers/InitialStage';
 import MainWindow from './containers/MainWindow';
 import BusinessPlansList from './components/BusinessPlansList';
+import RiskAnalysis from './containers/RiskAnalysis';
 
 class PrivateApp extends React.Component {
     constructor(props) {
@@ -20,6 +21,7 @@ class PrivateApp extends React.Component {
                 <Switch>
                     <Route exact path="/" render={(props) => <MainWindow {...props}> <BusinessPlansList {...props} /> </MainWindow>} />
                     <Route exact path="/new" render={(props) => <MainWindow {...props}> <InitialStage {...props} /> </MainWindow>} />
+                    <Route exact path="/riskAnalysis" render={(props) => <MainWindow {...props}> <RiskAnalysis {...props} /> </MainWindow>} />
                 </Switch>
             </Router>
            
