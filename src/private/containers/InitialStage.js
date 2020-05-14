@@ -2,52 +2,40 @@ import React, {Component} from 'react';
 import {Grid, Form, Dropdown, Button, Label, Input, Icon } from 'semantic-ui-react';
 import Map from '../components/Map';
 import { connect } from 'react-redux';
-import { getIndustries, getActivities } from '../../appStore/actions/naceActions';
-import {getCountries,changeCountry} from  '../../appStore/actions/countriesActions';
+import { getIndustries, getActivities, selectActivity, selectIndustry } from '../../appStore/actions/naceActions';
+import {getCountries,selectCountry} from  '../../appStore/actions/countriesActions';
 import { Link } from 'react-router-dom';
 import uuid from 'react-uuid';
 
 class InitialStage extends Component {
-    constructor(props){
-        super(props)
-            this.state = {
-                countries: [], 
-                activities: [],
-                industrySelectedValue: null,
-                countrySelectedValue: null,
-                latitude: 0,
-                longitude: 0
-            }
-    }
+
     componentDidMount() {  
         this.props.getCountries(this.props.language);
         this.props.getIndustries(this.props.language);
     }
     
       handleChangeIndustry = (event, data) =>{
-        //console.log(data.value);
-        //this.setState({industrySelectedValue: data.value}) 
-        //const url = `https://localhost:5001/api/NACE/activity/all/${data.value}`
-        //await axios.get(url)
-        //.then(res => {
-        //  const activities = res.data;
-        //  this.setState({ activities });
-        //})  
-
         this.props.getActivities(this.props.language, data.value);
+        this.props.selectIndustry(data.value);
     }
-
+    handleChangeActivity = async (event, data) =>{
+        this.props.selectActivity(data.value);
+    } 
     handleChangeCountry = async (event, data) =>{
-        this.props.changeCountry(data.value);
+        this.props.selectCountry(data.value);
     } 
     
-
+    
+    test() {
+        console.log(this.props.selectedIndustry)
+        console.log(this.props.selectedActivity)
+        console.log(this.props.selectedCountry)
+    }
       
     render() {
         const countries = this.props.countries.map(({id, countryName}) => ({key: uuid(), value: countryName, text: countryName}))
         const industries = this.props.industries.map(({id, code, title }) => ({key: id, value: code, text: code + ' ' + title}));
         const activities = this.props.activities.map(({ id, code, title }) => ({key: id, value: code, text: code + ' ' + title}));
-        console.log(this.props);
         return(
             <div style={{ textAlign: "center"}}>
                 <div style={{ width: "70%", margin: "0 auto", textAlign: "left" }}>
@@ -80,6 +68,7 @@ class InitialStage extends Component {
                                             fluid
                                             search
                                             selection
+                                            onChange={this.handleChangeActivity}
                                             options={activities}
                                         />
                                     </Form.Field>
@@ -97,12 +86,16 @@ class InitialStage extends Component {
                                 </Form>
                             </Grid.Column>
                             <Grid.Column width={8} style={{ overflow: "hidden" }}>
-                                <Map latitude={this.state.latitude} longitude={this.state.longitude}/>
+                                
                             </Grid.Column>
                         </Grid.Row>
                         <Grid.Row columns={1}>
                             <Grid.Column textAlign="right">
-                                <Button style={{ marginTop: "3vh"}} icon labelPosition='right' as={Link} to='riskAnalysis'>
+                                <Button style={{ marginTop: "3vh"}} 
+                                        icon labelPosition='right'
+                                        as={Link} to='riskAnalysis'
+                                        onClick={this.test.bind(this)}
+                                >
                                     Next
                                     <Icon name='right arrow' />
                                 </Button>
@@ -121,8 +114,10 @@ const mapStateToProps = (state) => {
         industries: state.industries,
         language: state.language,
         countries: state.countries,
-        selectedCountry:state.selectedCountry
+        selectedActivity: state.selectedActivity,
+        selectedCountry: state.selectedCountry,
+        selectedIndustry: state.selectedIndustry
     };
 }
 
-export default connect(mapStateToProps, { getActivities, getIndustries,getCountries,changeCountry })(InitialStage);
+export default connect(mapStateToProps, { getActivities, getIndustries, getCountries, selectCountry, selectActivity, selectIndustry })(InitialStage);

@@ -7,7 +7,7 @@ export const countriesReducer = (state = [], action) => {
     }
 }
 
-export const countryReducer = (state = null, action) => {
+export const countrySelectedReducer = (state = null, action) => {
     switch (action.type) {
         case 'COUNTRY_CHANGE_SUCCESS':
             return action.payload;

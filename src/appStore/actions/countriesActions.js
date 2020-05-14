@@ -18,7 +18,7 @@ export const getCountries = (language) => {
         }
     }
 };
-export const changeCountry = (country) => {
+export const selectCountry = (country) => {
     return async (dispatch, getState) => {
         dispatch({ type: 'LOADING', payload: true });
         try
