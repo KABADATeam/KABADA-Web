@@ -5,11 +5,13 @@ import loadingReducer from './loadingReducer';
 import errorReducer from './errorReducer';
 import { industryReducer, activityReducer, industrySelectedReducer, activitySelectedReducer } from './naceReducer';
 import {countrySelectedReducer, countriesReducer} from './countryReducer';
+import {eurostatDataReducer} from '../reducers/eurostat/eurostatReducer'
 
 export default combineReducers({
     activities: activityReducer,
     countries: countriesReducer,
     error: errorReducer,
+    eurostatData: eurostatDataReducer,
     industries: industryReducer,
     language: languageReducer,
     loading: loadingReducer,

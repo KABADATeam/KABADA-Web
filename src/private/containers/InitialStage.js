@@ -4,6 +4,7 @@ import Map from '../components/Map';
 import { connect } from 'react-redux';
 import { getIndustries, getActivities, selectActivity, selectIndustry } from '../../appStore/actions/naceActions';
 import {getCountries,selectCountry} from  '../../appStore/actions/countriesActions';
+import {getEurostatData} from '../../appStore/actions/eurostat/eurostatAction'
 import { Link } from 'react-router-dom';
 import uuid from 'react-uuid';
 
@@ -111,6 +112,7 @@ class InitialStage extends Component {
 const mapStateToProps = (state) => {
     return {
         activities: state.activities,
+        eurostatData: state.eurostatData,
         industries: state.industries,
         language: state.language,
         countries: state.countries,
@@ -120,4 +122,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getActivities, getIndustries, getCountries, selectCountry, selectActivity, selectIndustry })(InitialStage);
+export default connect(mapStateToProps, { getActivities, getIndustries, getCountries, selectCountry, selectActivity, selectIndustry, getEurostatData })(InitialStage);
