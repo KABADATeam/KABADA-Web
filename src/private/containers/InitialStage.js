@@ -31,26 +31,13 @@ class InitialStage extends Component {
         console.log(this.props.selectedIndustry)
         console.log(this.props.selectedActivity)
         console.log(this.props.selectedCountry)
+        this.props.getEurostatData()
     }
       
     render() {
         const countries = this.props.countries.map(({id, countryName}) => ({key: uuid(), value: countryName, text: countryName}))
-<<<<<<< HEAD
         const industries = this.props.industries.map(({id, code, title }) => ({key: id, value: code, text: code + ' ' + title}));
         const activities = this.props.activities.map(({ id, code, title }) => ({key: id, value: code, text: code + ' ' + title}));
-=======
-        const industries = this.props.industries.map(({id, code, title }) => ({key: id, value: code, text: 
-            <div >
-            <div className='row'>{code}</div>
-            <div className='rows'>{title}</div>
-            </div>}));
-        const activities = this.props.activities.map(({ id, code, title }) => ({key: id, value: code, text:
-        <div >
-            <div className='row'>{code}</div>
-            <div className='rows'>{title}</div>
-        </div>}));
-        console.log(this.props);
->>>>>>> 3493e52cb63aa775c1511de4091bd33112cffe47
         return(
             <div style={{ textAlign: "center"}}>
                 <div style={{ width: "70%", margin: "0 auto", textAlign: "left" }}>
