@@ -28,7 +28,10 @@ export const industrySelectedReducer = (state = null, action) => {
 export const activitySelectedReducer = (state = null, action) => {
     switch (action.type) {
         case 'ACTIVITY_SELECT_SUCCESS':
-            return action.payload;
+            var naceSplit = action.payload.split(".")
+            const naceJoin = naceSplit.join("")
+            console.log(naceJoin)
+            return naceJoin;
         default:
             return state;
     }

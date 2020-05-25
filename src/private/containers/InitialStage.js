@@ -11,7 +11,7 @@ import '../../css/Dropdown.css';
 class InitialStage extends Component {
 
     componentDidMount() {  
-        this.props.getCountries(this.props.language);
+        this.props.getCountries();
         this.props.getIndustries(this.props.language);
     }
     
@@ -27,15 +27,15 @@ class InitialStage extends Component {
     } 
     
     
-    test() {
+    test = async (event, data) => {
         console.log(this.props.selectedIndustry)
         console.log(this.props.selectedActivity)
         console.log(this.props.selectedCountry)
-        this.props.getEurostatData()
+        this.props.getEurostatData(this.props.selectedCountry, this.props.selectedActivity)
     }
       
     render() {
-        const countries = this.props.countries.map(({id, countryName}) => ({key: uuid(), value: countryName, text: countryName}))
+        const countries = this.props.countries.map(({ countryName, shortName }) => ({key: uuid(), value: shortName, text: countryName}))
         const industries = this.props.industries.map(({id, code, title }) => ({key: id, value: code, text: code + ' ' + title}));
         const activities = this.props.activities.map(({ id, code, title }) => ({key: id, value: code, text: code + ' ' + title}));
         return(
@@ -96,7 +96,7 @@ class InitialStage extends Component {
                                 <Button style={{ marginTop: "3vh"}} 
                                         icon labelPosition='right'
                                         as={Link} to='riskAnalysis'
-                                        onClick={this.test.bind(this)}
+                                        onClick={this.test}
                                 >
                                     Next
                                     <Icon name='right arrow' />

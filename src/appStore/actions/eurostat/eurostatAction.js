@@ -1,11 +1,11 @@
 import eurostatAPI from './eurostatAPI';
 
-export const getEurostatData = () => {
+export const getEurostatData = (country, activity) => {
     return async (dispatch, getState) => {
         dispatch({ type: 'LOADING', payload: true });
         try
         {
-            const response = await eurostatAPI.get('sbs_sc_sca_r2?sinceTimePeriod=2012&precision=1&size_emp=TOTAL&geo=LT&indic_sb=V11110&nace_r2=C10');
+            const response = await eurostatAPI.get(`sbs_sc_sca_r2?sinceTimePeriod=2012&precision=1&size_emp=TOTAL&geo=${country}&indic_sb=V11110&nace_r2=${activity}`);
             dispatch({ type: 'FETCHING_EUROSTATDATA_SUCCESS', payload: response.data });       
         } catch (error) {
             if (error.response === undefined) {
@@ -18,3 +18,5 @@ export const getEurostatData = () => {
         }
     }
 };
+//'sbs_sc_sca_r2?sinceTimePeriod=2012&precision=1&size_emp=TOTAL&geo=' + country + '&indic_sb=V11110&nace_r2=' + activity
+//`sbs_sc_sca_r2?sinceTimePeriod=2012&precision=1&size_emp=TOTAL&geo=${country}&indic_sb=V11110&nace_r2=${activity}`

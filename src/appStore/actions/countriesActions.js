@@ -1,11 +1,11 @@
 import kabadaAPI from './kabadaAPI';
 
-export const getCountries = (language) => {
+export const getCountries = () => {
     return async (dispatch, getState) => {
         dispatch({ type: 'LOADING', payload: true });
         try
         {
-            const response = await kabadaAPI.get('api/countries/countriesList/' + language);
+            const response = await kabadaAPI.get('api/countries/countriesList/' );
             dispatch({ type: 'COUNTRIES_FETCH_SUCCESS', payload: response.data });       
         } catch (error) {
             if (error.response === undefined) {

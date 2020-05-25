@@ -1,7 +1,6 @@
 export const eurostatDataReducer = (state = [], action) => {
     switch (action.type) {
         case 'FETCHING_EUROSTATDATA_SUCCESS':
-            console.log(action.payload);
             const valuesObj = JSON.parse(JSON.stringify(action.payload)).value
             const yearObj = JSON.parse(JSON.stringify(action.payload)).dimension.time.category.label
             const Data = []
