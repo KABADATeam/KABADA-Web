@@ -28,6 +28,14 @@ export const industrySelectedReducer = (state = null, action) => {
 export const activitySelectedReducer = (state = null, action) => {
     switch (action.type) {
         case 'ACTIVITY_SELECT_SUCCESS':
+            return action.payload;
+        default:
+            return state;
+    }
+}
+export const activitySelectedForEurostatReducer = (state = null, action) => {
+    switch (action.type) {
+        case 'ACTIVITY_SELECT_FOR_EUROSTAT_SUCCESS':
             var naceSplit = action.payload.split(".")
             const naceJoin = naceSplit.join("")
             console.log(naceJoin)

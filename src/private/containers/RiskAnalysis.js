@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Form, Button } from 'semantic-ui-react';
+import {Grid } from 'semantic-ui-react';
 import Chart from '../components/Chart';
 import {getEurostatData} from '../../appStore/actions/eurostat/eurostatAction'
 import { connect } from 'react-redux';
@@ -13,8 +13,8 @@ class RiskAnalysis extends React.Component {
                         <h2>Risk analysis</h2>
                     </div>
                     <Grid style={{ marginTop: "3vh"}}>
-                        <Grid.Row columns={2}>
-                            <Grid.Column width={8} style={{ overflow: "hidden" }}>
+                        <Grid.Row columns={1}>
+                            <Grid.Column style={{ overflow: "hidden" }}>
                                 <Chart data={this.props.eurostatData}/>
                             </Grid.Column>
                         </Grid.Row>
@@ -28,6 +28,7 @@ class RiskAnalysis extends React.Component {
 const mapStateToProps = (state) => {
     return {
         eurostatData: state.eurostatData,
+        error: state.error
     };
 }
 

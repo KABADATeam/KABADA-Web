@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Grid, Form, Dropdown, Button, Label, Input, Icon } from 'semantic-ui-react';
 import Map from '../components/Map';
 import { connect } from 'react-redux';
-import { getIndustries, getActivities, selectActivity, selectIndustry } from '../../appStore/actions/naceActions';
+import { getIndustries, getActivities, selectActivity, selectIndustry, selectActivityForEurostat } from '../../appStore/actions/naceActions';
 import {getCountries,selectCountry} from  '../../appStore/actions/countriesActions';
 import {getEurostatData} from '../../appStore/actions/eurostat/eurostatAction'
 import { Link } from 'react-router-dom';
@@ -21,17 +21,18 @@ class InitialStage extends Component {
     }
     handleChangeActivity = async (event, data) =>{
         this.props.selectActivity(data.value);
+        this.props.selectActivityForEurostat(data.value)
     } 
     handleChangeCountry = async (event, data) =>{
         this.props.selectCountry(data.value);
     } 
     
     
-    test = async (event, data) => {
+    openRiskAnalysis = async (event, data) => {
         console.log(this.props.selectedIndustry)
         console.log(this.props.selectedActivity)
         console.log(this.props.selectedCountry)
-        this.props.getEurostatData(this.props.selectedCountry, this.props.selectedActivity)
+        this.props.getEurostatData(this.props.selectedCountry, this.props.selectedActivityForEurostat)
     }
       
     render() {
@@ -96,7 +97,7 @@ class InitialStage extends Component {
                                 <Button style={{ marginTop: "3vh"}} 
                                         icon labelPosition='right'
                                         as={Link} to='riskAnalysis'
-                                        onClick={this.test}
+                                        onClick={this.openRiskAnalysis}
                                 >
                                     Next
                                     <Icon name='right arrow' />
@@ -118,9 +119,10 @@ const mapStateToProps = (state) => {
         language: state.language,
         countries: state.countries,
         selectedActivity: state.selectedActivity,
+        selectedActivityForEurostat: state.selectedActivityForEurostat,
         selectedCountry: state.selectedCountry,
         selectedIndustry: state.selectedIndustry
     };
 }
 
-export default connect(mapStateToProps, { getActivities, getIndustries, getCountries, selectCountry, selectActivity, selectIndustry, getEurostatData })(InitialStage);
+export default connect(mapStateToProps, { getActivities, getIndustries, getCountries, selectCountry, selectActivity, selectIndustry, getEurostatData, selectActivityForEurostat })(InitialStage);

@@ -73,3 +73,22 @@ export const selectActivity = (activity) => {
         }
     }
 };
+
+export const selectActivityForEurostat = (activityForEurostat) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: 'LOADING', payload: true });
+        try
+        {
+            
+            dispatch({ type: 'ACTIVITY_SELECT_FOR_EUROSTAT_SUCCESS', payload: activityForEurostat });       
+        } catch (error) {
+            if (error.response === undefined) {
+                dispatch({ type: 'ERROR', payload: { message: 'Oopsie... System error. Try again, later' } });
+            } else {
+                dispatch({ type: 'ERROR', payload: error.response.data });
+            }            
+        } finally {
+            dispatch({ type: 'LOADING', payload: false });
+        }
+    }
+};
