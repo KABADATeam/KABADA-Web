@@ -1,10 +1,26 @@
 import React from 'react';
 import {Grid } from 'semantic-ui-react';
 import Chart from '../components/Chart';
+import ChartLoader from '../components/Loader'
 import {getEurostatData} from '../../appStore/actions/eurostat/eurostatAction'
 import { connect } from 'react-redux';
 
 class RiskAnalysis extends React.Component {
+   /* constructor(props){
+        super(props)
+        this.state = {
+            active : null
+        }
+    }
+    componentDidMount(){
+        this.setState({active: true})
+        setTimeout(() => {
+            this.setState({active: false})
+        },2000)
+    }*/
+    //{this.props.loading === true ? <ChartLoader active={this.props.loading}/> : <Chart data={this.props.eurostatData}/> }
+    //<ChartLoader active={this.props.loading}/>
+    //<Chart data={this.props.eurostatData}/>
     render() {
         return (
             <div style={{ textAlign: "center"}}>
@@ -15,6 +31,7 @@ class RiskAnalysis extends React.Component {
                     <Grid style={{ marginTop: "3vh"}}>
                         <Grid.Row columns={1}>
                             <Grid.Column style={{ overflow: "hidden" }}>
+                                <ChartLoader active={this.props.loading}/>
                                 <Chart data={this.props.eurostatData}/>
                             </Grid.Column>
                         </Grid.Row>
@@ -28,7 +45,7 @@ class RiskAnalysis extends React.Component {
 const mapStateToProps = (state) => {
     return {
         eurostatData: state.eurostatData,
-        error: state.error
+        loading: state.loading,
     };
 }
 
