@@ -13,7 +13,7 @@ class Login extends React.Component {
 		this.state = {
 			password: "",
 			username: "",
-			RememberMecheckBox: true,
+			RememberMecheckBox: false,
 			response: true,
 			usernameError: false,
 			passwordError: false,
@@ -88,7 +88,7 @@ class Login extends React.Component {
   componentClicked = () => {};
 
   render() {
-	const translation = loginDictionary[this.props.language];
+	const translation = loginDictionary["en"];
     return (
       <div>
         <Container>
@@ -184,7 +184,6 @@ class Login extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        language: state.language,
         loading: state.loading,
         error: state.error
     };

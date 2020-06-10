@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Grid, Form, Dropdown, Button, Label, Input, Icon } from 'semantic-ui-react';
-import Map from '../components/Map';
 import { connect } from 'react-redux';
 import { getIndustries, getActivities, selectActivity, selectIndustry, selectActivityForEurostat } from '../../appStore/actions/naceActions';
 import {getCountries,selectCountry} from  '../../appStore/actions/countriesActions';
