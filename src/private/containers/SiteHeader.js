@@ -16,12 +16,15 @@ class SiteHeader extends React.Component {
                                 <Image src='kabada_logo.png' style={{ width: "120px" }}></Image>
                             </Menu.Item>
                             <Menu.Menu position='right' style={{ marginRight: "30px" }}>
-                                <Menu.Item name='about' as={Link} to='/'>
+                                <Menu.Item name='about' as={Link} to='/about'>
                                     <Header as='h4' className='header-items'>About</Header>
                                 </Menu.Item>  
                                 <Menu.Item name='policy' as={Link} to='/privacy'>
                                     <Header as='h4' className='header-items'>Privacy policy</Header>
-                                </Menu.Item>                               
+                                </Menu.Item>   
+                                <Menu.Item name='about' as={Link} to='/plans'>
+                                    <Header as='h4' className='header-items'>My plans</Header>
+                                </Menu.Item>                            
                                 <UserMenu />
                             </Menu.Menu>
                         </Menu>                       

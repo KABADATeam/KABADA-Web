@@ -14,7 +14,7 @@ class BusinessPlansList extends React.Component {
                     <Grid style={{ marginTop: "3vh"}}>
                         <Grid.Row columns={1}>
                             <Grid.Column>
-                                <Button icon labelPosition='left' as={Link} to='/new'>
+                                <Button icon labelPosition='left' as={Link} to='/initial-setup'>
                                     <Icon name='plus' />
                                     New...
                                 </Button>

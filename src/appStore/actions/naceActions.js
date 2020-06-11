@@ -1,11 +1,11 @@
 import kabadaAPI from './kabadaAPI';
 
-export const getIndustries = (language) => {
+export const getIndustries = () => {
     return async (dispatch, getState) => {
         dispatch({ type: 'LOADING', payload: true });
         try
         {
-            const response = await kabadaAPI.get('https://localhost:5001/api/NACE/industry/of/' + language);
+            const response = await kabadaAPI.get('api/nace/industries');
             dispatch({ type: 'FETCHING_INDUSTRIES_SUCCESS', payload: response.data });       
         } catch (error) {
             if (error.response === undefined) {
@@ -19,12 +19,12 @@ export const getIndustries = (language) => {
     }
 };
 
-export const getActivities = (language, industry) => {
+export const getActivities = (industry) => {
     return async (dispatch, getState) => {
         dispatch({ type: 'LOADING', payload: true });
         try
         {
-            const response = await kabadaAPI.get('https://localhost:5001/api/NACE/activity/of/' + language + '/' + industry);
+            const response = await kabadaAPI.get('/api/nace/industries/' + industry + '/activities');
             dispatch({ type: 'FETCHING_ACTIVITIES_SUCCESS', payload: response.data });       
         } catch (error) {
             if (error.response === undefined) {
@@ -42,7 +42,6 @@ export const selectIndustry = (industry) => {
         dispatch({ type: 'LOADING', payload: true });
         try
         {
-            
             dispatch({ type: 'INDUSTRY_SELECT_SUCCESS', payload: industry });       
         } catch (error) {
             if (error.response === undefined) {
@@ -60,7 +59,6 @@ export const selectActivity = (activity) => {
         dispatch({ type: 'LOADING', payload: true });
         try
         {
-            
             dispatch({ type: 'ACTIVITY_SELECT_SUCCESS', payload: activity });       
         } catch (error) {
             if (error.response === undefined) {

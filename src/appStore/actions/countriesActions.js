@@ -5,7 +5,7 @@ export const getCountries = () => {
         dispatch({ type: 'LOADING', payload: true });
         try
         {
-            const response = await kabadaAPI.get('api/countries/countriesList/' );
+            const response = await kabadaAPI.get('api/countries' );
             dispatch({ type: 'COUNTRIES_FETCH_SUCCESS', payload: response.data });       
         } catch (error) {
             if (error.response === undefined) {
@@ -18,12 +18,12 @@ export const getCountries = () => {
         }
     }
 };
+
 export const selectCountry = (country) => {
     return async (dispatch, getState) => {
         dispatch({ type: 'LOADING', payload: true });
         try
         {
-            
             dispatch({ type: 'COUNTRY_CHANGE_SUCCESS', payload: country });       
         } catch (error) {
             if (error.response === undefined) {

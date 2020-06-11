@@ -16,7 +16,7 @@ class SiteHeader extends React.Component {
                                 <Image src='kabada_logo.png' as={Link} to='/' style={{ width: "120px"}}></Image>
                             </Menu.Item>
                             <Menu.Menu position='right' style={{ marginRight: "30px" }}>
-                                <Menu.Item name='about' as={Link} to='/'>
+                                <Menu.Item name='about' as={Link} to='/about'>
                                     <Header as='h4' className='header-items'>{translation.about}</Header>
                                 </Menu.Item>  
                                 <Menu.Item name='policy' as={Link} to='/privacy'>

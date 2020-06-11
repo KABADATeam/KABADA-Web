@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Checkbox, Form, Container, Grid, Input, Divider, Message } from "semantic-ui-react";
+import { Button, Checkbox, Form, Container, Grid, Input, Divider } from "semantic-ui-react";
 import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login";
 import loginDictionary from '../../dictionaries/LoginDictionary';
@@ -126,7 +126,6 @@ class Login extends React.Component {
                   >
                     {translation.login}
                   </Button>
-                  {this.props.error !== '' ? <Message negative>{this.props.error}</Message>: ''}
                 </Form>
                 <div>
                   <Divider horizontal>{translation.alternativeLogin}</Divider>
