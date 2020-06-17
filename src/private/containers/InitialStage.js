@@ -14,7 +14,10 @@ class InitialStage extends Component {
         this.state = {
             title: '',
             needsSaving: false,
-            buttonLoading: false
+            buttonLoading: false,
+            chooseIndustry: false,
+            chooseActivity: false,
+            chooseCountry: false,
         };
     }
 
@@ -34,7 +37,8 @@ class InitialStage extends Component {
         const country = this.props.countries.find(item => item.id === data.value);
         this.props.selectCountry(country);
         this.setState({
-            needsSaving: true
+            needsSaving: true,
+            chooseCountry: true
         });
     } 
 
@@ -42,7 +46,8 @@ class InitialStage extends Component {
         this.props.selectIndustry(data.value);
         this.props.getActivities(data.value);
         this.setState({
-            needsSaving: true
+            needsSaving: true,
+            chooseIndustry: true
         });
     } 
     
@@ -62,7 +67,8 @@ class InitialStage extends Component {
         }
         this.props.selectActivity(activity);
         this.setState({
-            needsSaving: true
+            needsSaving: true,
+            chooseActivity: true
         });
     } 
     
@@ -82,6 +88,8 @@ class InitialStage extends Component {
     }
       
     render() {
+        const {title, chooseActivity, chooseCountry, chooseIndustry} = this.state
+        const enabledButton = title.length > 0 && chooseActivity === true & chooseCountry === true && chooseIndustry === true;
         const countries = this.props.countries.map(({ id, title }) => ({key: id, value: id, text: title }));
         const industriesItems = this.props.industries.map((item) => ({
                 key: item.id,
@@ -205,7 +213,7 @@ class InitialStage extends Component {
                     </Grid.Row>
                     <Grid.Row columns={1}>
                         <Grid.Column style={{ textAlign: "right" }}>
-                            <Button className="button-next" icon labelPosition='right' loading={this.state.buttonLoading} onClick={this.onNextClicked}>
+                            <Button className="button-next" icon labelPosition='right' loading={this.state.buttonLoading} onClick={this.onNextClicked} disabled={!enabledButton}>
                                 Next
                                 <Icon name='right arrow' />
                             </Button>
