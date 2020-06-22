@@ -6,13 +6,15 @@ import messageReducer from './messageReducer';
 import { planReducer } from './planReducer';
 import { industriesReducer, activitiesReducer, industrySelectedReducer, activitySelectedReducer, activitySelectedForEurostatReducer } from './naceReducer';
 import {countrySelectedReducer, countriesReducer} from './countryReducer';
-import {eurostatDataReducer} from '../reducers/eurostat/eurostatReducer'
+import {eurostatDataReducer, eurostatDataReducerProduction, eurostatDataReducerPersonnel} from '../reducers/eurostat/eurostatReducer'
 
 export default combineReducers({
     activities: activitiesReducer,
     businessPlan: planReducer,
     countries: countriesReducer,
     eurostatData: eurostatDataReducer,
+    eurostatData2: eurostatDataReducerProduction,
+    eurostatDataPersonnel: eurostatDataReducerPersonnel,
     industries: industriesReducer,
     language: languageReducer,
     loading: loadingReducer,
