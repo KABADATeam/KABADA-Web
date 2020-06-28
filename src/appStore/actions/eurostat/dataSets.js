@@ -21,5 +21,23 @@ const dataSet = {
                 variables: [ "V11110", "V12120", "V13310", "V13320", "V13330", "V91130", "V91290" ]
             }
         ]
+    },
+    "F": {
+        dataSets: [
+            {
+                tableCode: "sbs_na_sca_r2",
+                industries: [ "F41", "F411", "F4110", "F412" ],
+                variables: [ "V11110", "V12110", "V12120", "V12130", "V12150", "V13310", "V13320" ]
+            }
+        ]
+    },
+    "M": {
+        dataSets: [
+            {
+                tableCode: "bd_9pm_r2",
+                industries: [ "M69", "M70", "M71", "M72", "M73", "M74", "M75" ],
+                variables: [ "V11951", "V11952", "V11953", "V11960", "V16961", "V97451", "V97452", "V97453" ]
+            }
+        ]
     }
 }
