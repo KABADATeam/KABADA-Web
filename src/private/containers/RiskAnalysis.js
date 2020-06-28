@@ -2,6 +2,8 @@ import React from 'react';
 import {Grid, Container } from 'semantic-ui-react';
 import Chart from '../components/Chart';
 import ChartLoader from '../components/Loader'
+import { selectActivity, selectActivityForEurostat } from '../../appStore/actions/naceActions';
+import { selectCountry} from '../../appStore/actions/countriesActions'
 import {getEurostatDataEnterprisesNumber, getEurostatDataProductionValue, getEurostatDataPersonnelCosts} from '../../appStore/actions/eurostat/eurostatAction'
 import { connect } from 'react-redux';
 
@@ -22,23 +24,31 @@ class RiskAnalysis extends React.Component {
     //<ChartLoader active={this.props.loading}/>
     //<Chart data={this.props.eurostatData}/>
     componentDidMount(){
-        this.props.getEurostatDataEnterprisesNumber()
-        this.props.getEurostatDataProductionValue()
-        this.props.getEurostatDataPersonnelCosts()
+        var selectedCountryObject = Object.getOwnPropertyDescriptors(this.props.selectedCountry)
+        var selectedCountry = selectedCountryObject.shortCode.value
+        var selectedActivityObject = Object.getOwnPropertyDescriptors(this.props.selectedActivity)
+        var naceValue = selectedActivityObject.code.value
+        var naceValueWithOutDots = naceValue.split(".")
+        naceValueWithOutDots.splice(2,1)
+        const selectedActivity = naceValueWithOutDots.join("")
+        this.props.getEurostatDataEnterprisesNumber(selectedCountry, selectedActivity)
+        this.props.getEurostatDataProductionValue(selectedCountry, selectedActivity)
+        this.props.getEurostatDataPersonnelCosts(selectedCountry, selectedActivity)
     }
+
     render() {
         return (
             <div style={{ textAlign: "center"}}>
-                <div style={{ width: "70%", margin: "0 auto", textAlign: "left" }}>
+                <div style={{ width: "80%", margin: "0 auto", textAlign: "left" }}>
                     <div style={{ width: "100%", margin: "0 auto", textAlign: "center" }}>
                         <h2>Risk analysis</h2>
                     </div>
                     <Grid style={{ marginTop: "3vh"}}>
-                        <Grid.Row columns={1}>
+                        <Grid.Row columns={2}>
                             <Grid.Column style={{ overflow: "hidden" }}>
                                 <Container textAlign='center'>Enterprises - number</Container>
                                 <ChartLoader active={this.props.loading}/>
-                                <Chart data={this.props.eurostatDataEnterprises}/>
+                                <Chart data={this.props.eurostatDataProduction}/>
                             </Grid.Column>
                             <Grid.Column style={{ overflow: "hidden" }}>
                                 <Container textAlign='center'>Production value</Container>
@@ -64,6 +74,9 @@ const mapStateToProps = (state) => {
         eurostatDataProduction: state.eurostatData2,
         eurostatDataPersonnel: state.eurostatDataPersonnel,
         loading: state.loading,
+        selectedActivity: state.selectedActivity,
+        selectedCountry: state.selectedCountry,
+        selectedActivityForEurostat: state.selectedActivityForEurostat
     };
 }
 
@@ -71,6 +84,9 @@ export default connect(mapStateToProps,
     { 
         getEurostatDataEnterprisesNumber,
         getEurostatDataProductionValue,
-        getEurostatDataPersonnelCosts 
+        getEurostatDataPersonnelCosts,
+        selectActivity,
+        selectCountry,
+        selectActivityForEurostat 
     })
     (RiskAnalysis);
