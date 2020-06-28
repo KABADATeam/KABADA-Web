@@ -7,3 +7,11 @@ export const planReducer = (state = null, action) => {
     }
 }
 
+export const planFetchReducer = (state = [], action) => {
+    switch (action.type) {
+        case "FETCHING_PLAN_SUCCESS":
+            return action.payload;
+        default:
+            return state;
+    }
+};

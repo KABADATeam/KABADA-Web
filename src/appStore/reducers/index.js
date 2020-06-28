@@ -3,10 +3,10 @@ import languageReducer from './languageReducer';
 import authenticationReducer from './authenticationReducer';
 import loadingReducer from './loadingReducer';
 import messageReducer from './messageReducer';
-import { planReducer } from './planReducer';
+import { planReducer, planFetchReducer } from './planReducer';
 import { industriesReducer, activitiesReducer, industrySelectedReducer, activitySelectedReducer, activitySelectedForEurostatReducer } from './naceReducer';
-import {countrySelectedReducer, countriesReducer} from './countryReducer';
-import {eurostatDataReducer, eurostatDataReducerProduction, eurostatDataReducerPersonnel} from '../reducers/eurostat/eurostatReducer'
+import { countrySelectedReducer, countriesReducer } from './countryReducer';
+import { eurostatDataReducer, eurostatDataReducerProduction, eurostatDataReducerPersonnel } from '../reducers/eurostat/eurostatReducer'
 
 export default combineReducers({
     activities: activitiesReducer,
@@ -21,7 +21,8 @@ export default combineReducers({
     message: messageReducer,
     selectedActivity: activitySelectedReducer,
     selectedActivityForEurostat: activitySelectedForEurostatReducer,
-    selectedCountry:countrySelectedReducer,
+    selectedCountry: countrySelectedReducer,
     selectedIndustry: industrySelectedReducer,
     user: authenticationReducer,
+    savedBusinessPlans: planFetchReducer,
 });
