@@ -1,12 +1,13 @@
 import eurostatAPI from './eurostatAPI';
 
-export const getEurostatDataEnterprisesNumber = () => {
+export const getEurostatDataEnterprisesNumber = (country, activityForEurostat) => {
     return async (dispatch, getState) => {
         dispatch({ type: 'LOADING', payload: true });
         try
         {
-            const response = await eurostatAPI.get(`sbs_na_sca_r2?sinceTimePeriod=2010&precision=1&geo=PT&indic_sb=V11110&nace_r2=C13`);
+            const response = await eurostatAPI.get(`sbs_na_sca_r2?sinceTimePeriod=2010&precision=1&geo=${country}&indic_sb=V11110&nace_r2=${activityForEurostat}`);
             //sbs_sc_sca_r2?sinceTimePeriod=2012&precision=1&size_emp=TOTAL&geo=$&indic_sb=V11110&nace_r2=${activityForEurostat}
+            //`sbs_na_sca_r2?sinceTimePeriod=2010&precision=1&geo=PT&indic_sb=V11110&nace_r2=C13`
             dispatch({ type: 'FETCHING_EUROSTATDATA_SUCCESS', payload: response.data });       
         } catch (error) {
             if (error.response === undefined) {
@@ -19,12 +20,12 @@ export const getEurostatDataEnterprisesNumber = () => {
         }
     }
 };
-export const getEurostatDataProductionValue = () => {
+export const getEurostatDataProductionValue = (country, activityForEurostat) => {
     return async (dispatch, getState) => {
         dispatch({ type: 'LOADING', payload: true });
         try
         {
-            const response = await eurostatAPI.get(`sbs_na_sca_r2?sinceTimePeriod=2010&precision=1&geo=PT&indic_sb=V12120&nace_r2=C13`);
+            const response = await eurostatAPI.get(`sbs_na_sca_r2?sinceTimePeriod=2010&precision=1&geo=${country}&indic_sb=V12120&nace_r2=${activityForEurostat}`);
             //sbs_sc_sca_r2?sinceTimePeriod=2012&precision=1&size_emp=TOTAL&geo=$&indic_sb=V11110&nace_r2=${activityForEurostat}
             dispatch({ type: 'FETCHING_EUROSTATDATA_SUCCESS_PRODUCTION_VALUE', payload: response.data });       
         } catch (error) {
@@ -38,12 +39,12 @@ export const getEurostatDataProductionValue = () => {
         }
     }
 };
-export const getEurostatDataPersonnelCosts = () => {
+export const getEurostatDataPersonnelCosts = (country, activityForEurostat) => {
     return async (dispatch, getState) => {
         dispatch({ type: 'LOADING', payload: true });
         try
         {
-            const response = await eurostatAPI.get(`sbs_na_sca_r2?sinceTimePeriod=2010&precision=1&geo=PT&indic_sb=V13310&nace_r2=C13`);
+            const response = await eurostatAPI.get(`sbs_na_sca_r2?sinceTimePeriod=2010&precision=1&geo=${country}&indic_sb=V13310&nace_r2=${activityForEurostat}`);
             //sbs_sc_sca_r2?sinceTimePeriod=2012&precision=1&size_emp=TOTAL&geo=$&indic_sb=V11110&nace_r2=${activityForEurostat}
             dispatch({ type: 'FETCHING_EUROSTATDATA_SUCCESS_PERSONNEL_VALUE', payload: response.data });       
         } catch (error) {
