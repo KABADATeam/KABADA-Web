@@ -19,7 +19,6 @@ class MessageBox extends React.Component {
     } 
 
     render() {
-        console.log(this.props.response);
         if (this.props.response.type === "info") {
             return (
                 this.props.response.message !== '' ?
