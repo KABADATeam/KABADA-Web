@@ -57,15 +57,3 @@ const industryCode = (code) => {
     var fragments = code.split(".");
     return fragments[0];
 }
-
-export const activitySelectedForEurostatReducer = (state = null, action) => {
-    switch (action.type) {
-        case 'ACTIVITY_SELECT_FOR_EUROSTAT_SUCCESS':
-            var naceSplit = action.payload.split(".")
-            const naceJoin = naceSplit.join("")
-            console.log(naceJoin)
-            return naceJoin;
-        default:
-            return state;
-    }
-}
