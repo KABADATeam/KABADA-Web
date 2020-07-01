@@ -45,3 +45,21 @@ export const getPlans = () => {
         }
     };
 };
+
+export const removePlan = (planId) => {
+    return async (dispatch, getState) => {
+        try {
+            const token = getState().user.access_token;
+            const postObject = {
+                'Id': planId
+            }
+            const response = await kabadaAPI.post('api/plans/remove', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: 'REMOVING_PLAN_SUCCESS', payload: response.data });
+        } catch (error) {
+            dispatch({ type: 'ERROR', payload: errorHandler(error) });
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
+        }
+    }
+};
+

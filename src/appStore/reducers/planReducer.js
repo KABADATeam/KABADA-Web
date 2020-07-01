@@ -15,3 +15,12 @@ export const planFetchReducer = (state = [], action) => {
             return state;
     }
 };
+
+export const planRemoveReducer = (state = null, action) => {
+    switch (action.type) {
+        case "REMOVING_PLAN_SUCCESS":
+            return action.payload;
+        default:
+            return state;
+    }
+};
