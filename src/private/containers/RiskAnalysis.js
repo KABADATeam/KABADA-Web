@@ -2,13 +2,15 @@ import React from 'react';
 import { Grid, Container, Loader } from 'semantic-ui-react';
 import Chart from '../components/Chart';
 import ChartLoader from '../components/Loader'
-import { getEurostatData } from '../../appStore/actions/eurostat/eurostatAction'
+import { getEurostatData } from '../../appStore/actions/eurostat/eurostatAction';
+import { getEurostatAllData } from '../../appStore/actions/eurostat/eurostatAllAction'
 import { connect } from 'react-redux';
 
 class RiskAnalysis extends React.Component {
 
     componentDidMount(){
-        this.props.getEurostatData();
+        this.props.getEurostatData()
+        this.props.getEurostatAllData()
     }
 
     render() {
@@ -29,6 +31,7 @@ class RiskAnalysis extends React.Component {
                     </Grid.Column>
                 </Grid.Row>
             );
+            
 
             return (
                 <div style={{ textAlign: "center"}}>
@@ -51,8 +54,9 @@ const mapStateToProps = (state) => {
         loading: state.loading,
         selectedCountry: state.selectedCountry,
         selectedActivity: state.selectedActivity,
-        eurostatData: state.eurostatData
+        eurostatData: state.eurostatData,
+        eurostatAllData: state.eurostatAllData
     };
 }
 
-export default connect(mapStateToProps, { getEurostatData })(RiskAnalysis);
+export default connect(mapStateToProps, { getEurostatData, getEurostatAllData })(RiskAnalysis);
