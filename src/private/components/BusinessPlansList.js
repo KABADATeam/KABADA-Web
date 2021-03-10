@@ -2,51 +2,59 @@ import React from 'react';
 import { Grid, Button, Icon, Divider } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getPlans, removePlan } from "../../appStore/actions/planActions";
+import { getPlans, removePlan, getSelectedPlan, clearSelectedPlan } from "../../appStore/actions/planActions";
+import { selectActivity, selectIndustry } from '../../appStore/actions/naceActions';
+import { selectCountry } from '../../appStore/actions/countriesActions';
 
 class BusinessPlansList extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            plans: []
         };
     }
 
     componentDidMount() {
         this.props.getPlans();
+        this.props.clearSelectedPlan();
     }
 
-
-    onPlanEdit = (data) => {
-        console.log(data);
+    deletePlan = (plan) => {
+        if (window.confirm("Are you sure?")) {
+            const vart = this.props.removePlan(plan.id);
+            console.log(vart);
+        }
     }
 
-    onPlanDelete = (data) => {
-        this.props.removePlan(data);
-        this.props.getPlans();
-        this.props.getPlans();
-        console.log(this.props.savedBusinessPlans);
+    editPlan = (plan) => {
+        this.props.getSelectedPlan(plan);
+        this.props.selectActivity(plan.activity);
+        this.props.selectCountry(plan.country);
+        this.props.selectIndustry(plan.activity.industry);
+        this.props.history.push({
+            pathname: "/initial-setup",
+        });
     }
 
     render() {
-        const savedBusinessPlans = this.props.savedBusinessPlans.map((plan) =>
-            <Grid.Row key={plan.id} columns={2}>
-                <Grid.Column key={plan.id} floated='left'>
+        const savedBusinessPlans = this.props.savedBusinessPlans.map((plan, i) =>
+            <Grid.Row key={i} columns={3}>
+                <Grid.Column floated='left' width={1}>
+                    <label>{i + 1}</label>
+                </Grid.Column>
+                <Grid.Column floated='left'>
                     <label>{plan.title}</label>
                 </Grid.Column>
-                <Grid.Column floated='right'>
-                    <Button icon onClick={() => this.onPlanDelete(plan.id)}>
-                        <Icon disabled name='delete' />
+                <Grid.Column floated='right' width={3}>
+                    <Button icon onClick={this.deletePlan.bind(this, plan)}>
+                        <Icon name='delete' />
                     </Button>
-                    <Button icon onClick={() => this.onPlanEdit(plan.id)}>
-                        <Icon disabled name='edit' />
+                    <Button icon onClick={this.editPlan.bind(this, plan)}>
+                        <Icon name='edit' />
                     </Button>
                 </Grid.Column>
             </Grid.Row>
         );
-        console.log(this.props.savedBusinessPlans);
-
 
         return (
             <div style={{ textAlign: "center" }}>
@@ -67,7 +75,9 @@ class BusinessPlansList extends React.Component {
                                 </div>
                             </Grid.Column>
                         </Grid.Row>
-                        {savedBusinessPlans}
+                        {
+                            Object.keys(this.props.savedBusinessPlans).length > 0 ? savedBusinessPlans : 'There are no items to display here, yet.'
+                        }
                     </Grid>
                 </div>
             </div>
@@ -79,8 +89,11 @@ const mapStateToProps = (state) => {
     return {
         language: state.language,
         savedBusinessPlans: state.savedBusinessPlans,
-        removedBusinessPlan: state.removedBusinessPlan,
+        selectedBusinessPlan: state.selectedBusinessPlan,
+        selectedActivity: state.selectedActivity,
+        selectedCountry: state.selectedCountry,
+        selectedIndustry: state.selectedIndustry,
     };
 }
 
-export default connect(mapStateToProps, { getPlans, removePlan })(BusinessPlansList);
+export default connect(mapStateToProps, { getPlans, removePlan, getSelectedPlan, selectCountry, selectActivity, selectIndustry, clearSelectedPlan })(BusinessPlansList);

@@ -1,10 +1,11 @@
 import React from 'react';
-import { Grid, Container, Loader } from 'semantic-ui-react';
+import { Grid, Loader } from 'semantic-ui-react';
 import Chart from '../components/Chart';
 import ChartLoader from '../components/Loader'
 import { getEurostatData } from '../../appStore/actions/eurostat/eurostatAction';
 import { getEurostatAllData } from '../../appStore/actions/eurostat/eurostatAllAction'
 import { connect } from 'react-redux';
+import uuid from 'react-uuid';
 
 class RiskAnalysis extends React.Component {
 
@@ -13,7 +14,19 @@ class RiskAnalysis extends React.Component {
         this.props.getEurostatAllData()
     }
 
+    compare(a, b) {
+        if ( a.title < b.title ){
+          return -1;
+        }
+        if ( a.title > b.title ){
+          return 1;
+        }
+        return 0;
+    }
+
     render() {
+        
+
         if (this.props.loading === true) {
             return (
                 <div style={{ textAlign: "center"}}>
@@ -23,15 +36,21 @@ class RiskAnalysis extends React.Component {
                 </div>
             )
         } else {
-            console.log(this.props.eurostatData);
-            const diagrams = this.props.eurostatData.map(diagramData =>
-                <Grid.Row columns={1} key={new Date().getMilliseconds()}>
+            const diagrams = this.props.eurostatData.sort(this.compare).map(diagramData =>
+                <Grid.Row columns={1} key={uuid()}>
                     <Grid.Column textAlign='center'>
-                        <Chart data={diagramData}/>
+                        <Chart data={diagramData.data}/>
                     </Grid.Column>
                 </Grid.Row>
             );
-            
+
+            const euroDiagrams = this.props.eurostatAllData.sort(this.compare).map(diagramData =>
+                <Grid.Row columns={1} key={uuid()}>
+                    <Grid.Column textAlign='center'>
+                        <Chart data={diagramData.data}/>
+                    </Grid.Column>
+                </Grid.Row>
+            );
 
             return (
                 <div style={{ textAlign: "center"}}>
@@ -40,7 +59,27 @@ class RiskAnalysis extends React.Component {
                             <h2>Eurostat data</h2>
                         </div>
                         <Grid style={{ marginTop: "3vh"}}>
-                            {diagrams}
+                            <Grid.Row columns={2}>
+                                <Grid.Column width={8} textAlign='center'>
+                                    <h2>{this.props.selectedCountry.title}</h2>
+                                </Grid.Column>
+                                <Grid.Column width={8} textAlign='center'>
+                                    <h2>European Union</h2>
+                                </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row columns={2}>
+                                <Grid.Column width={8} textAlign='center'>
+                                    <Grid>
+                                        {diagrams}
+                                    </Grid>
+                                </Grid.Column>
+                                <Grid.Column width={8} textAlign='center'>
+                                    <Grid>
+                                        {euroDiagrams}
+                                    </Grid>
+                                </Grid.Column>
+                            </Grid.Row>
+                            
                         </Grid>     
                     </div>
                 </div>

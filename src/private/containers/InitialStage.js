@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Grid, Form, Dropdown, Button, Label, Input, Icon } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { getIndustries, getActivities, selectActivity, selectIndustry } from '../../appStore/actions/naceActions';
-import { getCountries,selectCountry } from  '../../appStore/actions/countriesActions';
-import { saveInitialPlanData } from '../../appStore/actions/planActions';
-import { setMessage  } from '../../appStore/actions/messageActions';
+import { getCountries, selectCountry } from '../../appStore/actions/countriesActions';
+import { saveInitialPlanData, getSelectedPlan, updatePlanData, clearSelectedPlan } from '../../appStore/actions/planActions';
+import { setMessage } from '../../appStore/actions/messageActions';
 import '../../css/index.css';
 
 class InitialStage extends Component {
@@ -13,23 +13,43 @@ class InitialStage extends Component {
         super(props);
         this.state = {
             title: '',
+            country: '',
+            industry: '',
+            activity: '',
+            updatingPlan: false,
             needsSaving: false,
+            savingEditedData: false,
             buttonLoading: false,
             chooseIndustry: false,
             chooseActivity: false,
             chooseCountry: false,
+            initialValues: false,
         };
     }
 
-    componentDidMount() {  
+    componentDidMount() {
         this.props.getCountries();
         this.props.getIndustries();
+        if (typeof this.props.selectedBusinessPlan.country !== 'undefined') {
+            this.props.getActivities(this.props.selectedBusinessPlan.activity.industry.id);
+            this.setState({
+                country: this.props.selectedBusinessPlan.country.id,
+                industry: this.props.selectedBusinessPlan.activity.industry.id,
+                activity: this.props.selectedBusinessPlan.activity.id,
+                title: this.props.selectedBusinessPlan.title,
+                chooseIndustry: true,
+                chooseActivity: true,
+                chooseCountry: true,
+                updatingPlan: true,
+                needsSaving: true,
+            });
+        }
     }
 
     onTitleChanged = (e, data) => {
         this.setState({
             title: data.value,
-            needsSaving: true 
+            needsSaving: true
         });
     }
 
@@ -38,76 +58,101 @@ class InitialStage extends Component {
         this.props.selectCountry(country);
         this.setState({
             needsSaving: true,
-            chooseCountry: true
+            chooseCountry: true,
+            country: data.value
         });
-    } 
+    }
 
     onIndustryChanged = (e, data) => {
         this.props.selectIndustry(data.value);
         this.props.getActivities(data.value);
         this.setState({
             needsSaving: true,
-            chooseIndustry: true
+            chooseIndustry: true,
+            industry: data.value
         });
-    } 
-    
-    onActivityChanged = (e, data) => {
-        var activity = this.props.activities.find(item => item.id === data.value);
+    }
+
+    findActivity = (id) => {
+        var activity = this.props.activities.find(item => item.id === id);
         if (activity === undefined) {
-            for (var i = 0 ; i < this.props.activities.length; i += 1) {
+            for (var i = 0; i < this.props.activities.length; i += 1) {
                 var item = this.props.activities[i];
-                for (var j = 0 ; j < item.childActivities.length; j += 1) {
+                for (var j = 0; j < item.childActivities.length; j += 1) {
                     var childItem = item.childActivities[j];
-                    if (childItem.id === data.value) {
+                    if (childItem.id === id) {
                         activity = childItem;
                         break;
                     }
                 }
             }
         }
+        return activity;
+    }
+
+    onActivityChanged = (e, data) => {
+        var activity = this.findActivity(data.value);
+        console.log(activity)
         this.props.selectActivity(activity);
         this.setState({
             needsSaving: true,
-            chooseActivity: true
+            chooseActivity: true,
+            activity: data.value
         });
-    } 
-    
+    }
+
+    update = () => {
+        this.props.updatePlanData(this.props.selectedBusinessPlan.id, this.state.title, this.props.selectedActivity.id, this.props.selectedCountry.id, () => {
+            this.setState({ buttonLoading: false });
+            this.props.history.push('/market-analysis');
+            this.props.setMessage("Updated");
+        }, () => {
+            this.setState({ buttonLoading: false });
+        });
+        this.props.clearSelectedPlan();
+    }
+
     onNextClicked = () => {
         if (this.state.needsSaving === true) {
-            this.setState({ buttonLoading: true });
-            this.props.saveInitialPlanData(this.state.title, this.props.selectedActivity.id, this.props.selectedCountry.id, () => {
-                this.setState({ buttonLoading: false });
-                this.props.history.push('/market-analysis');
-                this.props.setMessage("Saved");
-            }, () => {
-                this.setState({ buttonLoading: false });
-            });
+            if (this.state.updatingPlan === false) {
+                this.setState({ buttonLoading: true });
+                this.props.saveInitialPlanData(this.state.title, this.props.selectedActivity.id, this.props.selectedCountry.id, () => {
+                    this.setState({ buttonLoading: false });
+                    this.props.history.push('/market-analysis');
+                    this.props.setMessage("Saved");
+                }, () => {
+                    this.setState({ buttonLoading: false });
+                });
+            }
+            if (this.state.updatingPlan === true) {
+                this.update();
+            }
         } else {
             this.props.history.push('/market-analysis');
-        }       
+        }
     }
-      
+
     render() {
-        const {title, chooseActivity, chooseCountry, chooseIndustry} = this.state
+        const { title, chooseActivity, chooseCountry, chooseIndustry, country, industry, activity } = this.state
         const enabledButton = title.length > 0 && chooseActivity === true & chooseCountry === true && chooseIndustry === true;
-        const countries = this.props.countries.map(({ id, title }) => ({key: id, value: id, text: title }));
+        const countries = this.props.countries.map(({ id, title }) => ({ key: id, value: id, text: title }));
         const industriesItems = this.props.industries.map((item) => ({
-                key: item.id,
-                value: item.id,
-                text: item.code + '. ' + item.title,
-                content: (
-                    <Grid>
-                        <Grid.Row columns={2}>
-                            <Grid.Column width={1}>
-                                {item.code}
-                            </Grid.Column>
-                            <Grid.Column width={15}>
-                                {item.title}
-                            </Grid.Column>
-                        </Grid.Row>
-                    </Grid>
-                )
-            })
+            key: item.id,
+            value: item.id,
+            text: item.code + '. ' + item.title,
+            content: (
+                <Grid>
+                    <Grid.Row columns={2}>
+                        <Grid.Column width={1}>
+                            {item.code}
+                        </Grid.Column>
+                        <Grid.Column width={15}>
+                            {item.title}
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+            )
+        })
         );
 
         const activitiesItems = [];
@@ -117,10 +162,10 @@ class InitialStage extends Component {
                 key: item.id,
                 value: item.id,
                 text: item.code + '. ' + item.title,
-                content : (
+                content: (
                     <Grid>
                         <Grid.Row columns={2}>
-                            <Grid.Column width={1} style={{ textAlign: "left"}}>
+                            <Grid.Column width={1} style={{ textAlign: "left" }}>
                                 {item.code}
                             </Grid.Column>
                             <Grid.Column width={15}>
@@ -135,10 +180,10 @@ class InitialStage extends Component {
                     key: childItem.id,
                     value: childItem.id,
                     text: childItem.code + '. ' + childItem.title,
-                    content : (
+                    content: (
                         <Grid>
                             <Grid.Row columns={2}>
-                                <Grid.Column width={2} style={{ textAlign: "right"}}>
+                                <Grid.Column width={2} style={{ textAlign: "right" }}>
                                     {childItem.code}
                                 </Grid.Column>
                                 <Grid.Column width={14}>
@@ -156,21 +201,23 @@ class InitialStage extends Component {
                 <div style={{ width: "100%", margin: "0 auto", textAlign: "center" }}>
                     <h2>Business plan creation</h2>
                 </div>
-                <Grid style={{ marginTop: "3vh"}}>
+                <Grid style={{ marginTop: "3vh" }}>
                     <Grid.Row columns={1}>
                         <Grid.Column width={16}>
                             <Form style={{ textAlign: "left" }}>
                                 <Form.Field>
                                     <Label basic className="label-config">Business Plan Title:</Label>
                                     <div className="decoration"></div>
-                                    <Input focus placeholder='Enter title' fluid onChange={this.onTitleChanged.bind(this)} />
+                                    <Input focus value={title} name="title" placeholder='Enter title' fluid onChange={this.onTitleChanged.bind(this)} />
                                 </Form.Field>
 
                                 <Form.Field className="form-field-config">
                                     <Label basic className="label-config">NACE Rev. 2 Section:</Label>
                                     <div className="decoration"></div>
                                     <Dropdown
+                                        name="industry"
                                         placeholder='Select Section'
+                                        value={industry}
                                         fluid
                                         search
                                         loading={this.props.loading}
@@ -183,12 +230,14 @@ class InitialStage extends Component {
                                     <Label basic className="label-config">NACE Rev. 2 Division, Group, Class:</Label>
                                     <div className="decoration"></div>
                                     <Dropdown
+                                        name="activity"
                                         placeholder='Select Division, Group or Class'
+                                        value={activity}
                                         fluid
                                         search
                                         selection
                                         noResultsMessage="Select NACE Rev. 2 Section first"
-                                        onChange={this.onActivityChanged} 
+                                        onChange={this.onActivityChanged}
                                         options={activitiesItems}
                                     />
                                 </Form.Field>
@@ -197,6 +246,8 @@ class InitialStage extends Component {
                                     <Label basic className="label-config">Country:</Label>
                                     <div className="decoration"></div>
                                     <Dropdown
+                                        value={country}
+                                        name="country"
                                         placeholder='Select Country'
                                         fluid
                                         search
@@ -208,7 +259,7 @@ class InitialStage extends Component {
                             </Form>
                         </Grid.Column>
                         <Grid.Column width={8} style={{ overflow: "hidden" }}>
-                            
+
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row columns={1}>
@@ -233,18 +284,23 @@ const mapStateToProps = (state) => {
         countries: state.countries,
         selectedActivity: state.selectedActivity,
         selectedCountry: state.selectedCountry,
-        selectedIndustry: state.selectedIndustry
+        selectedIndustry: state.selectedIndustry,
+        selectedBusinessPlan: state.selectedBusinessPlan,
+        updatedPlan: state.updatedPlan,
     };
 }
 
-export default connect(mapStateToProps, 
-    { 
-        getActivities, 
-        getIndustries, 
-        getCountries, 
-        selectCountry, 
-        selectActivity, 
-        selectIndustry, 
+export default connect(mapStateToProps,
+    {
+        getActivities,
+        getIndustries,
+        getCountries,
+        selectCountry,
+        selectActivity,
+        selectIndustry,
+        getSelectedPlan,
         saveInitialPlanData,
+        updatePlanData,
+        clearSelectedPlan,
         setMessage
     })(InitialStage);
