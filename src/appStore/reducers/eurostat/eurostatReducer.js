@@ -18,7 +18,7 @@ export const eurostatDataReducer = (state = [], action) => {
                 Data[i].name = yearObj[property]
                 i++
             }
-            return [ ...state, Data ];
+            return [ ...state, { title: legendData, data: Data } ];
         case 'RESET_EUROSTATDATA':
             return [];
         default:

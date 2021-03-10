@@ -16,7 +16,7 @@ export const saveInitialPlanData = (title, activityId, countryId, callback, call
             callback();
         } catch (error) {
             dispatch({ type: 'ERROR', payload: errorHandler(error) });
-            callback2();
+            //callback2();
         } finally {
             //dispatch({ type: 'LOADING', payload: false });
         }

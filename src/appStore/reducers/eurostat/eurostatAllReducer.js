@@ -18,8 +18,7 @@ export const eurostatAllDataReducer = (state = [], action) => {
                 DataAll[i].name = yearObj[property]
                 i++
             }
-            console.log('ALL: ' + DataAll);
-            return [ ...state, DataAll ];
+            return [ ...state, { title: legendData, data: DataAll } ];
         case 'RESET_EUROSTAT_ALL_DATA':
             return [];
         default:
