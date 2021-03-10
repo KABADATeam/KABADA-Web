@@ -133,7 +133,6 @@ class InitialStage extends Component {
     }
 
     render() {
-        console.log(this.props)
         const { title, chooseActivity, chooseCountry, chooseIndustry, country, industry, activity } = this.state
         const enabledButton = title.length > 0 && chooseActivity === true & chooseCountry === true && chooseIndustry === true;
         const countries = this.props.countries.map(({ id, title }) => ({ key: id, value: id, text: title }));

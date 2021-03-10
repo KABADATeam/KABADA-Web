@@ -5,6 +5,7 @@ import ChartLoader from '../components/Loader'
 import { getEurostatData } from '../../appStore/actions/eurostat/eurostatAction';
 import { getEurostatAllData } from '../../appStore/actions/eurostat/eurostatAllAction'
 import { connect } from 'react-redux';
+import uuid from 'react-uuid';
 
 class RiskAnalysis extends React.Component {
 
@@ -24,6 +25,8 @@ class RiskAnalysis extends React.Component {
     }
 
     render() {
+        
+
         if (this.props.loading === true) {
             return (
                 <div style={{ textAlign: "center"}}>
@@ -33,16 +36,16 @@ class RiskAnalysis extends React.Component {
                 </div>
             )
         } else {
-            const diagrams = this.props.eurostatData.map(diagramData =>
-                <Grid.Row columns={1} key={(new Date()).getUTCMilliseconds()}>
+            const diagrams = this.props.eurostatData.sort(this.compare).map(diagramData =>
+                <Grid.Row columns={1} key={uuid()}>
                     <Grid.Column textAlign='center'>
                         <Chart data={diagramData.data}/>
                     </Grid.Column>
                 </Grid.Row>
             );
 
-            const euroDiagrams = this.props.eurostatAllData.map(diagramData =>
-                <Grid.Row columns={1} key={(new Date()).getUTCMilliseconds()}>
+            const euroDiagrams = this.props.eurostatAllData.sort(this.compare).map(diagramData =>
+                <Grid.Row columns={1} key={uuid()}>
                     <Grid.Column textAlign='center'>
                         <Chart data={diagramData.data}/>
                     </Grid.Column>

@@ -7,7 +7,7 @@ export const getEurostatAllData = () => {
         dispatch({ type: 'RESET_EUROSTAT_ALL_DATA', payload: null });
         const codes = getState().selectedActivity.formatedCodes;
         const industry = getState().selectedActivity.industry;
-        console.log(getState().selectedActivity.industry);
+        //console.log(getState().selectedActivity.industry);
         let queryData = dataSet[industry];
         for (var data of queryData.dataSets) {
             var industries = data.industries;
@@ -27,8 +27,7 @@ export const getEurostatAllData = () => {
                     //(data.tableCode + "?sinceTimePeriod=2010&precision=1&size_emp=TOTAL&geo=EU27_2020&indic_sb=" + variable + "&nace_r2=" + activityCode)
                     dispatch({ type: 'FETCHING_EUROSTAT_ALL_DATA_SUCCESS', payload: response.data });   
                 } catch (error){
-                    //dispatch({ type: 'ERROR', payload: "Not all requested data could be downloaded" });
-                    console.log(error);
+                    dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
             }
         }
