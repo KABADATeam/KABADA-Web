@@ -1,10 +1,26 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
-import { Button, Form, Container, Grid, Divider, Input, Message } from "semantic-ui-react";
+import { Form, Input, Button } from 'antd';
 import { register } from '../../appStore/actions/authenticationActions';
+import { Link } from 'react-router-dom';
 
 const emailRegex = RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/);
+
+const layout = {
+    labelCol: {
+      span: 8,
+    },
+    wrapperCol: {
+      span: 16,
+    },
+  };
+  const tailLayout = {
+    wrapperCol: {
+      offset: 8,
+      span: 16,
+    },
+  };
 
 class Register extends React.Component {
     constructor(props) {
@@ -99,70 +115,92 @@ class Register extends React.Component {
         this.setState({ email: event.target.value });
     }
 
+    onFinish = (values) => {
+        console.log('Success:', values);
+        this.props.register(values.name, values.email, values.password, () => {
+            this.props.history.push("/login");
+        });
+      };
+    
+      onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+      };
+
     render() {
         return (
-            <div>
-                <Container>
-                    <Grid>
-                        <Grid.Row centered>
-                            <Grid.Column width={6}>
-                                <Form>
-                                    <Form.Field
-                                        control={Input}
-                                        label="Full name"
-                                        placeholder="enter your full name"
-                                        value={this.state.fullName}
-                                        onChange={this.fullNameChange.bind(this)}
-                                        error={this.state.fullNameMessage}
-                                    ></Form.Field>
-                                    <Form.Field
-                                        control={Input}
-                                        label="Email"
-                                        placeholder="enter your email"
-                                        value={this.state.email}
-                                        onChange={this.emailChange.bind(this)}
-                                        error={this.state.emailMessage}
-                                    ></Form.Field>
-                                    <Form.Field
-                                        label="Password"
-                                        control={Input}
-                                        placeholder="enter yuor password"
-                                        onChange={this.passwordChange.bind(this)}
-                                        value={this.state.password}
-                                        type="password"
-                                        error={this.state.passwordMessage}
-                                    ></Form.Field>
-                                    <Form.Field
-                                        label="Confirm password"
-                                        control={Input}
-                                        placeholder="confirm your password"
-                                        onChange={this.passwordConfirmationChange.bind(this)}
-                                        value={this.state.passwordConfirmation}
-                                        type="password"
-                                        error={this.state.passwordConfirmationMessage}
-                                    ></Form.Field>
-                                    <Button
-                                        fluid
-                                        type="submit"
-                                        onClick={this.handleSubmit.bind(this)}
-                                        loading={this.props.loading}
-                                    >
-                                        Create account
-                                     </Button>
-                                     {this.props.error !== '' ? <Message negative>{this.props.error}</Message>: ''}
-        
-                                </Form>
-                                <Divider inverted />
-                <center><div >
-                  
-                  <a href="./Login">Already have an Account</a> 
-                </div></center>
-                            </Grid.Column>
-                        </Grid.Row>
-                    </Grid>
-                </Container>
+            <Form 
+                {...layout}
+                name="basic"
+                initialValues={{
+                    remember: true,
+                }}
+                onFinish={this.onFinish}
+                onFinishFailed={this.onFinishFailed}>
 
-            </div>
+                <Form.Item
+                    label="Name"
+                    name="name"
+                    rules={[
+                    {
+                        required: true,
+                        message: 'Please input your name!',
+                    },
+                    ]}>
+
+                    <Input />
+                </Form.Item>
+
+                <Form.Item
+                    label="Email"
+                    name="email"
+                    rules={[
+                    {
+                        required: true,
+                        message: 'Please input your email!',
+                    },
+                    ]}>
+
+                    <Input />
+                </Form.Item>
+
+                <Form.Item
+                    label="Password"
+                    name="password"
+                    rules={[
+                    {
+                        required: true,
+                        message: 'Please input your password!',
+                    },
+                    ]}>
+
+                    <Input.Password />
+                </Form.Item>
+
+                <Form.Item
+                    label="Repeated password"
+                    name="repeated_password"
+                    rules={[
+                    {
+                        required: true,
+                        message: 'Please repeat your password!',
+                    },
+                    ]}>
+
+                    <Input.Password />
+                </Form.Item>
+
+                <Form.Item {...tailLayout}>
+                    <Button type="primary" htmlType="submit">
+                        Register
+                    </Button>
+                </Form.Item>
+
+                <Form.Item {...tailLayout} rules={[ { required: false } ]}>
+                    <Link to='/login'>
+                        <h4>Login</h4>
+                    </Link>
+                </Form.Item>
+            </Form>
         )
     }
 }

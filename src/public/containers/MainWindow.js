@@ -1,17 +1,15 @@
 import React from 'react';
-import { Grid } from 'semantic-ui-react';
+import { Row, Col } from 'antd';
 
 class MainWindow extends React.Component {
 
     render() {        
         return (
-            <Grid>
-                <Grid.Row>
-                    <Grid.Column width={16} >
-                        {this.props.children}
-                    </Grid.Column>
-                </Grid.Row>           
-            </Grid>              
+            <Row>
+                <Col span={24}>
+                    {this.props.children}
+                </Col>
+            </Row>            
         );
     }
 }

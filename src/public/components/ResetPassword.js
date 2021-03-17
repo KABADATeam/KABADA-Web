@@ -1,5 +1,20 @@
 import React, {Component} from 'react';
-import { Grid, Button, Form, Input } from 'semantic-ui-react';
+import { Form, Input, Button } from 'antd';
+
+const layout = {
+    labelCol: {
+      span: 8,
+    },
+    wrapperCol: {
+      span: 16,
+    },
+  };
+  const tailLayout = {
+    wrapperCol: {
+      offset: 8,
+      span: 16,
+    },
+  };
 
 class ResetPassword extends Component {
     state = {
@@ -26,6 +41,7 @@ class ResetPassword extends Component {
             emailValue: event.target.value,
         })
     }
+
     sendPassword(){
 
         this.setState({
@@ -34,29 +50,49 @@ class ResetPassword extends Component {
             emailState: true
         }) 
     }
+
+    onFinish = (values) => {
+        console.log('Success:', values);
+        //this.props.login(values.username, values.password);
+      };
+    
+      onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+      };
+
     render() {
         console.log('vartotojui '+this.state.emailValue +' password: '+this.state.password )
         return (
-            <Grid centered columns={1}>
-                <Form>
-                    <Form.Field>
-                        <label>Forgot password</label>
-                        <label>You can reset your password here</label>
-                        <Input 
-                            focus
-                            placeholder='Email address'
-                            value={this.state.emailValue}
-                            onChange={this.validateEmail.bind(this)}    
-                        />
-                    </Form.Field>
-                    <Button 
-                            primary
-                            disabled= {this.state.emailState}
-                            onClick={this.sendPassword.bind(this)}
-                    >Send My Password
-                    </Button>
-                </Form>
-            </Grid>
+            <Form 
+                {...layout}
+                name="basic"
+                initialValues={{
+                    remember: true,
+                }}
+                onFinish={this.onFinish}
+                onFinishFailed={this.onFinishFailed} >
+
+			<Form.Item
+				label="email"
+				name="email"
+				rules={[
+				{
+					required: true,
+					message: 'Please input your email!',
+				},
+				]}>
+
+				<Input />
+			</Form.Item>
+
+			<Form.Item {...tailLayout}>
+				<Button type="primary" htmlType="submit">
+					Reset password
+				</Button>
+      		</Form.Item>
+
+		</Form>
+            
         )
     }
 }
