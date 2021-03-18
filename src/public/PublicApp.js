@@ -9,19 +9,21 @@ import MainWindow from './containers/MainWindow';
 import HomeWindow from './containers/HomeWindow';
 import ForgotPasswordWindow from './containers/ForgotPasswordWindow';
 import RegisterWindow from './containers/RegisterWindow';
+import LoginWindow from './containers/LoginWindow';
+import { login } from '../appStore/actions/authenticationActions';
 
 class PublicApp extends React.Component {
     render() {
         return (
             <Router>
                 <Switch>
-                    <Route exact path="/login" render={(props) => <MainWindow {...props}> <Login {...props} /> </MainWindow>} />
+                    <Route exact path="/login" render={(props) => <LoginWindow />} /> 
                     <Route exact path="/" render={(props) => <HomeWindow /> } />
                     <Route exact path="/reset_password" render={(props) => <ForgotPasswordWindow /> } />
                     <Route exact path="/register" render={(props) => <RegisterWindow/> }/>
                 </Switch>
             </Router>
-           
+
         )
     }
 }
