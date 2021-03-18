@@ -8,6 +8,7 @@ import Register from './components/Register';
 import MainWindow from './containers/MainWindow';
 import HomeWindow from './containers/HomeWindow';
 import ForgotPasswordWindow from './containers/ForgotPasswordWindow';
+import RegisterWindow from './containers/RegisterWindow';
 
 class PublicApp extends React.Component {
     render() {
@@ -17,7 +18,7 @@ class PublicApp extends React.Component {
                     <Route exact path="/login" render={(props) => <MainWindow {...props}> <Login {...props} /> </MainWindow>} />
                     <Route exact path="/" render={(props) => <HomeWindow /> } />
                     <Route exact path="/reset_password" render={(props) => <ForgotPasswordWindow /> } />
-                    <Route exact path="/register" render={(props) => <MainWindow {...props}> <Register {...props} /> </MainWindow>} />
+                    <Route exact path="/register" render={(props) => <RegisterWindow/> }/>
                 </Switch>
             </Router>
            
