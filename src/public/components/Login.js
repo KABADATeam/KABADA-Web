@@ -28,11 +28,18 @@ const tailLayout = {
 	},
 };
 
-const cardStyle = { 'border-radius': '8px', 'box-shadow': '0px 0px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.08), 0px 0px 1px rgba(0, 0, 0, 0.04)', 'font-weight': 'normal', 'font-size': '16px', 'padding-left': '16px', 'padding-top': '16px', 'padding-right': '16px', 'padding-bottom': '16px' };
-const buttonStyle = { 'border-radius': '4px', 'font-weight': '600', 'font-size': '14px' };
-const bottomDisclaimerStyle = { textAlign: "center", 'font-size': '12px' };
-const inputStyle = { 'border-radius': '4px' };
+const cardStyle = {
+	'background': '#FFFFFF', 'border': '0px', 'border-radius': '8px', 'box-shadow': '0px 0px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.08), 0px 0px 1px rgba(0, 0, 0, 0.04)',
+	'font-weight': 'normal', 'font-size': '16px', 'padding': '40px'
+};
+const buttonStyle = { 'border-radius': '4px', 'font-weight': '600', 'font-size': '14px', };
+const mainTextColor = { 'color': '#262626' };
+const inputStyle = { 'border-radius': '4px', 'width': '100%', 'line-height': '22px', 'margin-bottom': '0px' };
 const linkStyle = { 'font-weight': '600' };
+const bottomDisclaimerStyle = {
+	'text-align': 'center', 'font-size': '12px', 'margin-bottom': '0px', 'width': '100%', 'justifyContent': 'center',
+	'font-style': 'normal', 'font-weight': 'normal', 'line-height': '20px', 'color': '#8C8C8C'
+};
 
 const KabadaIconSVG = () => (
 	<svg width="164" height="38" viewBox="0 0 164 38" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -143,11 +150,11 @@ class Login extends React.Component {
 
 
 		return (
-			<Card style={cardStyle}>
+			<Card style={{ ...cardStyle, ...mainTextColor }} bodyStyle={{ padding: "0" }}>
 				<Row>
-					<Space direction="vertical" size="large">
+					<Space direction="vertical" size={40}>
 						<KabadaIcon />
-						<Title level={3}>Sign in</Title>
+						<Title level={3} style={{ ...mainTextColor, 'margin-bottom': '4px' }}>Sign in</Title>
 					</Space>
 				</Row>
 				<Row>
@@ -158,90 +165,83 @@ class Login extends React.Component {
 					</Link>
 					</Space>
 				</Row>
-				<Space>
-					<Form
-						{...layout}
-						name="basic"
-						initialValues={{
-							remember: false,
-						}}
-						onFinish={this.onFinish}
-						onFinishFailed={this.onFinishFailed} >
+				<Form
+					layout="vertical"
+					name="basic"
+					initialValues={{
+						remember: false,
+					}}
+					onFinish={this.onFinish}
+					onFinishFailed={this.onFinishFailed} >
 
-						<Form.Item {...tailLayout} block>
-							<FacebookLogin
-								appId="243803703658185"
-								autoLoad={false}
-								fields="name, email, picture"
-								scope="public_profile"
-								callback={this.responseFacebook.bind(this)}
-								textButton=" Continue with Facebook"
-								cssClass="custom-facebook-button"
-								icon={<FacebookFilled />}
-								onClick={this.responseFacebook.bind(this)} />
-						</Form.Item>
+					<Form.Item {...tailLayout} block style={{ 'margin-bottom': '16px' }}>
+						<FacebookLogin
+							appId="243803703658185"
+							autoLoad={false}
+							fields="name, email, picture"
+							scope="public_profile"
+							callback={this.responseFacebook.bind(this)}
+							textButton=" Continue with Facebook"
+							cssClass="custom-facebook-button"
+							icon={<FacebookFilled />}
+							onClick={this.responseFacebook.bind(this)} />
+					</Form.Item>
 
-						<Form.Item {...tailLayout}>
-							<GoogleLogin
-								clientId="959683655410-qvc3ilj5rppsntbv68lnkcp95i3t8d29.apps.googleusercontent.com"
-								render={(renderProps) => (
-									<Button
-										size="large"
-										style={buttonStyle}
-										onClick={renderProps.onClick}
-										icon={<GoogleCircleFilled />} block
-									>
-										Continue in with Google
-									</Button>
-								)}
-								cookiePolicy={"single_host_origin"}
-								scope="profile"
-								autoLoad={false}
-								onSuccess={this.responseGoogle.bind(this)}
-								onFailure={this.responseGoogle.bind(this)} />
-						</Form.Item>
-						<Divider>OR</Divider>
-
-						<Form.Item
-							label="Email address"
-							name="username"
-							rules={[
-								{
-									message: 'Please input your username!',
-								},
-							]}>
-
-							<Input size="large" style={inputStyle} />
-						</Form.Item>
-
-						<Form.Item
-							label={<Space align="end" direction="horizontal" size={230}><label>Password</label>
-								<Link style={linkStyle} to='/reset'>
-									Forgot password?
-								</Link>
-							</Space>}
-							name="password"
-							rules={[
-								{
-									message: 'Please input your password!',
-								},
-							]}>
-							<Input.Password size="large" style={inputStyle} />
-						</Form.Item>
-
-						<Form.Item {...tailLayout} style={{ 'margin-bottom': '8px' }}>
-							<Button type="primary" size="large" style={buttonStyle} htmlType="submit" block>
-								Sign In
+					<Form.Item {...tailLayout}>
+						<GoogleLogin
+							clientId="959683655410-qvc3ilj5rppsntbv68lnkcp95i3t8d29.apps.googleusercontent.com"
+							render={(renderProps) => (
+								<Button
+									size="large"
+									style={{ ...buttonStyle, ...mainTextColor }}
+									onClick={renderProps.onClick}
+									icon={<GoogleCircleFilled />} block
+								>
+									Continue in with Google
 								</Button>
-						</Form.Item>
+							)}
+							cookiePolicy={"single_host_origin"}
+							scope="profile"
+							autoLoad={false}
+							onSuccess={this.responseGoogle.bind(this)}
+							onFailure={this.responseGoogle.bind(this)} />
+					</Form.Item>
+					<Divider style={mainTextColor}>OR</Divider>
 
-						<Form.Item style={bottomDisclaimerStyle}>
-							<Text type="secondary">By continuing, you agree with Terms of service and Privacy Policy.</Text>
+					<Form.Item label={<label style={mainTextColor}>Email address</label>} style={inputStyle}>
+						<Form.Item
+							name="username"
+							nostyle
+							rules={[{ required: true, message: 'Please enter your Email address!' }]}
+						>
+							<Input size="large" />
 						</Form.Item>
+					</Form.Item>
 
-					</Form >
+					<Form.Item label={<Space align="end" direction="horizontal" size={230}><label style={mainTextColor}>Password</label>
+						<Link style={linkStyle} to='/reset'>
+							Forgot password?
+								</Link>
+					</Space>} style={inputStyle}>
+						<Form.Item
+							name="password"
+							nostyle
+							rules={[{ required: true, message: 'Please enter your password!' }]}
+						>
+							<Input.Password size="large" />
+						</Form.Item>
+					</Form.Item>
+
+					<Form.Item {...tailLayout} style={{ 'margin-bottom': '8px' }}>
+						<Button type="primary" size="large" style={buttonStyle} htmlType="submit" block>
+							Sign In
+								</Button>
+					</Form.Item>
+				</Form >
+				<Space direction="horizontal" style={bottomDisclaimerStyle}>
+					<Text style={bottomDisclaimerStyle}>By continuing, you agree with Terms of service and Privacy Policy.</Text>
 				</Space>
-			</Card>
+			</Card >
 
 		);
 	}
