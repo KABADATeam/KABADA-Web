@@ -25,6 +25,10 @@ const tailLayout = {
 const cardStyle = {
     backgroundColor: "#FFFFFF",
     borderRadius: "8px",
+    padding: 40, 
+    fontSize: 16, 
+    fontStyle: "normal",
+    fontWeight: "normal" 
 }
 
 const KabadaIconSVG = () => (
@@ -146,14 +150,14 @@ class Register extends React.Component {
 
     render() {
         return (
-            <Card style={cardStyle}>
+            <Card style={cardStyle} bodyStyle={{ padding: "0" }}>
                 <KabadaIconSVG/>
                 <Row style={{marginTop: 32}}>
-                    <Text style={{fontWeight: 600}}>Sign Up</Text>
+                    <Text strong style={{'font-weight': 600, 'font-size': 24, 'color': '#262626'}}>Sign Up</Text>
                 </Row>
                 <Row>
                     <Space align="start">
-                        <Text>Already have an account?</Text>
+                        <Text style={{'color': '#262626'}}>Already have an account?</Text>
                         <Link to='/login'>
                             Login
                         </Link>
@@ -165,7 +169,7 @@ class Register extends React.Component {
                 <Button size="large" block icon={<GoogleCircleFilled />} style={{ background: "#FFFFFF", alignItems: "center", borderRadius: "4px", marginTop: 16 }}>
                     Continue in with Google
                 </Button>
-                <Divider plain>OR</Divider>
+                <Divider plain><Text strong style={{'font-size': 14, 'color': '#262626'}}>OR</Text></Divider>
                 <Form
                     layout="vertical"
                     name="basic"
