@@ -10,18 +10,20 @@ import MainWindow from './containers/MainWindow';
 import HomeWindow from './containers/HomeWindow';
 import AuthenticationWindow from './containers/AuthenticationWindow';
 import SentPassword from './components/SentPassword';
+import RegisterWindow from './containers/RegisterWindow';
+import LoginWindow from './containers/LoginWindow';
 
 class PublicApp extends React.Component {
     render() {
         return (
             <Router>
                 <Switch>
-                    <Route exact path="/login" render={(props) => <MainWindow {...props}> <Login {...props} /> </MainWindow>} />
+                    <Route exact path="/login" render={(props) => <LoginWindow />} /> 
                     <Route exact path="/" render={(props) => <HomeWindow /> } />
                     <Route exact path="/forgot-password" render={(props) => <AuthenticationWindow> <ResetPassword /> </AuthenticationWindow> } />
                     <Route exact path="/password-sent" render={(props) => <AuthenticationWindow> <SentPassword /> </AuthenticationWindow> } />
                     <Route exact path="/set-password" render={(props) => <AuthenticationWindow> <SetPassword /> </AuthenticationWindow> } />
-                    <Route exact path="/register" render={(props) => <MainWindow {...props}> <Register {...props} /> </MainWindow>} />
+                    <Route exact path="/register" render={(props) => <RegisterWindow/> }/>
                 </Switch>
             </Router>
            

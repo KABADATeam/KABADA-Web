@@ -1,0 +1,14 @@
+.custom-facebook-button{
+    border: 1px solid transparent;
+    align-items: center;
+    padding: 9px 16px;
+    background-color: #4267B2;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 22px;
+    color: #FFFFFF;
+    border-radius: 4px;
+}
+
+
