@@ -8,7 +8,8 @@ const cardStyle = {
 	'fontWeight': 'normal', 'fontSize': '16px', 'padding': '40px'
 };
 
-const mainTextColor = { 'color': '#262626' };
+const mainTextColor = { color: '#262626', fontWeight: '600' };
+const textColor = { color: '#262626', fontWeight: '400' };
 
 const linkStyle = { 'fontWeight': '600', 'fontSize': '14px' };
 
@@ -17,7 +18,7 @@ const buttonStyle = { 'borderRadius': '4px', 'fontWeight': '600', 'fontSize': '1
 
 const { Title, Text } = Typography;
 
-class ResetPassword extends Component {
+class SentPassword extends Component {
 
     state = {
         email: '',
@@ -76,50 +77,21 @@ class ResetPassword extends Component {
 
     render() {
         return (
+
+
             <Card style={{ ...cardStyle, ...mainTextColor }} bodyStyle={{ padding: "0" }}>
                 <Row>
 					<Space direction="vertical" size={40}>
 						<KabadaIcon />
-						<Title level={3} style={{ ...mainTextColor, marginBottom: '0px' }}>Reset your password</Title>
+						<Title level={3} style={{ ...mainTextColor, marginBottom: '0px' }}>Thanks, check your email for instructions to reset your password</Title>
 					</Space>
 				</Row>
 				<Row>
 					<Space style={{ 'marginBottom': '32px', paddingTop: '16px' }}>
-                        Enter the email address associated with your account and we'll send you a link to reset your password.
+                   <Text style={{ ...textColor, marginBottom: '0px' }}> Didn't get the email? Check your spam folder or <a href='/password-sent'>resend</a> </Text>
 					</Space>
 				</Row>
-                <Form 
-                layout="vertical"
-                name="basic"
-                onFinish={this.onFinish} >
 
-			<Form.Item
-				label="Email address"
-				name="email"
-                validateStatus={this.state.status}
-				help={this.state.status === 'error' ? this.state.errorMessage : null }
-				>
-
-				<Input onChange={this.onChange}/>
-			</Form.Item>
-
-			<Form.Item >
-				<Button type="primary" htmlType="submit" size='large' style={buttonStyle} block>
-					Continue
-				</Button>
-      		</Form.Item>
-
-		</Form>
-        <div style={spaceAlignContainer}>
-            <div >
-            <Space direction="horizontal" align='center' size='large' >
-            <Link style={linkStyle} to='/login'>
-							Return to sign in
-								</Link>
-				</Space>
-            </div>
-        </div>
-        
             </Card>
             
             
@@ -127,4 +99,4 @@ class ResetPassword extends Component {
     }
 }
 
-export default ResetPassword;
+export default SentPassword;

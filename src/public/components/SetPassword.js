@@ -11,13 +11,14 @@ const cardStyle = {
 const mainTextColor = { 'color': '#262626' };
 
 const linkStyle = { 'fontWeight': '600', 'fontSize': '14px' };
+const inputStyle = { 'border-radius': '4px', 'width': '100%', 'line-height': '22px', 'margin-bottom': '0px' };
 
 const spaceAlignContainer = { 'display': 'flex', 'flexWrap': 'wrap', 'justifyContent': 'center' };
 const buttonStyle = { 'borderRadius': '4px', 'fontWeight': '600', 'fontSize': '14px', };
 
 const { Title, Text } = Typography;
 
-class ResetPassword extends Component {
+class SetPassword extends Component {
 
     state = {
         email: '',
@@ -80,28 +81,34 @@ class ResetPassword extends Component {
                 <Row>
 					<Space direction="vertical" size={40}>
 						<KabadaIcon />
-						<Title level={3} style={{ ...mainTextColor, marginBottom: '0px' }}>Reset your password</Title>
+						<Title level={3} style={{ ...mainTextColor, marginBottom: '0px' }}>Choose a new password</Title>
 					</Space>
 				</Row>
-				<Row>
-					<Space style={{ 'marginBottom': '32px', paddingTop: '16px' }}>
-                        Enter the email address associated with your account and we'll send you a link to reset your password.
-					</Space>
-				</Row>
+
                 <Form 
                 layout="vertical"
                 name="basic"
-                onFinish={this.onFinish} >
+                onFinish={this.onFinish} style={{ paddingTop: '32px'}} >
 
-			<Form.Item
-				label="Email address"
-				name="email"
-                validateStatus={this.state.status}
-				help={this.state.status === 'error' ? this.state.errorMessage : null }
-				>
+                <Form.Item label={<label style={mainTextColor}>Password</label>} style={inputStyle}>
+						<Form.Item
+							name="password"
+							nostyle
+							rules={[{ required: true, message: 'Please enter your password!' }]}
+						>
+							<Input.Password size="large" />
+						</Form.Item>
+					</Form.Item>
 
-				<Input onChange={this.onChange}/>
-			</Form.Item>
+                    <Form.Item label={<label style={mainTextColor}>Confirm password</label>} style={inputStyle}>
+						<Form.Item
+							name="password"
+							nostyle
+							rules={[{ required: true, message: 'Please confirm your password!' }]}
+						>
+							<Input.Password size="large" />
+						</Form.Item>
+					</Form.Item>
 
 			<Form.Item >
 				<Button type="primary" htmlType="submit" size='large' style={buttonStyle} block>
@@ -127,4 +134,4 @@ class ResetPassword extends Component {
     }
 }
 
-export default ResetPassword;
+export default SetPassword;
