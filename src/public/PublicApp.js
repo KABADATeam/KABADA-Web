@@ -1,16 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import SiteHeader from './containers/SiteHeader';
-import Home from './components/Home';
 import ResetPassword from './components/ResetPassword';
 import SetPassword from './components/SetPassword';
 import Register from './components/Register';
-import MainWindow from './containers/MainWindow';
 import HomeWindow from './containers/HomeWindow';
 import AuthenticationWindow from './containers/AuthenticationWindow';
 import SentPassword from './components/SentPassword';
-import RegisterWindow from './containers/RegisterWindow';
-import LoginWindow from './containers/LoginWindow';
 import Login from './components/Login';
 
 class PublicApp extends React.Component {
@@ -23,7 +18,7 @@ class PublicApp extends React.Component {
                     <Route exact path="/forgot-password" render={(props) => <AuthenticationWindow> <ResetPassword /> </AuthenticationWindow> } />
                     <Route exact path="/password-sent" render={(props) => <AuthenticationWindow> <SentPassword /> </AuthenticationWindow> } />
                     <Route exact path="/set-password" render={(props) => <AuthenticationWindow> <SetPassword /> </AuthenticationWindow> } />
-                    <Route exact path="/register" render={(props) => <RegisterWindow/> }/>
+                    <Route exact path="/register" render={(props) => <AuthenticationWindow> <Register /> </AuthenticationWindow> }/>
                 </Switch>
             </Router>
            

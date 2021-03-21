@@ -32,13 +32,7 @@ class Login extends React.Component {
 	};
 
 	responseFacebook = (response) => {
-		this.setState({ data: response });
-		this.setState({ picture: response.picture.data.url });
-		if (response.accessToken) {
-			this.setState({ login: true });
-		} else {
-			this.setState({ login: false });
-		}
+		
 	};
 
 	onFinish = (values) => {
@@ -120,7 +114,7 @@ class Login extends React.Component {
 							</Col>
 
 							<Col span={12} style={{ textAlign: 'right' }}>
-								<Link style={linkStyle} to='/reset'>
+								<Link style={linkStyle} to='/forgot-password'>
 									Forgot password?
 								</Link>
 							</Col>
