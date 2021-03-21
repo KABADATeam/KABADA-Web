@@ -1,20 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Menu, Image } from 'antd';
+import { Row, Col, Menu } from 'antd';
 
 class SiteHeader extends React.Component {
     render() {
         return (
             <>
-                <Row>
+                <Row align='middle' style={{ backgroundColor: 'lightgray', height: '70px' }}>
                     <Col span={4}>
-                        <Image src='kabada_logo.png' width={120} />
+                        <img src='kabada_logo.png' style={{ height: '60px'}} alt='Kabada logo :)' />
                     </Col>
                     <Col span={20}>
-                        <Menu mode="horizontal">
+                        <Menu mode="horizontal" style={{ height: '65px', float: 'right', backgroundColor: 'inherit', borderBottom: 'none' }}>
                             <Menu.Item key='about'>
                                 <Link to='/about'>
-                                    <h4>About</h4>
+                                    <h4 style={{ marginTop: '10px' }}>About</h4>
                                 </Link>
                             </Menu.Item>
                             <Menu.Item key='privacy'>

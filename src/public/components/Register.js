@@ -9,15 +9,13 @@ import { register } from '../../appStore/actions/authenticationActions';
 import { Link } from 'react-router-dom';
 import KabadaIcon from './KabadaIcon';
 
-import { cardStyle, buttonStyle, textColor, inputStyle, linkStyle, bottomDisclaimerStyle } from '../../styles/customStyles';
+import { cardStyle, buttonStyle, textColor, inputStyle, bottomDisclaimerStyle } from '../../styles/customStyles';
 import { tailLayout} from '../../styles/customLayouts';
-
-const emailRegex = RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/);
 
 const { Text, Title } = Typography
 
 class Register extends React.Component {
-    
+
     responseFacebook = (response) => {
         console.log(response);
 	};

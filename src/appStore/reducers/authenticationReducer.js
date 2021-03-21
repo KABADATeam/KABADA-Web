@@ -1,4 +1,4 @@
-export default (state = initState(), action) => {
+const authenticationReducer = (state = initState(), action) => {
     switch (action.type) {
         case 'LOGIN_SUCCESS':
             const user = { ...state, 
@@ -43,3 +43,5 @@ function wipeStorage() {
     localStorage.removeItem('name');
     
 }
+
+export default authenticationReducer;

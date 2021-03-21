@@ -1,4 +1,4 @@
-export default (state = false, action) => {
+const loadingReducer = (state = false, action) => {
     switch(action.type) {
         case 'LOADING':
             return action.payload;  
@@ -6,3 +6,5 @@ export default (state = false, action) => {
             return state;
     }
 }
+
+export default loadingReducer;

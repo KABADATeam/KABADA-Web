@@ -1,4 +1,4 @@
-export default (state = initState(), action) => {
+const languageReducer = (state = initState(), action) => {
     switch (action.type) {
         case 'LANGUAGE_CHANGE_SUCCESS':
             localStorage.setItem("language", action.payload);
@@ -15,3 +15,5 @@ function initState() {
         return "en";
     }
 }
+
+export default languageReducer;

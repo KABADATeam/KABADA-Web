@@ -7,6 +7,8 @@ export const eurostatDataReducer = (state = [], action) => {
             const Data = [];
             const statusObj = JSON.parse(JSON.stringify(action.payload)).status;
             var legendData = '';
+            var i = 0;
+
             if (statusObj && Object.keys(statusObj).length === 0) {
                 for (const property in legendDataObj){
                     legendData = legendDataObj[property]
@@ -15,7 +17,8 @@ export const eurostatDataReducer = (state = [], action) => {
                 for (const property in valuesObj){
                     Data.push({ name: '', [legendData]: valuesObj[property]})
                 }
-                var i = 0
+                
+                i = 0;
                 for (const property in yearObj){
                     Data[i].name = yearObj[property]
                     i++
@@ -35,7 +38,8 @@ export const eurostatDataReducer = (state = [], action) => {
                 for (const property in fixedValues){
                     Data.push({ name: '', [legendData]: fixedValues[property]})
                 }
-                var i = 0
+                
+                i = 0;
                 for (const property in yearObj){
                     Data[i].name = yearObj[property]
                     i++

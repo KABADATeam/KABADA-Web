@@ -62,7 +62,7 @@ class Login extends React.Component {
 					initialValues={{ remember: false }}
 					onFinish={this.onFinish} >
 
-					<Form.Item {...tailLayout} block style={{ marginBottom: '16px' }}>
+					<Form.Item {...tailLayout} style={{ marginBottom: '16px' }}>
 						<FacebookLogin
 							appId="243803703658185"
 							autoLoad={false}
@@ -75,7 +75,7 @@ class Login extends React.Component {
 							onClick={this.responseFacebook.bind(this)} />
 					</Form.Item>
 
-					<Form.Item {...tailLayout}>
+					<Form.Item {...tailLayout} >
 						<GoogleLogin
 							clientId="959683655410-qvc3ilj5rppsntbv68lnkcp95i3t8d29.apps.googleusercontent.com"
 							render={(renderProps) => (
@@ -83,9 +83,9 @@ class Login extends React.Component {
 									size="large"
 									style={buttonStyle}
 									onClick={renderProps.onClick}
-									icon={<GoogleCircleFilled />} block
-								>
-									Continue in with Google
+									icon={<GoogleCircleFilled />} block	>
+
+									Continue with Google
 								</Button>
 							)}
 							cookiePolicy={"single_host_origin"}
@@ -101,13 +101,13 @@ class Login extends React.Component {
 						<Form.Item
 							name="username"
 							nostyle
-							rules={[{ required: true, message: 'Please enter your email address' }]}
-						>
+							rules={[{ required: true, message: 'Please enter your email address' }]} >
+
 							<Input size="large" />
 						</Form.Item>
 					</Form.Item>
 
-					<Form.Item>
+					<Form.Item style={{ marginBottom: '0px'}}>
 						<Row style={{ paddingBottom: '8px' }}>
 							<Col span={12}>
 								<label style={textColor}>Password</label>
@@ -123,14 +123,14 @@ class Login extends React.Component {
 						<Form.Item
 							name="password"
 							nostyle
-							rules={[{ required: true, message: 'Please enter your password' }]}
-						>
+							rules={[{ required: true, message: 'Please enter your password' }]}	>
+
 							<Input.Password size="large" />
 						</Form.Item>
       				</Form.Item>
 
 					<Form.Item {...tailLayout} style={{ marginBottom: '8px' }}>
-						<Button type="primary" size="large" style={buttonStyle} htmlType="submit" block>
+						<Button type="primary" size="large" style={buttonStyle} htmlType="submit" block >
 							Sign In
 						</Button>
 					</Form.Item>
