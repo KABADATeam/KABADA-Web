@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Button, Card, Divider, Typography, Space, Row, Col } from 'antd';
+import { Form, Input, Button, Card, Divider, Typography, Space, Row, Col, Alert } from 'antd';
 import { FacebookFilled, GoogleCircleFilled } from '@ant-design/icons';
 import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login";
@@ -11,7 +11,7 @@ import '../../css/customButtons.css';
 import KabadaIcon from './KabadaIcon';
 
 import { cardStyle, buttonStyle, textColor, inputStyle, linkStyle, bottomDisclaimerStyle } from '../../styles/customStyles';
-import { tailLayout} from '../../styles/customLayouts';
+import { tailLayout } from '../../styles/customLayouts';
 
 const { Title, Text } = Typography;
 
@@ -32,12 +32,12 @@ class Login extends React.Component {
 	};
 
 	responseFacebook = (response) => {
-		
+
 	};
 
 	onFinish = (values) => {
 		console.log('Success:', values);
-		//this.props.login(values.username, values.password);
+		this.props.login(values.username, values.password);
 	};
 
 	render() {
@@ -83,7 +83,7 @@ class Login extends React.Component {
 									size="large"
 									style={buttonStyle}
 									onClick={renderProps.onClick}
-									icon={<GoogleCircleFilled />} block	>
+									icon={<GoogleCircleFilled />} block="true"	>
 
 									Continue with Google
 								</Button>
@@ -100,14 +100,12 @@ class Login extends React.Component {
 					<Form.Item label={<label style={textColor}>Email address</label>} style={inputStyle}>
 						<Form.Item
 							name="username"
-							nostyle
-							rules={[{ required: true, message: 'Please enter your email address' }]} >
-
+							rules={[{ type: 'email', required: true, message: 'Please enter your email address' }]} >
 							<Input size="large" />
 						</Form.Item>
 					</Form.Item>
 
-					<Form.Item style={{ marginBottom: '0px'}}>
+					<Form.Item style={{ marginBottom: '0px' }}>
 						<Row style={{ paddingBottom: '8px' }}>
 							<Col span={12}>
 								<label style={textColor}>Password</label>
@@ -122,15 +120,24 @@ class Login extends React.Component {
 
 						<Form.Item
 							name="password"
-							nostyle
-							rules={[{ required: true, message: 'Please enter your password' }]}	>
-
+							rules={[{ required: true, message: 'Please enter your password' }]} 	>
 							<Input.Password size="large" />
 						</Form.Item>
-      				</Form.Item>
+
+					</Form.Item>
+
+					{
+						(this.props.message.type === "error" ?
+							(<Alert
+								style={{ marginBottom: '8px' }}
+								showIcon
+								message={this.props.message.message.message}
+								type="error"
+							/>) : null)
+					}
 
 					<Form.Item {...tailLayout} style={{ marginBottom: '8px' }}>
-						<Button type="primary" size="large" style={buttonStyle} htmlType="submit" block >
+						<Button type="primary" size="large" style={buttonStyle} htmlType="submit" block="true" >
 							Sign In
 						</Button>
 					</Form.Item>
@@ -149,7 +156,8 @@ class Login extends React.Component {
 const mapStateToProps = (state) => {
 	return {
 		loading: state.loading,
-		error: state.error
+		error: state.error,
+		message: state.message,
 	};
 }
 
