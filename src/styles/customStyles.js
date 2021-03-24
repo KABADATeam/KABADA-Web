@@ -43,3 +43,10 @@ export const bottomDisclaimerStyle = {
     lineHeight: '20px',
     color: '#8C8C8C'
 };
+export const footerStyle = {
+    position: "absolute",
+    bottom: "16px", 
+    width: "100%",  
+    fontSize: '12px', 
+    color: '#8C8C8C'
+}
