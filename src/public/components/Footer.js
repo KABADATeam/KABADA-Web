@@ -1,12 +1,25 @@
 import React, { Component } from 'react';
+import { footerStyle } from '../../styles/customStyles'
+import { Divider } from 'antd';
 
 class Footer extends Component {
     render() {
-        return (
-            <div style={{ position: "absolute", bottom: "16px", width: "100%", textAlign: "center", fontSize: '12px', color: '#8C8C8C' }}>
-                © KABADA {new Date().getFullYear()}
-            </div>
-        )
+        const {alignment, divider} = this.props;
+        if (divider === true) {
+            return (
+                <div style={{ ...footerStyle, textAlign: alignment }}>
+                    <Divider style={{marginBottom: 10.5 }}/>
+                    © KABADA {new Date().getFullYear()}
+                </div>
+            )
+        }
+        else if (divider === false) {
+            return (
+                <div style={{ ...footerStyle, textAlign: alignment }}>
+                    © KABADA {new Date().getFullYear()}
+                </div>
+            )
+        }       
     }
 }
 

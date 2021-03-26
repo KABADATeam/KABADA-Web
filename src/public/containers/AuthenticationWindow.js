@@ -11,7 +11,7 @@ class AuthenticationWindow extends Component {
                         {this.props.children}
                     </div>
                 </div>     
-                <Footer />
+                <Footer alignment='center' divider={false} />
             </>
         );
     }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
-import { Form, Input, Button, Typography, Card, Space, Divider, Row } from 'antd';
+import { Form, Input, Button, Typography, Card, Space, Divider, Row, Alert } from 'antd';
 import { FacebookFilled, GoogleCircleFilled } from '@ant-design/icons';
 import FacebookLogin from "react-facebook-login";
 import GoogleLogin from "react-google-login";
@@ -23,10 +23,10 @@ class Register extends React.Component {
     responseGoogle = (response) => {
 		console.log(response);
 	};
-
+	
     onFinish = (values) => {
         console.log('Success:', values);
-        this.props.register(values.name, values.email, values.password, () => {
+        this.props.register("Test", values.email, values.password, () => {
             this.props.history.push("/login");
         });
     };
@@ -36,6 +36,13 @@ class Register extends React.Component {
     };
 
     render() {
+		/*const validatePasswordLength = (rule, values, callback) => {
+			if (values.password.length <= 6) {
+				callback("Wrong");
+			} else {
+				callback();
+			}
+		}*/
         return (
             <Card style={cardStyle} bodyStyle={{ padding: "0" }}>
                 <Row>
@@ -58,7 +65,7 @@ class Register extends React.Component {
                     onFinish={this.onFinish}
                     onFinishFailed={this.onFinishFailed} >
 
-                    <Form.Item {...tailLayout} block style={{ marginBottom: '16px' }}>
+                    <Form.Item {...tailLayout} block="true" style={{ marginBottom: '16px' }}>
 						<FacebookLogin
 							appId="243803703658185"
 							autoLoad={false}
@@ -79,7 +86,8 @@ class Register extends React.Component {
 									size="large"
 									style={buttonStyle}
 									onClick={renderProps.onClick}
-									icon={<GoogleCircleFilled />} block
+									icon={<GoogleCircleFilled />} 
+									block="true"
 								>
 									Continue in with Google
 								</Button>
@@ -96,9 +104,7 @@ class Register extends React.Component {
                     <Form.Item label={<label style={textColor}>Email address</label>} style={inputStyle}>
 						<Form.Item
 							name="email"
-							nostyle
 							rules={[{ required: true, message: 'Please enter your email address' }]} >
-						
 							<Input size="large" />
 						</Form.Item>
 					</Form.Item>
@@ -106,9 +112,15 @@ class Register extends React.Component {
                     <Form.Item label={<label style={textColor}>Password</label>} style={inputStyle}>
                         <Form.Item
 							name="password"
-							nostyle
-							rules={[{ required: true, message: 'Please enter your password' }]} >
-						
+							hasFeedback="true"
+							rules={[
+								{
+									required: true, 
+									message: 'Please enter your password',
+								},
+								{ min: 5, message:  'Password must contain at least 5 characters'}
+							]} 
+						>
 							<Input.Password size="large" />
 						</Form.Item>
                     </Form.Item>
@@ -116,15 +128,38 @@ class Register extends React.Component {
                     <Form.Item label={<label style={textColor}>Confirm password</label>} style={inputStyle}>
                         <Form.Item
 							name="confirmedPassword"
-							nostyle
-							rules={[{ required: true, message: 'Please confirm your password' }]} >
-						
-							<Input.Password size="large" />
+							hasFeedback="true"
+							dependencies={['password']}
+							rules={[
+								{ 
+									required: true, 
+									message: 'Please confirm your password', 
+								},
+								({ getFieldValue }) => ({
+									validator(_, value) {
+									if (!value || getFieldValue('password') === value) {
+										return Promise.resolve();
+									}
+									return Promise.reject(new Error('Password do not match!'));
+									},
+								}),
+							]}
+						>
+						<Input.Password size="large" />
 						</Form.Item>
                     </Form.Item>
-
+					{
+						(this.props.message.type === "error" ? (
+							<Alert
+								style={{ marginBottom: '8px' }}
+								showIcon
+								message={this.props.message.message.message}
+								type="error"
+							/>
+							) : null)
+					}
                     <Form.Item {...tailLayout} style={{ marginBottom: '8px' }}>
-						<Button type="primary" size="large" style={buttonStyle} htmlType="submit" block>
+						<Button type="primary" size="large" style={buttonStyle} htmlType="submit" block="true">
 							Create Account
 						</Button>
 					</Form.Item>
@@ -142,7 +177,8 @@ class Register extends React.Component {
 const mapStateToProps = (state) => {
     return {
         loading: state.loading,
-        error: state.error
+		error: state.error,
+		message: state.message,
     };
 }
 
