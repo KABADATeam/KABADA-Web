@@ -1,4 +1,4 @@
-export default (state = { type: "info", message: "" }, action) => {
+const messageReducer = (state = { type: "info", message: "" }, action) => {
     switch(action.type) {
         case 'ERROR':
             return { ...state, type: "error", message: action.payload };
@@ -8,3 +8,5 @@ export default (state = { type: "info", message: "" }, action) => {
             return state;
     }
 }
+
+export default messageReducer;

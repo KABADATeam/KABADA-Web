@@ -1,7 +1,6 @@
 import React from 'react';
 import { Grid, Loader } from 'semantic-ui-react';
 import Chart from '../components/Chart';
-import ChartLoader from '../components/Loader'
 import { getEurostatData } from '../../appStore/actions/eurostat/eurostatAction';
 import { getEurostatAllData } from '../../appStore/actions/eurostat/eurostatAllAction'
 import { connect } from 'react-redux';
