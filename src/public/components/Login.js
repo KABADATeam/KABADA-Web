@@ -64,7 +64,7 @@ class Login extends React.Component {
 
 					<Form.Item {...tailLayout} style={{ marginBottom: '16px' }}>
 						<FacebookLogin
-							appId="243803703658185"
+							appId={process.env.REACT_APP_FACEBOOK_APPID}
 							autoLoad={false}
 							fields="name, email, picture"
 							scope="public_profile"
@@ -77,7 +77,7 @@ class Login extends React.Component {
 
 					<Form.Item {...tailLayout} >
 						<GoogleLogin
-							clientId="959683655410-qvc3ilj5rppsntbv68lnkcp95i3t8d29.apps.googleusercontent.com"
+							clientId={process.env.REACT_APP_GOOGLE_CLIENTID}
 							render={(renderProps) => (
 								<Button
 									size="large"
