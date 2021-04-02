@@ -1,21 +1,19 @@
 import React from "react";
-import { Form, Input, Button, Card, Typography, Space, Table, DatePicker, Select, Row, Col, PageHeader } from 'antd';
-import { DownOutlined, SearchOutlined, CaretDownOutlined } from '@ant-design/icons';
+import { Input, Card, Typography, Space, Table, DatePicker, Select, Row, Col, Avatar } from 'antd';
+import { SearchOutlined, CaretDownOutlined, CaretDownFilled, UserOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { getAllPublicPlans } from "../../appStore/actions/planActions";
-import { cardStyle, buttonStyle, textColor, inputStyle } from '../../styles/customStyles';
-import { tailLayout } from '../../styles/customLayouts';
+import { iconColor, pageHeaderStyle, filterStyle } from '../../styles/customStyles';
+import '../../css/publicPlanFilter.css';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-const pageHeaderStyle = {
-    'width': '1200px', 'height': '102px', 'padding': '40px 0px 24px', 'background': '#F5F5F5', 'fontWeight': '600',
-    'fontSize': '30px', 'lineHeight': '38px',
+const position = { 'position': 'fixed', 'left': '50%', 'transform': 'translate(-50%)', }
+const publicPlansCardStyle = {
+    display: 'flex', justifyContent: 'center', height: '423px',
+    backgroundColor: '#FFFFFF', boxShadow: '0px 0px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.08), 0px 0px 1px rgba(0, 0, 0, 0.04)', borderRadius: '8px',
 };
-const groupStyle = { 'display': 'flex', 'justify-content': 'center', };
-const tableStyle = { 'height': '423px', 'width': '1200px', };
-const inputGroupStyle = { 'height': '140px', 'width': '1200px' };
 
 class PublicBusinessPlans extends React.Component {
     constructor(props) {
@@ -42,6 +40,11 @@ class PublicBusinessPlans extends React.Component {
                 key: 'name',
                 sorter: (a, b) => a.name.localeCompare(b.name),
                 sortDirections: ['descend', 'ascend'],
+                render: (text, record) => (
+                    <Text style={{ fontWeight: '600' }}>
+                        {record.name}
+                    </Text>
+                ),
             },
             {
                 title: 'Industry',
@@ -55,8 +58,6 @@ class PublicBusinessPlans extends React.Component {
                 title: 'Country',
                 dataIndex: 'country',
                 key: 'country',
-                sorter: (a, b) => a.country.localeCompare(b.country),
-                sortDirections: ['descend', 'ascend'],
             },
             {
                 title: 'Date Created',
@@ -71,6 +72,14 @@ class PublicBusinessPlans extends React.Component {
                 key: 'owner',
                 sorter: (a, b) => a.owner.localeCompare(b.owner),
                 sortDirections: ['descend', 'ascend'],
+                render: (text, record) => (
+                    <Space size="small">
+                        <Avatar size={22} icon={<UserOutlined />} />
+                        <Text>
+                            {record.owner}
+                        </Text>
+                    </Space>
+                ),
             },
             {
                 title: '',
@@ -78,52 +87,53 @@ class PublicBusinessPlans extends React.Component {
                 render: () => (
                     <Space size="middle">
                         <a className="ant-dropdown-link">
-                            Actions <DownOutlined />
+                            Actions <CaretDownFilled />
                         </a>
                     </Space>
                 ),
             },
         ];
         return (
-            <div style={{ 'background-color': '#E8E8E8' }}>
-                <Card {...tailLayout} style={groupStyle} bodyStyle={{ padding: "0", }}>
-                    <PageHeader
-                        style={pageHeaderStyle}
-                        className="site-page-header"
-                        title="Public business plans"
-                    />
-                    <Input.Group style={inputGroupStyle} size="large">
-                        <Row gutter={[16, 10]}>
-                            <Col span={8}>
-                                <Input placeholder="Search by name..." prefix={<SearchOutlined />} style={{ ...inputStyle, 'text-align': 'left' }} size="large" />
-                            </Col>
-                            <Col span={8}>
-                                <Select style={{ 'width': '100%', borderRadius: '10px', }} placeholder="Choose Industry" suffixIcon={<CaretDownOutlined />} allowClear>
-                                    <Option value="Industry">Industry</Option>
-                                </Select>
-                            </Col>
-                            <Col span={8}>
-                                <Select style={{ 'width': '100%' }} placeholder="Sort by: Newest" suffixIcon={<CaretDownOutlined />} allowClear>
-                                    <Option value="Date">Date</Option>
-                                </Select>
-                            </Col>
-                            <Col span={8}>
-                                <DatePicker placeholder="Date Created" size="large" style={inputStyle} />
-                            </Col>
-                            <Col span={8}>
-                                <Select style={{ 'width': '100%' }} placeholder="Choose Country" suffixIcon={<CaretDownOutlined />} allowClear>
-                                    <Option value="Country">Country</Option>
-                                </Select>
-                            </Col>
-                            <Col span={8}>
-                                <Select style={{ 'width': '100%' }} placeholder="Choose Language" suffixIcon={<CaretDownOutlined />} allowClear>
-                                    <Option value="Language">Language</Option>
-                                </Select>
-                            </Col>
-                        </Row>
-                    </Input.Group>
-                    <Table style={tableStyle} columns={columns} pagination={{ showTotal: (total, range) => `${range[0]}-${range[1]} of ${total}`, position: ['bottomLeft'] }} dataSource={data} onChange={this.handleChange} />
-                </Card >
+            <div >
+                <div style={position} >
+
+                    <Title level={2} style={{ pageHeaderStyle, marginBottom: '24px', marginTop: '40px', textAlign: 'left', color: '#262626', fontWeight: 600 }}>Public business plans</Title>
+
+                    <Card style={publicPlansCardStyle} bodyStyle={{ paddingTop: '20px', paddingLeft: '0px', paddingRight: '0px', paddingBottom: '20px' }}>
+                        <Input.Group style={{ width: '1200px', marginBottom: '20px', paddingLeft: '20px', paddingRight: '20px', }} >
+                            <Row gutter={[16, 10]}>
+                                <Col span={8}>
+                                    <Input style={filterStyle} placeholder="Search by name..." prefix={<SearchOutlined style={iconColor} />} />
+                                </Col>
+                                <Col span={8}>
+                                    <Select dropdownClassName="filterSelect" placeholder="Choose Industry" suffixIcon={<CaretDownOutlined style={iconColor} />} allowClear>
+                                        <Option value="Industry">Industry</Option>
+                                    </Select>
+                                </Col>
+                                <Col span={8}>
+                                    <Select dropdownClassName="filterSelect" placeholder="Sort by: Newest" suffixIcon={<CaretDownOutlined style={iconColor} />} allowClear>
+                                        <Option value="newest">Sort by: Newest</Option>
+                                        <Option value="oldest">Sort by: Oldest</Option>
+                                    </Select>
+                                </Col>
+                                <Col span={8}>
+                                    <DatePicker style={filterStyle} placeholder="Date Created" />
+                                </Col>
+                                <Col span={8}>
+                                    <Select dropdownClassName="filterSelect" placeholder="Choose Country" suffixIcon={<CaretDownOutlined style={iconColor} />} allowClear>
+                                        <Option value="Country">Country</Option>
+                                    </Select>
+                                </Col>
+                                <Col span={8}>
+                                    <Select dropdownClassName="filterSelect" placeholder="Choose Language" suffixIcon={<CaretDownOutlined style={iconColor} />} allowClear>
+                                        <Option value="Language">Language</Option>
+                                    </Select>
+                                </Col>
+                            </Row>
+                        </Input.Group>
+                        <Table columns={columns} pagination={{ showTotal: (total, range) => <Text style={{ position: 'absolute', left: '50%', transform: 'translate(-50%)' }}>{range[0]}-{range[1]} of {total}</Text>, position: ['bottomLeft'] }} dataSource={data} onChange={this.handleChange} />
+                    </Card >
+                </div >
             </div >
         );
     }

@@ -1,0 +1,23 @@
+.filterSelect{
+    width: 100%;
+}
+
+.ant-select-selection-placeholder{
+    line-height: 35px!important;
+}
+
+.ant-select
+{  
+width: 100%;
+}
+.ant-select-selector{
+    height: 40px!important;
+    border-radius: 4px!important;
+    text-align: left;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+}
+.ant-dropdown-link{
+    font-weight: 600;
+}
