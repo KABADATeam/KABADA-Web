@@ -3,7 +3,7 @@ import languageReducer from './languageReducer';
 import authenticationReducer from './authenticationReducer';
 import loadingReducer from './loadingReducer';
 import messageReducer from './messageReducer';
-import { planReducer, planFetchReducer, selectedplanFetchReducer, updatePlanReducer } from './planReducer';
+import { planReducer, planFetchReducer, selectedplanFetchReducer, updatePlanReducer, allPublicPlansFetchReducer } from './planReducer';
 import { industriesReducer, activitiesReducer, industrySelectedReducer, activitySelectedReducer } from './naceReducer';
 import { countrySelectedReducer, countriesReducer } from './countryReducer';
 import { eurostatDataReducer } from '../reducers/eurostat/eurostatReducer';
@@ -26,4 +26,5 @@ export default combineReducers({
     savedBusinessPlans: planFetchReducer,
     selectedBusinessPlan: selectedplanFetchReducer,
     updatedPlan: updatePlanReducer,
+    publicPlans: allPublicPlansFetchReducer,
 });
