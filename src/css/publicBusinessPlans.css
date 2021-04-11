@@ -1,5 +1,6 @@
 .filterSelect{
     width: 100%;
+    
 }
 
 .ant-select-selection-placeholder{
@@ -10,20 +11,50 @@
 width: 100%;
 }
 
+.ant-table-thead th{
+    border-top: 1px solid #f0f0f0;
+    background-color: #FFFFFF!important;
+
+}
 .ant-select-selector{
     height: 40px!important;
     border-radius: 4px!important;
+    border: 1px solid #BFBFBF!important;
     text-align: left;
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
 }
+
+::placeholder{
+    color: #8C8C8C!important;
+}
+
+.ant-select-selection-placeholder{
+    color: #8C8C8C!important;
+}
+
+.ant-select-selection-item{
+    padding-top: 4px!important;
+}
+
 .ant-dropdown-link{
     font-weight: 600;
+    border-style: none;
+    padding: 0 0;
 }
 
 .ant-table-pagination.ant-pagination {
     margin: 16px 8px!important;
+    background: #FFFFFF;
+}
+
+.ant-pagination-item-link {
+    border-radius: 4px!important;
+}
+
+.ant-pagination-item {
+    border-radius: 4px!important;
 }
 
 .site-layout-content {

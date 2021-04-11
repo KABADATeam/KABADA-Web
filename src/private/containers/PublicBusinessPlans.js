@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, Card, Typography, Space, Table, DatePicker, Select, Row, Col, Avatar } from 'antd';
+import { Input, Card, Typography, Space, Table, DatePicker, Select, Row, Col, Avatar, Dropdown, Button, Menu } from 'antd';
 import { SearchOutlined, CaretDownOutlined, CaretDownFilled, UserOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { getAllPublicPlans } from "../../appStore/actions/planActions";
@@ -37,6 +37,16 @@ class PublicBusinessPlans extends React.Component {
     }
 
     render() {
+        const menu = (
+            <Menu>
+                <Menu.Item key="1">
+                    1st action
+              </Menu.Item>
+                <Menu.Item key="2">
+                    2nd action
+              </Menu.Item>
+            </Menu>
+        );
         const data = this.props.publicPlans;
         const columns = [
             {
@@ -91,11 +101,11 @@ class PublicBusinessPlans extends React.Component {
                 title: '',
                 key: 'action',
                 render: () => (
-                    <Space size="middle">
+                    <Dropdown overlay={menu}>
                         <a className="ant-dropdown-link">
                             Actions <CaretDownFilled />
                         </a>
-                    </Space>
+                    </Dropdown>
                 ),
             },
         ];
@@ -103,7 +113,7 @@ class PublicBusinessPlans extends React.Component {
             <Row >
                 <Col style={{ ...position, marginTop: '64px', width: '1200px' }}>
 
-                    <Title level={2} style={{ ...pageHeaderStyle, marginBottom: '24px', textAlign: 'left', color: '#262626', fontWeight: 600 }}>Public business plans</Title>
+                    <Title level={2} style={{ ...pageHeaderStyle, marginBottom: '0px', textAlign: 'left', color: '#262626', fontWeight: 600 }}>Public business plans</Title>
 
                     <Card style={{ ...publicPlansCardStyle, }} bodyStyle={{ width: '100%', paddingTop: '20px', paddingLeft: '0px', paddingRight: '0px', paddingBottom: '0px' }}>
                         <Input.Group style={{ marginBottom: '20px', paddingLeft: '20px', paddingRight: '20px', width: '100%' }} >
@@ -137,7 +147,7 @@ class PublicBusinessPlans extends React.Component {
                                 </Col>
                             </Row>
                         </Input.Group>
-                        <Table style={{ width: '100%' }} columns={columns} pagination={{ showTotal: (total, range) => <Text style={{ position: 'absolute', left: '50%', transform: 'translate(-50%)' }}>{range[0]}-{range[1]} of {total}</Text>, position: ['bottomLeft'] }} dataSource={data} onChange={this.handleChange} />
+                        <Table style={{ width: '100%' }} size="default" columns={columns} pagination={{ showTotal: (total, range) => <Text style={{ position: 'absolute', left: '50%', transform: 'translate(-50%)' }}>{range[0]}-{range[1]} of {total}</Text>, position: ['bottomLeft'] }} dataSource={data} onChange={this.handleChange} />
                     </Card >
                 </Col>
             </Row >

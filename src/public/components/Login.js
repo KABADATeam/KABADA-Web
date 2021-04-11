@@ -4,7 +4,7 @@ import { FacebookFilled, GoogleCircleFilled } from '@ant-design/icons';
 import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login";
 import { connect } from 'react-redux';
-import { login } from '../../appStore/actions/authenticationActions';
+import { login, googleLogin } from '../../appStore/actions/authenticationActions';
 import { withRouter } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import '../../css/customButtons.css';
@@ -28,15 +28,20 @@ class Login extends React.Component {
 	}
 
 	responseGoogle = (response) => {
+		const email = response.profileObj.email;
 		this.setState({ googleSignup: response });
+		this.props.googleLogin(email);
+	};
+
+	responseFailGoogle = (response) => {
+		console.log(response);
 	};
 
 	responseFacebook = (response) => {
-
+		console.log(response);
 	};
 
 	onFinish = (values) => {
-		console.log('Success:', values);
 		this.props.login(values.username, values.password);
 	};
 
@@ -92,7 +97,7 @@ class Login extends React.Component {
 							scope="profile"
 							autoLoad={false}
 							onSuccess={this.responseGoogle.bind(this)}
-							onFailure={this.responseGoogle.bind(this)} />
+							onFailure={this.responseFailGoogle.bind(this)} />
 					</Form.Item>
 
 					<Divider style={textColor}>OR</Divider>
@@ -161,4 +166,4 @@ const mapStateToProps = (state) => {
 	};
 }
 
-export default connect(mapStateToProps, { login })(withRouter(Login));
+export default connect(mapStateToProps, { login, googleLogin })(withRouter(Login));
