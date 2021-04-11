@@ -1,0 +1,48 @@
+.filterSelect{
+    width: 100%;
+}
+
+.ant-select-selection-placeholder{
+    line-height: 35px!important;
+}
+
+.ant-select{  
+width: 100%;
+}
+
+.ant-select-selector{
+    height: 40px!important;
+    border-radius: 4px!important;
+    text-align: left;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+}
+.ant-dropdown-link{
+    font-weight: 600;
+}
+
+.ant-table-pagination.ant-pagination {
+    margin: 16px 8px!important;
+}
+
+.site-layout-content {
+    min-height: 280px;
+    padding: 24px;
+    background: #fff;
+  }
+  #components-layout-demo-top .logo {
+    float: left;
+    width: 120px;
+    height: 31px;
+    margin: 16px 24px 16px 0;
+    background: rgba(255, 255, 255, 0.3);
+  }
+  .ant-row-rtl #components-layout-demo-top .logo {
+    float: right;
+    margin: 16px 0 16px 24px;
+  }
+
+  body {
+      background-color: #F5F5F5!important;
+  }

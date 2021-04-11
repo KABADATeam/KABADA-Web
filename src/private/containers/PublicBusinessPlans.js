@@ -4,14 +4,14 @@ import { SearchOutlined, CaretDownOutlined, CaretDownFilled, UserOutlined } from
 import { connect } from 'react-redux';
 import { getAllPublicPlans } from "../../appStore/actions/planActions";
 import { iconColor, pageHeaderStyle, filterStyle } from '../../styles/customStyles';
-import '../../css/publicPlanFilter.css';
+import '../../css/publicBusinessPlans.css';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-const position = { 'position': 'fixed', 'left': '50%', 'transform': 'translate(-50%)', }
+const position = { 'position': 'fixed', 'left': '50%', 'transform': 'translate(-50%)' }
 const publicPlansCardStyle = {
-    display: 'flex', justifyContent: 'center', height: '423px',
+    display: 'flex', justifyContent: 'center', minHeight: '423px',
     backgroundColor: '#FFFFFF', boxShadow: '0px 0px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.08), 0px 0px 1px rgba(0, 0, 0, 0.04)', borderRadius: '8px',
 };
 
@@ -29,6 +29,11 @@ class PublicBusinessPlans extends React.Component {
 
     componentDidMount() {
         this.props.getAllPublicPlans();
+    }
+
+    getFullDate = (date) => {
+        const dateAndTime = date.split('T');
+        return dateAndTime[0].split('-').reverse().join('.');
     }
 
     render() {
@@ -63,8 +68,9 @@ class PublicBusinessPlans extends React.Component {
                 title: 'Date Created',
                 dataIndex: 'dateCreated',
                 key: 'dateCreated',
-                sorter: (a, b) => new Date(a.dateCreated.substring(6, 10), a.dateCreated.substring(3, 5), a.dateCreated.substring(0, 2)).getTime() - new Date(b.dateCreated.substring(6, 10), b.dateCreated.substring(3, 5), b.dateCreated.substring(0, 2)).getTime(),
+                sorter: (a, b) => new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime(),
                 sortDirections: ['descend', 'ascend'],
+                render: (text, record) => this.getFullDate(record.dateCreated),
             },
             {
                 title: 'Owner',
@@ -94,13 +100,13 @@ class PublicBusinessPlans extends React.Component {
             },
         ];
         return (
-            <div >
-                <div style={position} >
+            <Row >
+                <Col style={{ ...position, marginTop: '64px', width: '1200px' }}>
 
-                    <Title level={2} style={{ pageHeaderStyle, marginBottom: '24px', marginTop: '40px', textAlign: 'left', color: '#262626', fontWeight: 600 }}>Public business plans</Title>
+                    <Title level={2} style={{ ...pageHeaderStyle, marginBottom: '24px', textAlign: 'left', color: '#262626', fontWeight: 600 }}>Public business plans</Title>
 
-                    <Card style={publicPlansCardStyle} bodyStyle={{ paddingTop: '20px', paddingLeft: '0px', paddingRight: '0px', paddingBottom: '20px' }}>
-                        <Input.Group style={{ width: '1200px', marginBottom: '20px', paddingLeft: '20px', paddingRight: '20px', }} >
+                    <Card style={{ ...publicPlansCardStyle, }} bodyStyle={{ width: '100%', paddingTop: '20px', paddingLeft: '0px', paddingRight: '0px', paddingBottom: '0px' }}>
+                        <Input.Group style={{ marginBottom: '20px', paddingLeft: '20px', paddingRight: '20px', width: '100%' }} >
                             <Row gutter={[16, 10]}>
                                 <Col span={8}>
                                     <Input style={filterStyle} placeholder="Search by name..." prefix={<SearchOutlined style={iconColor} />} />
@@ -131,10 +137,10 @@ class PublicBusinessPlans extends React.Component {
                                 </Col>
                             </Row>
                         </Input.Group>
-                        <Table columns={columns} pagination={{ showTotal: (total, range) => <Text style={{ position: 'absolute', left: '50%', transform: 'translate(-50%)' }}>{range[0]}-{range[1]} of {total}</Text>, position: ['bottomLeft'] }} dataSource={data} onChange={this.handleChange} />
+                        <Table style={{ width: '100%' }} columns={columns} pagination={{ showTotal: (total, range) => <Text style={{ position: 'absolute', left: '50%', transform: 'translate(-50%)' }}>{range[0]}-{range[1]} of {total}</Text>, position: ['bottomLeft'] }} dataSource={data} onChange={this.handleChange} />
                     </Card >
-                </div >
-            </div >
+                </Col>
+            </Row >
         );
     }
 }

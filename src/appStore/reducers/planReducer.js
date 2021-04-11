@@ -53,7 +53,7 @@ const all_plans_data = [
         name: 'Unicod Inc.',
         industry: 'Forests',
         country: 'Portugal',
-        dateCreated: '17.03.2021',
+        dateCreated: '2021-03-17',
         owner: 'Kaspars Naglis'
     },
     {
@@ -61,7 +61,7 @@ const all_plans_data = [
         name: 'Kabada Intelligence Ltd.',
         industry: 'IT services',
         country: 'Germany',
-        dateCreated: '12.03.2021',
+        dateCreated: '2021-03-12',
         owner: 'Kaspars Naglis'
     },
     {
@@ -69,7 +69,7 @@ const all_plans_data = [
         name: 'Naglis SIA',
         industry: 'IT services',
         country: 'Germany',
-        dateCreated: '17.03.2021',
+        dateCreated: '2021-03-17',
         owner: 'Kaspars Naglis'
     },
 ];
