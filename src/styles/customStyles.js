@@ -65,7 +65,7 @@ export const pageHeaderStyle = {
 };
 
 export const filterStyle = {
-    border: '1px solid #D9D9D9',
+    border: '1px solid #BFBFBF',
     boxSizing: 'border-box',
     borderRadius: '4px',
     height: '40px',
@@ -74,5 +74,6 @@ export const filterStyle = {
     fontStyle: 'normal',
     fontWeight: 'normal',
     fontSize: '14px',
-    lineHeight: '22px'
+    lineHeight: '22px',
+    textColor: '#8C8C8C',
 };
