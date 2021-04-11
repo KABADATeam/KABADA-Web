@@ -49,3 +49,41 @@ export const logout = () => {
         dispatch({ type: 'LOGOUT_USER_SUCCESS', payload: {} });
     }
 };
+
+export const forgotPassword = (email, callback) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: 'LOADING', payload: true });
+        try
+        {
+            await kabadaAPI.post('api/auth/reset', { 'Email': email });
+            callback();       
+        } catch (error) {
+            if (error.response === undefined) {
+                dispatch({ type: 'ERROR', payload: { message: 'Oopsie... System error. Try again, later' } });
+            } else {
+                dispatch({ type: 'ERROR', payload: error.response.data });
+            }            
+        } finally {
+            dispatch({ type: 'LOADING', payload: false });
+        }
+    }
+};
+
+export const resetPassword = (requestString, password, callback) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: 'LOADING', payload: true });
+        try
+        {
+            await kabadaAPI.post('api/auth/set_password', { 'Password': password, 'PasswordResetString': requestString });
+            callback();       
+        } catch (error) {
+            if (error.response === undefined) {
+                dispatch({ type: 'ERROR', payload: { message: 'Oopsie... System error. Try again, later' } });
+            } else {
+                dispatch({ type: 'ERROR', payload: error.response.data });
+            }            
+        } finally {
+            dispatch({ type: 'LOADING', payload: false });
+        }
+    }
+};

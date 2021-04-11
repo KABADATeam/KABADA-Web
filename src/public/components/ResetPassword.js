@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import { Form, Input, Button, Card, Row, Space, Typography } from 'antd';
 import { Link } from 'react-router-dom';
+import { forgotPassword } from '../../appStore/actions/authenticationActions';
+import { connect } from 'react-redux';
 import KabadaIcon from './KabadaIcon';
 
 import { cardStyle, buttonStyle, textColor, linkStyle } from '../../styles/customStyles';
@@ -53,6 +56,11 @@ class ResetPassword extends Component {
         });
 
         if (this.isEmailValid(this.state.email)) {
+            this.props.forgotPassword(this.state.email, () => {
+                window.location.href = '/password-sent';
+                
+            });
+
             this.setState({
                 status: "success"
             });
@@ -62,7 +70,7 @@ class ResetPassword extends Component {
             });
         }
         
-        //this.props.login(values.username, values.password);
+        
     };
 
     render() {
@@ -112,4 +120,12 @@ class ResetPassword extends Component {
     }
 }
 
-export default ResetPassword;
+const mapStateToProps = (state) => {
+	return {
+		loading: state.loading,
+		error: state.error,
+		message: state.message,
+	};
+}
+
+export default connect(mapStateToProps, { forgotPassword })(withRouter(ResetPassword));
