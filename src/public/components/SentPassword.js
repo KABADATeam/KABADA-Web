@@ -22,7 +22,7 @@ class SentPassword extends Component {
 				</Row>
 				<Row>
 					<Space style={{ 'marginBottom': '32px', paddingTop: '16px' }}>
-                        <Text style={{ ...textColor2, marginBottom: '0px' }}> Didn't get the email? Check your spam folder or <Link to='/password-sent'>resend</Link> </Text>
+                        <Text style={{ ...textColor2, marginBottom: '0px' }}> Didn't get the email? Check your spam folder or <Link to='/forgot-password'>resend</Link> </Text>
 					</Space>
 				</Row>
 
