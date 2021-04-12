@@ -38,6 +38,24 @@ export const googleLogin = (email) => {
     }
 };
 
+export const facebookLogin = (access_token) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: 'LOADING', payload: true });
+        try
+        {
+            dispatch({ type: 'LOGIN_SUCCESS', payload: { 'access_token': access_token } });       
+        } catch (error) {
+            if (error.response === undefined) {
+                dispatch({ type: 'ERROR', payload: { message: 'Oopsie... System error. Try again, later' } });
+            } else {
+                dispatch({ type: 'ERROR', payload: error.response.data });
+            }            
+        } finally {
+            dispatch({ type: 'LOADING', payload: false });
+        }
+    }
+};
+
 export const register = (name, email, password, callback) => {
     return async (dispatch, getState) => {
         dispatch({ type: 'LOADING', payload: true });

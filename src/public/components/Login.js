@@ -4,7 +4,7 @@ import { FacebookFilled, GoogleCircleFilled } from '@ant-design/icons';
 import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login";
 import { connect } from 'react-redux';
-import { login, googleLogin } from '../../appStore/actions/authenticationActions';
+import { login, googleLogin, facebookLogin } from '../../appStore/actions/authenticationActions';
 import { withRouter } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import '../../css/customButtons.css';
@@ -39,6 +39,7 @@ class Login extends React.Component {
 
 	responseFacebook = (response) => {
 		console.log(response);
+		this.props.facebookLogin(response.accessToken);
 	};
 
 	onFinish = (values) => {
@@ -166,4 +167,4 @@ const mapStateToProps = (state) => {
 	};
 }
 
-export default connect(mapStateToProps, { login, googleLogin })(withRouter(Login));
+export default connect(mapStateToProps, { login, googleLogin, facebookLogin })(withRouter(Login));
