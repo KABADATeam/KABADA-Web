@@ -37,3 +37,39 @@ export const updatePlanReducer = (state = null, action) => {
             return state;
     }
 }
+
+export const allPublicPlansFetchReducer = (state = [], action) => {
+    switch (action.type) {
+        case "FETCHING_ALL_PLANS_SUCCESS":
+            return all_plans_data;
+        default:
+            return state;
+    }
+};
+
+const all_plans_data = [
+    {
+        key: '1',
+        name: 'Unicod Inc.',
+        industry: 'Forests',
+        country: 'Portugal',
+        dateCreated: '2021-03-17',
+        owner: 'Kaspars Naglis'
+    },
+    {
+        key: '2',
+        name: 'Kabada Intelligence Ltd.',
+        industry: 'IT services',
+        country: 'Germany',
+        dateCreated: '2021-03-12',
+        owner: 'Kaspars Naglis'
+    },
+    {
+        key: '3',
+        name: 'Naglis SIA',
+        industry: 'IT services',
+        country: 'Germany',
+        dateCreated: '2021-03-17',
+        owner: 'Kaspars Naglis'
+    },
+];

@@ -23,6 +23,25 @@ export const saveInitialPlanData = (title, activityId, countryId, callback, call
     }
 };
 
+export const getAllPublicPlans = () => {
+    return async (dispatch, getState) => {
+        try {
+            dispatch({ type: "FETCHING_ALL_PLANS_SUCCESS", payload: {} });
+        } catch (error) {
+            if (error.response === undefined) {
+                dispatch({
+                    type: "ERROR",
+                    payload: { message: "Oopsie... System error. Try again, later" },
+                });
+            } else {
+                dispatch({ type: "ERROR", payload: error.response.data });
+            }
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
+        }
+    };
+};
+
 export const getPlans = () => {
     return async (dispatch, getState) => {
         try {

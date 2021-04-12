@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import { Form, Input, Button, Card, Row, Space, Typography } from 'antd';
 import { Link } from 'react-router-dom';
+import { resetPassword } from '../../appStore/actions/authenticationActions';
+import { connect } from 'react-redux';
+import queryString from 'query-string';
+
 import KabadaIcon from './KabadaIcon';
 
 import { cardStyle, buttonStyle, textColor, inputStyle, linkStyle } from '../../styles/customStyles';
@@ -12,7 +17,12 @@ const { Title } = Typography;
 class SetPassword extends Component {
 
     onFinish = (values) => {
-       console.log(values); 
+        if (values.password === values.confirmedPassword) {
+            const params = queryString.parse(this.props.location.search)
+            this.props.resetPassword(params.requestId, values.password, () => {
+                window.location.href = '/login';
+            });
+        }
     };
 
     render() {
@@ -66,4 +76,12 @@ class SetPassword extends Component {
     }
 }
 
-export default SetPassword;
+const mapStateToProps = (state) => {
+	return {
+		loading: state.loading,
+		error: state.error,
+		message: state.message,
+	};
+}
+
+export default connect(mapStateToProps, { resetPassword })(withRouter(SetPassword));
