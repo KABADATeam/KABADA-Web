@@ -54,7 +54,10 @@ const all_plans_data = [
         industry: 'Forests',
         country: 'Portugal',
         dateCreated: '2021-03-17',
-        owner: 'Kaspars Naglis'
+        owner: 'Kaspars Naglis', 
+        img: 'http://icons.iconseeker.com/png/fullsize/fruity-apples/seablue-512.png',
+        completed: 100,
+        planType: 'Public'
     },
     {
         key: '2',
@@ -62,7 +65,10 @@ const all_plans_data = [
         industry: 'IT services',
         country: 'Germany',
         dateCreated: '2021-03-12',
-        owner: 'Kaspars Naglis'
+        owner: 'Kaspars Naglis',
+        img: 'http://icons.iconseeker.com/png/fullsize/fruity-apples/seablue-512.png',
+        completed: 75,
+        planType: 'Private'
     },
     {
         key: '3',
@@ -70,6 +76,42 @@ const all_plans_data = [
         industry: 'IT services',
         country: 'Germany',
         dateCreated: '2021-03-17',
-        owner: 'Kaspars Naglis'
+        owner: 'Kaspars Naglis',
+        img: 'http://icons.iconseeker.com/png/fullsize/fruity-apples/seablue-512.png',
+        completed: 5,
+        planType: 'Private'
+    },
+    {
+        key: '4',
+        name: 'Unicod Inc.',
+        industry: 'Forests',
+        country: 'Portugal',
+        dateCreated: '2021-03-17',
+        owner: 'Kaspars Naglis', 
+        img: 'http://icons.iconseeker.com/png/fullsize/fruity-apples/seablue-512.png',
+        completed: 100,
+        planType: 'Public'
+    },
+    {
+        key: '5',
+        name: 'Kabada Intelligence Ltd.',
+        industry: 'IT services',
+        country: 'Germany',
+        dateCreated: '2021-03-12',
+        owner: 'Kaspars Naglis',
+        img: 'http://icons.iconseeker.com/png/fullsize/fruity-apples/seablue-512.png',
+        completed: 75,
+        planType: 'Private'
+    },
+    {
+        key: '6',
+        name: 'Naglis SIA',
+        industry: 'IT services',
+        country: 'Germany',
+        dateCreated: '2021-03-17',
+        owner: 'Kaspars Naglis',
+        img: 'http://icons.iconseeker.com/png/fullsize/fruity-apples/seablue-512.png',
+        completed: 5,
+        planType: 'Private'
     },
 ];
