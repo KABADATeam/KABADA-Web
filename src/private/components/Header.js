@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import {Row, Col, Button, Avatar, Dropdown, Typography} from 'antd'
+import {Row, Col, Button, Avatar, Dropdown, Typography, Menu} from 'antd'
+import { connect } from 'react-redux';
 import KabadaIcon from './KabadaIcon';
+import { logout } from '../../appStore/actions/authenticationActions';
+import { withRouter } from "react-router-dom";
 import {buttonStyle} from '../../styles/customStyles';
 import { CaretDownFilled, UserOutlined } from '@ant-design/icons';
 
@@ -19,8 +22,19 @@ const avatarTextStyle = {
     lineHeight: '22px'
 }
 
+
+
 class Header extends Component {
-    render() {        
+    render() {  
+        const menu = (
+            <Menu>
+              <Menu.Item onClick={() => this.props.logout()}>
+                Log out
+              </Menu.Item>
+              
+            </Menu>
+          );
+
         return (
             <>
                 <Row style={headerStyles} align="middle">
@@ -47,9 +61,9 @@ class Header extends Component {
                     <Col span={4} offset={8} >
                         <div style={{float: 'right', marginRight: 24}}>
                             <Avatar size={32} icon={<UserOutlined />}/>
-                            <Text style={{...avatarTextStyle, paddingLeft: 8}}>Kaspars</Text>
-                            <Dropdown>
-                                <CaretDownFilled/>
+                            
+                            <Dropdown overlay={menu} >
+                                <Text style={{...avatarTextStyle, paddingLeft: 8}}>Kaspars <CaretDownFilled /></Text>
                             </Dropdown> 
                         </div>
                     </Col>
@@ -59,4 +73,4 @@ class Header extends Component {
     }
 }
 
-export default Header;
+export default connect(null, { logout })(withRouter(Header));
