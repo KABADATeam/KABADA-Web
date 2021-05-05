@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, Typography, Button, Tabs } from 'antd';
 import { buttonStyle } from '../../styles/customStyles';
 import PlanElementComponent from '../components/PlanElementComponent';
+import NewBusinessPlanModal from "../components/NewBusinessPlanModal";
 
 const { Title } = Typography;
 const { TabPane } = Tabs;
@@ -13,6 +14,7 @@ class PersonalBusinessPlans extends Component {
         super(props);
         this.state = {
             activeTab: "1",
+            isVisible: false,
         }
     }
     
@@ -24,7 +26,21 @@ class PersonalBusinessPlans extends Component {
 
     }
 
+    openModal = () => {
+        this.setState({
+            isVisible: true,
+        })
+    };
+
+    closeModal = () => {
+        console.log('Clicked cancel button');
+        this.setState({
+            isVisible: false,
+        });
+    };
+
     render() {
+        const isVisible = this.state.isVisible;
         return (
             <Row style={{ ...position, marginTop: 64, width: 1200 }}>
                 <Col span={12} style={{ marginTop: 41 }}>
@@ -43,6 +59,7 @@ class PersonalBusinessPlans extends Component {
                             type="primary"
                             style={{ ...buttonStyle, marginLeft: 32 }}
                             size="large"
+                            onClick={this.openModal.bind(this)}
                         >
                             Create Plan
                         </Button>
@@ -62,6 +79,7 @@ class PersonalBusinessPlans extends Component {
                             <PlanElementComponent tabKey={this.state.activeTab}/>
                         </TabPane>
                 </Tabs>
+                <NewBusinessPlanModal visibility={isVisible} handleClose={this.closeModal} />
             </Row>
         );
     }
