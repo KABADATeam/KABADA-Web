@@ -41,6 +41,42 @@ export const getAllPublicPlans = () => {
         }
     };
 };
+export const getAllPublicPlansForFilter = (tabKey) => {
+    return async (dispatch, getState) => {
+        try {
+            dispatch({ type: "FETCHING_ALL_PLANS_FOR_FILTER_SUCCESS", payload: tabKey });
+        } catch (error) {
+            if (error.response === undefined) {
+                dispatch({
+                    type: "ERROR",
+                    payload: { message: "Oopsie... System error. Try again, later" },
+                });
+            } else {
+                dispatch({ type: "ERROR", payload: error.response.data });
+            }
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
+        }
+    };
+};
+export const getInProgressPlans = () => {
+    return async (dispatch, getState) => {
+        try {
+            dispatch({ type: "FETCHING_IN_PROGRESS_PLANS_SUCCESS", payload: {} });
+        } catch (error) {
+            if (error.response === undefined) {
+                dispatch({
+                    type: "ERROR",
+                    payload: { message: "Oopsie... System error. Try again, later" },
+                });
+            } else {
+                dispatch({ type: "ERROR", payload: error.response.data });
+            }
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
+        }
+    };
+};
 
 export const getPlans = () => {
     return async (dispatch, getState) => {

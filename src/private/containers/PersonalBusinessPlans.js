@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Typography, Button, Tabs, Card } from 'antd';
+import { Row, Col, Typography, Button, Tabs } from 'antd';
 import { buttonStyle } from '../../styles/customStyles';
 import PlanElementComponent from '../components/PlanElementComponent';
 
@@ -9,6 +9,20 @@ const { TabPane } = Tabs;
 const position = { 'position': 'fixed', 'left': '50%', 'transform': 'translate(-50%)' }
 
 class PersonalBusinessPlans extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            activeTab: "1",
+        }
+    }
+    
+    changeTabKey = (activeKey) => {
+        let activeTabString = activeKey.toString();
+        this.setState({
+            activeTab: activeTabString
+        })
+
+    }
 
     render() {
         return (
@@ -34,18 +48,18 @@ class PersonalBusinessPlans extends Component {
                         </Button>
                     </div>
                 </Col>
-                <Tabs defaultActiveKey="1" >
+                <Tabs activeKey={this.state.activeTab} onChange={this.changeTabKey}>
                         <TabPane tab="All" key="1">
-                            <PlanElementComponent/>
+                            <PlanElementComponent tabKey={this.state.activeTab}/>
                         </TabPane>
                         <TabPane tab="In Progress" key="2">
-                            COntent of Tab 2
+                            <PlanElementComponent tabKey={this.state.activeTab}/>
                         </TabPane>
                         <TabPane tab="Completed" key="3">
-                            Content of Tab 3
+                            <PlanElementComponent tabKey={this.state.activeTab}/>
                         </TabPane>
                         <TabPane tab="Shared With me" key="4">
-                            Content of Tab 4
+                            <PlanElementComponent tabKey={this.state.activeTab}/>
                         </TabPane>
                 </Tabs>
             </Row>
