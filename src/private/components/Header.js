@@ -3,7 +3,7 @@ import {Row, Col, Button, Avatar, Dropdown, Typography, Menu} from 'antd'
 import { connect } from 'react-redux';
 import KabadaIcon from './KabadaIcon';
 import { logout } from '../../appStore/actions/authenticationActions';
-import { withRouter } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 import {buttonStyle} from '../../styles/customStyles';
 import { CaretDownFilled, UserOutlined } from '@ant-design/icons';
 
@@ -22,16 +22,25 @@ const avatarTextStyle = {
     lineHeight: '22px'
 }
 
-
-
 class Header extends Component {
+
+
+    onSettingsClick() {
+        this.props.history.push(`/user-settings`);
+    }
+
     render() {  
+
+        const name = this.props.user.name === '' ? this.props.user.email.substring(0, this.props.user.email.indexOf("@")) : this.props.name;
+
         const menu = (
             <Menu>
-              <Menu.Item onClick={() => this.props.logout()}>
-                Log out
-              </Menu.Item>
-              
+                <Menu.Item onClick={() => this.onSettingsClick()}>
+                    Settings
+                </Menu.Item>
+                <Menu.Item onClick={() => this.props.logout()}>
+                    Log out
+                </Menu.Item>
             </Menu>
           );
 
@@ -63,7 +72,7 @@ class Header extends Component {
                             <Avatar size={32} icon={<UserOutlined />}/>
                             
                             <Dropdown overlay={menu} >
-                                <Text style={{...avatarTextStyle, paddingLeft: 8}}>Kaspars <CaretDownFilled /></Text>
+                                <Text style={{...avatarTextStyle, paddingLeft: 8}}>{name} <CaretDownFilled /></Text>
                             </Dropdown> 
                         </div>
                     </Col>
@@ -73,4 +82,10 @@ class Header extends Component {
     }
 }
 
-export default connect(null, { logout })(withRouter(Header));
+const mapStateToProps = (state) => {
+    return {
+        user: state.user
+    };
+}
+
+export default connect(mapStateToProps, { logout })(withRouter(Header));
