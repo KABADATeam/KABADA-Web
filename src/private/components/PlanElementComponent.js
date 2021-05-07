@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Card, Typography, List, Row} from 'antd';
 import { connect } from 'react-redux';
-import { getAllPublicPlansForFilter, getAllPublicPlans } from "../../appStore/actions/planActions";
+import { getAllPublicPlans } from "../../appStore/actions/planActions";
 import PlanStatusTag from "./PlanStatusTag";
 
 const {Text} = Typography;
@@ -20,29 +20,33 @@ const dateTextStyle = {
 
 class PlanElementComponent extends Component {
     componentDidMount() {
-        //this.props.getAllPublicPlans();
-        this.props.getAllPublicPlansForFilter(this.props.tabKey)  
+        this.props.getAllPublicPlans();  
+    }
+    filterFunction = (tabKey) => {
+        if (tabKey === "1") {
+            return this.props.publicPlans
+        } else if (tabKey === "2") {
+            const inProgressPlans = this.props.publicPlans.filter(item => item.completed < 100);
+            return inProgressPlans
+        } else if (tabKey === "3") {
+            const completedPlans = this.props.publicPlans.filter(item => item.completed === 100);
+            return completedPlans
+        } else if (tabKey === "4") {
+            const sharedPlans = []
+            return sharedPlans
+        } else
+            return this.props.publicPlans
     }
     render () {
         const {tabKey} = this.props;
-        
-        /*const showedPlans = () => {
-            if (tabKey === "1") {
-                console.log("komponente " + this.props.publicPlansJZ.allPlanList)
-                return this.props.publicPlansJZ.allPlanList
-            } else if (tabKey === "2") {
-                return this.props.publicPlansJZ.completedPlanList
-            } else if (tabKey === "3") {
-                return this.props.publicPlansJZ.inProgressPlanList
-            } else {
-                return this.props.publicPlansJZ.sharedPlanList
-            }
-        }*/
+        const dataSource = (
+            this.filterFunction(tabKey)
+        )
         return ( 
             <>
             <List
                 grid={{ gutter: 16}}
-                dataSource={this.props.publicPlansForFilter}
+                dataSource={dataSource}
                 renderItem={item => (
                     <List.Item>
                         <Card style={{width: '282px', height: '236px', borderRadius: '8px', backgroundColor: '#FFFFFF',
@@ -73,8 +77,7 @@ const mapStateToProps = (state) => {
         error: state.error,
         message: state.message,
         publicPlans: state.publicPlans,
-        publicPlansForFilter: state.publicPlansForFilter,
     };
 }
 
-export default connect(mapStateToProps, { getAllPublicPlansForFilter, getAllPublicPlans })(PlanElementComponent);
+export default connect(mapStateToProps, { getAllPublicPlans })(PlanElementComponent);

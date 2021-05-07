@@ -52,72 +52,7 @@ export const allPublicPlansFetchReducer = (state = [], action) => {
             return state;
     }
 };
-export const allPublicPlansForFilterFetchReducer = (state = [], action) => {
-    switch (action.type) {
-        case "FETCHING_ALL_PLANS_FOR_FILTER_SUCCESS":
-            console.log('Reducer' + action.payload);
-            if (action.payload === "1") {
-                console.log('Reducer get tabkey: ' + action.payload)
-                return all_plans_data
-            } else if (action.payload === "2") {
-                const inProgressPlans = all_plans_data.filter(item => item.completed < 100);
-                console.log(inProgressPlans);
-                return inProgressPlans
-            }
-             else if (action.payload === "3") {
-                const completedPlans = all_plans_data.filter(item => item.completed === 100);
-                console.log(completedPlans);
-                return completedPlans
-            }
-            else 
-                return state;            
-            default:
-            return state;
-    }
-};
- /*
- case "FETCHING_ALL_PLANS_SUCCESS_JZ":
-            console.log('Reducer' + action.payload);
-            if (action.payload === "1") {
-                console.log('Reducer get tabkey: ' + action.payload)
-                return all_plans_data
-            } else if (action.payload === "2") {
-                const inProgressPlans = all_plans_data.filter(item => item.completed < 100);
-                console.log(inProgressPlans);
-                return inProgressPlans
-            }
-             else if (action.payload === "3") {
-                const completedPlans = all_plans_data.filter(item => item.completed === 100);
-                console.log(completedPlans);
-                return completedPlans
-            }
-            else 
-                return state;
- */
-/*
-if (action.payload === "1") {
-                return {
-                    allPlanList: [...state.allPlanList, all_plans_data]
-                }
-            } else if (action.payload === "2") {
-                const inProgressPlans = all_plans_data.filter(item => item.completed < 100);
-                console.log(inProgressPlans);
-                return {
-                    inProgressPlanList: [...state.inProgressPlanList, inProgressPlans]
-                }
-            }
-             else if (action.payload === "3") {
-                const completedPlans = all_plans_data.filter(item => item.completed === 100);
-                console.log(completedPlans);
-                return {
-                    completedPlanList: [...state.completedPlanList, completedPlans]
-                }
-            }
-            else 
-                return { sharedPlanList: []};            
-            default:
-            return state;
-*/
+ 
 const all_plans_data = [
     {
         key: '1',
