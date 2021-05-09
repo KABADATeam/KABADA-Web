@@ -1,3 +1,9 @@
+const initialState = {
+    allPlanList: [],
+    inProgressPlanList: [],
+    completedPlanList: [],
+    sharedPlanList: []
+}
 export const planReducer = (state = null, action) => {
     switch (action.type) {
         case 'SAVING_PLAN_SUCCESS':
@@ -46,7 +52,7 @@ export const allPublicPlansFetchReducer = (state = [], action) => {
             return state;
     }
 };
-
+ 
 const all_plans_data = [
     {
         key: '1',
