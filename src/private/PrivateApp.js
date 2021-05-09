@@ -8,11 +8,7 @@ import RiskAnalysis from './containers/RiskAnalysis';
 import PublicBusinessPlans from './containers/PublicBusinessPlans';
 import PersonalBusinessPlans from './containers/PersonalBusinessPlans';
 import Footer from '../public/components/Footer';
-<<<<<<< HEAD
 import UserSettingsWindow from './containers/UserSettingsWindow';
-=======
-import PlanElementComponent from '../private/components/PlanElementComponent';
->>>>>>> b01501c6ee6b823450743daf73c9299709e8efa5
 
 
 class PrivateApp extends React.Component {

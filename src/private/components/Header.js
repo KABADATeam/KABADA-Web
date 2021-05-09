@@ -3,29 +3,17 @@ import {Row, Col, Button, Avatar, Dropdown, Typography, Menu} from 'antd'
 import { connect } from 'react-redux';
 import KabadaIcon from './KabadaIcon';
 import { logout } from '../../appStore/actions/authenticationActions';
-<<<<<<< HEAD
 import { withRouter, Redirect } from "react-router-dom";
-=======
-import { withRouter } from "react-router-dom";
->>>>>>> b01501c6ee6b823450743daf73c9299709e8efa5
 import {buttonStyle} from '../../styles/customStyles';
 import { CaretDownFilled, UserOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
 const headerStyles = {
-<<<<<<< HEAD
-=======
-    position: 'absolute',
->>>>>>> b01501c6ee6b823450743daf73c9299709e8efa5
     width: '100%', 
     height: 64, 
     backgroundColor: '#FFFFFF',
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> b01501c6ee6b823450743daf73c9299709e8efa5
 const avatarTextStyle = {
     fontStyle: 'normal',
     fontWeight: '600',
@@ -33,7 +21,6 @@ const avatarTextStyle = {
     lineHeight: '22px'
 }
 
-<<<<<<< HEAD
 class Header extends Component {
 
 
@@ -53,18 +40,6 @@ class Header extends Component {
                 <Menu.Item onClick={() => this.props.logout()}>
                     Log out
                 </Menu.Item>
-=======
-
-
-class Header extends Component {
-    render() {  
-        const menu = (
-            <Menu>
-              <Menu.Item onClick={() => this.props.logout()}>
-                Log out
-              </Menu.Item>
-              
->>>>>>> b01501c6ee6b823450743daf73c9299709e8efa5
             </Menu>
           );
 
@@ -96,11 +71,7 @@ class Header extends Component {
                             <Avatar size={32} icon={<UserOutlined />}/>
                             
                             <Dropdown overlay={menu} >
-<<<<<<< HEAD
                                 <Text style={{...avatarTextStyle, paddingLeft: 8}}>{name} <CaretDownFilled /></Text>
-=======
-                                <Text style={{...avatarTextStyle, paddingLeft: 8}}>Kaspars <CaretDownFilled /></Text>
->>>>>>> b01501c6ee6b823450743daf73c9299709e8efa5
                             </Dropdown> 
                         </div>
                     </Col>
@@ -110,7 +81,6 @@ class Header extends Component {
     }
 }
 
-<<<<<<< HEAD
 const mapStateToProps = (state) => {
     return {
         user: state.user
@@ -118,6 +88,3 @@ const mapStateToProps = (state) => {
 }
 
 export default connect(mapStateToProps, { logout })(withRouter(Header));
-=======
-export default connect(null, { logout })(withRouter(Header));
->>>>>>> b01501c6ee6b823450743daf73c9299709e8efa5
