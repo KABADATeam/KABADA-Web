@@ -10,11 +10,11 @@ import { CaretDownFilled, UserOutlined } from '@ant-design/icons';
 const { Text } = Typography;
 
 const headerStyles = {
-    //position: 'absolute',
     width: '100%', 
     height: 64, 
     backgroundColor: '#FFFFFF',
 }
+
 const avatarTextStyle = {
     fontStyle: 'normal',
     fontWeight: '600',

@@ -152,7 +152,7 @@ class PublicBusinessPlans extends React.Component {
                 key: 'action',
                 render: () => (
                     <Dropdown overlay={menu}>
-                        <a href="#" className="ant-dropdown-link">
+                        <a href="/#" className="ant-dropdown-link">
                             Actions <CaretDownFilled />
                         </a>
                     </Dropdown>

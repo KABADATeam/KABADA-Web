@@ -31,7 +31,7 @@ class PrivateApp extends React.Component {
                     <Route exact path="/market-analysis" render={(props) => <MainWindow {...props}> <RiskAnalysis {...props} /> </MainWindow>} />
                     <Route exact path="/user-settings" render={(props) => <UserSettingsWindow {...props} />} />
                 </Switch>
-                <Footer alignment='center' divider={true} />
+                {/* <Footer alignment='center' divider={true} /> */}
             </Router>
 
         )

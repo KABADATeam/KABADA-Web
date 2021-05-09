@@ -3,6 +3,7 @@ import { Divider, Button, Breadcrumb, Row, Col, Typography } from 'antd';
 import LoginServicesSettings from '../components/LoginServicesSettings';
 import NotificationSettings from '../components/NotificationSettings';
 import EmailPasswordSettings from '../components/EmailPasswordSettings';
+import PersonalSettings from '../components/PersonalSettings';
 import { buttonStyle } from '../../styles/customStyles';
 
 import { ArrowLeftOutlined } from '@ant-design/icons';
@@ -87,7 +88,7 @@ class UserSettingsWindow extends React.Component {
                         <Text style={settingsGroupTitleTextStyle}>Personal data</Text>
                     </Col>
                     <Col span={12}>
-                        <NotificationSettings />
+                        <PersonalSettings />
                     </Col>
                 </Row>
 
@@ -109,7 +110,7 @@ class UserSettingsWindow extends React.Component {
                 </Col>
 
                 <Col span={16} offset = {4}>
-                    <div style={{ float:"right"}}>
+                    <div style={{ float:"right", height: "200px" }}>
                         <Button style={{ ...buttonStyle, marginRight: "8px" }}>Discard</Button>
                         <Button type="primary" style={{ ...buttonStyle}}>Save</Button>
                     </div>

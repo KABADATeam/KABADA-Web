@@ -18,7 +18,7 @@ class NewBusinessPlanModal extends Component {
         const formData = new FormData();
         if (Array.isArray(fileList) && fileList.length !== 0) {
             fileList.forEach(item => {
-                if (item.file.status != 'removed') {
+                if (item.file.status !== 'removed') {
                     formData.append('files[]', item.file);
                 }
             })
@@ -91,7 +91,7 @@ class NewBusinessPlanModal extends Component {
                     footer={
                         <div>
                             <Button key="customCancel" onClick={this.handleCancel.bind(this)}>Cancel</Button>
-                            <Button key="customSubmit" form="myForm" key="submit" htmlType="submit" type={'primary'}>Submit</Button>
+                            <Button key="customSubmit" form="myForm" htmlType="submit" type={'primary'}>Submit</Button>
                         </div>
                     }
                 >

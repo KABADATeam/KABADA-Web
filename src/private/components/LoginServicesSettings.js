@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Card, Row, Col, Button, Typography, Space } from 'antd';
+import { Card, Row, Col, Button, Space } from 'antd';
 import '../../css/customModal.css';
 import { buttonStyle } from '../../styles/customStyles';
-import Icon, { GoogleCircleFilled, FacebookFilled } from '@ant-design/icons';
+import { GoogleCircleFilled, FacebookFilled } from '@ant-design/icons';
 
 const CardStyle = {
     backgroundColor: '#FFFFFF',

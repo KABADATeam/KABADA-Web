@@ -36,7 +36,7 @@ class NotificationSettings extends Component {
         return (
             <>
                 <Row>
-                    <Col span={14}>
+                    <Col span={24}>
                         <Card size={'small'} style={{ ...CardStyle }} bodyStyle={{ ...CardBodyStyle }}>
                             <Card.Grid hoverable={false} style={{ ...CardRowStyle }}>
                                 <div style={{ float: 'left' }}>Recieve email when someone reads your business plan</div>
