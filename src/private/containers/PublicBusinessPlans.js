@@ -96,7 +96,6 @@ class PublicBusinessPlans extends React.Component {
               </Menu.Item>
             </Menu>
         );
-
         const columns = [
             {
                 title: 'Name',
