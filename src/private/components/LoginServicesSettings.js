@@ -34,7 +34,7 @@ class LoginServicesSettings extends Component {
         return (
             <>
                 <Row>
-                    <Col span={14}>
+                    <Col span={24}>
                         <Card title="Login services" headStyle={{ paddingLeft: '20px', paddingRight: '20px', textAlign: 'left' }} style={{ ...CardStyle }} bodyStyle={{ ...CardBodyStyle }}>
                             <Card.Grid hoverable={false} style={{ ...CardRowStyle }}>
                                 <Space style={{ display: 'flex', justifyContent: 'space-between' }}>

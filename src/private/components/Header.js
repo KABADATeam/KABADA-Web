@@ -10,7 +10,7 @@ import { CaretDownFilled, UserOutlined } from '@ant-design/icons';
 const { Text } = Typography;
 
 const headerStyles = {
-    position: 'absolute',
+    //position: 'absolute',
     width: '100%', 
     height: 64, 
     backgroundColor: '#FFFFFF',
