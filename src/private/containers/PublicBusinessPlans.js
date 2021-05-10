@@ -1,40 +1,89 @@
 import React from "react";
-import { Input, Card, Typography, Space, Table, DatePicker, Select, Row, Col, Avatar, Dropdown, Button, Menu } from 'antd';
+import { Input, Card, Typography, Space, Table, DatePicker, Select, Row, Col, Avatar, Dropdown, Menu, Form, Layout } from 'antd';
 import { SearchOutlined, CaretDownOutlined, CaretDownFilled, UserOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { getAllPublicPlans } from "../../appStore/actions/planActions";
 import { iconColor, pageHeaderStyle, filterStyle } from '../../styles/customStyles';
 import '../../css/publicBusinessPlans.css';
 
+const { Header, Content } = Layout;
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-const position = { 'position': 'fixed', 'left': '50%', 'transform': 'translate(-50%)' }
 const publicPlansCardStyle = {
-    display: 'flex', justifyContent: 'center', minHeight: '423px',
-    backgroundColor: '#FFFFFF', boxShadow: '0px 0px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.08), 0px 0px 1px rgba(0, 0, 0, 0.04)', borderRadius: '8px',
+    display: 'flex', justifyContent: 'center', backgroundColor: '#FFFFFF', boxShadow: '0px 0px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.08), 0px 0px 1px rgba(0, 0, 0, 0.04)', borderRadius: '8px',
 };
 
 class PublicBusinessPlans extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            response: true,
-            login: false,
-            data: "",
-            picture: "",
-            googleSignup: "",
+            planData: [],
+            sorting: false,
         };
     }
 
     componentDidMount() {
-        this.props.getAllPublicPlans();
+        this.props.getAllPublicPlans()
+            .then(
+                () => {
+                    this.setState({
+                        planData: this.props.publicPlans
+                    });
+                },
+                (error) => {
+                    this.setState({
+                        error
+                    });
+                }
+            )
     }
 
     getFullDate = (date) => {
         const dateAndTime = date.split('T');
         return dateAndTime[0].split('-').reverse().join('.');
     }
+
+    onFinish = (values) => {
+        console.log(values);
+    };
+
+    search = (values, changedValues) => {
+        let sorted = false;
+        let filteredData = this.props.publicPlans;
+        Object.keys(changedValues).forEach(function (key, index) {
+            if (changedValues[key] !== undefined) {
+                if (key === "dateCreated") {
+                    if (changedValues[key] !== null) {
+                        filteredData = filteredData.filter(item => {
+                            return (
+                                item[key].indexOf(changedValues[key].toISOString().split('T')[0]) >= 0
+                            )
+                        });
+                    }
+                }
+                if (key === "language") {
+                    // filter by language
+                }
+                if (key === "sorting" && changedValues[key] !== undefined) {
+                    sorted = changedValues[key];
+                }
+                if (key === "industry" || key === "name" || key === "country") {
+                    console.log(`key=${key}  value=${changedValues[key]}`)
+                    filteredData = filteredData.filter(item => {
+                        return (
+                            item[key].toLowerCase().indexOf(changedValues[key].toLowerCase()) >= 0
+                        )
+                    });
+                }
+            }
+        });
+
+        this.setState({
+            planData: filteredData,
+            sorting: sorted,
+        });
+    };
 
     render() {
         const menu = (
@@ -47,7 +96,6 @@ class PublicBusinessPlans extends React.Component {
               </Menu.Item>
             </Menu>
         );
-        const data = this.props.publicPlans;
         const columns = [
             {
                 title: 'Name',
@@ -80,6 +128,7 @@ class PublicBusinessPlans extends React.Component {
                 key: 'dateCreated',
                 sorter: (a, b) => new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime(),
                 sortDirections: ['descend', 'ascend'],
+                sortOrder: this.state.sorting,
                 render: (text, record) => this.getFullDate(record.dateCreated),
             },
             {
@@ -102,55 +151,93 @@ class PublicBusinessPlans extends React.Component {
                 key: 'action',
                 render: () => (
                     <Dropdown overlay={menu}>
-                        <a className="ant-dropdown-link">
+                        <a href="/#" className="ant-dropdown-link">
                             Actions <CaretDownFilled />
                         </a>
                     </Dropdown>
                 ),
             },
         ];
+
+        const uniqueIndustries = [];
+        const uniqueCountries = [];
+
+        this.props.publicPlans.forEach(item => {
+            if (uniqueIndustries.indexOf(item.industry) === -1) {
+                uniqueIndustries.push(item.industry)
+            }
+            if (uniqueCountries.indexOf(item.country) === -1) {
+                uniqueCountries.push(item.country)
+            }
+        });
+
         return (
-            <Row >
-                <Col style={{ ...position, marginTop: '64px', width: '1200px' }}>
+            <Layout style={{ backgroundColor: '#F5F5F5' }}>
+                <Header></Header>
+                <Content>
+                    <Row wrap={false} justify="center" align="middle">
+                        <Col span={20}>
+                            <Title level={2} style={{ ...pageHeaderStyle, marginBottom: '0px', textAlign: 'left', color: '#262626' }}>Public business plans</Title>
 
-                    <Title level={2} style={{ ...pageHeaderStyle, marginBottom: '0px', textAlign: 'left', color: '#262626', fontWeight: 600 }}>Public business plans</Title>
-
-                    <Card style={{ ...publicPlansCardStyle, }} bodyStyle={{ width: '100%', paddingTop: '20px', paddingLeft: '0px', paddingRight: '0px', paddingBottom: '0px' }}>
-                        <Input.Group style={{ marginBottom: '20px', paddingLeft: '20px', paddingRight: '20px', width: '100%' }} >
-                            <Row gutter={[16, 10]}>
-                                <Col span={8}>
-                                    <Input style={filterStyle} placeholder="Search by name..." prefix={<SearchOutlined style={iconColor} />} />
-                                </Col>
-                                <Col span={8}>
-                                    <Select dropdownClassName="filterSelect" placeholder="Choose Industry" suffixIcon={<CaretDownOutlined style={iconColor} />} allowClear>
-                                        <Option value="Industry">Industry</Option>
-                                    </Select>
-                                </Col>
-                                <Col span={8}>
-                                    <Select dropdownClassName="filterSelect" placeholder="Sort by: Newest" suffixIcon={<CaretDownOutlined style={iconColor} />} allowClear>
-                                        <Option value="newest">Sort by: Newest</Option>
-                                        <Option value="oldest">Sort by: Oldest</Option>
-                                    </Select>
-                                </Col>
-                                <Col span={8}>
-                                    <DatePicker style={filterStyle} placeholder="Date Created" />
-                                </Col>
-                                <Col span={8}>
-                                    <Select dropdownClassName="filterSelect" placeholder="Choose Country" suffixIcon={<CaretDownOutlined style={iconColor} />} allowClear>
-                                        <Option value="Country">Country</Option>
-                                    </Select>
-                                </Col>
-                                <Col span={8}>
-                                    <Select dropdownClassName="filterSelect" placeholder="Choose Language" suffixIcon={<CaretDownOutlined style={iconColor} />} allowClear>
-                                        <Option value="Language">Language</Option>
-                                    </Select>
-                                </Col>
-                            </Row>
-                        </Input.Group>
-                        <Table style={{ width: '100%' }} size="default" columns={columns} pagination={{ showTotal: (total, range) => <Text style={{ position: 'absolute', left: '50%', transform: 'translate(-50%)' }}>{range[0]}-{range[1]} of {total}</Text>, position: ['bottomLeft'] }} dataSource={data} onChange={this.handleChange} />
-                    </Card >
-                </Col>
-            </Row >
+                            <Card style={{ ...publicPlansCardStyle }} bodyStyle={{ width: '100%', paddingTop: '20px', paddingLeft: '0px', paddingRight: '0px', paddingBottom: '0px' }}>
+                                <Form
+                                    onValuesChange={this.search.bind(this)}
+                                    onFinish={this.onFinish.bind(this)}
+                                    style={{ marginBottom: '20px', paddingLeft: '20px', paddingRight: '20px', width: '100%' }}
+                                >
+                                    <Row gutter={[16, 20]}>
+                                        <Col span={8}>
+                                            <Form.Item noStyle={true} name="name">
+                                                <Input style={filterStyle} placeholder="Search by name..." prefix={<SearchOutlined style={iconColor} />} />
+                                            </Form.Item>
+                                        </Col>
+                                        <Col span={8}>
+                                            <Form.Item noStyle={true} name="industry">
+                                                <Select dropdownClassName="filterSelect" placeholder="Choose Industry"
+                                                    suffixIcon={<CaretDownOutlined style={iconColor} />} allowClear>
+                                                    {uniqueIndustries.map((item) => (
+                                                        <Option key={item}>{item}</Option>
+                                                    ))}
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                        <Col span={8}>
+                                            <Form.Item noStyle={true} name="sorting">
+                                                <Select dropdownClassName="filterSelect" placeholder="Sort by" suffixIcon={<CaretDownOutlined style={iconColor} />} allowClear>
+                                                    <Option value="descend">Sort by: Newest</Option>
+                                                    <Option value="ascend">Sort by: Oldest</Option>
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                        <Col span={8}>
+                                            <Form.Item noStyle={true} name="dateCreated">
+                                                <DatePicker style={filterStyle} placeholder="Date Created" />
+                                            </Form.Item>
+                                        </Col>
+                                        <Col span={8}>
+                                            <Form.Item noStyle={true} name="country">
+                                                <Select dropdownClassName="filterSelect" placeholder="Choose Country" suffixIcon={<CaretDownOutlined style={iconColor} />} allowClear>
+                                                    {uniqueCountries.map((item) => (
+                                                        <Option key={item}>{item}</Option>
+                                                    ))}
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                        <Col span={8}>
+                                            <Form.Item noStyle={true} name="language">
+                                                <Select dropdownClassName="filterSelect" placeholder="Choose Language" suffixIcon={<CaretDownOutlined style={iconColor} />} allowClear>
+                                                    <Option value="Language">Language</Option>
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                    </Row>
+                                </Form>
+                                <Table style={{ width: '100%' }} size="default" columns={columns} pagination={{ defaultPageSize: 5, showTotal: (total, range) => <Text style={{ position: 'absolute', left: '50%', transform: 'translate(-50%)' }}>{range[0]}-{range[1]} of {total}</Text>, position: ['bottomLeft'] }} dataSource={this.state.planData} onChange={this.handleChange} />
+                            </Card >
+                        </Col>
+                    </Row >
+                </Content>
+            </Layout>
         );
     }
 }

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Row, Col, Typography, Button, Tabs, Card } from 'antd';
+import { Row, Col, Typography, Button, Tabs } from 'antd';
 import { buttonStyle } from '../../styles/customStyles';
 import PlanElementComponent from '../components/PlanElementComponent';
+import NewBusinessPlanModal from "../components/NewBusinessPlanModal";
 
 const { Title } = Typography;
 const { TabPane } = Tabs;
@@ -9,8 +10,37 @@ const { TabPane } = Tabs;
 const position = { 'position': 'fixed', 'left': '50%', 'transform': 'translate(-50%)' }
 
 class PersonalBusinessPlans extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            activeTab: "1",
+            isVisible: false,
+        }
+    }
+    
+    changeTabKey = (activeKey) => {
+        let activeTabString = activeKey.toString();
+        this.setState({
+            activeTab: activeTabString
+        })
+
+    }
+
+    openModal = () => {
+        this.setState({
+            isVisible: true,
+        })
+    };
+
+    closeModal = () => {
+        console.log('Clicked cancel button');
+        this.setState({
+            isVisible: false,
+        });
+    };
 
     render() {
+        const isVisible = this.state.isVisible;
         return (
             <Row style={{ ...position, marginTop: 64, width: 1200 }}>
                 <Col span={12} style={{ marginTop: 41 }}>
@@ -29,25 +59,27 @@ class PersonalBusinessPlans extends Component {
                             type="primary"
                             style={{ ...buttonStyle, marginLeft: 32 }}
                             size="large"
+                            onClick={this.openModal.bind(this)}
                         >
                             Create Plan
                         </Button>
                     </div>
                 </Col>
-                <Tabs defaultActiveKey="1" >
+                <Tabs activeKey={this.state.activeTab} onChange={this.changeTabKey}>
                         <TabPane tab="All" key="1">
-                            <PlanElementComponent/>
+                            <PlanElementComponent tabKey={this.state.activeTab}/>
                         </TabPane>
                         <TabPane tab="In Progress" key="2">
-                            COntent of Tab 2
+                            <PlanElementComponent tabKey={this.state.activeTab}/>
                         </TabPane>
                         <TabPane tab="Completed" key="3">
-                            Content of Tab 3
+                            <PlanElementComponent tabKey={this.state.activeTab}/>
                         </TabPane>
                         <TabPane tab="Shared With me" key="4">
-                            Content of Tab 4
+                            <PlanElementComponent tabKey={this.state.activeTab}/>
                         </TabPane>
                 </Tabs>
+                <NewBusinessPlanModal visibility={isVisible} handleClose={this.closeModal} />
             </Row>
         );
     }
