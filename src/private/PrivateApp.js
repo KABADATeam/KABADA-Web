@@ -8,7 +8,7 @@ import RiskAnalysis from './containers/RiskAnalysis';
 import PublicBusinessPlans from './containers/PublicBusinessPlans';
 import PersonalBusinessPlans from './containers/PersonalBusinessPlans';
 import Footer from '../public/components/Footer';
-import PlanElementComponent from '../private/components/PlanElementComponent';
+import UserSettingsWindow from './containers/UserSettingsWindow';
 
 
 class PrivateApp extends React.Component {
@@ -29,9 +29,9 @@ class PrivateApp extends React.Component {
                     <Route exact path="/plans" render={(props) => <MainWindow {...props}> <BusinessPlansList {...props} /> </MainWindow>} />
                     <Route exact path="/initial-setup" render={(props) => <MainWindow {...props}> <InitialStage {...props} /> </MainWindow>} />
                     <Route exact path="/market-analysis" render={(props) => <MainWindow {...props}> <RiskAnalysis {...props} /> </MainWindow>} />
-                    <Route exact path="/planElementComponent" render={() => <PlanElementComponent />} />
+                    <Route exact path="/user-settings" render={(props) => <UserSettingsWindow {...props} />} />
                 </Switch>
-                <Footer alignment='center' divider={true} />
+                {/* <Footer alignment='center' divider={true} /> */}
             </Router>
 
         )
