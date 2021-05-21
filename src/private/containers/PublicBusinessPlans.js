@@ -97,7 +97,6 @@ class PublicBusinessPlans extends React.Component {
               </Menu.Item>
             </Menu>
         );
-
         const columns = [
             {
                 title: 'Name',
@@ -153,7 +152,7 @@ class PublicBusinessPlans extends React.Component {
                 key: 'action',
                 render: () => (
                     <Dropdown overlay={menu}>
-                        <a href="#" className="ant-dropdown-link">
+                        <a href="/#" className="ant-dropdown-link">
                             Actions <CaretDownFilled />
                         </a>
                     </Dropdown>
@@ -175,8 +174,7 @@ class PublicBusinessPlans extends React.Component {
 
         return (
             <Layout style={{ backgroundColor: '#F5F5F5' }}>
-                <Header></Header>
-                <Content>
+                <Content style={{ marginTop: "40px" }}>
                     <Row wrap={false} justify="center" align="middle">
                         <Col span={20}>
                             <Title level={2} style={{ ...pageHeaderStyle, marginBottom: '0px', textAlign: 'left', color: '#262626' }}>Public business plans</Title>

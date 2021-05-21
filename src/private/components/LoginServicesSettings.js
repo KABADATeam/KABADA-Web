@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Card, Row, Col, Button, Typography, Space } from 'antd';
+import { Card, Row, Col, Button, Space } from 'antd';
 import '../../css/customModal.css';
 import { buttonStyle } from '../../styles/customStyles';
-import Icon, { GoogleCircleFilled, FacebookFilled } from '@ant-design/icons';
+import { GoogleCircleFilled, FacebookFilled } from '@ant-design/icons';
 
 const CardStyle = {
     backgroundColor: '#FFFFFF',
@@ -34,7 +34,7 @@ class LoginServicesSettings extends Component {
         return (
             <>
                 <Row>
-                    <Col span={14}>
+                    <Col span={24}>
                         <Card title="Login services" headStyle={{ paddingLeft: '20px', paddingRight: '20px', textAlign: 'left' }} style={{ ...CardStyle }} bodyStyle={{ ...CardBodyStyle }}>
                             <Card.Grid hoverable={false} style={{ ...CardRowStyle }}>
                                 <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
