@@ -14,22 +14,20 @@ const CardRowStyle = { width: '100%', paddingTop: '16px', paddingBottom: '16px',
 
 class LoginServicesSettings extends Component {
 
-    state = {
-        disabledFacebook: true,
-        disabledGoogle: true,
+    toggleFacebook = () => {
+        this.props.handleFacebook(!this.props.settings.facebook);
+        this.props.handleHeader();
     };
 
-    toggleDisableFacebook = () => {
-        this.setState({ disabledFacebook: !this.state.disabledFacebook });
-        console.log("Facebook:" + this.state.disabledFacebook);
-    };
-
-    toggleDisableGoogle = () => {
-        this.setState({ disabledGoogle: !this.state.disabledGoogle });
-        console.log("Google:" + this.state.disabledGoogle);
+    toggleGoogle = () => {
+        this.props.handleGoogle(!this.props.settings.google);
+        this.props.handleHeader();
     };
 
     render() {
+
+        const facebook = this.props.settings.facebook;
+        const google = this.props.settings.google;
 
         return (
             <>
@@ -39,16 +37,16 @@ class LoginServicesSettings extends Component {
                             <Card.Grid hoverable={false} style={{ ...CardRowStyle }}>
                                 <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <div><FacebookFilled /> Facebook</div>
-                                    <Button size="large" style={{ ...buttonStyle }} onClick={this.toggleDisableFacebook.bind(this)}>
-                                        {!this.state.disabledFacebook ? 'Disconnect' : 'Connect'}
+                                    <Button size="large" style={{ ...buttonStyle }} onClick={this.toggleFacebook.bind(this)}>
+                                        {facebook ? 'Disconnect' : 'Connect'}
                                     </Button>
                                 </Space>
                             </Card.Grid>
                             <Card.Grid hoverable={false} style={{ ...CardRowStyle }}>
                                 <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <div><GoogleCircleFilled /> Google</div>
-                                    <Button size="large" style={buttonStyle} onClick={this.toggleDisableGoogle.bind(this)}>
-                                        {!this.state.disabledGoogle ? 'Disconnect' : 'Connect'}
+                                    <Button size="large" style={buttonStyle} onClick={this.toggleGoogle.bind(this)}>
+                                        {google ? 'Disconnect' : 'Connect'}
                                     </Button>
                                 </Space>
                             </Card.Grid>
