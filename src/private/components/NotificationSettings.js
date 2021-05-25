@@ -12,26 +12,19 @@ const CardRowStyle = { width: '100%', paddingTop: '20px', paddingBottom: '20px',
 
 class NotificationSettings extends Component {
 
-    state = {
-        recieveEmail: false,
-        revieveNotification: false,
-    };
-
     onChangeEmail = (checked) => {
-        this.setState({
-            recieveEmail: checked
-        })
-        console.log(`recieveEmail: ${checked}`);
+        this.props.handleHeader();
+        this.props.handleRecieveEmail(checked);
     }
 
     onChangeNotification = (checked) => {
-        this.setState({
-            revieveNotification: checked
-        })
-        console.log(`revieveNotification: ${checked}`);
+        this.props.handleHeader();
+        this.props.handleRecieveNotification(checked);
     }
 
     render() {
+        const email = this.props.settings.recieveEmail;
+        const notif = this.props.settings.recieveNotification;
 
         return (
             <>
@@ -40,11 +33,11 @@ class NotificationSettings extends Component {
                         <Card size={'small'} style={{ ...CardStyle }} bodyStyle={{ ...CardBodyStyle }}>
                             <Card.Grid hoverable={false} style={{ ...CardRowStyle }}>
                                 <div style={{ float: 'left' }}>Recieve email when someone reads your business plan</div>
-                                <div style={{ float: 'right' }}><Switch onChange={this.onChangeEmail.bind(this)} /></div>
+                                <div style={{ float: 'right' }}><Switch onChange={this.onChangeEmail.bind(this)} checked={email} /></div>
                             </Card.Grid>
                             <Card.Grid hoverable={false} style={{ ...CardRowStyle }}>
                                 <div style={{ float: 'left' }}>Recieve personal contact notifications</div>
-                                <div style={{ float: 'right' }}><Switch onChange={this.onChangeNotification.bind(this)} /></div>
+                                <div style={{ float: 'right' }}><Switch onChange={this.onChangeNotification.bind(this)} checked={notif} /></div>
                             </Card.Grid>
                         </Card >
                     </Col>
