@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import { Row, Col, Typography, Button, Card } from 'antd';
+import { Row, Col, Typography, Button, Card, Alert, Space } from 'antd';
 import { connect } from 'react-redux';
 import { buttonStyle } from '../../styles/customStyles';
+import ChangeEmailModal from "../components/ChangeEmailModal";
+import ChangePasswordModal from "../components/ChangePasswordModal";
+import { MessageOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -18,10 +21,56 @@ const CardRowStyle = { width: '100%', paddingTop: '16px', paddingBottom: '16px',
 
 class EmailPasswordSettings extends Component {
 
+    state = {
+        isVisibleChangeEmail: false,
+        isVisibleChangePassword: false
+    };
+    
+    closeChangeEmailModal = () => {
+        this.setState({
+            isVisibleChangeEmail: false
+        });
+    };
+
+    openChangeEmailModal = () => {
+        this.setState({
+            isVisibleChangeEmail: true
+        });
+    };
+
+    closeChangePasswordModal = () => {
+        this.setState({
+            isVisibleChangePassword: false
+        });
+    };
+
+    openChangePasswordModal = () => {
+        this.setState({
+            isVisibleChangePassword: true
+        });
+    };
+
     render() {
         return (
             <Row style={{ marginBottom: "16px" }}>
                 <Col span={24}>
+                    <Alert style={{ marginBottom: "16px"}}
+                        message={<Text strong={true}>Pending email verification</Text>}
+                        type="warning"
+                        showIcon 
+                        description={
+                            <Space direction="vertical">
+                                <Text>
+                                    We sent an email to verify that you own xxxx@xxxxx.com. You will not be able to use this email to log in to your account until it's verified.
+                                </Text>
+                                <Button type="ghost">
+                                    <Text strong={true}>Resend verification email</Text>
+                                </Button>
+                            </Space>
+                                
+                          }
+                    />
+
                     <Card style={{ ...CardStyle }} bodyStyle={{ ...CardBodyStyle }}>
                         <Card.Grid hoverable={false} style={{ ...CardRowStyle }}>
                             <div>
@@ -30,7 +79,7 @@ class EmailPasswordSettings extends Component {
                             <div style={{ marginTop: "8px" }}>
                                 <Text style={editableTextStyle}>{this.props.user.email}</Text>
                             </div>
-                            <Button style={{ ...buttonStyle, marginTop: "29px" }}>Change email</Button>
+                            <Button style={{ ...buttonStyle, marginTop: "29px" }} onClick={this.openChangeEmailModal.bind(this)}>Change email</Button>
                         </Card.Grid>
 
                         <Card.Grid hoverable={false} style={{ ...CardRowStyle }}>
@@ -38,12 +87,14 @@ class EmailPasswordSettings extends Component {
                                 <Text style={textStyle}>Password</Text>
                             </div>
                             <div style={{ marginTop: "8px" }}>
-                                <Text style={editableTextStyle}>*********</Text>
+                                <Text style={editableTextStyle}>You changed your last password almost 3 years ago</Text>
                             </div>
-                            <Button style={{ ...buttonStyle, marginTop: "29px" }}>Change password</Button>
+                            <Button style={{ ...buttonStyle, marginTop: "29px" }} onClick={this.openChangePasswordModal.bind(this)}>Change password</Button>
                         </Card.Grid>
                     </Card>
                 </Col>
+                <ChangeEmailModal visibility={this.state.isVisibleChangeEmail} handleClose={this.closeChangeEmailModal} />
+                <ChangePasswordModal visibility={this.state.isVisibleChangePassword} handleClose={this.closeChangePasswordModal} />
             </Row>
         );
     }
