@@ -9,6 +9,7 @@ import PublicBusinessPlans from './containers/PublicBusinessPlans';
 import PersonalBusinessPlans from './containers/PersonalBusinessPlans';
 import Footer from '../public/components/Footer';
 import UserSettingsWindow from './containers/UserSettingsWindow';
+import SwotWindow from './containers/SwotWindow';
 
 
 class PrivateApp extends React.Component {
@@ -22,7 +23,7 @@ class PrivateApp extends React.Component {
     render() {
         return (
             <Router>
-                <SiteHeader/>
+                <SiteHeader />
                 <Switch>
                     <Route exact path="/public-business-plans" render={(props) => <MainWindow {...props}> <PublicBusinessPlans {...props} /> </MainWindow>} />
                     <Route exact path="/personal-business-plans" render={(props) => <MainWindow {...props}> <PersonalBusinessPlans {...props} /> </MainWindow>} />
@@ -30,6 +31,7 @@ class PrivateApp extends React.Component {
                     <Route exact path="/initial-setup" render={(props) => <MainWindow {...props}> <InitialStage {...props} /> </MainWindow>} />
                     <Route exact path="/market-analysis" render={(props) => <MainWindow {...props}> <RiskAnalysis {...props} /> </MainWindow>} />
                     <Route exact path="/user-settings" render={(props) => <UserSettingsWindow {...props} />} />
+                    <Route exact path="/swot" render={(props) => <SwotWindow {...props} />} />
                 </Switch>
                 {/* <Footer alignment='center' divider={true} /> */}
             </Router>
