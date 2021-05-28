@@ -18,14 +18,56 @@ class OpportunitiesThreats extends Component {
             {
                 key: 1,
                 name: 'Arrival of new technology',
-                opportunities: true,
-                threats: false,
+                checkedOpportunities: false,
+                checkedThreats: false,
+                isThreat: true,
+                isOpportunity: true,
+                isBoth: true,
             },
             {
                 key: 2,
                 name: 'New regulations',
-                opportunities: true,
-                threats: true,
+                checkedOpportunities: false,
+                checkedThreats: false,
+                isThreat: true,
+                isOpportunity: true,
+                isBoth: false,
+            },
+            {
+                key: 3,
+                name: 'Unfulfilled customer need',
+                checkedOpportunities: false,
+                checkedThreats: false,
+                isThreat: false,
+                isOpportunity: true,
+                isBoth: false,
+            },
+            {
+                key: 4,
+                name: 'Taking business courses (training)',
+                checkedOpportunities: false,
+                checkedThreats: false,
+                isThreat: false,
+                isOpportunity: true,
+                isBoth: false,
+            },
+            {
+                key: 5,
+                name: 'Trend changes',
+                checkedOpportunities: false,
+                checkedThreats: false,
+                isThreat: true,
+                isOpportunity: false,
+                isBoth: false,
+            },
+            {
+                key: 6,
+                name: 'New substitute products',
+                checkedOpportunities: false,
+                checkedThreats: false,
+                isThreat: true,
+                isOpportunity: false,
+                isBoth: false,
             },
         ],
         editing: false,
@@ -39,8 +81,11 @@ class OpportunitiesThreats extends Component {
             const newData = {
                 key: counter + 1,
                 name: '',
-                opportunities: false,
-                threats: false,
+                checkedOpportunities: false,
+                checkedThreats: false,
+                isThreat: true,
+                isOpportunity: true,
+                isBoth: true,
             };
             this.setState({
                 data: [...data, newData],
@@ -60,6 +105,24 @@ class OpportunitiesThreats extends Component {
                 editing: false,
             });
         }
+    }
+
+    checkBoxValidation = () => {
+        const data = [...this.state.data];
+        let strengthsCount = 0;
+        let weaknessCount = 0;
+        for (let index = 0; index < data.length; index++) {
+            if (data[index]["strengths"] === true)
+                strengthsCount++;
+            if (data[index]["weakness"] === true) {
+                weaknessCount++;
+            }
+        }
+        this.setState({
+            selectedStrengthsCount: strengthsCount,
+            selectedWeaknessCount: weaknessCount,
+        })
+
     }
 
     handleCheckboxChangeFactory = (rowIndex, columnKey) => event => {
@@ -107,25 +170,29 @@ class OpportunitiesThreats extends Component {
             },
             {
                 title: 'Opportunities',
-                dataIndex: 'opportunities',
-                key: 'opportunities',
+                dataIndex: 'checkedOpportunities',
+                key: 'checkedOpportunities',
                 render: (value, record, rowIndex) => (
-                    <Checkbox
-                        checked={value}
-                        onChange={this.handleCheckboxChangeFactory(rowIndex, "opportunities")}
-                    />
+                    (this.state.data[rowIndex]["isOpportunity"]) ? (
+                        <Checkbox
+                            checked={value}
+                            disabled={(this.state.data[rowIndex]["checkedThreats"] === true && this.state.data[rowIndex]["isBoth"] === false) ? true : false}
+                            onChange={this.handleCheckboxChangeFactory(rowIndex, "checkedOpportunities")}
+                        />) : (<></>)
                 ),
                 width: '23%',
             },
             {
                 title: 'Threats',
-                dataIndex: 'threats',
-                key: 'threats',
+                dataIndex: 'checkedThreats',
+                key: 'checkedThreats',
                 render: (value, record, rowIndex) => (
-                    <Checkbox
-                        checked={value}
-                        onChange={this.handleCheckboxChangeFactory(rowIndex, "threats")}
-                    />
+                    (this.state.data[rowIndex]["isThreat"]) ? (
+                        <Checkbox
+                            checked={value}
+                            disabled={(this.state.data[rowIndex]["checkedOpportunities"] === true && this.state.data[rowIndex]["isBoth"] === false) ? true : false}
+                            onChange={this.handleCheckboxChangeFactory(rowIndex, "checkedThreats")}
+                        />) : (<></>)
                 ),
                 width: '23%',
             }

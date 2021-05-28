@@ -96,9 +96,9 @@ class SwotWindow extends React.Component {
                 </Row>
 
                 <Col span={16} offset={4}>
-                    <Tabs defaultActiveKey="1">
+                    <Tabs defaultActiveKey="1" >
                         <TabPane tab="Strengths and weaknesses" key="1">
-                            <Row>
+                            <Row style={{ marginBottom: "50px" }}>
                                 <Col span={8}>
                                     <div style={{ marginRight: '40px' }}>
                                         <Typography.Title style={{ ...aboutTitleTextStyle }}>Strengths and weaknesses</Typography.Title>
@@ -116,7 +116,7 @@ class SwotWindow extends React.Component {
                             </Row>
                         </TabPane>
                         <TabPane tab="Opportunities and threats" key="2">
-                            <Row>
+                            <Row style={{ marginBottom: "50px" }}>
                                 <Col span={8}>
                                     <div style={{ marginRight: '40px' }}>
                                         <Typography.Title style={aboutTitleTextStyle}>Opportunities and threats</Typography.Title>

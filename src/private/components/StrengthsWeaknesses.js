@@ -26,9 +26,137 @@ class StrengthsWeaknesses extends Component {
                 strengths: false,
                 weakness: true,
             },
+            {
+                key: 3,
+                name: 'Vehicles',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 4,
+                name: 'Inventory',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 5,
+                name: 'Skills and experience of employees',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 6,
+                name: 'Corporate image',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 7,
+                name: 'Patents',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 8,
+                name: 'Trademarks',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 9,
+                name: 'Copyrights',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 10,
+                name: 'Operational processes',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 11,
+                name: 'Management processes',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 12,
+                name: 'Supporting processes',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 13,
+                name: 'Product design',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 14,
+                name: 'Product assortment',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 15,
+                name: 'Packaging and labelling',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 16,
+                name: 'Complementary and after-sales service',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 17,
+                name: 'Guarantees and warranties',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 18,
+                name: 'Return of goods',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 19,
+                name: 'Price',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 20,
+                name: 'Discounts',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 21,
+                name: 'Payment terms',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 22,
+                name: 'Customer convenient access to products',
+                strengths: false,
+                weakness: false,
+            },
+            {
+                key: 23,
+                name: 'Advertising, PR and sales promotion',
+                strengths: false,
+                weakness: false,
+            },
         ],
         editing: false,
         editingId: -1,
+        selectedStrengthsCount: 0,
+        selectedWeaknessCount: 0,
     };
 
 
@@ -62,13 +190,31 @@ class StrengthsWeaknesses extends Component {
         }
     }
 
+    checkBoxValidation = () => {
+        const data = [...this.state.data];
+        let strengthsCount = 0;
+        let weaknessCount = 0;
+        for (let index = 0; index < data.length; index++) {
+            if (data[index]["strengths"] === true)
+                strengthsCount++;
+            if (data[index]["weakness"] === true) {
+                weaknessCount++;
+            }
+        }
+        this.setState({
+            selectedStrengthsCount: strengthsCount,
+            selectedWeaknessCount: weaknessCount,
+        })
+
+    }
+
     handleCheckboxChangeFactory = (rowIndex, columnKey) => event => {
         const newData = [...this.state.data];
         newData[rowIndex][columnKey] = event.target.checked;
         this.setState({
             dataSource: newData,
         });
-        console.log(newData[rowIndex]);
+        this.checkBoxValidation();
     };
 
     handleInputChange = (value, rowIndex) => event => {
@@ -112,7 +258,7 @@ class StrengthsWeaknesses extends Component {
                 render: (value, record, rowIndex) => (
                     <Checkbox
                         checked={value}
-                        disabled={(this.state.data[rowIndex]["weakness"] === true) ? true : false}
+                        disabled={(this.state.data[rowIndex]["weakness"] === true || (this.state.selectedStrengthsCount === 6 && value !== true)) ? true : false}
                         onChange={this.handleCheckboxChangeFactory(rowIndex, "strengths")}
                     />
                 ),
@@ -125,7 +271,7 @@ class StrengthsWeaknesses extends Component {
                 render: (value, record, rowIndex) => (
                     <Checkbox
                         checked={value}
-                        disabled={(this.state.data[rowIndex]["strengths"] === true) ? true : false}
+                        disabled={(this.state.data[rowIndex]["strengths"] === true || (this.state.selectedWeaknessCount === 6 && value !== true)) ? true : false}
                         onChange={this.handleCheckboxChangeFactory(rowIndex, "weakness")}
                     />
                 ),
