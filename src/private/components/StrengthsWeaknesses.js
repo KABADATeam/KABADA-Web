@@ -23,7 +23,7 @@ class StrengthsWeaknesses extends Component {
             {
                 key: 2,
                 name: 'Facilities and equipment',
-                strengths: true,
+                strengths: false,
                 weakness: true,
             },
         ],
@@ -112,6 +112,7 @@ class StrengthsWeaknesses extends Component {
                 render: (value, record, rowIndex) => (
                     <Checkbox
                         checked={value}
+                        disabled={(this.state.data[rowIndex]["weakness"] === true) ? true : false}
                         onChange={this.handleCheckboxChangeFactory(rowIndex, "strengths")}
                     />
                 ),
@@ -124,6 +125,7 @@ class StrengthsWeaknesses extends Component {
                 render: (value, record, rowIndex) => (
                     <Checkbox
                         checked={value}
+                        disabled={(this.state.data[rowIndex]["strengths"] === true) ? true : false}
                         onChange={this.handleCheckboxChangeFactory(rowIndex, "weakness")}
                     />
                 ),
