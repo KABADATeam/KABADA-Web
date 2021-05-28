@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-import { Card, Row, Col, Checkbox, Table, Button, Input, Typography } from 'antd';
+import { Card, Row, Col, Checkbox, Table, Button, Input, Typography, Space } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import '../../css/customModal.css';
-const EditableContext = React.createContext(null);
+import { buttonStyle, inputStyle } from '../../styles/customStyles';
+import '../../css/swotStyle.css';
 const CardStyle = {
     display: 'flex', justifyContent: 'center', backgroundColor: '#FFFFFF',
     boxShadow: '0px 0px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.08), 0px 0px 1px rgba(0, 0, 0, 0.04)', borderRadius: '8px',
 };
 
-const CardBodyStyle = { width: '100%', paddingTop: '0px', paddingLeft: '0px', paddingRight: '0px', paddingBottom: '0px' };
-const CardRowStyle = { width: '100%', paddingTop: '20px', paddingBottom: '20px', paddingLeft: '20px', paddingRight: '20px' };
+const CardBodyStyle = { width: '100%', paddingTop: '4px', paddingLeft: '4px', paddingRight: '4px', paddingBottom: '4px' };
 
 
 class OpportunitiesThreats extends Component {
@@ -34,58 +33,57 @@ class OpportunitiesThreats extends Component {
     };
 
     addTableRow = () => {
-        const { data } = this.state;
-        const counter = data.length;
-        const newData = {
-            key: counter + 1,
-            name: ``,
-            opportunities: false,
-            threats: false,
-        };
-        this.setState({
-            data: [...data, newData],
-            editing: true,
-            editingId: counter + 1,
-        });
+        if (this.state.editing === false) {
+            const { data } = this.state;
+            const counter = data.length;
+            const newData = {
+                key: counter + 1,
+                name: '',
+                opportunities: false,
+                threats: false,
+            };
+            this.setState({
+                data: [...data, newData],
+                editing: true,
+                editingId: counter + 1,
+            });
+        }
     }
 
     handledeleteRow = (rowIndex) => {
-        console.log(this.state.editingId);
-        const dataSource = [...this.state.data];
-        this.setState({
-            data: dataSource.filter((item) => item.key !== this.state.editingId),
-        });
-    }
-    render() {
-
-        const handleCheckboxChangeFactory = (rowIndex, columnKey) => event => {
-            const newCheckboxState = [...this.state.data];
-            newCheckboxState[rowIndex][columnKey] = event.target.checked;
-            const newData = [...this.state.data];
-            const index = newData.findIndex((item) => rowIndex === item.key);
-            const item = newData[rowIndex];
-            newData.splice(index, 1, { ...item, ...newCheckboxState[rowIndex] });
+        if (this.state.editing === true) {
+            console.log(this.state.editingId);
+            const dataSource = [...this.state.data];
             this.setState({
-                dataSource: newData,
+                data: dataSource.filter((item) => item.key !== this.state.editingId),
+                editingId: -1,
+                editing: false,
             });
-            console.log(newCheckboxState[rowIndex]);
-        };
+        }
+    }
 
-        const handleInputChange = (value, rowIndex) => event => {
-            console.log(event.target.value);
+    handleCheckboxChangeFactory = (rowIndex, columnKey) => event => {
+        const newData = [...this.state.data];
+        newData[rowIndex][columnKey] = event.target.checked;
+        this.setState({
+            dataSource: newData,
+        });
+        console.log(newData[rowIndex]);
+    };
 
-            const newNameValue = [...this.state.data];
-            newNameValue[rowIndex]["name"] = event.target.value;
+    handleInputChange = (value, rowIndex) => event => {
+        if (event.target.value !== "") {
             const newData = [...this.state.data];
-            const index = newData.findIndex((item) => rowIndex === item.key);
-            const item = newData[rowIndex];
-            newData.splice(index, 1, { ...item, ...newNameValue[rowIndex] });
+            newData[rowIndex]["name"] = event.target.value;
             this.setState({
                 dataSource: newData,
                 editing: false,
                 editingId: -1,
             })
         }
+    }
+
+    render() {
 
         const columns = [
             {
@@ -94,16 +92,18 @@ class OpportunitiesThreats extends Component {
                 key: 'name',
                 render: (value, record, rowIndex) => (
                     (this.state.editing && rowIndex === this.state.editingId - 1) ? (
-                        <>
+                        <Space>
                             <Input
-                                onPressEnter={handleInputChange(value, rowIndex)}
+                                style={{ ...inputStyle, fontSize: '14px', height: "40px" }}
+                                size="large"
+                                onPressEnter={this.handleInputChange(value, rowIndex)}
                                 placeholder="Add other"
-
                             />
-                            <Button onClick={this.handledeleteRow.bind(this, rowIndex)}><DeleteOutlined /></Button>
-                        </>
+                            <Button size="large" style={{ ...buttonStyle }} onClick={this.handledeleteRow.bind(this, rowIndex)}><DeleteOutlined /></Button>
+                        </Space>
                     ) : (<Typography>{value}</Typography>)
                 ),
+                width: '54%',
             },
             {
                 title: 'Opportunities',
@@ -112,9 +112,10 @@ class OpportunitiesThreats extends Component {
                 render: (value, record, rowIndex) => (
                     <Checkbox
                         checked={value}
-                        onChange={handleCheckboxChangeFactory(rowIndex, "opportunities")}
+                        onChange={this.handleCheckboxChangeFactory(rowIndex, "opportunities")}
                     />
                 ),
+                width: '23%',
             },
             {
                 title: 'Threats',
@@ -123,9 +124,10 @@ class OpportunitiesThreats extends Component {
                 render: (value, record, rowIndex) => (
                     <Checkbox
                         checked={value}
-                        onChange={handleCheckboxChangeFactory(rowIndex, "threats")}
+                        onChange={this.handleCheckboxChangeFactory(rowIndex, "threats")}
                     />
                 ),
+                width: '23%',
             }
         ];
 
@@ -133,17 +135,18 @@ class OpportunitiesThreats extends Component {
         return (
             <>
                 <Card size={'small'} style={{ ...CardStyle }} bodyStyle={{ ...CardBodyStyle }}>
-                    <Card.Grid hoverable={false} style={{ ...CardRowStyle }}>
-                        <div >Opportunities and threats</div>
-                        <div>List of predefined options for each part, where some of the items can be define for both sides,
-                            some can be simultaneously on both sides, some only for O or T part</div>
-                        <Table
-                            dataSource={this.state.data}
-                            columns={columns}
-                            pagination={false}
-                            footer={() => (<Button onClick={this.addTableRow.bind(this)}><PlusOutlined />Add item</Button>)}
-                        />
-                    </Card.Grid>
+                    <Table
+                        title={() => <>
+                            <Typography style={{ fontSize: "16px", fontWeight: "600", color: "#262626" }}>Opportunities and threats</Typography>
+                            <Typography style={{ color: "#8C8C8C", fontSize: "14px" }}>
+                                List of predefined options for each part, where some of the items can be define for both sides,
+                                some can be simultaneously on both sides, some only for O or T part</Typography>
+                        </>}
+                        dataSource={this.state.data}
+                        columns={columns}
+                        pagination={false}
+                        footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.addTableRow.bind(this)}><PlusOutlined />Add item</Button>)}
+                    />
                 </Card >
             </>
         );

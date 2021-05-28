@@ -1,17 +1,28 @@
 import React from 'react';
-import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Tabs } from 'antd';
+import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Tabs, Descriptions } from 'antd';
 import { buttonStyle } from '../../styles/customStyles';
 import { ArrowLeftOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import StrengthsWeaknesses from '../components/StrengthsWeaknesses';
 import OpportunitiesThreats from '../components/OpportunitiesThreats';
+import { Link } from 'react-router-dom';
 const { TabPane } = Tabs;
 const { Text } = Typography;
 
-const settingsGroupTitleTextStyle = {
+const aboutTitleTextStyle = {
     fontStyle: 'normal',
-    fontWeight: 600,
-    fontSize: 20,
+    fontWeight: '600',
+    fontSize: '20px',
+    marginBottom: '16px',
+}
+
+const textStyle = {
+    fontSize: '14px',
+    color: '#8C8C8C',
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    lineHeight: '22px',
+    marginRight: '40px'
 }
 
 const titleTextStyle = {
@@ -72,9 +83,15 @@ class SwotWindow extends React.Component {
                     <Col offset={4} span={1}>
                         <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                     </Col>
-                    <Col span={15}>
-                        <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>SWOT </Text> <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF' }} />
-                        <div style={{ float: 'right' }}><Text>Mark as completed </Text><Switch /> </div>
+                    <Col span={4}>
+                        <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
+                            <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>SWOT</Text> <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
+                        </div>
+                    </Col>
+                    <Col span={11}>
+                        <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
+                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed </Text><Switch />
+                        </div>
                     </Col>
                 </Row>
 
@@ -82,20 +99,36 @@ class SwotWindow extends React.Component {
                     <Tabs defaultActiveKey="1">
                         <TabPane tab="Strengths and weaknesses" key="1">
                             <Row>
-                                <Col span={4}>
-                                    <Text style={settingsGroupTitleTextStyle}>Strengths and weaknesses</Text>
+                                <Col span={8}>
+                                    <div style={{ marginRight: '40px' }}>
+                                        <Typography.Title style={{ ...aboutTitleTextStyle }}>Strengths and weaknesses</Typography.Title>
+                                        <Typography.Text style={{ ...textStyle }}>
+                                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+                                            Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+                                        <br />
+                                            <Typography.Link underline style={{ ...textStyle }}>Read more about SWOT</Typography.Link>
+                                        </Typography.Text>
+                                    </div>
                                 </Col>
-                                <Col span={12}>
+                                <Col span={16}>
                                     <StrengthsWeaknesses />
                                 </Col>
                             </Row>
                         </TabPane>
                         <TabPane tab="Opportunities and threats" key="2">
                             <Row>
-                                <Col span={4}>
-                                    <Text style={settingsGroupTitleTextStyle}>Opportunities and threats</Text>
+                                <Col span={8}>
+                                    <div style={{ marginRight: '40px' }}>
+                                        <Typography.Title style={aboutTitleTextStyle}>Opportunities and threats</Typography.Title>
+                                        <Typography.Text style={textStyle}>
+                                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+                                            Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+                                        <br />
+                                            <Typography.Link underline style={{ ...textStyle }}>Read more about SWOT</Typography.Link>
+                                        </Typography.Text>
+                                    </div>
                                 </Col>
-                                <Col span={12}>
+                                <Col span={16}>
                                     <OpportunitiesThreats />
                                 </Col>
                             </Row>
