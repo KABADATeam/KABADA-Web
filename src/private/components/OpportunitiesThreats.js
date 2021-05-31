@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Card, Row, Col, Checkbox, Table, Button, Input, Typography, Space } from 'antd';
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { buttonStyle, inputStyle } from '../../styles/customStyles';
 import '../../css/swotStyle.css';
 const CardStyle = {
@@ -23,6 +23,7 @@ class OpportunitiesThreats extends Component {
                 isThreat: true,
                 isOpportunity: true,
                 isBoth: true,
+                info: "a",
             },
             {
                 key: 2,
@@ -32,6 +33,7 @@ class OpportunitiesThreats extends Component {
                 isThreat: true,
                 isOpportunity: true,
                 isBoth: false,
+                info: "a",
             },
             {
                 key: 3,
@@ -41,6 +43,7 @@ class OpportunitiesThreats extends Component {
                 isThreat: false,
                 isOpportunity: true,
                 isBoth: false,
+                info: "a",
             },
             {
                 key: 4,
@@ -50,6 +53,7 @@ class OpportunitiesThreats extends Component {
                 isThreat: false,
                 isOpportunity: true,
                 isBoth: false,
+                info: "a",
             },
             {
                 key: 5,
@@ -59,6 +63,7 @@ class OpportunitiesThreats extends Component {
                 isThreat: true,
                 isOpportunity: false,
                 isBoth: false,
+                info: "",
             },
             {
                 key: 6,
@@ -68,6 +73,7 @@ class OpportunitiesThreats extends Component {
                 isThreat: true,
                 isOpportunity: false,
                 isBoth: false,
+                info: "",
             },
         ],
         editing: false,
@@ -164,7 +170,8 @@ class OpportunitiesThreats extends Component {
                             />
                             <Button size="large" style={{ ...buttonStyle }} onClick={this.handledeleteRow.bind(this, rowIndex)}><DeleteOutlined /></Button>
                         </Space>
-                    ) : (<Typography>{value}</Typography>)
+                    ) : ((record.info) ? (<Space><Typography>{value}</Typography> <InfoCircleFilled style={{ color: '#BFBFBF' }} /></Space>) :
+                        (<Space><Typography>{value}</Typography></Space>))
                 ),
                 width: '54%',
             },
