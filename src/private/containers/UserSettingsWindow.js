@@ -5,6 +5,7 @@ import NotificationSettings from '../components/NotificationSettings';
 import EmailPasswordSettings from '../components/EmailPasswordSettings';
 import PersonalSettings from '../components/PersonalSettings';
 import { buttonStyle } from '../../styles/customStyles';
+import FooterComponent from '../../public/components/FooterComponent';
 
 import { ArrowLeftOutlined } from '@ant-design/icons';
 

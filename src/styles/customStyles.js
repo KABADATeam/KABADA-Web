@@ -44,11 +44,12 @@ export const bottomDisclaimerStyle = {
     color: '#8C8C8C'
 };
 export const footerStyle = {
-    position: "absolute",
-    bottom: "16px",
-    width: "100%",
     fontSize: '12px',
-    color: '#8C8C8C'
+    backgroundColor: '#F5F5F5',
+    position: 'absolute',
+    bottom: '0px',
+    width: '100%', 
+    height: '20px'
 }
 
 export const iconColor = {

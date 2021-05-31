@@ -1,21 +1,19 @@
 import React from 'react';
-import { Grid } from 'semantic-ui-react';
-import MessageBox from '../components/MessageBox';
+import FooterComponent from '../../public/components/FooterComponent';
+import {Layout} from 'antd';
+
+const { Content } = Layout;
 
 class MainWindow extends React.Component {
 
     render() {        
         return (
-            <Grid>
-                <Grid.Row>
-                    <Grid.Column width={16} >
-                        <div style={{ textAlign: "center"}}>
-                            <MessageBox />
-                            {this.props.children}
-                        </div>
-                    </Grid.Column>
-                </Grid.Row>           
-            </Grid>              
+            <Layout style={{minHeight: '100%', position: "relative", marginBottom: 0, paddingBottom: 20, boxSizing: "border-box" }}>
+                <Content >
+                        {this.props.children}
+                </Content>
+                <FooterComponent alignment='left' divider={true}/>
+            </Layout>              
         );
     }
 }
