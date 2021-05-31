@@ -9,6 +9,7 @@ import PublicBusinessPlans from './containers/PublicBusinessPlans';
 import PersonalBusinessPlans from './containers/PersonalBusinessPlans';
 import UserSettingsWindow from './containers/UserSettingsWindow';
 import SwotWindow from './containers/SwotWindow';
+import KeyResources from './containers/KeyResources';
 
 
 class PrivateApp extends React.Component {
@@ -29,8 +30,9 @@ class PrivateApp extends React.Component {
                     <Route exact path="/plans" render={(props) => <MainWindow {...props}> <BusinessPlansList {...props} /> </MainWindow>} />
                     <Route exact path="/initial-setup" render={(props) => <MainWindow {...props}> <InitialStage {...props} /> </MainWindow>} />
                     <Route exact path="/market-analysis" render={(props) => <MainWindow {...props}> <RiskAnalysis {...props} /> </MainWindow>} />
-                    <Route exact path="/user-settings" render={(props) => <MainWindow {...props}> <UserSettingsWindow {...props} /> </MainWindow> } />
-                    <Route exact path="/swot" render={(props) => <MainWindow {...props}> <SwotWindow {...props} /> </MainWindow> } />
+                    <Route exact path="/user-settings" render={(props) => <MainWindow {...props}> <UserSettingsWindow {...props} /> </MainWindow>} />
+                    <Route exact path="/swot" render={(props) => <MainWindow {...props}> <SwotWindow {...props} /> </MainWindow>} />
+                    <Route exact path="/key-resources" render={(props) => <MainWindow {...props}> <KeyResources {...props} /> </MainWindow>} />
                 </Switch>
             </Router>
 

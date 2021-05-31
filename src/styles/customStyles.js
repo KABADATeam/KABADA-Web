@@ -19,7 +19,19 @@ export const buttonStyle = {
     fontSize: '14px'
 };
 
+export const leftButtonStyle = {
+    borderRadius: '4px 0px 0px 4px',
+    boxShadow: '0px 1px 0px rgba(0, 0, 0, 0.05)',
+    fontWeight: '600',
+    fontSize: '14px'
+};
 
+export const rightButtonStyle = {
+    borderRadius: '0px 4px 4px 0px',
+    boxShadow: '0px 1px 0px rgba(0, 0, 0, 0.05)',
+    fontWeight: '600',
+    fontSize: '14px'
+};
 
 export const inputStyle = {
     borderRadius: '4px',
@@ -48,7 +60,7 @@ export const footerStyle = {
     backgroundColor: '#F5F5F5',
     position: 'absolute',
     bottom: '0px',
-    width: '100%', 
+    width: '100%',
     height: '20px'
 }
 
