@@ -1,11 +1,12 @@
 import React from 'react';
-import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Tabs, Descriptions } from 'antd';
-import { buttonStyle } from '../../styles/customStyles';
+import { Button, Breadcrumb, Row, Col, Typography, Switch, Tabs } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import StrengthsWeaknesses from '../components/StrengthsWeaknesses';
 import OpportunitiesThreats from '../components/OpportunitiesThreats';
-import { Link } from 'react-router-dom';
+import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
+import { getSwotList } from "../../appStore/actions/swotAction";
+
 const { TabPane } = Tabs;
 const { Text } = Typography;
 
@@ -49,22 +50,125 @@ class SwotWindow extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            isVisibleHeader: 'hidden',
+            originalSwotList: {},
+            sw: [],
+            ot: [],
+            editingOt: false,
+            editingSw: false,
         };
     }
 
     componentDidMount() {
-
+        this.props.getSwotList()
+            .then(
+                () => {
+                    this.setState({
+                        sw: this.props.swotList.strengthWeakness,
+                        ot: this.props.swotList.opportunityThreat,
+                        originalSwotList: JSON.parse(JSON.stringify(this.props.swotList))
+                    });
+                },
+                (error) => {
+                    this.setState({
+                        sw: [],
+                        ot: []
+                    });
+                }
+            );
     }
 
     onBackClick() {
         this.props.history.push(`/personal-business-plans`);
     }
 
+    hideChangesHeader = () => {
+        this.setState({
+            isVisibleHeader: 'hidden',
+        });
+    };
+
+    showChangesHeader = () => {
+        this.setState({
+            isVisibleHeader: 'visible',
+        });
+    };
+
+    discardChanges = () => {
+        const originalData = JSON.parse(JSON.stringify(this.state.originalSwotList))
+        this.setState({
+            sw: originalData.strengthWeakness,
+            ot: originalData.opportunityThreat,
+            editingOt: false,
+            editingSw: false,
+        });
+
+        this.hideChangesHeader();
+    };
+
+    onAddNewRow = (value) => {
+        console.log(value)
+        this.setState({
+            sw: [
+                ...this.state.sw,
+                value
+            ],
+            editingSw: true,
+        });
+    }
+
+    onDeleteRow = (value) => {
+        let newData = this.state.sw.filter((item) => item.key !== value);
+        this.setState({
+            sw: newData,
+            editingSw: false,
+        });
+    }
+
+    onAddNewRowOt = (value) => {
+        console.log(value)
+        this.setState({
+            ot: [
+                ...this.state.ot,
+                value
+            ],
+            editingOt: true,
+        });
+    }
+
+    onDeleteRowOt = (value) => {
+        let newData = this.state.ot.filter((item) => item.key !== value);
+        this.setState({
+            ot: newData,
+            editingOt: false,
+        });
+    }
+
+    onEditingChange = () => {
+        this.setState({
+            editingOt: false,
+            editingSw: false,
+        })
+    }
+
+    saveChanges = () => {
+        console.log("save changes");
+        this.hideChangesHeader();
+        //this.props.update(this.state.swotList);
+    };
 
     render() {
+        console.log(this.state.originalSwotList);
+        console.log(this.state.sw);
+        const isVisibleHeader = this.state.isVisibleHeader;
         return (
             <>
+                <UnsavedChangesHeader
+                    visibility={isVisibleHeader}
+                    handleHiding={this.hideChangesHeader}
+                    discardChanges={this.discardChanges}
+                    saveChanges={this.saveChanges}
+                />
                 <Col span={16} offset={4}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
@@ -111,7 +215,14 @@ class SwotWindow extends React.Component {
                                     </div>
                                 </Col>
                                 <Col span={16}>
-                                    <StrengthsWeaknesses />
+                                    <StrengthsWeaknesses
+                                        swList={this.state.sw}
+                                        handleHeader={this.showChangesHeader}
+                                        handleAddRow={this.onAddNewRow}
+                                        handleDeleteRow={this.onDeleteRow}
+                                        editing={this.state.editingSw}
+                                        handleEditingChange={this.onEditingChange}
+                                    />
                                 </Col>
                             </Row>
                         </TabPane>
@@ -129,7 +240,14 @@ class SwotWindow extends React.Component {
                                     </div>
                                 </Col>
                                 <Col span={16}>
-                                    <OpportunitiesThreats />
+                                    <OpportunitiesThreats
+                                        otList={this.state.ot}
+                                        handleHeader={this.showChangesHeader}
+                                        handleAddRow={this.onAddNewRowOt}
+                                        handleDeleteRow={this.onDeleteRowOt}
+                                        editing={this.state.editingOt}
+                                        handleEditingChange={this.onEditingChange}
+                                    />
                                 </Col>
                             </Row>
                         </TabPane>
@@ -145,8 +263,8 @@ const mapStateToProps = (state) => {
         loading: state.loading,
         error: state.error,
         message: state.message,
-        userSettings: state.userSettings,
+        swotList: state.swotList,
     };
 }
 
-export default connect(mapStateToProps)(SwotWindow)
+export default connect(mapStateToProps, { getSwotList })(SwotWindow)

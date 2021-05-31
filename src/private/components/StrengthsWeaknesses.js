@@ -13,170 +13,6 @@ const CardBodyStyle = { width: '100%', paddingTop: '4px', paddingLeft: '4px', pa
 class StrengthsWeaknesses extends Component {
 
     state = {
-        data: [
-            {
-                key: 1,
-                name: 'Land',
-                strengths: true,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 2,
-                name: 'Facilities and equipment',
-                strengths: false,
-                weakness: true,
-                info: "a"
-            },
-            {
-                key: 3,
-                name: 'Vehicles',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 4,
-                name: 'Inventory',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 5,
-                name: 'Skills and experience of employees',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 6,
-                name: 'Corporate image',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 7,
-                name: 'Patents',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 8,
-                name: 'Trademarks',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 9,
-                name: 'Copyrights',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 10,
-                name: 'Operational processes',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 11,
-                name: 'Management processes',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 12,
-                name: 'Supporting processes',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 13,
-                name: 'Product design',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 14,
-                name: 'Product assortment',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 15,
-                name: 'Packaging and labelling',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 16,
-                name: 'Complementary and after-sales service',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 17,
-                name: 'Guarantees and warranties',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 18,
-                name: 'Return of goods',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 19,
-                name: 'Price',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 20,
-                name: 'Discounts',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 21,
-                name: 'Payment terms',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 22,
-                name: 'Customer convenient access to products',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-            {
-                key: 23,
-                name: 'Advertising, PR and sales promotion',
-                strengths: false,
-                weakness: false,
-                info: "a"
-            },
-        ],
-        editing: false,
         editingId: -1,
         selectedStrengthsCount: 0,
         selectedWeaknessCount: 0,
@@ -184,43 +20,40 @@ class StrengthsWeaknesses extends Component {
 
 
     addTableRow = () => {
-        if (this.state.editing === false) {
-            const { data } = this.state;
-            const counter = data.length;
-            const newData = {
+        if (this.props.editing === false) {
+            this.props.handleHeader();
+            let counter = this.props.swList.length;
+            let newData = {
                 key: counter + 1,
                 name: '',
-                opportunities: false,
-                threats: false,
+                strengths: false,
+                weakness: false,
+                info: ''
             };
+            this.props.handleAddRow(newData);
             this.setState({
-                data: [...data, newData],
-                editing: true,
                 editingId: counter + 1,
             });
         }
     }
 
     handledeleteRow = (rowIndex) => {
-        if (this.state.editing === true) {
+        if (this.props.editing === true) {
             console.log(this.state.editingId);
-            const dataSource = [...this.state.data];
+            this.props.handleDeleteRow(this.state.editingId);
             this.setState({
-                data: dataSource.filter((item) => item.key !== this.state.editingId),
                 editingId: -1,
-                editing: false,
             });
         }
     }
 
     checkBoxValidation = () => {
-        const data = [...this.state.data];
         let strengthsCount = 0;
         let weaknessCount = 0;
-        for (let index = 0; index < data.length; index++) {
-            if (data[index]["strengths"] === true)
+        for (let index = 0; index < this.props.swList.length; index++) {
+            if (this.props.swList[index]["strengths"] === true)
                 strengthsCount++;
-            if (data[index]["weakness"] === true) {
+            if (this.props.swList[index]["weakness"] === true) {
                 weaknessCount++;
             }
         }
@@ -232,27 +65,27 @@ class StrengthsWeaknesses extends Component {
     }
 
     handleCheckboxChangeFactory = (rowIndex, columnKey) => event => {
-        const newData = [...this.state.data];
-        newData[rowIndex][columnKey] = event.target.checked;
-        this.setState({
-            dataSource: newData,
-        });
+        this.props.handleHeader();
+        this.props.swList[rowIndex][columnKey] = event.target.checked;
         this.checkBoxValidation();
     };
 
     handleInputChange = (value, rowIndex) => event => {
+        console.log(rowIndex);
         if (event.target.value !== "") {
-            const newData = [...this.state.data];
-            newData[rowIndex]["name"] = event.target.value;
+            this.props.swList[rowIndex]["name"] = event.target.value;
             this.setState({
-                dataSource: newData,
-                editing: false,
                 editingId: -1,
             })
+            this.props.handleEditingChange();
         }
     }
 
     render() {
+
+        const data = this.props.swList;
+        const editing = this.props.editing;
+        console.log(this.props.swList)
 
         const columns = [
             {
@@ -260,7 +93,7 @@ class StrengthsWeaknesses extends Component {
                 dataIndex: 'name',
                 key: 'name',
                 render: (value, record, rowIndex) => (
-                    (this.state.editing && rowIndex === this.state.editingId - 1) ? (
+                    (editing && rowIndex === this.state.editingId - 1) ? (
                         <Space>
                             <Input
                                 style={{ ...inputStyle, fontSize: '14px', height: "40px" }}
@@ -282,7 +115,7 @@ class StrengthsWeaknesses extends Component {
                 render: (value, record, rowIndex) => (
                     <Checkbox
                         checked={value}
-                        disabled={(this.state.data[rowIndex]["weakness"] === true || (this.state.selectedStrengthsCount === 6 && value !== true)) ? true : false}
+                        disabled={(data[rowIndex]["weakness"] === true || (this.state.selectedStrengthsCount === 6 && value !== true)) ? true : false}
                         onChange={this.handleCheckboxChangeFactory(rowIndex, "strengths")}
                     />
                 ),
@@ -295,7 +128,7 @@ class StrengthsWeaknesses extends Component {
                 render: (value, record, rowIndex) => (
                     <Checkbox
                         checked={value}
-                        disabled={(this.state.data[rowIndex]["strengths"] === true || (this.state.selectedWeaknessCount === 6 && value !== true)) ? true : false}
+                        disabled={(data[rowIndex]["strengths"] === true || (this.state.selectedWeaknessCount === 6 && value !== true)) ? true : false}
                         onChange={this.handleCheckboxChangeFactory(rowIndex, "weakness")}
                     />
                 ),
@@ -312,7 +145,7 @@ class StrengthsWeaknesses extends Component {
                             <Typography style={{ color: "#8C8C8C", fontSize: "14px" }}>
                                 Select 3 - 6 items in each column. Each of the item can be selected only for one side – S or W</Typography>
                         </>}
-                        dataSource={this.state.data}
+                        dataSource={data}
                         columns={columns}
                         pagination={false}
                         footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.addTableRow.bind(this)}><PlusOutlined />Add item</Button>)}
