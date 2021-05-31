@@ -5,9 +5,11 @@ import NotificationSettings from '../components/NotificationSettings';
 import EmailPasswordSettings from '../components/EmailPasswordSettings';
 import PersonalSettings from '../components/PersonalSettings';
 import { buttonStyle } from '../../styles/customStyles';
-import FooterComponent from '../../public/components/FooterComponent';
-
 import { ArrowLeftOutlined } from '@ant-design/icons';
+import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
+
+import { connect } from 'react-redux';
+import { getUserSettings, updateUserSettings } from "../../appStore/actions/settingsAction";
 
 const { Text } = Typography;
 
@@ -38,14 +40,144 @@ const titleButtonStyle = {
 
 class UserSettingsWindow extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            isVisibleHeader: 'hidden',
+            settings: {},
+        };
+    }
+
+    componentDidMount() {
+        this.props.getUserSettings()
+            .then(
+                () => {
+                    this.setState({
+                        settings: this.props.userSettings
+                    });
+                },
+                (error) => {
+                    this.setState({
+                        settings: {}
+                    });
+                }
+            )
+
+    }
+
     onBackClick() {
         this.props.history.push(`/personal-business-plans`);
     }
 
-    render() {        
+    hideChangesHeader = () => {
+        this.setState({
+            isVisibleHeader: 'hidden',
+        });
+    };
+
+    showChangesHeader = () => {
+        this.setState({
+            isVisibleHeader: 'visible',
+        });
+    };
+
+    changeRecieveEmail = (value) => {
+        this.setState(prevState => ({
+            settings: {
+                ...prevState.settings,
+                recieveEmail: value
+            }
+        }));
+    };
+
+    changeRecieveNotification = (value) => {
+        this.setState(prevState => ({
+            settings: {
+                ...prevState.settings,
+                recieveNotification: value
+            }
+        }));
+    }
+
+    changeFirstName = (value) => {
+        this.setState(prevState => ({
+            settings: {
+                ...prevState.settings,
+                firstName: value
+            }
+        }));
+    };
+
+    changeLastName = (value) => {
+        this.setState(prevState => ({
+            settings: {
+                ...prevState.settings,
+                lastName: value
+            }
+        }));
+    };
+
+    changeFacebook = (value) => {
+        this.setState(prevState => ({
+            settings: {
+                ...prevState.settings,
+                facebook: value
+            }
+        }));
+    };
+
+    changeGoogle = (value) => {
+        this.setState(prevState => ({
+            settings: {
+                ...prevState.settings,
+                google: value
+            }
+        }));
+    };
+
+    discardChanges = () => {
+        this.setState({
+            settings: this.props.userSettings
+        });
+        this.hideChangesHeader();
+    };
+
+
+    saveChanges = () => {
+        console.log("save changes");
+        console.log(this.state.settings);
+        this.hideChangesHeader();
+        this.props.updateUserSettings(this.state.settings);
+    };
+
+    removePhoto = () => {
+        this.setState(prevState => ({
+            settings: {
+                ...prevState.settings,
+                userImage: ''
+            }
+        }));
+    }
+    changePhoto = (src) => {
+        this.setState(prevState => ({
+            settings: {
+                ...prevState.settings,
+                userImage: src
+            }
+        }));
+    }
+
+    render() {
+        const isVisibleHeader = this.state.isVisibleHeader;
         return (
             <>
-                <Col span={16} offset = {4}>
+                <UnsavedChangesHeader
+                    visibility={isVisibleHeader}
+                    handleHiding={this.hideChangesHeader}
+                    discardChanges={this.discardChanges}
+                    saveChanges={this.saveChanges}
+                />
+                <Col span={16} offset={4}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
                             <a href="personal-business-plans">My Business plans</a>
@@ -57,68 +189,94 @@ class UserSettingsWindow extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col offset = {4}>
+                    <Col offset={4}>
                         <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                     </Col>
                     <Col>
-                        <Text style={{...titleTextStyle, marginLeft: "16px" }}>Settings</Text>
+                        <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Settings</Text>
                     </Col>
                 </Row>
-                
 
-                <Col span={16} offset = {4}>
+
+                <Col span={16} offset={4}>
                     <Divider />
                 </Col>
-                
+
                 <Row>
-                    <Col span={4} offset = {4}>
+                    <Col span={4} offset={4}>
                         <Text style={settingsGroupTitleTextStyle}>Registration data</Text>
                     </Col>
                     <Col span={12}>
                         <EmailPasswordSettings />
-                        <LoginServicesSettings />
+                        <LoginServicesSettings
+                            settings={this.state.settings}
+                            handleHeader={this.showChangesHeader}
+                            handleGoogle={this.changeGoogle}
+                            handleFacebook={this.changeFacebook}
+                        />
                     </Col>
                 </Row>
 
-                <Col span={16} offset = {4}>
+                <Col span={16} offset={4}>
                     <Divider />
                 </Col>
-                
+
                 <Row>
-                    <Col span={4} offset = {4}>
+                    <Col span={4} offset={4}>
                         <Text style={settingsGroupTitleTextStyle}>Personal data</Text>
                     </Col>
                     <Col span={12}>
-                        <PersonalSettings />
+                        <PersonalSettings
+                            settings={this.state.settings}
+                            handleHeader={this.showChangesHeader}
+                            handleChangeFirstName={this.changeFirstName}
+                            handleChangeLastName={this.changeLastName}
+                            handleRemovePhoto={this.removePhoto}
+                            handleChangePhoto={this.changePhoto}
+                        />
                     </Col>
                 </Row>
 
-                <Col span={16} offset = {4}>
+                <Col span={16} offset={4}>
                     <Divider />
                 </Col>
-                
+
                 <Row>
-                    <Col span={4} offset = {4}>
+                    <Col span={4} offset={4}>
                         <Text style={settingsGroupTitleTextStyle}>Notification settings</Text>
                     </Col>
                     <Col span={12}>
-                        <NotificationSettings />
+                        <NotificationSettings
+                            settings={this.state.settings}
+                            handleHeader={this.showChangesHeader}
+                            handleRecieveEmail={this.changeRecieveEmail}
+                            handleRecieveNotification={this.changeRecieveNotification}
+                        />
                     </Col>
                 </Row>
 
-                <Col span={16} offset = {4}>
+                <Col span={16} offset={4}>
                     <Divider />
                 </Col>
 
-                <Col span={16} offset = {4}>
-                    <div style={{ float:"right", height: "200px" }}>
-                        <Button style={{ ...buttonStyle, marginRight: "8px" }}>Discard</Button>
-                        <Button type="primary" style={{ ...buttonStyle}}>Save</Button>
+                <Col span={16} offset={4}>
+                    <div style={{ float: "right", height: "200px" }}>
+                        <Button style={{ ...buttonStyle, marginRight: "8px" }} onClick={this.discardChanges}>Discard</Button>
+                        <Button type="primary" style={{ ...buttonStyle }} onClick={this.saveChanges}>Save</Button>
                     </div>
                 </Col>
-            </>     
+            </>
         );
     }
 }
 
-export default UserSettingsWindow;
+const mapStateToProps = (state) => {
+    return {
+        loading: state.loading,
+        error: state.error,
+        message: state.message,
+        userSettings: state.userSettings,
+    };
+}
+
+export default connect(mapStateToProps, { getUserSettings, updateUserSettings })(UserSettingsWindow);
