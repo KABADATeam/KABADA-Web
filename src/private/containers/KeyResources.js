@@ -1,18 +1,10 @@
 import React from 'react';
 import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { buttonStyle, leftButtonStyle, rightButtonStyle } from '../../styles/customStyles';
+import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle, tableDescriptionStyle } from '../../styles/customStyles';
 import { connect } from 'react-redux';
 
 const { Text } = Typography;
-
-const CardStyle = {
-    display: 'flex', justifyContent: 'center', backgroundColor: '#FFFFFF',
-    boxShadow: '0px 0px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.08), 0px 0px 1px rgba(0, 0, 0, 0.04)', borderRadius: '8px',
-};
-
-const CardBodyStyle = { width: '100%', paddingTop: '4px', paddingLeft: '4px', paddingRight: '4px', paddingBottom: '4px' };
-
 
 const titleTextStyle = {
     fontStyle: "normal",
@@ -192,11 +184,11 @@ class KeyResources extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                            <Card size={'small'} style={{ ...CardStyle }} bodyStyle={{ ...CardBodyStyle }}>
+                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                                 <Table
                                     title={() => <>
-                                        <Typography style={{ fontSize: "16px", fontWeight: "600", color: "#262626" }}>Key resources</Typography>
-                                        <Typography style={{ color: "#8C8C8C", fontSize: "14px" }}>
+                                        <Typography style={{ ...tableTitleStyle }}>Key resources</Typography>
+                                        <Typography style={{ ...tableDescriptionStyle }}>
                                             Only state those resources that make you unique compared to your competitors in the market.
                                             </Typography>
                                     </>}

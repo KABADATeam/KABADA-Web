@@ -90,3 +90,27 @@ export const filterStyle = {
     lineHeight: '22px',
     textColor: '#8C8C8C',
 };
+
+export const tableCardStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    boxShadow: '0px 0px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.08), 0px 0px 1px rgba(0, 0, 0, 0.04)',
+    borderRadius: '8px',
+};
+
+export const tableCardBodyStyle = {
+    width: '100%',
+    padding: '4px 4px 4px 4px',
+};
+
+export const tableTitleStyle = {
+    fontSize: "16px",
+    fontWeight: "600",
+    color: "#262626"
+};
+
+export const tableDescriptionStyle = {
+    color: "#8C8C8C",
+    fontSize: "14px"
+};

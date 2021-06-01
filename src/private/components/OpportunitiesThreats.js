@@ -1,15 +1,8 @@
 import React, { Component } from 'react';
 import { Card, Row, Col, Checkbox, Table, Button, Input, Typography, Space } from 'antd';
 import { PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
-import { buttonStyle, inputStyle } from '../../styles/customStyles';
+import { buttonStyle, inputStyle, tableTitleStyle, tableDescriptionStyle, tableCardBodyStyle, tableCardStyle } from '../../styles/customStyles';
 import '../../css/swotStyle.css';
-const CardStyle = {
-    display: 'flex', justifyContent: 'center', backgroundColor: '#FFFFFF',
-    boxShadow: '0px 0px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.08), 0px 0px 1px rgba(0, 0, 0, 0.04)', borderRadius: '8px',
-};
-
-const CardBodyStyle = { width: '100%', paddingTop: '4px', paddingLeft: '4px', paddingRight: '4px', paddingBottom: '4px' };
-
 
 class OpportunitiesThreats extends Component {
 
@@ -39,7 +32,6 @@ class OpportunitiesThreats extends Component {
 
     handledeleteRow = (rowIndex) => {
         if (this.props.editing === true) {
-            console.log(this.state.editingId);
             this.props.handleDeleteRow(this.state.editingId);
             this.setState({
                 editingId: -1,
@@ -63,16 +55,16 @@ class OpportunitiesThreats extends Component {
     }
 
     render() {
-        console.log("editing: " + this.props.editing);
         const data = this.props.otList;
         const editing = this.props.editing;
+        const editingId = this.state.editingId - 1;
         const columns = [
             {
                 title: 'Column name',
                 dataIndex: 'name',
                 key: 'name',
                 render: (value, record, rowIndex) => (
-                    (editing && rowIndex === this.state.editingId - 1) ? (
+                    (editing && rowIndex === editingId) ? (
                         <Space>
                             <Input
                                 style={{ ...inputStyle, fontSize: '14px', height: "40px" }}
@@ -117,14 +109,13 @@ class OpportunitiesThreats extends Component {
             }
         ];
 
-        console.log(data)
         return (
             <>
-                <Card size={'small'} style={{ ...CardStyle }} bodyStyle={{ ...CardBodyStyle }}>
+                <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                     <Table
                         title={() => <>
-                            <Typography style={{ fontSize: "16px", fontWeight: "600", color: "#262626" }}>Opportunities and threats</Typography>
-                            <Typography style={{ color: "#8C8C8C", fontSize: "14px" }}>
+                            <Typography style={{ ...tableTitleStyle }}>Opportunities and threats</Typography>
+                            <Typography style={{ ...tableDescriptionStyle }}>
                                 List of predefined options for each part, where some of the items can be define for both sides,
                                 some can be simultaneously on both sides, some only for O or T part</Typography>
                         </>}

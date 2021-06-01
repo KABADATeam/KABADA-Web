@@ -107,7 +107,6 @@ class SwotWindow extends React.Component {
     };
 
     onAddNewRow = (value) => {
-        console.log(value)
         this.setState({
             sw: [
                 ...this.state.sw,
@@ -126,7 +125,6 @@ class SwotWindow extends React.Component {
     }
 
     onAddNewRowOt = (value) => {
-        console.log(value)
         this.setState({
             ot: [
                 ...this.state.ot,

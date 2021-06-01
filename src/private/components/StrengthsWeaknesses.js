@@ -1,14 +1,8 @@
 import React, { Component } from 'react';
-import { Card, Row, Col, Checkbox, Table, Button, Input, Typography, Space } from 'antd';
+import { Card, Checkbox, Table, Button, Input, Typography, Space } from 'antd';
 import { PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
-import { buttonStyle, inputStyle } from '../../styles/customStyles';
+import { buttonStyle, inputStyle, tableCardBodyStyle, tableCardStyle, tableTitleStyle, tableDescriptionStyle } from '../../styles/customStyles';
 import '../../css/swotStyle.css';
-const CardStyle = {
-    display: 'flex', justifyContent: 'center', backgroundColor: '#FFFFFF',
-    boxShadow: '0px 0px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.08), 0px 0px 1px rgba(0, 0, 0, 0.04)', borderRadius: '8px',
-};
-
-const CardBodyStyle = { width: '100%', paddingTop: '4px', paddingLeft: '4px', paddingRight: '4px', paddingBottom: '4px' };
 
 class StrengthsWeaknesses extends Component {
 
@@ -39,7 +33,6 @@ class StrengthsWeaknesses extends Component {
 
     handledeleteRow = (rowIndex) => {
         if (this.props.editing === true) {
-            console.log(this.state.editingId);
             this.props.handleDeleteRow(this.state.editingId);
             this.setState({
                 editingId: -1,
@@ -61,7 +54,6 @@ class StrengthsWeaknesses extends Component {
             selectedStrengthsCount: strengthsCount,
             selectedWeaknessCount: weaknessCount,
         })
-
     }
 
     handleCheckboxChangeFactory = (rowIndex, columnKey) => event => {
@@ -71,7 +63,6 @@ class StrengthsWeaknesses extends Component {
     };
 
     handleInputChange = (value, rowIndex) => event => {
-        console.log(rowIndex);
         if (event.target.value !== "") {
             this.props.swList[rowIndex]["name"] = event.target.value;
             this.setState({
@@ -85,7 +76,9 @@ class StrengthsWeaknesses extends Component {
 
         const data = this.props.swList;
         const editing = this.props.editing;
-        console.log(this.props.swList)
+        const editingId = this.state.editingId - 1;
+        const selectedStrengthsCount = this.state.selectedStrengthsCount;
+        const selectedWeaknessCount = this.state.selectedWeaknessCount;
 
         const columns = [
             {
@@ -93,7 +86,7 @@ class StrengthsWeaknesses extends Component {
                 dataIndex: 'name',
                 key: 'name',
                 render: (value, record, rowIndex) => (
-                    (editing && rowIndex === this.state.editingId - 1) ? (
+                    (editing && rowIndex === editingId) ? (
                         <Space>
                             <Input
                                 style={{ ...inputStyle, fontSize: '14px', height: "40px" }}
@@ -115,7 +108,7 @@ class StrengthsWeaknesses extends Component {
                 render: (value, record, rowIndex) => (
                     <Checkbox
                         checked={value}
-                        disabled={(data[rowIndex]["weakness"] === true || (this.state.selectedStrengthsCount === 6 && value !== true)) ? true : false}
+                        disabled={(data[rowIndex]["weakness"] === true || (selectedStrengthsCount === 6 && value !== true)) ? true : false}
                         onChange={this.handleCheckboxChangeFactory(rowIndex, "strengths")}
                     />
                 ),
@@ -128,7 +121,7 @@ class StrengthsWeaknesses extends Component {
                 render: (value, record, rowIndex) => (
                     <Checkbox
                         checked={value}
-                        disabled={(data[rowIndex]["strengths"] === true || (this.state.selectedWeaknessCount === 6 && value !== true)) ? true : false}
+                        disabled={(data[rowIndex]["strengths"] === true || (selectedWeaknessCount === 6 && value !== true)) ? true : false}
                         onChange={this.handleCheckboxChangeFactory(rowIndex, "weakness")}
                     />
                 ),
@@ -138,11 +131,11 @@ class StrengthsWeaknesses extends Component {
 
         return (
             <>
-                <Card size={'small'} style={{ ...CardStyle }} bodyStyle={{ ...CardBodyStyle }}>
+                <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                     <Table
                         title={() => <>
-                            <Typography style={{ fontSize: "16px", fontWeight: "600", color: "#262626" }}>Strengths and weaknesses</Typography>
-                            <Typography style={{ color: "#8C8C8C", fontSize: "14px" }}>
+                            <Typography style={{ ...tableTitleStyle }}>Strengths and weaknesses</Typography>
+                            <Typography style={{ ...tableDescriptionStyle }}>
                                 Select 3 - 6 items in each column. Each of the item can be selected only for one side – S or W</Typography>
                         </>}
                         dataSource={data}
