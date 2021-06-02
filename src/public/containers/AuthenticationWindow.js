@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
-import Footer from '../components/Footer';
+import FooterComponent from '../components/FooterComponent';
+import {Layout} from 'antd';
+
+const { Content } = Layout;
 
 class AuthenticationWindow extends Component {
 
     render() {        
         return (
-            <>
-                <div style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", width: "100%" }}>
-                    <div style={{ width: "486px", marginLeft: "auto", marginRight: "auto" }}>
+            <Layout style={{minHeight: '100%', position: "relative", marginBottom: -20, paddingBottom: 20, boxSizing: "border-box" }}>
+                <Content >
                         {this.props.children}
-                    </div>
-                </div>     
-                <Footer alignment='center' divider={false} />
-            </>
+                </Content>
+                <FooterComponent alignment='center' divider={false}/>
+            </Layout>
+                     
+            
         );
     }
 }

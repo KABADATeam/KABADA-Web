@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { getAllPublicPlans } from "../../appStore/actions/planActions";
 import { iconColor, pageHeaderStyle, filterStyle } from '../../styles/customStyles';
 import '../../css/publicBusinessPlans.css';
+import FooterComponent from '../../public/components/FooterComponent';
 
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
@@ -172,8 +173,8 @@ class PublicBusinessPlans extends React.Component {
         });
 
         return (
-            <Layout style={{ backgroundColor: '#F5F5F5' }}>
-                <Content style={{ marginTop: "40px" }}>
+            <Layout style={{ backgroundColor: '#F5F5F5'}}>
+                <Content style={{ marginTop: "40px"}}>
                     <Row wrap={false} justify="center" align="middle">
                         <Col span={20}>
                             <Title level={2} style={{ ...pageHeaderStyle, marginBottom: '0px', textAlign: 'left', color: '#262626' }}>Public business plans</Title>

@@ -120,4 +120,59 @@ const all_plans_data = [
         completed: 5,
         planType: 'Private'
     },
+    {
+        key: '7',
+        name: 'Naglis SIA',
+        industry: 'IT services',
+        country: 'Germany',
+        dateCreated: '2021-03-17',
+        owner: 'Kaspars Naglis',
+        img: 'http://icons.iconseeker.com/png/fullsize/fruity-apples/seablue-512.png',
+        completed: 5,
+        planType: 'Private'
+    },
+    {
+        key: '8',
+        name: 'Unicod Inc.',
+        industry: 'Forests',
+        country: 'Portugal',
+        dateCreated: '2021-03-17',
+        owner: 'Kaspars Naglis', 
+        img: 'http://icons.iconseeker.com/png/fullsize/fruity-apples/seablue-512.png',
+        completed: 100,
+        planType: 'Public'
+    },
+    {
+        key: '9',
+        name: 'Kabada Intelligence Ltd.',
+        industry: 'IT services',
+        country: 'Germany',
+        dateCreated: '2021-03-12',
+        owner: 'Kaspars Naglis',
+        img: 'http://icons.iconseeker.com/png/fullsize/fruity-apples/seablue-512.png',
+        completed: 75,
+        planType: 'Private'
+    },
+    {
+        key: '10',
+        name: 'Naglis SIA',
+        industry: 'IT services',
+        country: 'Germany',
+        dateCreated: '2021-03-17',
+        owner: 'Kaspars Naglis',
+        img: 'http://icons.iconseeker.com/png/fullsize/fruity-apples/seablue-512.png',
+        completed: 5,
+        planType: 'Private'
+    },
+    {
+        key: '11',
+        name: 'Naglis SIA',
+        industry: 'IT services',
+        country: 'Germany',
+        dateCreated: '2021-03-17',
+        owner: 'Kaspars Naglis',
+        img: 'http://icons.iconseeker.com/png/fullsize/fruity-apples/seablue-512.png',
+        completed: 5,
+        planType: 'Private'
+    },
 ];

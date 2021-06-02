@@ -1,0 +1,9 @@
+.ant-table-footer {
+    background: #FFFFFF!important;
+}
+
+.ant-checkbox-input{
+    border: 1px solid #BFBFBF;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
