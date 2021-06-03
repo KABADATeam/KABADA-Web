@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import {Row, Col, Button, Avatar, Dropdown, Typography, Menu} from 'antd'
+import {Row, Col, Button, Avatar, Dropdown, Typography, Menu } from 'antd'
 import { connect } from 'react-redux';
 import KabadaIcon from './KabadaIcon';
 import { logout } from '../../appStore/actions/authenticationActions';
 import { withRouter, Redirect } from "react-router-dom";
 import {buttonStyle} from '../../styles/customStyles';
-import { CaretDownFilled, UserOutlined } from '@ant-design/icons';
+import { CaretDownFilled, SettingOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 
+const { SubMenu } = Menu;
 const { Text } = Typography;
 
 const headerStyles = {
@@ -28,6 +29,14 @@ class Header extends Component {
         this.props.history.push(`/user-settings`);
     }
 
+    onSwotClick() {
+        this.props.history.push(`/swot`);
+    }
+
+    onResourcesClick() {
+        this.props.history.push(`/key-resources`);
+    }
+
     render() {  
 
         const name = this.props.user.name === '' ? this.props.user.email.substring(0, this.props.user.email.indexOf("@")) : this.props.name;
@@ -35,11 +44,17 @@ class Header extends Component {
         const menu = (
             <Menu>
                 <Menu.Item onClick={() => this.onSettingsClick()}>
-                    Settings
+                    <SettingOutlined />
+                    <span>Settings</span>
                 </Menu.Item>
                 <Menu.Item onClick={() => this.props.logout()}>
-                    Log out
+                    <LogoutOutlined />
+                    <span>Log out</span>
                 </Menu.Item>
+                <SubMenu title="Temps">
+                    <Menu.Item onClick={() => this.onSwotClick()}>SWOT</Menu.Item>
+                    <Menu.Item onClick={() => this.onResourcesClick()}>Key Resources</Menu.Item>
+                </SubMenu>
             </Menu>
           );
 

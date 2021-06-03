@@ -260,7 +260,7 @@ class UserSettingsWindow extends React.Component {
                 </Col>
 
                 <Col span={16} offset={4}>
-                    <div style={{ float: "right", height: "200px" }}>
+                    <div style={{ float: "right", height: "140px" }}>
                         <Button style={{ ...buttonStyle, marginRight: "8px" }} onClick={this.discardChanges}>Discard</Button>
                         <Button type="primary" style={{ ...buttonStyle }} onClick={this.saveChanges}>Save</Button>
                     </div>
