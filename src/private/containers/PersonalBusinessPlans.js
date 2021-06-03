@@ -18,7 +18,6 @@ class PersonalBusinessPlans extends Component {
             isVisible: false,
         }
     }
-
     changeTabKey = (activeKey) => {
         let activeTabString = activeKey.toString();
         this.setState({
