@@ -7,7 +7,9 @@ import { planReducer, planFetchReducer, selectedplanFetchReducer, updatePlanRedu
 import { industriesReducer, activitiesReducer, industrySelectedReducer, activitySelectedReducer } from './naceReducer';
 import { countrySelectedReducer, countriesReducer } from './countryReducer';
 import { eurostatDataReducer } from '../reducers/eurostat/eurostatReducer';
-import { eurostatAllDataReducer } from '../reducers/eurostat/eurostatAllReducer'
+import { eurostatAllDataReducer } from '../reducers/eurostat/eurostatAllReducer';
+import { userSettingsReducer } from './settingsReducer';
+import { swotReducer } from './swotReducer';
 
 export default combineReducers({
     activities: activitiesReducer,
@@ -27,4 +29,6 @@ export default combineReducers({
     selectedBusinessPlan: selectedplanFetchReducer,
     updatedPlan: updatePlanReducer,
     publicPlans: allPublicPlansFetchReducer,
+    userSettings: userSettingsReducer,
+    swotList: swotReducer,
 });

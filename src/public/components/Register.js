@@ -1,18 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
-import { Form, Input, Button, Typography, Card, Space, Divider, Row, Alert } from 'antd';
+import { Form, Input, Button, Typography, Card, Space, Divider, Row, Alert, Layout } from 'antd';
 import { FacebookFilled, GoogleCircleFilled } from '@ant-design/icons';
 import FacebookLogin from "react-facebook-login";
 import GoogleLogin from "react-google-login";
 import { register } from '../../appStore/actions/authenticationActions';
 import { Link } from 'react-router-dom';
 import KabadaIcon from './KabadaIcon';
+import FooterComponent from './FooterComponent'
 
 import { cardStyle, buttonStyle, textColor, inputStyle, bottomDisclaimerStyle } from '../../styles/customStyles';
 import { tailLayout} from '../../styles/customLayouts';
 
 const { Text, Title } = Typography
+const { Header, Content } = Layout;
 
 class Register extends React.Component {
 
@@ -44,7 +46,7 @@ class Register extends React.Component {
 			}
 		}*/
         return (
-            <Card style={cardStyle} bodyStyle={{ padding: "0" }}>
+				<Card style={cardStyle} bodyStyle={{ padding: "0" }}>
                 <Row>
 					<Space direction="vertical" size={40}>
                         <KabadaIcon />
@@ -169,7 +171,7 @@ class Register extends React.Component {
 						By continuing, you agree with Terms of service and Privacy Policy.
 					</Text>
 				</Space>
-            </Card>
+            </Card>            
         )
     }
 }

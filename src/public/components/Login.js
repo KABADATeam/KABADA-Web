@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Button, Card, Divider, Typography, Space, Row, Col, Alert } from 'antd';
+import { Form, Input, Button, Card, Divider, Typography, Space, Row, Col, Alert, Layout } from 'antd';
 import { FacebookFilled, GoogleCircleFilled } from '@ant-design/icons';
 import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login";
@@ -9,11 +9,12 @@ import { withRouter } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import '../../css/customButtons.css';
 import KabadaIcon from './KabadaIcon';
-
+import FooterComponent from './FooterComponent'
 import { cardStyle, buttonStyle, textColor, inputStyle, linkStyle, bottomDisclaimerStyle } from '../../styles/customStyles';
 import { tailLayout } from '../../styles/customLayouts';
 
 const { Title, Text } = Typography;
+const { Header, Content } = Layout;
 
 class Login extends React.Component {
 	constructor(props) {
