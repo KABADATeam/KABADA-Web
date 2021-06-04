@@ -3,6 +3,7 @@ import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table,
 import { ArrowLeftOutlined, InfoCircleFilled, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle, tableDescriptionStyle } from '../../styles/customStyles';
 import { connect } from 'react-redux';
+import KeyResourcesModal from "../components/KeyResourcesModal";
 
 const { Text } = Typography;
 
@@ -70,6 +71,7 @@ class KeyResources extends React.Component {
                     columnLabel: 'Employ Permanently',
                 },
             ],
+            isVisible: false
         };
     }
 
@@ -80,9 +82,17 @@ class KeyResources extends React.Component {
         this.props.history.push(`/personal-business-plans`);
     }
 
-    addNewItem() {
-
+    addNewItem = () => {
+        this.setState({
+            isVisible: true,
+        })
     }
+    closeNewItemModal = () => {
+        console.log('Clicked cancel button');
+        this.setState({
+            isVisible: false,
+        });
+    };
 
     deleteItem(row) {
         console.log(row);
@@ -199,6 +209,7 @@ class KeyResources extends React.Component {
                                 />
                             </Card >
                         </Col>
+                        <KeyResourcesModal visibility={this.state.isVisible} handleClose={this.closeNewItemModal} />
                     </Row>
                 </Col>
             </>
