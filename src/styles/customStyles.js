@@ -59,10 +59,11 @@ export const bottomDisclaimerStyle = {
 export const footerStyle = {
     fontSize: '12px',
     backgroundColor: '#F5F5F5',
-    position: 'absolute',
+    
     bottom: '0px',
     width: '100%',
-    height: '20px'
+    paddingTop: '10px',
+    paddingBottom: '10px'
 }
 
 export const iconColor = {

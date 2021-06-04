@@ -8,7 +8,7 @@ class MainWindow extends React.Component {
 
     render() {        
         return (
-            <Layout style={{minHeight: '100%', position: "relative", marginBottom: -20, paddingBottom: 20, backgroundColor: '#F5F5F5'}}>
+            <Layout style={{minHeight: 'calc(100% - 64px)', position: "relative", marginBottom: -20, paddingBottom: 0, backgroundColor: '#F5F5F5'}}>
                 <Content >
                         {this.props.children}
                 </Content>
