@@ -18,11 +18,21 @@ const CardStyle = {
 const CardBodyStyle = { width: '100%', paddingTop: '0px', paddingLeft: '0px', paddingRight: '0px', paddingBottom: '0px' };
 const CardRowStyle = { width: '100%', paddingTop: '16px', paddingBottom: '16px', paddingLeft: '20px', paddingRight: '20px' };
 
+
+function getBase64(img, callback) {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsArrayBuffer(img);
+    //reader.readAsDataURL(img);
+    //reader.readAsBinaryString(img);
+}
+
 class PersonalSettings extends Component {
 
     state = {
         fileList: [],
         previewImage: '',
+        isPhotoChanged: false,
     };
 
     onChangeFirstName = ({ target: { value } }) => {
@@ -37,10 +47,10 @@ class PersonalSettings extends Component {
 
     onRemovePhoto = () => {
         this.props.handleHeader();
-        this.props.handleRemovePhoto();
+        this.props.handleRemovePhoto(true);
         this.setState({
             fileList: [],
-            previewImage: ''
+            previewImage: '',
         });
     }
 
@@ -50,7 +60,10 @@ class PersonalSettings extends Component {
     render() {
         const firstName = this.props.settings.firstName;
         const lastName = this.props.settings.lastName;
-        let userImg = this.props.settings.userImage;
+        const resetPhoto = this.props.resetPhoto;
+        var userImg;
+        if (this.props.settings.userPhoto)
+            userImg = "data:image/png;base64," + this.props.settings.userPhoto;
 
         const fileList = this.state.fileList;
 
@@ -68,12 +81,16 @@ class PersonalSettings extends Component {
                     previewImage: previewImage.src
                 });
                 this.props.handleHeader();
-                this.props.handleChangePhoto(previewImage.src);
+                getBase64(file, imageData => {
+                    var data = new Uint8Array(imageData);
+                    this.props.handleChangePhoto(Object.values(data), true);
+                });
                 return false;
             },
             fileList,
         };
-        if (this.state.previewImage !== '') {
+
+        if (!resetPhoto && this.state.previewImage !== '') {
             userImg = this.state.previewImage;
         }
 

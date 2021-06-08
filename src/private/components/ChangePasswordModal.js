@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
-import { Form, Modal, Button, Input, Upload } from 'antd';
-import { buttonStyle, inputStyle } from '../../styles/customStyles';
-import { UploadOutlined } from '@ant-design/icons';
+import { Form, Modal, Button, Input } from 'antd';
+import { inputStyle } from '../../styles/customStyles';
 import '../../css/customModal.css';
+import { changeUserPassword } from "../../appStore/actions/settingsAction";
+import { connect } from 'react-redux';
 
-class ChangeEmailModal extends Component {
+class ChangePasswordModal extends Component {
 
     handleOk = (values) => {
         console.log(values);
+        this.props.changeUserPassword(values.currentPassword, values.newPassword)
+        this.props.handleClose();
     };
 
     handleCancel = () => {
@@ -15,7 +18,7 @@ class ChangeEmailModal extends Component {
     };
 
     render() {
-
+        console.log(this.props.message)
         const isVisible = this.props.visibility;
 
         return (
@@ -38,38 +41,45 @@ class ChangeEmailModal extends Component {
                         <Form.Item key="currentPassword" name="currentPassword" label="Enter your current password"
                             rules={[
                                 {
-                                    validator: async (_, name) => {
-                                        if (!name || name.length < 1) {
+                                    validator: async (_, value) => {
+                                        if (!value || value.length < 1) {
                                             return Promise.reject(new Error('Enter your current password'));
                                         }
                                     },
                                 },
                             ]}>
-                            <Input size="large" style={inputStyle} />
+                            <Input.Password size="large" style={inputStyle} />
                         </Form.Item>
-                        <Form.Item key="newPassword" name="newPassword" label="Enter new password"
+                        <Form.Item key="newPassword" name="newPassword" label="Enter new password" dependencies={['currentPassword']}
                             rules={[
-                                {
-                                    validator: async (_, name) => {
-                                        if (!name || name.length < 1) {
+                                ({ getFieldValue }) => ({
+                                    validator: async (_, value) => {
+                                        if (!value || value.length < 1) {
                                             return Promise.reject(new Error('Enter new password'));
                                         }
-                                    },
-                                },
-                            ]}>
-                            <Input size="large" style={inputStyle} />
-                        </Form.Item>
-                        <Form.Item key="repeatedPassword" name="repeatedPassword" label="Repeat your new password"
-                            rules={[
-                                {
-                                    validator: async (_, name) => {
-                                        if (!name || name.length < 1) {
-                                            return Promise.reject(new Error('Repeat your new password'));
+                                        if (!value || getFieldValue('currentPassword') === value) {
+                                            return Promise.reject(new Error('The current password match the new password!'));
                                         }
                                     },
-                                },
+                                }),
                             ]}>
-                            <Input size="large" style={inputStyle} />
+                            <Input.Password size="large" style={inputStyle} />
+                        </Form.Item>
+                        <Form.Item key="repeatedPassword" name="repeatedPassword" label="Repeat your new password" dependencies={['newPassword']}
+                            rules={[
+                                ({ getFieldValue }) => ({
+                                    validator: async (_, value) => {
+                                        if (!value || value.length < 1) {
+                                            return Promise.reject(new Error('Repeat your new password'));
+                                        }
+                                        if (!value || getFieldValue('newPassword') === value) {
+                                            return Promise.resolve();
+                                        }
+                                        else return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                                    },
+                                })
+                            ]}>
+                            <Input.Password size="large" style={inputStyle} />
                         </Form.Item>
                     </Form>
                 </Modal >
@@ -77,6 +87,12 @@ class ChangeEmailModal extends Component {
         )
     }
 }
-
-export default ChangeEmailModal;
+const mapStateToProps = (state) => {
+    return {
+        loading: state.loading,
+        error: state.error,
+        message: state.message,
+    };
+}
+export default connect(mapStateToProps, { changeUserPassword })(ChangePasswordModal);
 

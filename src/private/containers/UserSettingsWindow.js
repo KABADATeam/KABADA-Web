@@ -9,7 +9,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 
 import { connect } from 'react-redux';
-import { getUserSettings, updateUserSettings } from "../../appStore/actions/settingsAction";
+import { getUserSettings, updateUserSettings, changeUserPassword } from "../../appStore/actions/settingsAction";
 
 const { Text } = Typography;
 
@@ -45,6 +45,8 @@ class UserSettingsWindow extends React.Component {
         this.state = {
             isVisibleHeader: 'hidden',
             settings: {},
+            isPhotoChanged: false,
+            resetPhoto: false
         };
     }
 
@@ -62,7 +64,6 @@ class UserSettingsWindow extends React.Component {
                     });
                 }
             )
-
     }
 
     onBackClick() {
@@ -137,33 +138,41 @@ class UserSettingsWindow extends React.Component {
 
     discardChanges = () => {
         this.setState({
-            settings: this.props.userSettings
+            settings: this.props.userSettings,
+            resetPhoto: true,
         });
         this.hideChangesHeader();
     };
 
 
     saveChanges = () => {
-        console.log("save changes");
-        console.log(this.state.settings);
         this.hideChangesHeader();
-        this.props.updateUserSettings(this.state.settings);
+        this.props.updateUserSettings(this.state.settings, this.state.isPhotoChanged);
+        this.setState({
+            isPhotoChanged: false,
+            resetPhoto: false
+        })
     };
 
-    removePhoto = () => {
+    removePhoto = (isPhotoChanged) => {
         this.setState(prevState => ({
             settings: {
                 ...prevState.settings,
-                userImage: ''
-            }
+                userPhoto: ''
+            },
+            isPhotoChanged: isPhotoChanged,
+            resetPhoto: false,
         }));
     }
-    changePhoto = (src) => {
+
+    changePhoto = (src, isPhotoChanged) => {
         this.setState(prevState => ({
             settings: {
                 ...prevState.settings,
-                userImage: src
-            }
+                userPhoto: src,
+            },
+            isPhotoChanged: isPhotoChanged,
+            resetPhoto: false,
         }));
     }
 
@@ -233,6 +242,7 @@ class UserSettingsWindow extends React.Component {
                             handleChangeLastName={this.changeLastName}
                             handleRemovePhoto={this.removePhoto}
                             handleChangePhoto={this.changePhoto}
+                            resetPhoto={this.state.resetPhoto}
                         />
                     </Col>
                 </Row>
@@ -279,4 +289,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getUserSettings, updateUserSettings })(UserSettingsWindow);
+export default connect(mapStateToProps, { getUserSettings, updateUserSettings, changeUserPassword })(UserSettingsWindow);

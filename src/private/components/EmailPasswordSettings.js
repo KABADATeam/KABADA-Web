@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { buttonStyle } from '../../styles/customStyles';
 import ChangeEmailModal from "../components/ChangeEmailModal";
 import ChangePasswordModal from "../components/ChangePasswordModal";
-import { MessageOutlined } from '@ant-design/icons';
+import { resendVerificationEmail } from "../../appStore/actions/settingsAction";
 
 const { Text } = Typography;
 
@@ -25,7 +25,7 @@ class EmailPasswordSettings extends Component {
         isVisibleChangeEmail: false,
         isVisibleChangePassword: false
     };
-    
+
     closeChangeEmailModal = () => {
         this.setState({
             isVisibleChangeEmail: false
@@ -50,25 +50,31 @@ class EmailPasswordSettings extends Component {
         });
     };
 
+    resendVerificationEmail = () => {
+        console.log("resend")
+    }
+
     render() {
+        const email = this.props.user.email;
+        const passLatChanged = 1;
         return (
             <Row style={{ marginBottom: "16px" }}>
                 <Col span={24}>
-                    <Alert style={{ marginBottom: "16px"}}
+                    <Alert style={{ marginBottom: "16px" }}
                         message={<Text strong={true}>Pending email verification</Text>}
                         type="warning"
-                        showIcon 
+                        showIcon
                         description={
                             <Space direction="vertical">
                                 <Text>
-                                    We sent an email to verify that you own xxxx@xxxxx.com. You will not be able to use this email to log in to your account until it's verified.
+                                    We sent an email to verify that you own {email}. You will not be able to use this email to log in to your account until it's verified.
                                 </Text>
-                                <Button type="ghost">
+                                <Button type="ghost" onClick={this.resendVerificationEmail.bind(this)}>
                                     <Text strong={true}>Resend verification email</Text>
                                 </Button>
                             </Space>
-                                
-                          }
+
+                        }
                     />
 
                     <Card style={{ ...CardStyle }} bodyStyle={{ ...CardBodyStyle }}>
@@ -87,7 +93,7 @@ class EmailPasswordSettings extends Component {
                                 <Text style={textStyle}>Password</Text>
                             </div>
                             <div style={{ marginTop: "8px" }}>
-                                <Text style={editableTextStyle}>You changed your last password almost 3 years ago</Text>
+                                <Text style={editableTextStyle}>You changed your last password almost {passLatChanged} year(s) ago</Text>
                             </div>
                             <Button style={{ ...buttonStyle, marginTop: "29px" }} onClick={this.openChangePasswordModal.bind(this)}>Change password</Button>
                         </Card.Grid>
@@ -106,4 +112,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, null)(EmailPasswordSettings);
+export default connect(mapStateToProps, { resendVerificationEmail })(EmailPasswordSettings);
