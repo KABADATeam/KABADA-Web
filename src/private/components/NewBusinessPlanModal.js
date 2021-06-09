@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { Form, Modal, Button, Input, Upload } from 'antd';
+import { Form, Modal, Button, Input, Upload, Select, Space, Typography, Tooltip } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { buttonStyle, inputStyle } from '../../styles/customStyles';
 import { UploadOutlined } from '@ant-design/icons';
 import '../../css/customModal.css';
+const { Option } = Select;
+const { Text, Link } = Typography;
 
 class NewBusinessPlanModal extends Component {
 
@@ -12,10 +15,12 @@ class NewBusinessPlanModal extends Component {
     };
 
     handleOk = (values) => {
+
         console.log('Clicked ok button');
 
         const { fileList } = this.state;
         const formData = new FormData();
+
         if (Array.isArray(fileList) && fileList.length !== 0) {
             fileList.forEach(item => {
                 if (item.file.status !== 'removed') {
@@ -28,6 +33,8 @@ class NewBusinessPlanModal extends Component {
         this.setState({
             isVisible: true,
         });
+        console.log(values);
+        //this.props.handleClose();
     };
 
     handleCancel = () => {
@@ -52,6 +59,11 @@ class NewBusinessPlanModal extends Component {
 
         const isVisible = this.props.visibility;
         const { fileList } = this.state;
+
+        const country = ['Lithuania', 'Latvia'];
+        const language = ['lithuanian', 'english'];
+
+        const aboutNACE = "NACE is ...";
 
         const propsUpload = {
             onRemove: file => {
@@ -83,8 +95,10 @@ class NewBusinessPlanModal extends Component {
         return (
             <>
                 <Modal
+                    destroyOnClose={true}
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
+                    width={700}
                     title="New business plan"
                     visible={isVisible}
                     onCancel={this.handleCancel}
@@ -118,6 +132,62 @@ class NewBusinessPlanModal extends Component {
                             <Upload key="files" {...propsUpload} maxCount={1} name="files" accept="image/*">
                                 <Button style={buttonStyle} icon={<UploadOutlined />}>Browse</Button>
                             </Upload>
+                        </Form.Item>
+                        <Space direction="vertical" size={2}>
+                            <Space size={26}>
+                                <Form.Item style={{ marginBottom: "0px" }} key="NACEcode" name="NACEcode" label={<Space><Text>NACE code</Text><Tooltip title={aboutNACE}><QuestionCircleOutlined style={{ color: "#8C8C8C" }} /></Tooltip></Space>}
+                                    rules={[
+                                        {
+                                            validator: async (_, NACEcode) => {
+                                                if (!NACEcode || NACEcode.length < 1) {
+                                                    return Promise.reject(new Error('Enter NACE code'));
+                                                }
+                                            },
+                                        },
+                                    ]}>
+                                    <Input size="large" style={{ ...inputStyle, width: 315 }} placeholder="Code example BD5645645" />
+                                </Form.Item>
+
+                                <Form.Item style={{ marginBottom: "0px" }} key="country" name="country" label="Country of residence (optional)">
+                                    <Select showSearch
+                                        style={{ width: 315 }}
+                                        placeholder="Select country"
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) =>
+                                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        }
+                                    >
+                                        {country.map(item => (
+                                            <Option key={item}>{item}</Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+                            </Space>
+                            <Link underline>Code website</Link>
+                        </Space>
+                        <Form.Item style={{ marginTop: "35px" }} key="language" name="language" label="Language of bussines plan?"
+                            rules={[
+                                {
+                                    validator: async (_, language) => {
+                                        if (!language || language.length < 1) {
+                                            return Promise.reject(new Error('Select language of bussines plan'));
+                                        }
+                                    },
+                                },
+                            ]}
+                        >
+                            <Select showSearch
+                                style={{ width: 315 }}
+                                placeholder="Select language"
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                            >
+                                {language.map(item => (
+                                    <Option key={item}>{item}</Option>
+                                ))}
+                            </Select>
                         </Form.Item>
                     </Form>
                 </Modal >
