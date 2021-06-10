@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import { Row, Col, Typography, Button, Tabs, Layout, Card } from 'antd';
+import { Row, Col, Typography, Button, Tabs, Layout } from 'antd';
 import { buttonStyle, pageHeaderStyle } from '../../styles/customStyles';
 import PlanElementComponent from '../components/PlanElementComponent';
 import NewBusinessPlanModal from "../components/NewBusinessPlanModal";
 
-
 const { Title } = Typography;
 const { TabPane } = Tabs;
-const { Header, Content } = Layout;
+const { Content } = Layout;
 
 
 class PersonalBusinessPlans extends Component {

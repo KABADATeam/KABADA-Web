@@ -158,6 +158,7 @@ class SwotWindow extends React.Component {
     render() {
         console.log(this.state.originalSwotList);
         console.log(this.state.sw);
+        console.log(this.state.businessPlan);
         const isVisibleHeader = this.state.isVisibleHeader;
         return (
             <>
@@ -262,6 +263,7 @@ const mapStateToProps = (state) => {
         error: state.error,
         message: state.message,
         swotList: state.swotList,
+        businessPlan: state.selectedBusinessPlan
     };
 }
 

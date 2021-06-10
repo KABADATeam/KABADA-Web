@@ -25,7 +25,7 @@ export default combineReducers({
     selectedCountry: countrySelectedReducer,
     selectedIndustry: industrySelectedReducer,
     user: authenticationReducer,
-    savedBusinessPlans: planFetchReducer,
+    personalBusinessPlans: planFetchReducer,
     selectedBusinessPlan: selectedplanFetchReducer,
     updatedPlan: updatePlanReducer,
     publicPlans: allPublicPlansFetchReducer,

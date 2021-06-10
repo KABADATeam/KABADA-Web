@@ -49,7 +49,7 @@ export const getPlans = () => {
             const response = await kabadaAPI.get("api/plans", {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            dispatch({ type: "FETCHING_PLAN_SUCCESS", payload: response.data });
+            dispatch({ type: "FETCHING_PLAN_SUCCESS", payload: response.data.privateBusinessPlans.businessPlan });
         } catch (error) {
             if (error.response === undefined) {
                 dispatch({
