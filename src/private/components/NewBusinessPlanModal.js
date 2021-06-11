@@ -1,18 +1,31 @@
 import React, { Component } from 'react';
 import { Form, Modal, Button, Input, Upload, Select, Space, Typography, Tooltip } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { buttonStyle, inputStyle } from '../../styles/customStyles';
-import { UploadOutlined } from '@ant-design/icons';
 import '../../css/customModal.css';
+import { connect } from 'react-redux';
+import { getCountries } from '../../appStore/actions/countriesActions';
+import { getIndustries, getActivities } from '../../appStore/actions/naceActions';
+import { saveInitialPlanData } from '../../appStore/actions/planActions';
+
 const { Option } = Select;
-const { Text, Link } = Typography;
+const { Text } = Typography;
 
 class NewBusinessPlanModal extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            fileList: [],
+            isVisible: false,
+            enabledSelectActivity: false,
+        };
+    }
+    formRef = React.createRef();
 
-    state = {
-        fileList: [],
-        isVisible: false,
-    };
+    componentDidMount() {
+        this.props.getCountries();
+        this.props.getIndustries();
+    }
 
     handleOk = (values) => {
 
@@ -34,7 +47,8 @@ class NewBusinessPlanModal extends Component {
             isVisible: true,
         });
         console.log(values);
-        //this.props.handleClose();
+        //(values.name, values.activity, values.country);
+        this.props.handleClose();
     };
 
     handleCancel = () => {
@@ -55,14 +69,60 @@ class NewBusinessPlanModal extends Component {
         return e && e.fileList;
     };
 
+    handleIndustryChange = (value) => {
+        this.formRef.current.setFieldsValue({
+            activity: undefined
+        })
+        if (value) {
+            this.props.getActivities(value);
+            this.setState({
+                enabledSelectActivity: true,
+            });
+        }
+        else {
+            this.setState({
+                enabledSelectActivity: false,
+            });
+        }
+    };
+
+    handleIndustryClear = () => {
+        this.formRef.current.setFieldsValue({
+            activity: undefined
+        })
+        this.setState({
+            enabledSelectActivity: false,
+        });
+    };
+
     render() {
-
         const isVisible = this.props.visibility;
-        const { fileList } = this.state;
+        const { fileList, enabledSelectActivity } = this.state;
 
-        const country = ['Lithuania', 'Latvia'];
-        const language = ['lithuanian', 'english'];
+        const industries = this.props.industries.map((item) => ({
+            key: item.id,
+            value: item.id,
+            text: item.code + '. ' + item.title
+        }));
 
+        const activities = this.props.activities.map((item) => ({
+            key: item.id,
+            value: item.id,
+            text: item.code + '. ' + item.title
+        }));
+
+
+        const countries = this.props.countries.map(({ id, title }) => ({ key: id, value: id, text: title }));
+        const languages = [
+            { key: 1, text: "English" },
+            { key: 2, text: "Lietuvių" },
+            { key: 3, text: "Latviešu " },
+            { key: 4, text: "Italiano" },
+            { key: 5, text: "Português" },
+            { key: 6, text: "Čeština" },
+        ];
+
+        const defaultLanguage = 1;
         const aboutNACE = "NACE is ...";
 
         const propsUpload = {
@@ -109,7 +169,16 @@ class NewBusinessPlanModal extends Component {
                         </div>
                     }
                 >
-                    <Form layout="vertical" id="myForm" name="myForm" onFinish={this.handleOk}>
+                    <Form
+                        ref={this.formRef}
+                        layout="vertical"
+                        id="myForm"
+                        name="myForm"
+                        initialValues={{
+                            language: defaultLanguage,
+                        }}
+                        onFinish={this.handleOk}
+                    >
                         <Form.Item key="name" name="name" label="Project name"
                             rules={[
                                 {
@@ -133,68 +202,125 @@ class NewBusinessPlanModal extends Component {
                                 <Button style={buttonStyle} icon={<UploadOutlined />}>Browse</Button>
                             </Upload>
                         </Form.Item>
-                        <Space direction="vertical" size={2}>
-                            <Space size={26}>
-                                <Form.Item style={{ marginBottom: "0px" }} key="NACEcode" name="NACEcode" label={<Space><Text>NACE code</Text><Tooltip title={aboutNACE}><QuestionCircleOutlined style={{ color: "#8C8C8C" }} /></Tooltip></Space>}
-                                    rules={[
-                                        {
-                                            validator: async (_, NACEcode) => {
-                                                if (!NACEcode || NACEcode.length < 1) {
-                                                    return Promise.reject(new Error('Enter NACE code'));
-                                                }
-                                            },
-                                        },
-                                    ]}>
-                                    <Input size="large" style={{ ...inputStyle, width: 315 }} placeholder="Code example BD5645645" />
-                                </Form.Item>
-
-                                <Form.Item style={{ marginBottom: "0px" }} key="country" name="country" label="Country of residence (optional)">
-                                    <Select showSearch
-                                        style={{ width: 315 }}
-                                        placeholder="Select country"
-                                        optionFilterProp="children"
-                                        filterOption={(input, option) =>
-                                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                        }
-                                    >
-                                        {country.map(item => (
-                                            <Option key={item}>{item}</Option>
-                                        ))}
-                                    </Select>
-                                </Form.Item>
-                            </Space>
-                            <Link underline>Code website</Link>
-                        </Space>
-                        <Form.Item style={{ marginTop: "35px" }} key="language" name="language" label="Language of bussines plan?"
+                        <Form.Item key="industry" name="industry" label={<Space><Text>NACE Rev. 2 Section</Text><Tooltip title={aboutNACE}><QuestionCircleOutlined style={{ color: "#8C8C8C" }} /></Tooltip></Space>}
                             rules={[
                                 {
-                                    validator: async (_, language) => {
-                                        if (!language || language.length < 1) {
-                                            return Promise.reject(new Error('Select language of bussines plan'));
+                                    validator: async (_, industry) => {
+                                        if (!industry || industry.length < 1) {
+                                            return Promise.reject(new Error('Select NACE Rev. 2 Section'));
                                         }
                                     },
                                 },
-                            ]}
-                        >
-                            <Select showSearch
-                                style={{ width: 315 }}
-                                placeholder="Select language"
+                            ]}>
+                            <Select
+                                showSearch
+                                allowClear
+                                style={{ width: 655 }}
+                                placeholder="Select NACE Rev. 2 Section"
                                 optionFilterProp="children"
                                 filterOption={(input, option) =>
                                     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                 }
+                                onChange={this.handleIndustryChange}
+                                onClear={this.handleIndustryClear}
                             >
-                                {language.map(item => (
-                                    <Option key={item}>{item}</Option>
+                                {industries.map(item => (
+                                    <Option key={item.key} value={item.value}>{item.text}</Option>
                                 ))}
                             </Select>
                         </Form.Item>
+                        <Form.Item key="activity" name="activity" label="NACE Rev. 2 Division, Group, Class"
+                            rules={[
+                                {
+                                    validator: async (_, NACEcode) => {
+                                        if (!NACEcode || NACEcode.length < 1) {
+                                            return Promise.reject(new Error('Select Division, Group or Class'));
+                                        }
+                                    },
+                                },
+                            ]}>
+                            <Select
+                                showSearch
+                                allowClear
+                                style={{ width: 655 }}
+                                placeholder="Select NACE Rev. 2 Division, Group, Class"
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                                onChange={this.handleActivityChange}
+                                onClear={this.handleActivityClear}
+                                disabled={!enabledSelectActivity}
+                            >
+                                {
+                                    activities.map((item) => (
+                                        <Option key={item.key} value={item.value}>{item.text}</Option>
+                                    ))
+                                }
+                            </Select>
+                        </Form.Item>
+
+
+                        <Space size={26}>
+                            <Form.Item key="country" name="country" label="Country of residence (optional)">
+                                <Select
+                                    showSearch
+                                    allowClear
+                                    style={{ width: 315 }}
+                                    placeholder="Select country"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                >
+                                    {countries.map(item => (
+                                        <Option key={item.key} value={item.value}>{item.text}</Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+
+                            <Form.Item key="language" name="language" label="Language of bussines plan?"
+                                rules={[
+                                    {
+                                        validator: async (_, language) => {
+                                            if (!language || language.length < 1) {
+                                                return Promise.reject(new Error('Select language of bussines plan'));
+                                            }
+                                        },
+                                    },
+                                ]}
+                            >
+                                <Select showSearch
+                                    style={{ width: 315 }}
+                                    placeholder="Select language"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                >
+                                    {languages.map(item => (
+                                        <Option key={item.key} value={item.key}>{item.text}</Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Space>
                     </Form>
                 </Modal >
             </>
         )
     }
 }
-
-export default NewBusinessPlanModal;
+const mapStateToProps = (state) => {
+    return {
+        countries: state.countries,
+        activities: state.activities,
+        industries: state.industries,
+    };
+}
+export default connect(mapStateToProps, {
+    getCountries,
+    getActivities,
+    getIndustries,
+    saveInitialPlanData
+})(NewBusinessPlanModal);
 
