@@ -47,7 +47,7 @@ class NewBusinessPlanModal extends Component {
             isVisible: true,
         });
         console.log(values);
-        //(values.name, values.activity, values.country);
+        this.props.saveInitialPlanData(values.name, values.activity, values.country);
         this.props.handleClose();
     };
 
