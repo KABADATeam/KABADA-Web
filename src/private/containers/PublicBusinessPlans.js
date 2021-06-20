@@ -5,9 +5,8 @@ import { connect } from 'react-redux';
 import { getAllPublicPlans } from "../../appStore/actions/planActions";
 import { iconColor, pageHeaderStyle, filterStyle } from '../../styles/customStyles';
 import '../../css/publicBusinessPlans.css';
-import FooterComponent from '../../public/components/FooterComponent';
 
-const { Header, Content } = Layout;
+const { Content } = Layout;
 const { Title, Text } = Typography;
 const { Option } = Select;
 

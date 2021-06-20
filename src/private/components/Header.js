@@ -3,7 +3,7 @@ import {Row, Col, Button, Avatar, Dropdown, Typography, Menu } from 'antd'
 import { connect } from 'react-redux';
 import KabadaIcon from './KabadaIcon';
 import { logout } from '../../appStore/actions/authenticationActions';
-import { withRouter, Redirect } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import {buttonStyle} from '../../styles/customStyles';
 import { CaretDownFilled, SettingOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 
@@ -47,7 +47,10 @@ class Header extends Component {
                     <SettingOutlined />
                     <span>Settings</span>
                 </Menu.Item>
-                <Menu.Item onClick={() => this.props.logout()}>
+                <Menu.Item onClick={() => {
+                        this.props.logout();
+                        this.props.history.push(`/`);
+                    }}>
                     <LogoutOutlined />
                     <span>Log out</span>
                 </Menu.Item>

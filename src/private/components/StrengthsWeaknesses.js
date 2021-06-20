@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Checkbox, Table, Button, Input, Typography, Space, Tooltip, Row } from 'antd';
+import { Card, Checkbox, Table, Button, Input, Typography, Space, Tooltip } from 'antd';
 import { PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { buttonStyle, inputStyle, tableCardBodyStyle, tableCardStyle, tableTitleStyle, tableDescriptionStyle } from '../../styles/customStyles';
 import '../../css/swotStyle.css';

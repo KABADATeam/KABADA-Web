@@ -1,7 +1,7 @@
 import React from 'react';
 import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle, tableDescriptionStyle } from '../../styles/customStyles';
+import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle } from '../../styles/customStyles';
 import { connect } from 'react-redux';
 import KeyPartnersModal from "../components/KeyPartnersModal";
 
@@ -190,7 +190,7 @@ class KeyPartners extends React.Component {
                             <a href="personal-business-plans">My Business plans</a>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <a href="">Kabada Intelligence Ltd.</a>
+                            <a href="/">Kabada Intelligence Ltd.</a>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             Key Partners

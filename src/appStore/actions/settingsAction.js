@@ -103,7 +103,7 @@ export const changeUserEmail = (email, password) => {
 export const resendVerificationEmail = () => {
     return async (dispatch, getState) => {
         try {
-            const token = getState().user.access_token;
+            //const token = getState().user.access_token;
             //const response = await kabadaAPI.post('api/auth/change_email', { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: 'CHANGE_EMAIL_SUCCESS', payload: {} });
         } catch (error) {

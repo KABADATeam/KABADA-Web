@@ -150,7 +150,7 @@ class KeyResources extends React.Component {
                             <a href="personal-business-plans">My Business plans</a>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <a href="">Kabada Intelligence Ltd.</a>
+                            <a href="/">Kabada Intelligence Ltd.</a>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             Key Resources
