@@ -10,6 +10,7 @@ import PersonalBusinessPlans from './containers/PersonalBusinessPlans';
 import UserSettingsWindow from './containers/UserSettingsWindow';
 import SwotWindow from './containers/SwotWindow';
 import KeyResources from './containers/KeyResources';
+import KeyPartners from './containers/KeyPartners';
 
 
 class PrivateApp extends React.Component {
@@ -33,6 +34,7 @@ class PrivateApp extends React.Component {
                     <Route exact path="/user-settings" render={(props) => <MainWindow {...props}> <UserSettingsWindow {...props} /> </MainWindow>} />
                     <Route exact path="/swot" render={(props) => <MainWindow {...props}> <SwotWindow {...props} /> </MainWindow>} />
                     <Route exact path="/key-resources" render={(props) => <MainWindow {...props}> <KeyResources {...props} /> </MainWindow>} />
+                    <Route exact path="/key-partners" render={(props) => <MainWindow {...props}> <KeyPartners {...props} /> </MainWindow>} />
                 </Switch>
             </Router>
 
