@@ -7,7 +7,7 @@ const headerStyle = { position: 'fixed', top: '0', zIndex: 1, width: '100%', bac
 class UnsavedChangesHeader extends Component {
 
     discardChanges = () => {
-        this.props.handleHiding();
+        //this.props.handleHiding();
         this.props.discardChanges();
     }
 

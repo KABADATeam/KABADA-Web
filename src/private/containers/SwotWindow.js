@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import StrengthsWeaknesses from '../components/StrengthsWeaknesses';
 import OpportunitiesThreats from '../components/OpportunitiesThreats';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
-import { getSwotList } from "../../appStore/actions/swotAction";
+import { getSwotList, updateSwotState, discardChanges, saveChanges } from "../../appStore/actions/swotAction";
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
@@ -47,124 +47,50 @@ const titleButtonStyle = {
 
 class SwotWindow extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            isVisibleHeader: 'hidden',
-            originalSwotList: {},
-            sw: [],
-            ot: [],
-            editingOt: false,
-            editingSw: false,
-        };
-    }
-
-    componentDidMount() {
-        this.props.getSwotList()
-            .then(
-                () => {
-                    this.setState({
-                        sw: this.props.swotList.strengthWeakness,
-                        ot: this.props.swotList.opportunityThreat,
-                        originalSwotList: JSON.parse(JSON.stringify(this.props.swotList))
-                    });
-                },
-                (error) => {
-                    this.setState({
-                        sw: [],
-                        ot: []
-                    });
-                }
-            );
-    }
-
     onBackClick() {
         this.props.history.push(`/personal-business-plans`);
     }
 
-    hideChangesHeader = () => {
-        this.setState({
-            isVisibleHeader: 'hidden',
-        });
-    };
-
-    showChangesHeader = () => {
-        this.setState({
-            isVisibleHeader: 'visible',
-        });
-    };
+    onCompleteChange(state) {
+        this.props.updateSwotState(state);
+    }
 
     discardChanges = () => {
-        const originalData = JSON.parse(JSON.stringify(this.state.originalSwotList))
-        this.setState({
-            sw: originalData.strengthWeakness,
-            ot: originalData.opportunityThreat,
-            editingOt: false,
-            editingSw: false,
-        });
-
-        this.hideChangesHeader();
+        this.props.discardChanges();
     };
-
-    onAddNewRow = (value) => {
-        this.setState({
-            sw: [
-                ...this.state.sw,
-                value
-            ],
-            editingSw: true,
-        });
-    }
-
-    onDeleteRow = (value) => {
-        let newData = this.state.sw.filter((item) => item.key !== value);
-        this.setState({
-            sw: newData,
-            editingSw: false,
-        });
-    }
-
-    onAddNewRowOt = (value) => {
-        this.setState({
-            ot: [
-                ...this.state.ot,
-                value
-            ],
-            editingOt: true,
-        });
-    }
-
-    onDeleteRowOt = (value) => {
-        let newData = this.state.ot.filter((item) => item.key !== value);
-        this.setState({
-            ot: newData,
-            editingOt: false,
-        });
-    }
-
-    onEditingChange = () => {
-        this.setState({
-            editingOt: false,
-            editingSw: false,
-        })
-    }
 
     saveChanges = () => {
-        console.log("save changes");
-        this.hideChangesHeader();
-        //this.props.update(this.state.swotList);
+        this.props.saveChanges(this.props.businessPlan.id, () => {
+            this.props.getSwotList(this.props.businessPlan.id);
+        });
     };
 
+    getUpdatesWindowState() {
+        if (this.props.swot.updates.is_swot_completed !== null) {
+            return 'visible';
+        }
+
+        if (this.props.swot.updates.strengths.length > 0) {
+            return 'visible';
+        }
+
+        if (this.props.swot.updates.opportunities.length > 0) {
+            return 'visible';
+        }
+
+        return 'hidden';
+    }
+
+    componentDidMount() {
+        this.props.getSwotList(this.props.businessPlan.id);
+    }
+
     render() {
-        console.log(this.state.originalSwotList);
-        console.log(this.state.sw);
-        console.log(this.state.businessPlan);
-        const isVisibleHeader = this.state.isVisibleHeader;
+        const isVisibleHeader = this.getUpdatesWindowState();
         return (
             <>
                 <UnsavedChangesHeader
                     visibility={isVisibleHeader}
-                    handleHiding={this.hideChangesHeader}
                     discardChanges={this.discardChanges}
                     saveChanges={this.saveChanges}
                 />
@@ -193,7 +119,7 @@ class SwotWindow extends React.Component {
                     </Col>
                     <Col span={11}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed </Text><Switch />
+                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed </Text><Switch checked={this.props.swot.updates.is_swot_completed === null ? this.props.swot.original.is_swot_completed : this.props.swot.updates.is_swot_completed} onClick={this.onCompleteChange.bind(this)} />
                         </div>
                     </Col>
                 </Row>
@@ -214,14 +140,7 @@ class SwotWindow extends React.Component {
                                     </div>
                                 </Col>
                                 <Col span={16}>
-                                    <StrengthsWeaknesses
-                                        swList={this.state.sw}
-                                        handleHeader={this.showChangesHeader}
-                                        handleAddRow={this.onAddNewRow}
-                                        handleDeleteRow={this.onDeleteRow}
-                                        editing={this.state.editingSw}
-                                        handleEditingChange={this.onEditingChange}
-                                    />
+                                    <StrengthsWeaknesses />
                                 </Col>
                             </Row>
                         </TabPane>
@@ -239,14 +158,7 @@ class SwotWindow extends React.Component {
                                     </div>
                                 </Col>
                                 <Col span={16}>
-                                    <OpportunitiesThreats
-                                        otList={this.state.ot}
-                                        handleHeader={this.showChangesHeader}
-                                        handleAddRow={this.onAddNewRowOt}
-                                        handleDeleteRow={this.onDeleteRowOt}
-                                        editing={this.state.editingOt}
-                                        handleEditingChange={this.onEditingChange}
-                                    />
+                                    <OpportunitiesThreats />
                                 </Col>
                             </Row>
                         </TabPane>
@@ -259,12 +171,9 @@ class SwotWindow extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        loading: state.loading,
-        error: state.error,
-        message: state.message,
-        swotList: state.swotList,
+        swot: state.swotList,
         businessPlan: state.selectedBusinessPlan
     };
 }
 
-export default connect(mapStateToProps, { getSwotList })(SwotWindow)
+export default connect(mapStateToProps, { getSwotList, updateSwotState, discardChanges, saveChanges })(SwotWindow)

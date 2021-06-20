@@ -3,79 +3,91 @@ import { Card, Row, Col, Checkbox, Table, Button, Input, Typography, Space } fro
 import { PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { buttonStyle, inputStyle, tableTitleStyle, tableDescriptionStyle, tableCardBodyStyle, tableCardStyle } from '../../styles/customStyles';
 import '../../css/swotStyle.css';
+import { connect } from 'react-redux';
+import { updateSwotList, createNewItem, updateNewItem, deleteNewItem } from "../../appStore/actions/swotAction";
 
 class OpportunitiesThreats extends Component {
 
     state = {
         editingId: -1,
+        editing: false
     };
 
-    addTableRow = () => {
-        if (this.props.editing === false) {
-            this.props.handleHeader();
-            let counter = this.props.otList.length;
-            let newData = {
+    addItem = () => {
+        if (this.state.editing === false) {
+            const addedItems = this.props.list.updates.opportunities.filter(x => isNaN(x.id) === false);
+            const counter = this.props.list.original.oportunities_threats.length + addedItems.length;
+
+            const newItem = {
                 key: counter + 1,
-                name: '',
-                checkedOpportunities: false,
-                checkedThreats: false,
-                isThreat: true,
-                isOpportunity: true,
-                isBoth: true,
+                id: counter + 1,
+                title: '',
+                description: '',
+                value: 0,
+                isLocal: true
             };
-            this.props.handleAddRow(newData);
+
+            this.props.createNewItem(2, newItem);
+
             this.setState({
                 editingId: counter + 1,
+                editing: true
             });
         }
     }
 
-    handledeleteRow = (rowIndex) => {
-        if (this.props.editing === true) {
-            this.props.handleDeleteRow(this.state.editingId);
-            this.setState({
-                editingId: -1,
-            });
+    handleState = (item, type) => event => {
+        if (type === 3) {  // if opportunity
+            item.value = event.target.checked === true ? 3 : 0;
+        } else {    // threat
+            item.value = event.target.checked === true ? 4 : 0;
         }
-    }
-
-    handleCheckboxChangeFactory = (rowIndex, columnKey) => event => {
-        this.props.handleHeader();
-        this.props.otList[rowIndex][columnKey] = event.target.checked;
+        this.props.updateSwotList(2, item);
     };
 
-    handleInputChange = (value, rowIndex) => event => {
-        if (event.target.value !== "") {
-            this.props.otList[rowIndex]["name"] = event.target.value;
+    handleDeleteItem = (item) => {
+        this.props.deleteNewItem(2, item);
+
+        if (this.state.editing === true) {
             this.setState({
                 editingId: -1,
-            })
-            this.props.handleEditingChange();
+                editing: false
+            });
         }
+    }
+
+    handleInputChange = (item) => event => {
+        item.title = event.target.value;
+        this.props.updateNewItem(2, item);
+        this.setState({
+            editingId: -1,
+            editing: false
+        });
     }
 
     render() {
-        const data = this.props.otList;
-        const editing = this.props.editing;
+        const data = this.props.list.original.oportunities_threats.concat(this.props.list.updates.opportunities.filter(x => isNaN(x.id) === false));
+        const editing = this.state.editing;
         const editingId = this.state.editingId - 1;
+
         const columns = [
             {
                 title: 'Column name',
-                dataIndex: 'name',
-                key: 'name',
-                render: (value, record, rowIndex) => (
+                dataIndex: 'title',
+                key: 'title',
+                render: (title, record, rowIndex) => (
                     (editing && rowIndex === editingId) ? (
                         <Space>
                             <Input
                                 style={{ ...inputStyle, fontSize: '14px', height: "40px" }}
                                 size="large"
-                                onPressEnter={this.handleInputChange(value, rowIndex)}
+                                onPressEnter={this.handleInputChange(record)}
                                 placeholder="Add other"
                             />
-                            <Button size="large" style={{ ...buttonStyle }} onClick={this.handledeleteRow.bind(this, rowIndex)}><DeleteOutlined /></Button>
+                            <Button size="large" style={{ ...buttonStyle }} onClick={this.handleDeleteItem.bind(this, record)}><DeleteOutlined /></Button>
                         </Space>
-                    ) : ((record.info) ? (<Space><Typography>{value}</Typography> <InfoCircleFilled style={{ color: '#BFBFBF' }} /></Space>) :
-                        (<Space><Typography>{value}</Typography></Space>))
+                    ) : ((record.title) ? (<Space><Typography>{record.title}</Typography> <InfoCircleFilled style={{ color: '#BFBFBF' }} /></Space>) :
+                        (<Space><Typography>{record.title}</Typography></Space>))
                 ),
                 width: '54%',
             },
@@ -84,12 +96,11 @@ class OpportunitiesThreats extends Component {
                 dataIndex: 'checkedOpportunities',
                 key: 'checkedOpportunities',
                 render: (value, record, rowIndex) => (
-                    (data[rowIndex]["isOpportunity"]) ? (
-                        <Checkbox
-                            checked={value}
-                            disabled={(data[rowIndex]["checkedThreats"] === true && data[rowIndex]["isBoth"] === false) ? true : false}
-                            onChange={this.handleCheckboxChangeFactory(rowIndex, "checkedOpportunities")}
-                        />) : (<></>)
+                    <Checkbox
+                        checked={record.value === 0 ? false : record.value === 3 ? true : false}
+                        disabled={record.value === 4 ? true : false}
+                        onChange={this.handleState(record, 3)}
+                    />
                 ),
                 width: '23%',
             },
@@ -98,12 +109,11 @@ class OpportunitiesThreats extends Component {
                 dataIndex: 'checkedThreats',
                 key: 'checkedThreats',
                 render: (value, record, rowIndex) => (
-                    (data[rowIndex]["isThreat"]) ? (
-                        <Checkbox
-                            checked={value}
-                            disabled={(data[rowIndex]["checkedOpportunities"] === true && data[rowIndex]["isBoth"] === false) ? true : false}
-                            onChange={this.handleCheckboxChangeFactory(rowIndex, "checkedThreats")}
-                        />) : (<></>)
+                    <Checkbox
+                        checked={record.value === 0 ? false : record.value === 4 ? true : false}
+                        disabled={record.value === 3 ? true : false}
+                        onChange={this.handleState(record, 4)}
+                    />
                 ),
                 width: '23%',
             }
@@ -122,7 +132,7 @@ class OpportunitiesThreats extends Component {
                         dataSource={data}
                         columns={columns}
                         pagination={false}
-                        footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.addTableRow.bind(this)}><PlusOutlined />Add item</Button>)}
+                        footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.addItem.bind(this)}><PlusOutlined />Add item</Button>)}
                     />
                 </Card >
             </>
@@ -130,5 +140,11 @@ class OpportunitiesThreats extends Component {
     };
 };
 
-export default OpportunitiesThreats;
+const mapStateToProps = (state) => {
+    return {
+        list: state.swotList
+    };
+}
+
+export default connect(mapStateToProps, { updateSwotList, createNewItem, updateNewItem, deleteNewItem })(OpportunitiesThreats);
 
