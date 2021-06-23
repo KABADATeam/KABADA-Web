@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { Modal, List, Button } from 'antd';
+import { Modal, List, Button, Row, Col, Typography } from 'antd';
 import '../../css/customModal.css';
 import {RightOutlined} from '@ant-design/icons';
 import AddKeyResourceModal from './AddKeyResourceModal'
+
+const {Title, Text} = Typography;
 
 const data = [
     {
@@ -84,7 +86,7 @@ class KeyResourcesModal extends Component {
                                 />
                             </List.Item>
                         )}
-                    />
+                    /> 
                 </Modal >
                 
             </>
@@ -93,4 +95,5 @@ class KeyResourcesModal extends Component {
 }
 
 export default KeyResourcesModal;
+
 

@@ -15,7 +15,6 @@ export const cardStyle = {
 
 export const buttonStyle = {
     borderRadius: '4px',
-    boxShadow: '0px 1px 0px rgba(0, 0, 0, 0.05)',
     fontWeight: '600',
     fontSize: '14px'
 };

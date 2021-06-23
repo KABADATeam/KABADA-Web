@@ -1,10 +1,23 @@
 import React, { Component } from 'react';
-import { Modal, Button, Form, Space, Select, Radio, Divider } from 'antd';
+import { Modal, Button, Form, Space, Select, Radio, Divider, Input} from 'antd';
 import '../../css/customModal.css';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { buttonStyle } from '../../styles/customStyles';
 
 const { Option } = Select;
+
+const inputStyle = {
+    border: '1px solid #BFBFBF',
+    borderRadius: '4px',
+    boxSizing: 'border-box',
+    boxShadow: 'inset 0px 2px 0px rgba(0, 0, 0, 0.05)',
+    textAlign: 'left',
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    fontSize: '14px',
+    lineHeight: '22px',
+    textColor: '#8C8C8C',
+}
 
 class AddKeyResourceModal extends Component {
     state = {
@@ -54,7 +67,7 @@ class AddKeyResourceModal extends Component {
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
-                    width={636}
+                    width={588}
                     title={"Physical resources"}
                     visible={this.props.visibility}
                     onOk={this.handleOk}
@@ -72,25 +85,20 @@ class AddKeyResourceModal extends Component {
                         layout="vertical"
                     >
                         <Form.Item label="Type">
-                            <Space>
                                <Select defaultValue="buildings" style={{width:548}}>
                                 <Option value="buildings">Buildings</Option>
                                 <Option value="buildings2">Buildings 2</Option>
-                               </Select> 
-                               <Button icon={<DeleteOutlined/>} style={{...buttonStyle, width: 40, height: 40}}/>                               
-                            </Space>                            
+                               </Select>                                                           
                         </Form.Item>
-                        <Form.Item label="Building type">
-                               <Select defaultValue="inventoryBuildings" style={{width:548}}>
-                                <Option value="inventoryBuildings">Inventory Buildings</Option>
-                                <Option value="inventoryBuildings2">Inventory Buildings 2</Option>
-                               </Select>                                                 
+                        <Form.Item label="Description (optional)">
+                            <Input placeholder="Your description goes here" size="large" style={{...inputStyle, width:548}}/>                                                
                         </Form.Item>
                         <Form.Item label="Ownership type">
                             <Radio.Group onChange={this.onChangeOwnershipType} value={this.state.ownershipType}>
                                 <Space direction="vertical">
                                     <Radio value={1}>Rent</Radio>
                                     <Radio value={2}>Buy</Radio>
+                                    <Radio value={3}>Own</Radio>
                                 </Space>
                             </Radio.Group>
                         </Form.Item>
@@ -101,11 +109,7 @@ class AddKeyResourceModal extends Component {
                                     <Radio value={2}>Time to time</Radio>
                                 </Space>
                             </Radio.Group>
-                        </Form.Item>
-                        <Divider style={{width: 640, marginLeft: -25}} />
-                        <Form.Item>
-                            <Button size={"large"} style={{...buttonStyle, width: 118, height: 40}}><PlusOutlined />Add item</Button>
-                        </Form.Item>
+                        </Form.Item>                        
                     </Form>            
                 </Modal >
             </>
