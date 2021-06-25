@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 class ChangePasswordModal extends Component {
 
     handleOk = (values) => {
-        console.log(values);
         this.props.changeUserPassword(values.currentPassword, values.newPassword)
         this.props.handleClose();
     };
@@ -18,7 +17,6 @@ class ChangePasswordModal extends Component {
     };
 
     render() {
-        console.log(this.props.message)
         const isVisible = this.props.visibility;
 
         return (
@@ -89,9 +87,7 @@ class ChangePasswordModal extends Component {
 }
 const mapStateToProps = (state) => {
     return {
-        loading: state.loading,
-        error: state.error,
-        message: state.message,
+        loading: state.loading
     };
 }
 export default connect(mapStateToProps, { changeUserPassword })(ChangePasswordModal);

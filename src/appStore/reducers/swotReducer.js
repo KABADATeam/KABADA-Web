@@ -18,8 +18,8 @@ export const swotReducer = (
     }, action) => {
     switch (action.type) {
         case "FETCHING_SWOT_SUCCESS":
-            const strengths = action.payload.strengths_weakness_items.map(obj=> ({ ...obj, key: obj.id }));
-            const opportunities = action.payload.oportunities_threats.map(obj=> ({ ...obj, key: obj.id }));
+            const strengths = action.payload.strengths_weakness_items.map(obj=> ({ ...obj, key: obj.id })).sort((a, b) => (a.title < b.title) ? 1 : -1).sort((a, b) => (a.isLocal > b.isLocal) ? 1 : -1);
+            const opportunities = action.payload.oportunities_threats.map(obj=> ({ ...obj, key: obj.id })).sort((a, b) => (a.title < b.title) ? 1 : -1).sort((a, b) => (a.isLocal > b.isLocal) ? 1 : -1);
             const is_completed = action.payload.is_swot_completed;
             const originalObject = {
                 "is_swot_completed": is_completed,

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Card, Checkbox, Table, Button, Input, Typography, Space, Tooltip } from 'antd';
-import { PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, InfoCircleFilled, SaveOutlined } from '@ant-design/icons';
 import { buttonStyle, inputStyle, tableCardBodyStyle, tableCardStyle, tableTitleStyle, tableDescriptionStyle } from '../../styles/customStyles';
 import '../../css/swotStyle.css';
 import { connect } from 'react-redux';
@@ -12,7 +12,8 @@ class StrengthsWeaknesses extends Component {
         super(props);
         this.state = {
             editingId: -1,
-            editing: false
+            editing: false,
+            title: ""
         };
     }
 
@@ -45,7 +46,8 @@ class StrengthsWeaknesses extends Component {
         if (this.state.editing === true) {
             this.setState({
                 editingId: -1,
-                editing: false
+                editing: false,
+                title: ""
             });
         }
     }
@@ -59,12 +61,29 @@ class StrengthsWeaknesses extends Component {
         this.props.updateSwotList(1, item);
     };
 
+    handleSaveItem = (item) => {
+        item.title = this.state.title;
+        this.props.updateNewItem(1, item);
+        this.setState({
+            editingId: -1,
+            editing: false,
+            title: ""
+        });
+    }
+
     handleInputChange = (item) => event => {
         item.title = event.target.value;
         this.props.updateNewItem(1, item);
         this.setState({
             editingId: -1,
-            editing: false
+            editing: false,
+            title: ""
+        });
+    }
+
+    handleTitleChange = () => event => {
+        this.setState({
+            title: event.target.value
         });
     }
 
@@ -85,8 +104,10 @@ class StrengthsWeaknesses extends Component {
                                 style={{ ...inputStyle, fontSize: '14px', height: "40px" }}
                                 size="large"
                                 onPressEnter={this.handleInputChange(record)}
+                                onChange={this.handleTitleChange()}
                                 placeholder="Add other"
                             />
+                            <Button size="large" style={{ ...buttonStyle }} onClick={this.handleSaveItem.bind(this, record)}><SaveOutlined /></Button>
                             <Button size="large" style={{ ...buttonStyle }} onClick={this.handleDeleteItem.bind(this, record)}><DeleteOutlined /></Button>
                         </Space>
                     ) : ((record.title) ? (<Space><Typography>{record.title}</Typography><Tooltip title={record.description}><span><InfoCircleFilled style={{ color: '#BFBFBF' }} /></span></Tooltip></Space>) :
