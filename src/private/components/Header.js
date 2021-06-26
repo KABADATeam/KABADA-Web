@@ -29,12 +29,12 @@ class Header extends Component {
         this.props.history.push(`/user-settings`);
     }
 
-    onSwotClick() {
-        this.props.history.push(`/swot`);
+    onMyPlansClick() {
+        this.props.history.push(`/personal-business-plans`);
     }
 
-    onResourcesClick() {
-        this.props.history.push(`/key-resources`);
+    onPublicPlansClick() {
+        this.props.history.push(`/public-business-plans`);
     }
 
     render() {  
@@ -54,10 +54,6 @@ class Header extends Component {
                     <LogoutOutlined />
                     <span>Log out</span>
                 </Menu.Item>
-                <SubMenu title="Temps">
-                    <Menu.Item onClick={() => this.onSwotClick()}>SWOT</Menu.Item>
-                    <Menu.Item onClick={() => this.onResourcesClick()}>Key Resources</Menu.Item>
-                </SubMenu>
             </Menu>
           );
 
@@ -69,15 +65,15 @@ class Header extends Component {
                         <KabadaIcon/>
                         <Button 
                             type="text" 
-                            href="/personal-business-plans"
-                            style={{...buttonStyle}}
+                            style={{...buttonStyle, cursor: 'pointer'}}
+                            onClick={() => this.onMyPlansClick()}
                         >
                             My Business Plans
                         </Button>
                         <Button 
                             type="text" 
-                            href="/public-business-plans"
-                            style={{...buttonStyle, }}
+                            onClick={() => this.onPublicPlansClick()}
+                            style={{...buttonStyle, cursor: 'pointer'}}
                         >
                             Public business plans
                         </Button>

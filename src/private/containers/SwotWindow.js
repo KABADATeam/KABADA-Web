@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, Breadcrumb, Row, Col, Typography, Switch, Tabs } from 'antd';
+import { Link, withRouter } from 'react-router-dom';
+import { Button, Breadcrumb, Row, Col, Typography, Switch, Tabs, Space } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import StrengthsWeaknesses from '../components/StrengthsWeaknesses';
@@ -48,7 +49,7 @@ const titleButtonStyle = {
 class SwotWindow extends React.Component {
 
     onBackClick() {
-        this.props.history.push(`/personal-business-plans`);
+        this.props.history.push(`/overview`);
     }
 
     onCompleteChange(state) {
@@ -97,10 +98,10 @@ class SwotWindow extends React.Component {
                 <Col span={16} offset={4}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
-                            <a href="personal-business-plans">My Business plans</a>
+                            <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <a href="personal-business-plans">Kabada Intelligence Ltd.</a>
+                            <Space><Link to='/overview'>Kabada Intelligence Ltd.</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             SWOT
@@ -109,15 +110,14 @@ class SwotWindow extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px", marginBottom: "25px" }}>
-                    <Col offset={4} span={1}>
-                        <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
-                    </Col>
-                    <Col span={4}>
+                    <Col span={12} offset={4}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>SWOT</Text> <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
+                            <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
+                            <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>SWOT</Text>
+                            <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
                         </div>
                     </Col>
-                    <Col span={11}>
+                    <Col span={4}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                             <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed </Text><Switch checked={this.props.swot.updates.is_swot_completed === null ? this.props.swot.original.is_swot_completed : this.props.swot.updates.is_swot_completed} onClick={this.onCompleteChange.bind(this)} />
                         </div>
@@ -176,4 +176,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSwotList, updateSwotState, discardChanges, saveChanges })(SwotWindow)
+export default connect(mapStateToProps, { getSwotList, updateSwotState, discardChanges, saveChanges })(withRouter(SwotWindow));

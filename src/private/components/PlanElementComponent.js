@@ -3,6 +3,7 @@ import { Card, Typography, List, Row } from 'antd';
 import { connect } from 'react-redux';
 import { getPlans, getSelectedPlan } from "../../appStore/actions/planActions";
 import PlanStatusTag from "./PlanStatusTag";
+import { withRouter } from 'react-router-dom';
 
 const {Text} = Typography;
 
@@ -42,6 +43,7 @@ class PlanElementComponent extends Component {
 
     onClick(plan) {
         this.props.getSelectedPlan(plan);
+        this.props.history.push(`/overview`);
     }
 
     render () {
@@ -56,7 +58,7 @@ class PlanElementComponent extends Component {
                 grid={{ gutter: 16}}
                 dataSource={dataSource}
                 renderItem={item => (
-                    <List.Item onClick={() => this.onClick(item)}>
+                    <List.Item onClick={this.onClick.bind(this, item)} style={{ cursor: 'pointer' }}>
                         <Card style={{width: '282px', height: '236px', borderRadius: '8px', backgroundColor: '#FFFFFF',
                              backgroundImage: item.planImage === null? `url(businessPlan.webp)` : `url(${item.img})`,
                              backgroundSize:'282px 152px', backgroundRepeat: "no-repeat" 
@@ -81,9 +83,8 @@ class PlanElementComponent extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        loading: state.loading,
         personalPlans: state.personalBusinessPlans
     };
 }
 
-export default connect(mapStateToProps, { getPlans, getSelectedPlan })(PlanElementComponent);
+export default connect(mapStateToProps, { getPlans, getSelectedPlan })(withRouter(PlanElementComponent));

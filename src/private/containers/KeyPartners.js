@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link, withRouter } from 'react-router-dom';
 import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle } from '../../styles/customStyles';
@@ -90,7 +91,7 @@ class KeyPartners extends React.Component {
     }
 
     onBackClick() {
-        this.props.history.push(`/personal-business-plans`);
+        this.props.history.push(`/overview`);
     }
 
     addNewItem = () => {
@@ -187,10 +188,10 @@ class KeyPartners extends React.Component {
                 <Col span={16} offset={4}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
-                            <a href="personal-business-plans">My Business plans</a>
+                            <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <a href="/">Kabada Intelligence Ltd.</a>
+                            <Space><Link to='/overview'>Kabada Intelligence Ltd.</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             Key Partners
@@ -302,4 +303,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps)(KeyPartners);
+export default connect(mapStateToProps)(withRouter(KeyPartners));
