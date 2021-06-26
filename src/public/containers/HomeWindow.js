@@ -6,7 +6,7 @@ class HomeWindow extends React.Component {
     render() {        
         return (
             <>
-                <SiteHeader />
+                <SiteHeader />             
             </>          
         );
     }
