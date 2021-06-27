@@ -7,7 +7,6 @@ import { withRouter } from "react-router-dom";
 import {buttonStyle} from '../../styles/customStyles';
 import { CaretDownFilled, SettingOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 
-const { SubMenu } = Menu;
 const { Text } = Typography;
 
 const headerStyles = {

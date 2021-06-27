@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Menu } from 'antd';
+import { Row, Col } from 'antd';
 import KabadaIcon from '../../private/components/KabadaIcon';
 
 const headerStyles = {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space } from 'antd';
-import { ArrowLeftOutlined, InfoCircleFilled, CheckCircleOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { discardChanges, saveChanges } from "../../appStore/actions/swotAction";
@@ -15,15 +15,6 @@ const aboutTitleTextStyle = {
     fontWeight: '600',
     fontSize: '20px',
     marginBottom: '16px',
-}
-
-const textStyle = {
-    fontSize: '14px',
-    color: '#8C8C8C',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    lineHeight: '22px',
-    marginRight: '40px'
 }
 
 const titleTextStyle = {

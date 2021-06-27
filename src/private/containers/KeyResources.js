@@ -1,9 +1,13 @@
 import React from 'react';
+import { Link, withRouter } from 'react-router-dom';
 import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle, tableDescriptionStyle } from '../../styles/customStyles';
 import { connect } from 'react-redux';
 import KeyResourcesModal from "../components/KeyResourcesModal";
+import EditKeyResourceModal from "../components/EditKeyResourceModal";
+import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
+import { getResourcesList, getResourcesCategoriesList, deleteItem, updateResourcesState, discardChanges, saveChanges, saveEditable } from "../../appStore/actions/resourcesAction";
 
 const { Text } = Typography;
 
@@ -45,88 +49,91 @@ class KeyResources extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [
-                {
-                    key: 1,
-                    type: 'Physical',
-                    resource: 'Buildings',
-                    columnLabel: 'Rent Permanently',
-                },
-                {
-                    key: 2,
-                    type: 'Physical',
-                    resource: 'Transport',
-                    columnLabel: 'Rent Time to time',
-                },
-                {
-                    key: 3,
-                    type: 'Human',
-                    resource: 'Office worker',
-                    columnLabel: 'Employ Permanently',
-                },
-                {
-                    key: 4,
-                    type: 'Human',
-                    resource: 'Factory worker',
-                    columnLabel: 'Employ Permanently',
-                },
-            ],
-            isVisible: false
+            isVisible: false,
+            isEditableVisible: false
         };
     }
 
     componentDidMount() {
+        this.props.getResourcesList(this.props.businessPlan.id);
+        this.props.getResourcesCategoriesList();
     }
 
     onBackClick() {
-        this.props.history.push(`/personal-business-plans`);
+        this.props.history.push(`/overview`);
+    }
+
+    onCompleteChange(state) {
+        this.props.updateResourcesState(state);
     }
 
     addNewItem = () => {
         this.setState({
-            isVisible: true,
-        })
+            isVisible: true
+        });
     }
+
     closeNewItemModal = () => {
-        console.log('Clicked cancel button');
         this.setState({
-            isVisible: false,
+            isVisible: false
         });
     };
 
-    deleteItem(row) {
-        console.log(row);
-        const dataSource = [...this.state.data];
+    closeEditItemModal = () => {
         this.setState({
-            data: dataSource.filter((item) => item.key !== row.key),
+            isEditableVisible: false
+        });
+    };
+
+    deleteItem(item) {
+        this.props.deleteItem(item.resource_id);
+    }
+
+    editItem(item) {
+        this.props.saveEditable(item);
+        this.setState({
+            isEditableVisible: true
         });
     }
 
-    editItem(row) {
-        console.log(row)
+    getUpdatesWindowState() {
+        if (this.props.resources.updates.is_resources_completed !== null) {
+            return 'visible';
+        }
+
+        return 'hidden';
     }
 
-    render() {
+    discardChanges = () => {
+        this.props.discardChanges();
+    };
 
-        const data = this.state.data;
+    saveChanges = () => {
+        this.props.saveChanges(this.props.businessPlan.id);
+    };
+
+    render() {
+        console.log(this.props.resources);
+        const isVisibleHeader = this.getUpdatesWindowState();
+        const data = this.props.resources.original.key_resources.map(obj=> ({ ...obj, type: obj.category.description }));
         const columns = [
             {
                 title: 'Type',
                 dataIndex: 'type',
                 key: 'type',
-                width: '20%',
-            },
-            {
-                title: 'Resource',
-                dataIndex: 'resource',
-                key: 'resource',
                 width: '30%',
             },
             {
-                title: 'Column label',
-                dataIndex: 'columnLabel',
-                key: 'columnLabel',
-                width: '40%',
+                title: 'Name',
+                dataIndex: 'name',
+                key: 'name',
+                width: '30%',
+            },
+            {
+                title: 'Ownership',
+                dataIndex: 'ownership',
+                key: 'ownership',
+                width: '30%',
             },
             {
                 title: '',
@@ -143,14 +150,20 @@ class KeyResources extends React.Component {
         ];
 
         return (
+            
             <>
+                <UnsavedChangesHeader
+                    visibility={isVisibleHeader}
+                    discardChanges={this.discardChanges}
+                    saveChanges={this.saveChanges}
+                />
                 <Col span={16} offset={4}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
-                            <a href="personal-business-plans">My Business plans</a>
+                            <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <a href="/">Kabada Intelligence Ltd.</a>
+                            <Space><Link to='/overview'>Kabada Intelligence Ltd.</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             Key Resources
@@ -169,7 +182,7 @@ class KeyResources extends React.Component {
                     </Col>
                     <Col span={11}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch />
+                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.resources.updates.is_resources_completed === null ? this.props.resources.original.is_resources_completed : this.props.resources.updates.is_resources_completed} onClick={this.onCompleteChange.bind(this)} />
                         </div>
                     </Col>
                 </Row>
@@ -210,6 +223,7 @@ class KeyResources extends React.Component {
                             </Card >
                         </Col>
                         <KeyResourcesModal visibility={this.state.isVisible} handleClose={this.closeNewItemModal} />
+                        <EditKeyResourceModal visibility={this.state.isEditableVisible} handleClose={this.closeEditItemModal}/>
                     </Row>
                 </Col>
             </>
@@ -220,9 +234,9 @@ class KeyResources extends React.Component {
 const mapStateToProps = (state) => {
     return {
         loading: state.loading,
-        error: state.error,
-        message: state.message,
+        businessPlan: state.selectedBusinessPlan,
+        resources: state.resourcesList
     };
 }
 
-export default connect(mapStateToProps)(KeyResources);
+export default connect(mapStateToProps, { getResourcesList, getResourcesCategoriesList, deleteItem, updateResourcesState, discardChanges, saveChanges, saveEditable })(withRouter(KeyResources));

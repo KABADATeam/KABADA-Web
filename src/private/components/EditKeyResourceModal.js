@@ -19,7 +19,7 @@ const inputStyle = {
     textColor: '#8C8C8C',
 }
 
-class AddKeyResourceModal extends Component {
+class EditKeyResourceModal extends Component {
     state = {
         selectedItemId: null,
         selections: [ 0, 0 ],
@@ -106,12 +106,36 @@ class AddKeyResourceModal extends Component {
         });
     }
 
+    getOptions() {
+        if (this.props.categories.length > 0) {
+            const index = this.props.categories.findIndex(x => x.id === this.props.resource.category.id);
+            if (index > -1) {
+                const options = this.props.categories[index].types.map(t =>
+                    <Option key={t.id} value={t.id}>{t.title}</Option>
+                );
+                return options;
+            } else {
+                return <div></div>;
+            }
+        }
+        return <div></div>;
+    }
+
+    getCategory() {
+        const index = this.props.categories.findIndex(x => x.id === this.props.resource.category.id);
+        if (index > -1) {
+            return this.props.categories[index];
+        } else {
+            return null;
+        }
+    }
+
     render() {
-        const options = this.props.category.types.map(t =>
-            <Option key={t.id} value={t.id}>{t.title}</Option>
-        );
-        const defaultValue = this.props.category.types.length > 0 ? this.props.category.types[0].id : "";
-        const elements = this.getSelections(this.state.selectedItemId === null ? defaultValue : this.state.selectedItemId);
+        console.log(this.props);
+        const options = this.getOptions();
+        const category = this.getCategory();
+        const defaultValue = category === null ? "" : category.types[0].id;
+        const elements = <div></div>//this.getSelections(this.state.selectedItemId === null ? defaultValue : this.state.selectedItemId);
 
         return (
             <>
@@ -119,7 +143,7 @@ class AddKeyResourceModal extends Component {
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
                     width={588}
-                    title={this.props.category.title}
+                    title={this.props.resource.category.description}
                     visible={this.props.visibility}
                     onOk={this.onOk}
                     onCancel={this.onCancel}
@@ -148,10 +172,11 @@ class AddKeyResourceModal extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        category: state.selectedResourcesCategory,
-        businessPlan: state.selectedBusinessPlan
+        categories: state.resourcesCategoriesList,
+        businessPlan: state.selectedBusinessPlan,
+        resource: state.selectedResource
     };
 }
 
-export default connect(mapStateToProps, { saveResource } )(AddKeyResourceModal);
+export default connect(mapStateToProps, { saveResource } )(EditKeyResourceModal);
 
