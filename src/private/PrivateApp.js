@@ -9,6 +9,7 @@ import SwotWindow from './containers/SwotWindow';
 import KeyResources from './containers/KeyResources';
 import KeyPartners from './containers/KeyPartners';
 import Overview from './containers/Overview';
+import ValuePropositions from './containers/ValuePropositions';
 
 
 class PrivateApp extends React.Component {
@@ -31,6 +32,7 @@ class PrivateApp extends React.Component {
                     <Route exact path="/key-resources" render={(props) => <MainWindow {...props}> <KeyResources {...props} /> </MainWindow>} />
                     <Route exact path="/key-partners" render={(props) => <MainWindow {...props}> <KeyPartners {...props} /> </MainWindow>} />
                     <Route exact path="/overview" render={(props) => <MainWindow {...props}> <Overview {...props} /> </MainWindow>} />
+                    <Route exact path="/value-propositions" render={(props) => <MainWindow {...props}> <ValuePropositions {...props} /> </MainWindow>} />
                 </Switch>
             </Router>
 
