@@ -11,6 +11,8 @@ import { eurostatAllDataReducer } from '../reducers/eurostat/eurostatAllReducer'
 import { userSettingsReducer } from './settingsReducer';
 import { swotReducer } from './swotReducer';
 import { resourcesReducer, resourcesCategoriesReducer, selectedCategoryReducer, selectedResourceReducer } from './resourcesReducer';
+import { fileReducer } from './userFileReducer';
+import { planLanguagesReducer } from './planLanguageReducer';
 
 export default combineReducers({
     activities: activitiesReducer,
@@ -35,5 +37,7 @@ export default combineReducers({
     resourcesList: resourcesReducer,
     resourcesCategoriesList: resourcesCategoriesReducer,
     selectedResourcesCategory: selectedCategoryReducer,
-    selectedResource: selectedResourceReducer
+    selectedResource: selectedResourceReducer,
+    uploadedFile: fileReducer,
+    planLanguages: planLanguagesReducer
 });

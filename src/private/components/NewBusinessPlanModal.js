@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 import { getCountries } from '../../appStore/actions/countriesActions';
 import { getIndustries, getActivities } from '../../appStore/actions/naceActions';
 import { saveInitialPlanData } from '../../appStore/actions/planActions';
+import { uploadFile } from '../../appStore/actions/userFileAction';
+import { getPlanLanguages } from '../../appStore/actions/planLanguageAction';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -25,6 +27,7 @@ class NewBusinessPlanModal extends Component {
     componentDidMount() {
         this.props.getCountries();
         this.props.getIndustries();
+        this.props.getPlanLanguages();
     }
 
     handleOk = (values) => {
@@ -40,14 +43,22 @@ class NewBusinessPlanModal extends Component {
                     formData.append('files[]', item.file);
                 }
             })
+            formData.append('name', values.name);
+            this.props.uploadFile(formData)
+                .then(
+                    () => {
+                        console.log(this.props.uploadedFile);
+                        this.props.saveInitialPlanData(values.name, values.activity, values.country, values.language, this.props.uploadedFile);
+                    }
+                )
         }
-        formData.append('name', values.name);
+        else {
+            this.props.saveInitialPlanData(values.name, values.activity, values.country, values.language, '');
+        }
 
         this.setState({
             isVisible: true,
         });
-        console.log(values);
-        this.props.saveInitialPlanData(values.name, values.activity, values.country);
         this.props.handleClose();
     };
 
@@ -113,16 +124,8 @@ class NewBusinessPlanModal extends Component {
 
 
         const countries = this.props.countries.map(({ id, title }) => ({ key: id, value: id, text: title }));
-        const languages = [
-            { key: 1, text: "English" },
-            { key: 2, text: "Lietuvių" },
-            { key: 3, text: "Latviešu " },
-            { key: 4, text: "Italiano" },
-            { key: 5, text: "Português" },
-            { key: 6, text: "Čeština" },
-        ];
+        const languages = this.props.planLanguages.map(({ id, title }) => ({ key: id, value: id, text: title }));
 
-        const defaultLanguage = 1;
         const aboutNACE = "NACE is ...";
 
         const propsUpload = {
@@ -174,9 +177,6 @@ class NewBusinessPlanModal extends Component {
                         layout="vertical"
                         id="myForm"
                         name="myForm"
-                        initialValues={{
-                            language: defaultLanguage,
-                        }}
                         onFinish={this.handleOk}
                     >
                         <Form.Item key="name" name="name" label="Project name"
@@ -292,6 +292,7 @@ class NewBusinessPlanModal extends Component {
                             >
                                 <Select showSearch
                                     style={{ width: 315 }}
+                                    allowClear
                                     placeholder="Select language"
                                     optionFilterProp="children"
                                     filterOption={(input, option) =>
@@ -315,12 +316,16 @@ const mapStateToProps = (state) => {
         countries: state.countries,
         activities: state.activities,
         industries: state.industries,
+        uploadedFile: state.uploadedFile,
+        planLanguages: state.planLanguages,
     };
 }
 export default connect(mapStateToProps, {
     getCountries,
     getActivities,
     getIndustries,
-    saveInitialPlanData
+    saveInitialPlanData,
+    uploadFile,
+    getPlanLanguages
 })(NewBusinessPlanModal);
 
