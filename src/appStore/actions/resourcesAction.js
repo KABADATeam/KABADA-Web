@@ -69,7 +69,7 @@ export const saveResource = (postObject, category) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.post('api/kres/update', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            dispatch({ type: 'SAVE_RESOURCE_SUCCESS', payload: { ...postObject, "resource_id": response.data, "key": response.data,
+            dispatch({ type: 'SAVE_RESOURCE_SUCCESS', payload: { ...postObject, "resource_id": response.data, "type_id": postObject.resource_type_id, "key": response.data,
                 "category" : {
                     "description": category.title,
                     "id": category.id,
@@ -84,39 +84,32 @@ export const saveResource = (postObject, category) => {
     }
 };
 
-export const updateResourcesState = (is_completed) => {
-    return async (dispatch, getState) => {
-        try {
-            dispatch({ type: 'UPDATE_RESOURCES_STATE_SUCCESS', payload: { state: is_completed } });
-            //callback();
-        } catch (error) {
-            dispatch({ type: 'ERROR', payload: errorHandler(error) });
-            //callback2();
-        } finally {
-        }
-    }
-};
-
-export const discardChanges = () => {
-    return async (dispatch, getState) => {
-        try {
-            dispatch({ type: 'DISCARD_CHANGES_SUCCESS', payload: {} });
-            //callback();
-        } catch (error) {
-            dispatch({ type: 'ERROR', payload: errorHandler(error) });
-            //callback2();
-        } finally {
-        }
-    }
-};
-
-export const saveChanges = (planId) => {
+export const updateResource = (postObject, category) => {
     return async (dispatch, getState) => {
         try {
             const token = getState().user.access_token;
-            const updates = getState().resourcesList.updates;
-            await kabadaAPI.post('api/plans/changeResourcesCompleted', { "business_plan_id": planId, "is_resources_completed": updates.is_resources_completed }, { headers: { Authorization: `Bearer ${token}` } });
-            dispatch({ type: 'SAVE_CHANGES_SUCCESS', payload: updates.is_resources_completed });
+            await kabadaAPI.post('api/kres/update', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: 'UPDATE_RESOURCE_SUCCESS', payload: { ...postObject, "key": postObject.resource_id, "type_id": postObject.resource_type_id,
+                "category" : {
+                    "description": category.title,
+                    "id": category.id,
+                    "title": category.description
+                }
+            } });
+        } catch (error) {
+            dispatch({ type: 'ERROR', payload: errorHandler(error) });
+            //callback2();
+        } finally {
+        }
+    }
+};
+
+export const saveChanges = (planId, is_completed) => {
+    return async (dispatch, getState) => {
+        try {
+            const token = getState().user.access_token;
+            await kabadaAPI.post('api/plans/changeResourcesCompleted', { "business_plan_id": planId, "is_resources_completed": is_completed }, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: 'SAVE_CHANGES_SUCCESS', payload: is_completed });
         } catch (error) {
             dispatch({ type: 'ERROR', payload: errorHandler(error) });
             //callback2();

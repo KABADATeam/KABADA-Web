@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Modal, Button, Form, Space, Select, Radio, Input} from 'antd';
 import '../../css/customModal.css';
 import { saveResource } from "../../appStore/actions/resourcesAction";
+import { ArrowLeftOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
@@ -64,6 +65,10 @@ class AddKeyResourceModal extends Component {
         this.props.onSaving();
     }
 
+    onBack = () => {
+        this.props.onBack();
+    }
+
     onChange(e) {
         this.setState({
             description: e.target.value
@@ -119,7 +124,7 @@ class AddKeyResourceModal extends Component {
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
                     width={588}
-                    title={this.props.category.title}
+                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />  {this.props.category.title}</Space>}
                     visible={this.props.visibility}
                     onOk={this.onOk}
                     onCancel={this.onCancel}

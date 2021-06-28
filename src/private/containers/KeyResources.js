@@ -4,10 +4,9 @@ import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table,
 import { ArrowLeftOutlined, InfoCircleFilled, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle, tableDescriptionStyle } from '../../styles/customStyles';
 import { connect } from 'react-redux';
-import KeyResourcesModal from "../components/KeyResourcesModal";
+import KeyResourcesCategoriesModal from "../components/KeyResourcesCategoriesModal";
 import EditKeyResourceModal from "../components/EditKeyResourceModal";
-import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
-import { getResourcesList, getResourcesCategoriesList, deleteItem, updateResourcesState, discardChanges, saveChanges, saveEditable } from "../../appStore/actions/resourcesAction";
+import { getResourcesList, getResourcesCategoriesList, deleteItem, saveEditable, saveChanges } from "../../appStore/actions/resourcesAction";
 
 const { Text } = Typography;
 
@@ -49,9 +48,52 @@ class KeyResources extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isVisible: false,
-            isEditableVisible: false
+            is_categories_modal_visible: false,
+            is_edit_resource_modal_visible: false
         };
+    }
+
+    onBackClick() {
+        this.props.history.push(`/overview`);
+    }
+
+    onCompletedChange(state) {
+        this.props.saveChanges(this.props.businessPlan.id, state);
+    }
+
+    onAddNewItem = () => {
+        this.setState({
+            is_categories_modal_visible: true
+        });
+    }
+
+    onOpenCategoriesModal = () => {
+        this.setState({
+            is_categories_modal_visible: true
+        });
+    };
+
+    onCloseNewItemModal = () => {
+        this.setState({
+            is_categories_modal_visible: false
+        });
+    };
+
+    onCloseEditItemModal = () => {
+        this.setState({
+            is_edit_resource_modal_visible: false
+        });
+    };
+
+    onDeleteItem(item) {
+        this.props.deleteItem(item.resource_id);
+    }
+
+    onEditItem(item) {
+        this.props.saveEditable(item);
+        this.setState({
+            is_edit_resource_modal_visible: true
+        });
     }
 
     componentDidMount() {
@@ -59,63 +101,8 @@ class KeyResources extends React.Component {
         this.props.getResourcesCategoriesList();
     }
 
-    onBackClick() {
-        this.props.history.push(`/overview`);
-    }
-
-    onCompleteChange(state) {
-        this.props.updateResourcesState(state);
-    }
-
-    addNewItem = () => {
-        this.setState({
-            isVisible: true
-        });
-    }
-
-    closeNewItemModal = () => {
-        this.setState({
-            isVisible: false
-        });
-    };
-
-    closeEditItemModal = () => {
-        this.setState({
-            isEditableVisible: false
-        });
-    };
-
-    deleteItem(item) {
-        this.props.deleteItem(item.resource_id);
-    }
-
-    editItem(item) {
-        this.props.saveEditable(item);
-        this.setState({
-            isEditableVisible: true
-        });
-    }
-
-    getUpdatesWindowState() {
-        if (this.props.resources.updates.is_resources_completed !== null) {
-            return 'visible';
-        }
-
-        return 'hidden';
-    }
-
-    discardChanges = () => {
-        this.props.discardChanges();
-    };
-
-    saveChanges = () => {
-        this.props.saveChanges(this.props.businessPlan.id);
-    };
-
     render() {
-        console.log(this.props.resources);
-        const isVisibleHeader = this.getUpdatesWindowState();
-        const data = this.props.resources.original.key_resources.map(obj=> ({ ...obj, type: obj.category.description }));
+        const data = this.props.resources.key_resources.map(obj=> ({ ...obj, type: obj.category.description }));
         const columns = [
             {
                 title: 'Type',
@@ -142,8 +129,8 @@ class KeyResources extends React.Component {
                 width: '10%',
                 render: (obj, record) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.editItem.bind(this, record)} >Edit</Button>
-                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.deleteItem.bind(this, record)} ><DeleteOutlined /></Button>
+                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditItem.bind(this, record)} >Edit</Button>
+                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteItem.bind(this, record)} ><DeleteOutlined /></Button>
                     </Space>
                 ),
             }
@@ -152,11 +139,6 @@ class KeyResources extends React.Component {
         return (
             
             <>
-                <UnsavedChangesHeader
-                    visibility={isVisibleHeader}
-                    discardChanges={this.discardChanges}
-                    saveChanges={this.saveChanges}
-                />
                 <Col span={16} offset={4}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
@@ -182,7 +164,7 @@ class KeyResources extends React.Component {
                     </Col>
                     <Col span={11}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.resources.updates.is_resources_completed === null ? this.props.resources.original.is_resources_completed : this.props.resources.updates.is_resources_completed} onClick={this.onCompleteChange.bind(this)} />
+                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.resources.is_resources_completed} onClick={this.onCompletedChange.bind(this)} />
                         </div>
                     </Col>
                 </Row>
@@ -218,12 +200,12 @@ class KeyResources extends React.Component {
                                     dataSource={data}
                                     columns={columns}
                                     pagination={false}
-                                    footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.addNewItem.bind(this)}><PlusOutlined />Add key resource</Button>)}
+                                    footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddNewItem.bind(this)}><PlusOutlined />Add key resource</Button>)}
                                 />
                             </Card >
                         </Col>
-                        <KeyResourcesModal visibility={this.state.isVisible} handleClose={this.closeNewItemModal} />
-                        <EditKeyResourceModal visibility={this.state.isEditableVisible} handleClose={this.closeEditItemModal}/>
+                        <KeyResourcesCategoriesModal visibility={this.state.is_categories_modal_visible} handleClose={this.onCloseNewItemModal} handleOpen={this.onOpenCategoriesModal} />
+                        <EditKeyResourceModal visibility={this.state.is_edit_resource_modal_visible} handleClose={this.onCloseEditItemModal}/>
                     </Row>
                 </Col>
             </>
@@ -233,10 +215,9 @@ class KeyResources extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        loading: state.loading,
         businessPlan: state.selectedBusinessPlan,
         resources: state.resourcesList
     };
 }
 
-export default connect(mapStateToProps, { getResourcesList, getResourcesCategoriesList, deleteItem, updateResourcesState, discardChanges, saveChanges, saveEditable })(withRouter(KeyResources));
+export default connect(mapStateToProps, { getResourcesList, getResourcesCategoriesList, deleteItem, saveChanges, saveEditable })(withRouter(KeyResources));

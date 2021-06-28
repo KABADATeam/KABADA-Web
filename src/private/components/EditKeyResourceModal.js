@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Button, Form, Space, Select, Radio, Input} from 'antd';
 import '../../css/customModal.css';
-import { saveResource } from "../../appStore/actions/resourcesAction";
+import { updateResource } from "../../appStore/actions/resourcesAction";
 
 const { Option } = Select;
 
@@ -23,64 +23,77 @@ class EditKeyResourceModal extends Component {
     state = {
         selectedItemId: null,
         selections: [ 0, 0 ],
-        description: ''
+        name: null,
+        is_changed: [ false, false ]
     }
 
     onCancel = () => {
-        this.props.handleClose();
         this.setState({
             selectedItemId: null,
             selections: [ 0, 0 ],
-            description: ''
+            name: null,
+            is_changed: [ false, false ]
         });
+        this.props.handleClose(); 
     }
 
     onOk = () => {
-        let item = this.props.category.types[0];
-        if (this.state.selectedItemId !== null) {
-            item = this.props.category.types.find(x => x.id === this.state.selectedItemId);
-        }
-
-        const selections = item.selections.map((item, i) => {
+        const category = this.props.categories.find(x => x.id === this.props.resource.category.id);
+        let type = category.types.find(x => x.id === (this.state.selectedItemId === null ? this.props.resource.type_id : this.state.selectedItemId));
+        const selections = type.selections.map((item, i) => {
             const options = item.options.map((x, j) => j === this.state.selections[i] ? { title: x.title, selected: true } : x);
             return { title: item.title, options: options }
         });
 
         const postObject = {
-            "resource_id": null,
+            "resource_id": this.props.resource.resource_id,
             "business_plan_id": this.props.businessPlan.id,
-            "resource_type_id": item.id,
-            "name": this.state.description,
+            "resource_type_id": type.id,
+            "name": this.state.name === null ? this.props.resource.name : this.state.name,
             "selections": selections
         };
-
-        this.props.saveResource(postObject, this.props.category);
+        
+        this.props.updateResource(postObject, category);
         this.setState({
             selectedItemId: null,
             selections: [ 0, 0 ],
-            description: ''
+            name: null,
+            is_changed: [ false, false ]
         });
         this.props.handleClose();
-        this.props.onSaving();
     }
 
     onChange(e) {
         this.setState({
-            description: e.target.value
+            name: e.target.value
         });
     }
 
-    getSelections(id) {
-        const item = this.props.category.types.find(x => x.id === id);
-        if (item !== null && item !== undefined) {
-            const uiElements = item.selections.map((item, i) =>
+    transformSelections() {
+        let array = [];
+        if (this.props.resource !== null && this.props.resource !== undefined) {
+            this.props.resource.selections.forEach(item =>
+                item.options.forEach((o, j) => {
+                    if (o.selected === true) {
+                        array.push(j);
+                    }
+                })
+            );
+        }
+        return array;
+    }
+
+    getSelections() {
+        const category = this.props.categories.find(x => x.id === this.props.resource.category.id);
+        if (category !== null) {
+            const type = category.types.find(x => x.id === this.state.selectedItemId);
+            const uiElements = type.selections.map((item, i) =>
                 <Form.Item key={i} label={item.title}>
                     <Radio.Group key={i} onChange={this.onRadioSelection.bind(this, i)} value={this.state.selections[i]}>
                         <Space direction="vertical">
                             {item.options.map((o, j) =>
                                 <Radio key={j} value={j}>{o.title}</Radio>
                             )}
-    
                         </Space>
                     </Radio.Group>
                 </Form.Item>
@@ -92,50 +105,63 @@ class EditKeyResourceModal extends Component {
         }
     }
 
+    getInitialSelections() {
+        const array = this.transformSelections();
+        const uiElements = this.props.resource.selections.map((item, i) =>
+            <Form.Item key={i} label={item.title}>
+                <Radio.Group key={i} onChange={this.onRadioSelection.bind(this, i)} value={this.state.is_changed[i] === false ? array[i] : this.state.selections[i]} >
+                    <Space direction="vertical">
+                        {item.options.map((o, j) =>
+                            <Radio key={j} value={j}>{o.title}</Radio>
+                        )}
+
+                    </Space>
+                </Radio.Group>
+            </Form.Item>
+        );
+        return uiElements;
+    }
+
     onRadioSelection(item, e) {
         const array = this.state.selections;
+        const changesArray = this.state.is_changed;
         array[item] = e.target.value;
+        changesArray[item] = true;
         this.setState({
-            selections: array
+            selections: array,
+            is_changed: changesArray
         });
     }
 
     onSelectionChange(id) {
         this.setState({
-            selectedItemId: id
+            selectedItemId: id,
+            selections: [ 0, 0 ]
         });
     }
 
     getOptions() {
-        if (this.props.categories.length > 0) {
-            const index = this.props.categories.findIndex(x => x.id === this.props.resource.category.id);
-            if (index > -1) {
-                const options = this.props.categories[index].types.map(t =>
-                    <Option key={t.id} value={t.id}>{t.title}</Option>
-                );
-                return options;
-            } else {
-                return <div></div>;
-            }
-        }
-        return <div></div>;
-    }
-
-    getCategory() {
         const index = this.props.categories.findIndex(x => x.id === this.props.resource.category.id);
         if (index > -1) {
-            return this.props.categories[index];
+            const options = this.props.categories[index].types.map(t =>
+                <Option key={t.id} value={t.id}>{t.title}</Option>
+            );
+            return options;
         } else {
-            return null;
+            return <div></div>;
         }
     }
 
     render() {
-        console.log(this.props);
         const options = this.getOptions();
-        const category = this.getCategory();
-        const defaultValue = category === null ? "" : category.types[0].id;
-        const elements = <div></div>//this.getSelections(this.state.selectedItemId === null ? defaultValue : this.state.selectedItemId);
+        const defaultValue = this.state.selectedItemId === null ? this.props.resource.type_id : this.state.selectedItemId;
+        let elements = [];
+
+        if (this.state.selectedItemId === null) {
+            elements = this.getInitialSelections();
+        } else {
+            elements = this.getSelections();
+        }
 
         return (
             <>
@@ -160,7 +186,7 @@ class EditKeyResourceModal extends Component {
                         </Form.Item>
 
                         <Form.Item key={101} label="Description (optional)">
-                            <Input placeholder="Your description goes here" value={this.state.description} onChange={this.onChange.bind(this)} size="large" style={{...inputStyle, width:548}}/>                                                
+                            <Input placeholder="Your description goes here" value={this.state.name === null ? this.props.resource.name : this.state.name} onChange={this.onChange.bind(this)} size="large" style={{...inputStyle, width:548}}/>                                                
                         </Form.Item>    
                         {elements}                   
                     </Form>            
@@ -178,5 +204,5 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { saveResource } )(EditKeyResourceModal);
+export default connect(mapStateToProps, { updateResource } )(EditKeyResourceModal);
 

@@ -6,38 +6,38 @@ import {RightOutlined} from '@ant-design/icons';
 import AddKeyResourceModal from './AddKeyResourceModal';
 import { selectCategory } from "../../appStore/actions/resourcesAction";
 
-class KeyResourcesModal extends Component {
+class KeyResourcesCategoriesModal extends Component {
     state = {
-        isVisible : false,
-        addKeyVisibility: false,
+        is_add_resource_modal_visible: false
     }
 
-    handleCancel = () => {
+    onCancel = () => {
         this.props.handleClose();
-        console.log('Clicked cancel button');
-        this.setState({
-            isVisible: false,
-        });
     };
+
+    onBack = () => {
+        this.props.handleOpen();
+        this.setState({
+            is_add_resource_modal_visible: false
+        });
+    }
 
     addNewKeyResource = (item) => {
         this.props.selectCategory(item, () => {
+            this.props.handleClose();
             this.setState({
-                addKeyVisibility: true
+                is_add_resource_modal_visible: true
             });
         });
     }
 
     closeNewKeyResourceModal = () => {
         this.setState({
-            addKeyVisibility: false
+            is_add_resource_modal_visible: false
         });
     }
 
     onCloseAfterSaving = () => {
-        this.setState({
-            isVisible: false
-        });
         this.props.handleClose();
     }
 
@@ -49,7 +49,7 @@ class KeyResourcesModal extends Component {
                     centered={true}
                     title="Add key resource"
                     visible={this.props.visibility}
-                    onCancel={this.handleCancel}
+                    onCancel={this.onCancel}
                     footer={null}
                     width={636}
                 >
@@ -70,7 +70,7 @@ class KeyResourcesModal extends Component {
                         )}
                     /> 
                 </Modal >
-                <AddKeyResourceModal visibility={this.state.addKeyVisibility} onSaving={this.onCloseAfterSaving} handleClose={this.closeNewKeyResourceModal} />
+                <AddKeyResourceModal visibility={this.state.is_add_resource_modal_visible} onSaving={this.onCloseAfterSaving} onBack={this.onBack} handleClose={this.closeNewKeyResourceModal} />
             </>
         )
     }
@@ -78,12 +78,11 @@ class KeyResourcesModal extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        loading: state.loading,
         businessPlan: state.selectedBusinessPlan,
         categories: state.resourcesCategoriesList        
     };
 }
 
-export default connect(mapStateToProps, { selectCategory } )(KeyResourcesModal);
+export default connect(mapStateToProps, { selectCategory } )(KeyResourcesCategoriesModal);
 
 
