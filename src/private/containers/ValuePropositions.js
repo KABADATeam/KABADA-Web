@@ -1,10 +1,8 @@
 import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button, Breadcrumb, Row, Col, Typography, Switch, Space, Result, Image, Table } from 'antd';
-import { ArrowLeftOutlined, InfoCircleFilled, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import { connect } from 'react-redux';
-import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
-import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle, tableDescriptionStyle } from '../../styles/customStyles';
+import { ArrowLeftOutlined, InfoCircleFilled, DeleteOutlined } from '@ant-design/icons';
+import { buttonStyle, leftButtonStyle, rightButtonStyle } from '../../styles/customStyles';
 import '../../css/customTable.css';
 
 const { Text } = Typography;
@@ -45,30 +43,22 @@ class ValuePropositions extends React.Component {
     onCompleteChange(state) {
     }
 
-    discardChanges = () => {
-        this.props.discardChanges();
-    };
-
     saveChanges = () => {
 
     };
 
-    getUpdatesWindowState() {
-        return 'hidden';
-    }
-
     addKeyProduct = () => {
-
+        this.props.history.push(`/new-product`);
     }
 
-    deleteItem(item) {
+    deleteItem = (item) => {
 
     }
 
     addNewItem = () => {
     }
 
-    editItem(item) {
+    editItem = (item) => {
 
     }
 
@@ -76,8 +66,6 @@ class ValuePropositions extends React.Component {
     }
 
     render() {
-        const isVisibleHeader = this.getUpdatesWindowState();
-
         const valuePropositionsColumns = [
             {
                 title: 'Product name',
@@ -132,11 +120,6 @@ class ValuePropositions extends React.Component {
 
         return (
             <>
-                <UnsavedChangesHeader
-                    visibility={isVisibleHeader}
-                    discardChanges={this.discardChanges}
-                    saveChanges={this.saveChanges}
-                />
                 <Col span={16} offset={4}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
