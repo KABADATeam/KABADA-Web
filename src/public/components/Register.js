@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
-import { Form, Input, Button, Typography, Card, Space, Divider, Row, Alert } from 'antd';
+import { Form, Input, Button, Typography, Card, Space, Divider, Row } from 'antd';
 import { FacebookFilled, GoogleCircleFilled } from '@ant-design/icons';
 import FacebookLogin from "react-facebook-login";
 import GoogleLogin from "react-google-login";
@@ -17,32 +17,25 @@ const { Text, Title } = Typography
 class Register extends React.Component {
 
     responseFacebook = (response) => {
-        console.log(response);
+        //console.log(response);
 	};
 
     responseGoogle = (response) => {
-		console.log(response);
+		//console.log(response);
 	};
 	
     onFinish = (values) => {
-        console.log('Success:', values);
+        //console.log('Success:', values);
         this.props.register("Test", values.email, values.password, () => {
             this.props.history.push("/login");
         });
     };
 
     onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
+        //console.log('Failed:', errorInfo);
     };
 
     render() {
-		/*const validatePasswordLength = (rule, values, callback) => {
-			if (values.password.length <= 6) {
-				callback("Wrong");
-			} else {
-				callback();
-			}
-		}*/
         return (
 				<Card style={cardStyle} bodyStyle={{ padding: "0" }}>
                 <Row>
@@ -148,18 +141,8 @@ class Register extends React.Component {
 						<Input.Password size="large" />
 						</Form.Item>
                     </Form.Item>
-					{
-						(this.props.message.type === "error" ? (
-							<Alert
-								style={{ marginBottom: '8px' }}
-								showIcon
-								message={this.props.message.message.message}
-								type="error"
-							/>
-							) : null)
-					}
                     <Form.Item {...tailLayout} style={{ marginBottom: '8px' }}>
-						<Button type="primary" size="large" style={buttonStyle} htmlType="submit" block="true">
+						<Button type="primary" size="large" style={buttonStyle} loading={this.props.loading} htmlType="submit" block="true">
 							Create Account
 						</Button>
 					</Form.Item>
@@ -176,9 +159,7 @@ class Register extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        loading: state.loading,
-		error: state.error,
-		message: state.message,
+        loading: state.loading
     };
 }
 

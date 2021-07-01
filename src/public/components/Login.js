@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Button, Card, Divider, Typography, Space, Row, Col, Alert } from 'antd';
+import { Form, Input, Button, Card, Divider, Typography, Space, Row, Col } from 'antd';
 import { FacebookFilled, GoogleCircleFilled } from '@ant-design/icons';
 import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login";
@@ -33,11 +33,11 @@ class Login extends React.Component {
 	};
 
 	responseFailGoogle = (response) => {
-		console.log(response);
+		//console.log(response);
 	};
 
 	responseFacebook = (response) => {
-		console.log(response);
+		//console.log(response);
 		this.props.facebookLogin(response.accessToken);
 	};
 
@@ -69,6 +69,7 @@ class Login extends React.Component {
 
 					<Form.Item {...tailLayout} style={{ marginBottom: '16px' }}>
 						<FacebookLogin
+							isDisabled={true}
 							appId={process.env.REACT_APP_FACEBOOK_APPID}
 							autoLoad={false}
 							fields="name, email, picture"
@@ -85,11 +86,11 @@ class Login extends React.Component {
 							clientId={process.env.REACT_APP_GOOGLE_CLIENTID}
 							render={(renderProps) => (
 								<Button
+									loading={this.props.loading}
 									size="large"
 									style={buttonStyle}
 									onClick={renderProps.onClick}
 									icon={<GoogleCircleFilled />} block="true"	>
-
 									Continue with Google
 								</Button>
 							)}
@@ -131,18 +132,8 @@ class Login extends React.Component {
 
 					</Form.Item>
 
-					{
-						(this.props.message.type === "error" ?
-							(<Alert
-								style={{ marginBottom: '8px' }}
-								showIcon
-								message={this.props.message.message.message}
-								type="error"
-							/>) : null)
-					}
-
 					<Form.Item {...tailLayout} style={{ marginBottom: '8px' }}>
-						<Button type="primary" size="large" style={buttonStyle} htmlType="submit" block="true" >
+						<Button type="primary" loading={this.props.loading} size="large" style={buttonStyle} htmlType="submit" block="true" >
 							Sign In
 						</Button>
 					</Form.Item>
@@ -160,9 +151,7 @@ class Login extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		loading: state.loading,
-		error: state.error,
-		message: state.message,
+		loading: state.loading
 	};
 }
 
