@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Card, Typography, List, Row } from 'antd';
 import { connect } from 'react-redux';
-import { getPlans, getSelectedPlan } from "../../appStore/actions/planActions";
+import { getPlans, getSelectedPlan, getImage } from "../../appStore/actions/planActions";
 import PlanStatusTag from "./PlanStatusTag";
 import { withRouter } from 'react-router-dom';
 
@@ -22,7 +22,12 @@ const dateTextStyle = {
 class PlanElementComponent extends Component {
 
     componentDidMount() {
-        this.props.getPlans();  
+        this.props.getPlans()
+            .then(() => {
+                this.props.personalPlans.forEach(plan => {
+                    this.props.getImage(plan);
+                });
+            });
     }
 
     filterFunction = (tabKey) => {
@@ -60,9 +65,10 @@ class PlanElementComponent extends Component {
                 renderItem={item => (
                     <List.Item onClick={this.onClick.bind(this, item)} style={{ cursor: 'pointer' }}>
                         <Card style={{width: '282px', height: '236px', borderRadius: '8px', backgroundColor: '#FFFFFF',
-                             backgroundImage: item.planImage === null? `url(businessPlan.webp)` : `url(${item.img})`,
+                             backgroundImage: item.coverImage === null ? `url(businessPlan.webp)` : `url(${item.coverImage})`,
                              backgroundSize:'282px 152px', backgroundRepeat: "no-repeat" 
                         }}>
+
                         <Row>
                             <PlanStatusTag planStatusValue={item.percentage}/>
                         </Row>
@@ -87,4 +93,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getPlans, getSelectedPlan })(withRouter(PlanElementComponent));
+export default connect(mapStateToProps, { getPlans, getSelectedPlan, getImage })(withRouter(PlanElementComponent));

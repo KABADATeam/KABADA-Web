@@ -1,7 +1,7 @@
 import kabadaAPI from './kabadaAPI';
 import { errorHandler } from './errorHandler';
 
-export const saveInitialPlanData = (title, activityId, countryId, languageId, fileId, callback, callback2) => {
+export const saveInitialPlanData = (title, activityId, countryId, languageId, fileId) => {
     return async (dispatch, getState) => {
         try {
             const token = getState().user.access_token;
@@ -13,8 +13,7 @@ export const saveInitialPlanData = (title, activityId, countryId, languageId, fi
                 'languageId': languageId
             }
             const response = await kabadaAPI.post('api/plans', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            dispatch({ type: 'SAVING_PLAN_SUCCESS', payload: response.data });
-            callback();
+            dispatch({ type: 'SAVING_PLAN_SUCCESS', payload: { ...response.data, "percentage": 0, "dateCreated": response.data.created, "name": response.data.title, "planImage": response.data.img } });
         } catch (error) {
             dispatch({ type: 'ERROR', payload: errorHandler(error) });
         } finally {
@@ -41,14 +40,30 @@ export const getAllPublicPlans = () => {
     };
 };
 
+const getURL = (bufferArray) => {
+    var blob = new Blob([ bufferArray ], { type: "image/png" } );
+    return URL.createObjectURL(blob);
+}
+
+export const getImage = (plan) => {
+    return async (dispatch, getState) => {
+        try {
+            const token = getState().user.access_token;
+
+            const response = await kabadaAPI.get("api/files/" + plan.planImage, { headers: { Authorization: `Bearer ${token}` }, responseType: 'arraybuffer' });
+            dispatch({ type: "FETCHING_IMAGE_SUCCESS", payload: { ...plan, coverImage: getURL(response.data)  }});
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+
 export const getPlans = () => {
     return async (dispatch, getState) => {
         try {
             const token = getState().user.access_token;
-            const response = await kabadaAPI.get("api/plans", {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            dispatch({ type: "FETCHING_PLAN_SUCCESS", payload: response.data.privateBusinessPlans.businessPlan });
+            const response = await kabadaAPI.get("api/plans", { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: "FETCHING_PLANS_SUCCESS", payload: response.data.privateBusinessPlans.businessPlan });
         } catch (error) {
             if (error.response === undefined) {
                 dispatch({

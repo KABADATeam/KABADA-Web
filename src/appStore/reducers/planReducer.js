@@ -1,16 +1,11 @@
-export const planReducer = (state = null, action) => {
+export const privatePlansReducer = (state = [], action) => {
     switch (action.type) {
+        case "FETCHING_PLANS_SUCCESS":
+            return action.payload.map(obj=> ({ ...obj, coverImage: null }));
         case 'SAVING_PLAN_SUCCESS':
-            return action.payload;
-        default:
-            return state;
-    }
-}
-
-export const planFetchReducer = (state = [], action) => {
-    switch (action.type) {
-        case "FETCHING_PLAN_SUCCESS":
-            return action.payload;
+            return [ ...state, action.payload ];
+        case 'FETCHING_IMAGE_SUCCESS':
+            return state.map(x => x.id === action.payload.id ? action.payload : x);
         case "REMOVING_PLAN_SUCCESS":
             return action.payload.data.filter(plan => plan.id !== action.payload.id);
         default:

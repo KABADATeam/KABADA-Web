@@ -89,10 +89,10 @@ class Overview extends React.Component {
                 <Col span={20} offset={2}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
-                            <a href="personal-business-plans">My Business plans</a>
+                            <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <a href="overview">Kabada Intelligence Ltd.</a>
+                            <Space><Link to='/overview'>Kabada Intelligence Ltd.</Link></Space>
                         </Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
@@ -128,7 +128,7 @@ class Overview extends React.Component {
                                                 <List.Item key='2' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
                                                     <List.Item.Meta
                                                         avatar={<CheckCircleOutlined />}
-                                                        title="Value proposition"
+                                                        title={<Space><Link to='/new-product'>Value proposition</Link></Space>}
                                                         description="Description goes here" />
                                                     <div>...</div>
                                                 </List.Item>
@@ -220,7 +220,7 @@ class Overview extends React.Component {
                                 </Col>
                                 <Col span={6}>
                                     <Card style={{width: '282px', height: '236px', borderRadius: '8px', backgroundColor: '#FFFFFF',
-                                        backgroundImage: this.props.businessPlan.planImage === null? `url(businessPlan.webp)` : `url(${this.props.businessPlan.img})`,
+                                        backgroundImage: this.props.businessPlan.coverImage === null? `url(businessPlan.webp)` : `url(${this.props.businessPlan.coverImage})`,
                                         backgroundSize:'282px 152px', backgroundRepeat: "no-repeat" }}>
                                        <h4 style={{ marginTop: '150px'}}>Cover image</h4>
                                     </Card>

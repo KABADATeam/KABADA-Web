@@ -9,6 +9,7 @@ import { getIndustries, getActivities } from '../../appStore/actions/naceActions
 import { saveInitialPlanData } from '../../appStore/actions/planActions';
 import { uploadFile } from '../../appStore/actions/userFileAction';
 import { getPlanLanguages } from '../../appStore/actions/planLanguageAction';
+import { getImage } from "../../appStore/actions/planActions";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -32,8 +33,6 @@ class NewBusinessPlanModal extends Component {
 
     handleOk = (values) => {
 
-        console.log('Clicked ok button');
-
         const { fileList } = this.state;
         const formData = new FormData();
 
@@ -47,8 +46,11 @@ class NewBusinessPlanModal extends Component {
             this.props.uploadFile(formData)
                 .then(
                     () => {
-                        console.log(this.props.uploadedFile);
-                        this.props.saveInitialPlanData(values.name, values.activity, values.country, values.language, this.props.uploadedFile);
+                        this.props.saveInitialPlanData(values.name, values.activity, values.country, values.language, this.props.uploadedFile)
+                            .then(() => {
+                                const plan = this.props.personalPlans[this.props.personalPlans.length - 1];
+                                this.props.getImage(plan);
+                            });
                     }
                 )
         }
@@ -64,14 +66,12 @@ class NewBusinessPlanModal extends Component {
 
     handleCancel = () => {
         this.props.handleClose();
-        console.log('Clicked cancel button');
         this.setState({
             isVisible: false,
         });
     };
 
     normFile = (e) => {
-        console.log('Upload event:', e);
 
         if (Array.isArray(e)) {
             return e;
@@ -270,7 +270,7 @@ class NewBusinessPlanModal extends Component {
                                     placeholder="Select country"
                                     optionFilterProp="children"
                                     filterOption={(input, option) =>
-                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        option.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                     }
                                 >
                                     {countries.map(item => (
@@ -279,7 +279,7 @@ class NewBusinessPlanModal extends Component {
                                 </Select>
                             </Form.Item>
 
-                            <Form.Item key="language" name="language" label="Language of bussines plan?"
+                            <Form.Item key="language" name="language" label="Language of bussines plan?" initialValue={languages.length > 0 ? languages[0].value : ""}
                                 rules={[
                                     {
                                         validator: async (_, language) => {
@@ -296,7 +296,7 @@ class NewBusinessPlanModal extends Component {
                                     placeholder="Select language"
                                     optionFilterProp="children"
                                     filterOption={(input, option) =>
-                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        option.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                     }
                                 >
                                     {languages.map(item => (
@@ -318,6 +318,7 @@ const mapStateToProps = (state) => {
         industries: state.industries,
         uploadedFile: state.uploadedFile,
         planLanguages: state.planLanguages,
+        personalPlans: state.personalBusinessPlans
     };
 }
 export default connect(mapStateToProps, {
@@ -326,6 +327,7 @@ export default connect(mapStateToProps, {
     getIndustries,
     saveInitialPlanData,
     uploadFile,
-    getPlanLanguages
+    getPlanLanguages,
+    getImage
 })(NewBusinessPlanModal);
 
