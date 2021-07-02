@@ -48,12 +48,16 @@ const getURL = (bufferArray) => {
 export const getImage = (plan) => {
     return async (dispatch, getState) => {
         try {
-            const token = getState().user.access_token;
+            if (plan.planImage !== null) {
+                const token = getState().user.access_token;
 
-            const response = await kabadaAPI.get("api/files/" + plan.planImage, { headers: { Authorization: `Bearer ${token}` }, responseType: 'arraybuffer' });
-            dispatch({ type: "FETCHING_IMAGE_SUCCESS", payload: { ...plan, coverImage: getURL(response.data)  }});
+                const response = await kabadaAPI.get("api/files/" + plan.planImage, { headers: { Authorization: `Bearer ${token}` }, responseType: 'arraybuffer' });
+                dispatch({ type: "FETCHING_IMAGE_SUCCESS", payload: { ...plan, coverImage: getURL(response.data)  }});
+            } else {
+                return;
+            }
         } catch (error) {
-            console.log(error);
+            
         }
     }
 }
