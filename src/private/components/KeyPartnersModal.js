@@ -1,92 +1,54 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Modal, List, Button } from 'antd';
 import '../../css/customModal.css';
 import { RightOutlined } from '@ant-design/icons';
-import AddKeyPartnerModal from './AddKeyPartnerModal'
+import { selectCategoryType } from "../../appStore/actions/partnersAction";
 
-const data = [
-    {
-        key: 1,
-        title: 'Self Distribution',
-        description: 'Possible if you distribute your products through your own channels – directly, your own store, homepage. Often the case in some service sectors'
-    },
-    {
-        key: 2,
-        title: 'Highly diversified distributors',
-        description: 'You can choose «Many Distributors» if you believe that distribution channels are strongly diversified and no distributor is of high importance'
-    },
-    {
-        key: 3,
-        title: 'Retailers',
-        description: 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.',
-    },
-    {
-        key: 4,
-        title: 'Wholesalers',
-        description: 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.',
-    },
-    {
-        key: 5,
-        title: 'Agents',
-        description: 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.',
-    },
-    {
-        key: 6,
-        title: 'Other',
-        description: 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.',
-    },
-]
 class KeyPartnersModal extends Component {
-    state = {
-        isVisible: false,
-        addKeyVisibility: false,
+
+    onCancel = () => {
+        this.props.onClose();
+    };
+
+    onAddNewPartner = (item) => {
+        this.props.selectCategoryType(this.props.category.title, item, () => {
+            this.props.onClose();
+            this.props.onForward();
+        });
+        
     }
 
-    handleCancel = () => {
-        this.props.handleClose();
-        console.log('Clicked cancel button');
-        this.setState({
-            isVisible: false,
-        });
-    };
-    addNewKeyPartner = () => {
-        console.log()
-        this.setState({
-            addKeyVisibility: true,
-        })
-    }
     closeNewKeyPartnerModal = () => {
         this.setState({
-            addKeyVisibility: false,
+            isPartnerModalVisible: false
         })
     }
 
     render() {
+        console.log(this.props.category);
         return (
             <>
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
-                    title="Add key resource"
+                    title={<div>Add new {this.props.category.title}</div>}
                     visible={this.props.visibility}
-                    onCancel={this.handleCancel}
+                    onCancel={this.onCancel}
                     footer={null}
-                    width={636}
-                >
+                    width={636} >
                     <List
                         itemLayout='horizontal'
-                        dataSource={data}
+                        dataSource={this.props.category.types}
 
                         renderItem={item => (
                             <List.Item
-                                key={item.key}
-                                extra={<Button type="text" onClick={this.addNewKeyPartner.bind(this)}><RightOutlined /></Button>}
-                            >
-                                <AddKeyPartnerModal title={item.title} visibility={this.state.addKeyVisibility} handleClose={this.closeNewKeyPartnerModal} />
-                                <List.Item.Meta
+                                key={item.type_id}
+                                extra={<Button type="text" onClick={this.onAddNewPartner.bind(this, item)}><RightOutlined /></Button>} >
+
+                                <List.Item.Meta onClick={this.onAddNewPartner.bind(this, item)} style={{ cursor: "pointer" }}
                                     title={item.title}
-                                    description={item.description}
-                                />
+                                    description={item.description} />
                             </List.Item>
                         )}
                     />
@@ -97,5 +59,11 @@ class KeyPartnersModal extends Component {
     }
 }
 
-export default KeyPartnersModal;
+const mapStateToProps = (state) => {
+    return {
+        category: state.selectedPartnersCategory
+    };
+}
+
+export default connect(mapStateToProps, { selectCategoryType })(KeyPartnersModal);
 

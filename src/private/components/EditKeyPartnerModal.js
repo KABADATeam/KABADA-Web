@@ -4,11 +4,11 @@ import { Modal, Button, Form, Space, Radio, Input } from 'antd';
 import '../../css/customModal.css';
 import { inputStyle } from '../../styles/customStyles';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { saveDistributor, saveSupplier, saveOther } from "../../appStore/actions/partnersAction";
+import { updateDistributor, updateSupplier, updateOther } from "../../appStore/actions/partnersAction";
 
-class AddKeyPartnerModal extends Component {
+class EditKeyPartnerModal extends Component {
     state = {
-        priority: 1,
+        priority: 0,
         companyName: '',
         website: '',
         comment: ''
@@ -19,31 +19,27 @@ class AddKeyPartnerModal extends Component {
     }
 
     onOK = () => {
+        const priority = this.state.priority === 0 ? this.props.item.is_priority : this.state.priority;
         const postObj = {
-            "id": null,
+            "id": this.props.item.id,
             "business_plan_id": this.props.businessPlan.id,
-            "type_id": this.props.type.type_id,
-            "name": this.state.companyName,
-            "is_priority": this.state.priority === 1 ? false : true,
-            "website": this.state.website,
-            "comment":  this.state.comment
+            "type_id": this.props.item.type_id,
+            "name": this.state.companyName === '' ? this.props.item.name : this.state.companyName,
+            "is_priority": priority === 1 ? false : true,
+            "website": this.state.website === '' ? this.props.item.website : this.state.website,
+            "comment":  this.state.comment === '' ? this.props.item.comment : this.state.comment
         }
 
-        if (this.props.type.category_title === "distributor") {
-            this.props.saveDistributor(postObj, this.props.type.title);
-        } else if (this.props.type.category_title === "supplier") {
-            this.props.saveSupplier(postObj, this.props.type.title);
-        } else if (this.props.type.category_title === "other") {
-            this.props.saveOther(postObj, this.props.type.title);
+        if (this.props.item.category === "distributor") {
+            this.props.updateDistributor(postObj, this.props.item.type_title);
+        } else if (this.props.item.category === "supplier") {
+            this.props.updateSupplier(postObj, this.props.item.type_title);
+        } else if (this.props.item.category === "other") {
+            this.props.updateOther(postObj, this.props.item.type_title);
         } else {
             return;
         }
-        this.setState({
-            priority: 1,
-            companyName: '',
-            website: '',
-            comment: ''
-        });
+
         this.props.onClose();
     }
 
@@ -71,30 +67,25 @@ class AddKeyPartnerModal extends Component {
         })
     }
 
-    onBack = () => {
-        this.props.onBack();
-    }
-
-
     render() {
-        console.log(this.props.type);
+
         return (
             <>
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
-                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />  {this.props.type.title}</Space>}
+                    title={<Space><ArrowLeftOutlined onClick={this.onCancel} />  {this.props.item.type_title}</Space>}
                     visible={this.props.visibility}
                     onCancel={this.onCancel}
                     footer={
                         <div>
                             <Button key="customCancel" onClick={this.onCancel.bind(this)}>Cancel</Button>
-                            <Button key="customSubmit" form="myForm" onClick={this.onOK} htmlType="submit" type={'primary'}>Add</Button>
+                            <Button key="customSubmit" form="myForm" onClick={this.onOK} htmlType="submit" type={'primary'}>Save</Button>
                         </div>
                     }
                 >
-                    <Form layout="vertical" id="myForm" name="myForm" onFinish={this.handleOk}>
-                        <Form.Item key="name" name="name" label="Company Name"
+                    <Form layout="vertical" id="myForm" name="myForm" onFinish={this.onOK}>
+                        <Form.Item key="name" name="name" label="Company Name" initialValue={this.props.item.name}
                             rules={[
                                 {
                                     validator: async (_, value) => {
@@ -107,8 +98,8 @@ class AddKeyPartnerModal extends Component {
                             <Input size="large" style={inputStyle} value={this.state.companyName} onChange={this.onCompanyNameChange} />
                         </Form.Item>
 
-                        <Form.Item label="Is it Priority?" key="priority" name="priority" initialValue={1}>
-                            <Radio.Group onChange={this.onChangePriority}  value={this.state.priority}>
+                        <Form.Item label="Is it Priority?" key="priority" name="priority" initialValue={this.props.item.is_priority === false ? 1 : 2}>
+                            <Radio.Group onChange={this.onChangePriority} value={this.props.item.is_priority === false ? 1 : 2}>
                                 <Space direction="vertical">
                                     <Radio value={1}>No</Radio>
                                     <Radio value={2}>Yes</Radio>
@@ -116,11 +107,11 @@ class AddKeyPartnerModal extends Component {
                             </Radio.Group>
                         </Form.Item>
 
-                        <Form.Item key="website" name="website" label="Companty website (optional)">
+                        <Form.Item key="website" name="website" label="Companty website (optional)" initialValue={this.props.item.website}>
                             <Input size="large" style={inputStyle} onChange={this.onWebsiteChange} />
                         </Form.Item>
 
-                        <Form.Item key="comment" name="comment" label="Comment (optional)">
+                        <Form.Item key="comment" name="comment" label="Comment (optional)" initialValue={this.props.item.comment}>
                             <Input size="large" style={inputStyle} onChange={this.onCommentChange} />
                         </Form.Item>
                     </Form>
@@ -132,10 +123,9 @@ class AddKeyPartnerModal extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        businessPlan: state.selectedBusinessPlan,
-        type: state.selectedPartnersCategoryType
+        businessPlan: state.selectedBusinessPlan
     };
 }
 
-export default connect(mapStateToProps, { saveDistributor, saveSupplier, saveOther })(AddKeyPartnerModal);
+export default connect(mapStateToProps, { updateDistributor, updateSupplier, updateOther  })(EditKeyPartnerModal);
 

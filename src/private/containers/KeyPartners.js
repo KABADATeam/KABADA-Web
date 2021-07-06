@@ -5,6 +5,9 @@ import { ArrowLeftOutlined, InfoCircleFilled, PlusOutlined, DeleteOutlined } fro
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle } from '../../styles/customStyles';
 import { connect } from 'react-redux';
 import KeyPartnersModal from "../components/KeyPartnersModal";
+import AddKeyPartnerModal from '../components/AddKeyPartnerModal';
+import EditKeyPartnerModal from '../components/EditKeyPartnerModal';
+import { getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState } from "../../appStore/actions/partnersAction";
 
 const { Text } = Typography;
 
@@ -46,48 +49,12 @@ class KeyPartners extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            keyDistributorsData: [
-                {
-                    key: 1,
-                    type: 'Self Distribution',
-                    company: '-',
-                    priority: 'Yes',
-                },
-                {
-                    key: 2,
-                    type: 'Retailer',
-                    company: 'Unicod Inc.',
-                    priority: '',
-                },
-                {
-                    key: 3,
-                    type: 'Many Retailers',
-                    company: '-',
-                    priority: '',
-                },
-            ],
-            keySuppliersData: [
-                {
-                    key: 1,
-                    type: 'Outsourced',
-                    company: 'Let it be LTD',
-                },
-                {
-                    key: 2,
-                    type: 'Outsourced',
-                    company: 'Copmany Inc',
-                },
-                {
-                    key: 3,
-                    type: 'Financiers',
-                    company: 'Unicod Inc.',
-                },
-            ],
-            isVisible: false
+            isCategoriesModalVisible: false,
+            isPartnerModalVisible: false,
+            isEditPartnerModalVisible: false,
+            category: null,
+            item: { "type_title" : "" }
         };
-    }
-
-    componentDidMount() {
     }
 
     onBackClick() {
@@ -96,51 +63,128 @@ class KeyPartners extends React.Component {
 
     addNewItem = () => {
         this.setState({
-            isVisible: true,
-        })
+            isCategoriesModalVisible: true,
+        });
     }
-    closeNewItemModal = () => {
-        console.log('Clicked cancel button');
+
+    onAddNewPartner = () => {
         this.setState({
-            isVisible: false,
+            isPartnerModalVisible: true
+        });
+    }
+
+    onAddNewDistributor = () => {
+        this.props.selectCategory("distributor", this.props.categories.distributors_types, () => {
+            this.setState({
+                isCategoriesModalVisible: true
+            });
+        });
+    }
+
+    onAddNewSupplier = () => {
+        this.props.selectCategory("supplier", this.props.categories.suppliers_types, () => {
+            this.setState({
+                isCategoriesModalVisible: true
+            });
+        });
+    }
+
+    onAddNewOther = () => {
+        this.props.selectCategory("other", this.props.categories.others_types, () => {
+            this.setState({
+                isCategoriesModalVisible: true
+            });
+        });
+    }
+
+    onCloseCategoriesModal = () => {
+        this.setState({
+            isCategoriesModalVisible: false
         });
     };
 
-    deleteItem(row) {
-        console.log(row);
-        const dataSource = [...this.state.data];
+    onClosePartnerModal = () => {
         this.setState({
-            data: dataSource.filter((item) => item.key !== row.key),
+            isPartnerModalVisible: false
+        });
+    };
+
+    onCloseEditPartnerModal = () => {
+        this.setState({
+            isEditPartnerModalVisible: false,
+            item: { "type_title" : "" }
+        });
+    };
+
+    onBackToCategoriesModal = () => {
+        this.setState({
+            isPartnerModalVisible: false,
+            isCategoriesModalVisible: true
+        });
+    };
+
+    onDeleteDistributor(item) {
+        this.props.deleteDistributor(item.id);
+    }
+
+    onDeleteSupplier(item) {
+        this.props.deleteSupplier(item.id);
+    }
+
+    onDeleteOther(item) {
+        this.props.deleteOther(item.id);
+    }
+
+    onEditDistributor(item) {
+        this.setState({
+            isEditPartnerModalVisible: true,
+            item: { ...item, "category": "distributor" }
         });
     }
 
-    editItem(row) {
-        console.log(row)
+    onEditSupplier(item) {
+        this.setState({
+            isEditPartnerModalVisible: true,
+            item: { ...item, "category": "supplier" }
+        });
+    }
+
+    onEditOther(item) {
+        this.setState({
+            isEditPartnerModalVisible: true,
+            item: { ...item, "category": "other" }
+        });
+    }
+
+    onCompletedChange(state) {
+        this.props.saveState(this.props.businessPlan.id, state);
+    }
+
+    componentDidMount() {
+        this.props.getPartners(this.props.businessPlan.id);
+        this.props.getPartnersCategories();
     }
 
     render() {
 
-        const keyDistributorsData = this.state.keyDistributorsData;
-        const keySuppliersData = this.state.keySuppliersData;
-        const keyDistributorsCount = this.state.keyDistributorsData.length;
-        const keyDistributorsColumns = [
+        const distributorsColumns = [
             {
                 title: 'Distributor type',
-                dataIndex: 'type',
-                key: 'type',
+                dataIndex: 'type_title',
+                key: 'type_title',
                 width: '38%',
             },
             {
                 title: 'Company',
-                dataIndex: 'company',
-                key: 'company',
-                width: '15%',
+                dataIndex: 'name',
+                key: 'name',
+                width: '30%',
             },
             {
                 title: 'Priority',
                 dataIndex: 'priority',
                 key: 'priority',
-                width: '37%',
+                width: '22%',
             },
             {
                 title: '',
@@ -149,25 +193,31 @@ class KeyPartners extends React.Component {
                 width: '10%',
                 render: (obj, record) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.editItem.bind(this, record)} >Edit</Button>
-                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.deleteItem.bind(this, record)} ><DeleteOutlined /></Button>
+                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditDistributor.bind(this, record)} >Edit</Button>
+                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteDistributor.bind(this, record)} ><DeleteOutlined /></Button>
                     </Space>
                 ),
             }
         ];
 
-        const keySuppliersColumns = [
+        const suppliersColumns = [
             {
                 title: 'Supplier type',
-                dataIndex: 'type',
-                key: 'type',
+                dataIndex: 'type_title',
+                key: 'type_title',
                 width: '38%',
             },
             {
                 title: 'Company',
-                dataIndex: 'company',
-                key: 'company',
-                width: '52%',
+                dataIndex: 'name',
+                key: 'name',
+                width: '30%',
+            },
+            {
+                title: 'Priority',
+                dataIndex: 'priority',
+                key: 'priority',
+                width: '22%',
             },
             {
                 title: '',
@@ -176,8 +226,41 @@ class KeyPartners extends React.Component {
                 width: '10%',
                 render: (obj, record) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.editItem.bind(this, record)} >Edit</Button>
-                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.deleteItem.bind(this, record)} ><DeleteOutlined /></Button>
+                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditSupplier.bind(this, record)} >Edit</Button>
+                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteSupplier.bind(this, record)} ><DeleteOutlined /></Button>
+                    </Space>
+                ),
+            }
+        ];
+
+        const otherColumns = [
+            {
+                title: 'Type',
+                dataIndex: 'type_title',
+                key: 'type_title',
+                width: '38%',
+            },
+            {
+                title: 'Company',
+                dataIndex: 'name',
+                key: 'name',
+                width: '30%',
+            },
+            {
+                title: 'Priority',
+                dataIndex: 'priority',
+                key: 'priority',
+                width: '22%',
+            },
+            {
+                title: '',
+                dataIndex: 'action',
+                key: 'action',
+                width: '10%',
+                render: (obj, record) => (
+                    <Space size={0}>
+                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditOther.bind(this, record)} >Edit</Button>
+                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteOther.bind(this, record)} ><DeleteOutlined /></Button>
                     </Space>
                 ),
             }
@@ -210,7 +293,7 @@ class KeyPartners extends React.Component {
                     </Col>
                     <Col span={11}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch />
+                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.partners.is_partners_completed} onClick={this.onCompletedChange.bind(this)} />
                         </div>
                     </Col>
                 </Row>
@@ -235,10 +318,10 @@ class KeyPartners extends React.Component {
                         <Col span={17}>
                             <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                                 <Table
-                                    dataSource={keyDistributorsData}
-                                    columns={keyDistributorsColumns}
+                                    dataSource={this.props.partners.distributors}
+                                    columns={distributorsColumns}
                                     pagination={false}
-                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} disabled={(keyDistributorsCount === 3) ? true : false} onClick={this.addNewItem.bind(this)}><PlusOutlined />Add Distributor</Button><Text>Maximum distributors: {keyDistributorsCount}/3 <InfoCircleFilled style={{ fontSize: '16px', color: '#BFBFBF', marginLeft: '5px' }} /></Text></Space>)}
+                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} disabled={this.props.partners.distributors.length === 3 ? true : false} onClick={this.onAddNewDistributor.bind(this)}><PlusOutlined />Add Distributor</Button><Text>Maximum distributors: {this.props.partners.distributors.length}/3 <InfoCircleFilled style={{ fontSize: '16px', color: '#BFBFBF', marginLeft: '5px' }} /></Text></Space>)}
                                 />
                             </Card >
                         </Col>
@@ -258,10 +341,10 @@ class KeyPartners extends React.Component {
                         <Col span={17}>
                             <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                                 <Table
-                                    dataSource={keySuppliersData}
-                                    columns={keySuppliersColumns}
+                                    dataSource={this.props.partners.suppliers}
+                                    columns={suppliersColumns}
                                     pagination={false}
-                                    footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.addNewItem.bind(this)}><PlusOutlined />Add Suppliers</Button>)}
+                                    footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddNewSupplier.bind(this)}><PlusOutlined />Add Suppliers</Button>)}
                                 />
                             </Card >
                         </Col>
@@ -278,18 +361,24 @@ class KeyPartners extends React.Component {
                         </Col>
                         <Col span={17}>
                             <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                                <Typography style={{ ...tableTitleStyle, marginLeft: "15px", marginTop: "5px", marginBottom: "5px" }}>Various other<InfoCircleFilled style={{ fontSize: '16px', color: '#BFBFBF', marginLeft: '17px' }} /></Typography>
                                 <Table
-                                    title={() => <>
-                                        <Typography style={{ ...tableTitleStyle }}>Various other<InfoCircleFilled style={{ fontSize: '16px', color: '#BFBFBF', marginLeft: '17px' }} /></Typography>
-                                    </>}
+                                    dataSource={this.props.partners.others}
+                                    columns={otherColumns}
                                     pagination={false}
-                                    footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.addNewItem.bind(this)}><PlusOutlined />Add Other Partners</Button>)}
+                                    footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddNewOther.bind(this)}><PlusOutlined />Add Other Partners</Button>)}
                                 />
                             </Card >
                         </Col>
                     </Row>
                 </Col>
-                <KeyPartnersModal visibility={this.state.isVisible} handleClose={this.closeNewItemModal} />
+                <KeyPartnersModal visibility={this.state.isCategoriesModalVisible} onForward={this.onAddNewPartner}  onClose={this.onCloseCategoriesModal} />
+                <AddKeyPartnerModal visibility={this.state.isPartnerModalVisible} onClose={this.onClosePartnerModal} onBack={this.onBackToCategoriesModal} />
+                {
+                    this.state.isEditPartnerModalVisible ? 
+                        <EditKeyPartnerModal visibility={this.state.isEditPartnerModalVisible} item={this.state.item} onClose={this.onCloseEditPartnerModal} />
+                        : null
+                }
             </>
         );
     }
@@ -297,10 +386,10 @@ class KeyPartners extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        loading: state.loading,
-        error: state.error,
-        message: state.message,
+        businessPlan: state.selectedBusinessPlan,
+        partners: state.partners,
+        categories: state.partnersCategories
     };
 }
 
-export default connect(mapStateToProps)(withRouter(KeyPartners));
+export default connect(mapStateToProps, { getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState })(withRouter(KeyPartners));
