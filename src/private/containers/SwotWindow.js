@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import StrengthsWeaknesses from '../components/StrengthsWeaknesses';
 import OpportunitiesThreats from '../components/OpportunitiesThreats';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
-import { getSwotList, updateSwotState, discardChanges, saveChanges } from "../../appStore/actions/swotAction";
+import { getSwotList, discardChanges, saveChanges, saveState } from "../../appStore/actions/swotAction";
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
@@ -52,8 +52,8 @@ class SwotWindow extends React.Component {
         this.props.history.push(`/overview`);
     }
 
-    onCompleteChange(state) {
-        this.props.updateSwotState(state);
+    onCompletedChange(state) {
+        this.props.saveState(this.props.businessPlan.id, state);
     }
 
     discardChanges = () => {
@@ -67,10 +67,6 @@ class SwotWindow extends React.Component {
     };
 
     getUpdatesWindowState() {
-        if (this.props.swot.updates.is_swot_completed !== null) {
-            return 'visible';
-        }
-
         if (this.props.swot.updates.strengths.length > 0) {
             return 'visible';
         }
@@ -119,7 +115,7 @@ class SwotWindow extends React.Component {
                     </Col>
                     <Col span={4}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed </Text><Switch checked={this.props.swot.updates.is_swot_completed === null ? this.props.swot.original.is_swot_completed : this.props.swot.updates.is_swot_completed} onClick={this.onCompleteChange.bind(this)} />
+                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed </Text><Switch checked={this.props.swot.is_swot_completed} onClick={this.onCompletedChange.bind(this)} />
                         </div>
                     </Col>
                 </Row>
@@ -176,4 +172,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSwotList, updateSwotState, discardChanges, saveChanges })(withRouter(SwotWindow));
+export default connect(mapStateToProps, { getSwotList, discardChanges, saveChanges, saveState })(withRouter(SwotWindow));

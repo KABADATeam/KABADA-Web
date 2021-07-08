@@ -1,55 +1,39 @@
 import React, { Component } from 'react';
 import { Card, Checkbox, Table, Button, Input, Typography, Space, Tooltip } from 'antd';
-import { PlusOutlined, DeleteOutlined, InfoCircleFilled, SaveOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { buttonStyle, inputStyle, tableCardBodyStyle, tableCardStyle, tableTitleStyle, tableDescriptionStyle } from '../../styles/customStyles';
 import '../../css/swotStyle.css';
 import { connect } from 'react-redux';
-import { updateSwotList, createNewItem, updateNewItem, deleteNewItem } from "../../appStore/actions/swotAction";
+import { updateSwotList, createNewItem, deleteItem, updateItem } from "../../appStore/actions/swotAction";
 
 class StrengthsWeaknesses extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            editingId: -1,
-            editing: false,
-            title: ""
+    onAddItem = () => {
+        const newItem = {
+            "business_plan_id": this.props.businessPlan.id,
+            "swot": {
+                "id": null,
+                "name": "-",
+                "operation": 0
+            },
+            "kind": 0
         };
+
+        this.props.createNewItem(1, newItem);
     }
 
-    addItem = () => {
-        if (this.state.editing === false) {
-            const addedItems = this.props.list.updates.strengths.filter(x => isNaN(x.id) === false);
-            const counter = this.props.list.original.strengths_weakness_items.length + addedItems.length;
-
-            const newItem = {
-                key: counter + 1,
-                id: counter + 1,
-                title: '',
-                description: '',
-                value: 0,
-                isLocal: true
-            };
-
-            this.props.createNewItem(1, newItem);
-
-            this.setState({
-                editingId: counter + 1,
-                editing: true
-            });
-        }
-    }
-
-    handleDeleteItem = (item) => {
-        this.props.deleteNewItem(1, item);
-
-        if (this.state.editing === true) {
-            this.setState({
-                editingId: -1,
-                editing: false,
-                title: ""
-            });
-        }
+    onDeleteItem = (item) => {
+        const deleteItem = {
+            "business_plan_id": this.props.businessPlan.id,
+            "strengths_weakness": [
+                {
+                    "id": item.id,
+                    "name": item.title,
+                    "operation": -1
+                }
+            ]
+        };
+        this.props.deleteItem(1, deleteItem);
     }
 
     handleState = (item, type) => event => {
@@ -61,36 +45,23 @@ class StrengthsWeaknesses extends Component {
         this.props.updateSwotList(1, item);
     };
 
-    handleSaveItem = (item) => {
-        item.title = this.state.title;
-        this.props.updateNewItem(1, item);
-        this.setState({
-            editingId: -1,
-            editing: false,
-            title: ""
-        });
-    }
-
-    handleInputChange = (item) => event => {
-        item.title = event.target.value;
-        this.props.updateNewItem(1, item);
-        this.setState({
-            editingId: -1,
-            editing: false,
-            title: ""
-        });
-    }
-
-    handleTitleChange = () => event => {
-        this.setState({
-            title: event.target.value
-        });
+    onTitleChange = (item) => event => {
+        const updateItem = {
+            "business_plan_id": this.props.businessPlan.id,
+            "swot": {
+                  "id": item.id,
+                  "name": event.target.value,
+                  "operation": item.value
+            },
+            "kind": 0
+        };
+        if (event.target.value !== '') {
+            this.props.updateItem(1, updateItem);
+        }
     }
 
     render() {
         const data = this.props.list.original.strengths_weakness_items.concat(this.props.list.updates.strengths.filter(x => isNaN(x.id) === false));
-        const editing = this.state.editing;
-        const editingId = this.state.editingId - 1;
 
         const columns = [
             {
@@ -98,17 +69,16 @@ class StrengthsWeaknesses extends Component {
                 dataIndex: 'title',
                 key: 'title',
                 render: (title, record, rowIndex) => (
-                    (editing && rowIndex === editingId) ? (
+                    (record.isLocal === true) ? (
                         <Space>
                             <Input
                                 style={{ ...inputStyle, fontSize: '14px', height: "40px" }}
                                 size="large"
-                                onPressEnter={this.handleInputChange(record)}
-                                onChange={this.handleTitleChange()}
-                                placeholder="Add other"
+                                onChange={this.onTitleChange(record)}
+                                placeholder="Enter title"
+                                defaultValue={record.title}
                             />
-                            <Button size="large" style={{ ...buttonStyle }} onClick={this.handleSaveItem.bind(this, record)}><SaveOutlined /></Button>
-                            <Button size="large" style={{ ...buttonStyle }} onClick={this.handleDeleteItem.bind(this, record)}><DeleteOutlined /></Button>
+                            <Button size="large" style={{ ...buttonStyle }} onClick={this.onDeleteItem.bind(this, record)}><DeleteOutlined /></Button>
                         </Space>
                     ) : ((record.title) ? (<Space><Typography>{record.title}</Typography><Tooltip title={record.description}><span><InfoCircleFilled style={{ color: '#BFBFBF' }} /></span></Tooltip></Space>) :
                         (<Space><Typography>{record.title}</Typography></Space>))
@@ -155,7 +125,7 @@ class StrengthsWeaknesses extends Component {
                         dataSource={data}
                         columns={columns}
                         pagination={false}
-                        footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.addItem.bind(this)}><PlusOutlined />Add item</Button>)}
+                        footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddItem.bind(this)}><PlusOutlined />Add item</Button>)}
                     />
                 </Card >
             </>
@@ -165,9 +135,10 @@ class StrengthsWeaknesses extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        list: state.swotList
+        list: state.swotList,
+        businessPlan: state.selectedBusinessPlan
     };
 }
 
-export default connect(mapStateToProps, { updateSwotList, createNewItem, updateNewItem, deleteNewItem })(StrengthsWeaknesses);
+export default connect(mapStateToProps, { updateSwotList, createNewItem, deleteItem, updateItem })(StrengthsWeaknesses);
 

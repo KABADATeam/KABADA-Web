@@ -1,40 +1,25 @@
 import React, { Component } from 'react';
 import { Card, Checkbox, Table, Button, Input, Typography, Space } from 'antd';
-import { PlusOutlined, DeleteOutlined, InfoCircleFilled, SaveOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { buttonStyle, inputStyle, tableTitleStyle, tableDescriptionStyle, tableCardBodyStyle, tableCardStyle } from '../../styles/customStyles';
 import '../../css/swotStyle.css';
 import { connect } from 'react-redux';
-import { updateSwotList, createNewItem, updateNewItem, deleteNewItem } from "../../appStore/actions/swotAction";
+import { updateSwotList, createNewItem, updateItem, deleteItem } from "../../appStore/actions/swotAction";
 
 class OpportunitiesThreats extends Component {
 
-    state = {
-        editingId: -1,
-        editing: false,
-        title: ""
-    };
+    onAddItem = () => {
+        const newItem = {
+            "business_plan_id": this.props.businessPlan.id,
+            "swot": {
+                "id": null,
+                "name": "-",
+                "operation": 0
+            },
+            "kind": 1
+        };
 
-    addItem = () => {
-        if (this.state.editing === false) {
-            const addedItems = this.props.list.updates.opportunities.filter(x => isNaN(x.id) === false);
-            const counter = this.props.list.original.oportunities_threats.length + addedItems.length;
-
-            const newItem = {
-                key: counter + 1,
-                id: counter + 1,
-                title: '',
-                description: '',
-                value: 0,
-                isLocal: true
-            };
-
-            this.props.createNewItem(2, newItem);
-
-            this.setState({
-                editingId: counter + 1,
-                editing: true
-            });
-        }
+        this.props.createNewItem(2, newItem);
     }
 
     handleState = (item, type) => event => {
@@ -46,16 +31,18 @@ class OpportunitiesThreats extends Component {
         this.props.updateSwotList(2, item);
     };
 
-    handleDeleteItem = (item) => {
-        this.props.deleteNewItem(2, item);
-
-        if (this.state.editing === true) {
-            this.setState({
-                editingId: -1,
-                editing: false,
-                title: ""
-            });
-        }
+    onDeleteItem = (item) => {
+        const deleteItem = {
+            "business_plan_id": this.props.businessPlan.id,
+            "opportunities_threats": [
+                {
+                    "id": item.id,
+                    "name": item.title,
+                    "operation": -1
+                }
+            ]
+        };
+        this.props.deleteItem(2, deleteItem);
     }
 
     handleSaveItem = (item) => {
@@ -78,16 +65,23 @@ class OpportunitiesThreats extends Component {
         });
     }
 
-    handleTitleChange = () => event => {
-        this.setState({
-            title: event.target.value
-        });
+    onTitleChange = (item) => event => {
+        const updateItem = {
+            "business_plan_id": this.props.businessPlan.id,
+            "swot": {
+                  "id": item.id,
+                  "name": event.target.value,
+                  "operation": item.value
+            },
+            "kind": 1
+        };
+        if (event.target.value !== '') {
+            this.props.updateItem(2, updateItem);
+        }
     }
 
     render() {
         const data = this.props.list.original.oportunities_threats.concat(this.props.list.updates.opportunities.filter(x => isNaN(x.id) === false));
-        const editing = this.state.editing;
-        const editingId = this.state.editingId - 1;
 
         const columns = [
             {
@@ -95,17 +89,16 @@ class OpportunitiesThreats extends Component {
                 dataIndex: 'title',
                 key: 'title',
                 render: (title, record, rowIndex) => (
-                    (editing && rowIndex === editingId) ? (
+                    (record.isLocal === true) ? (
                         <Space>
                             <Input
                                 style={{ ...inputStyle, fontSize: '14px', height: "40px" }}
                                 size="large"
-                                onPressEnter={this.handleInputChange(record)}
-                                onChange={this.handleTitleChange()}
-                                placeholder="Add other"
+                                onChange={this.onTitleChange(record)}
+                                placeholder="Enter title"
+                                defaultValue={record.title}
                             />
-                            <Button size="large" style={{ ...buttonStyle }} onClick={this.handleSaveItem.bind(this, record)}><SaveOutlined /></Button>
-                            <Button size="large" style={{ ...buttonStyle }} onClick={this.handleDeleteItem.bind(this, record)}><DeleteOutlined /></Button>
+                            <Button size="large" style={{ ...buttonStyle }} onClick={this.onDeleteItem.bind(this, record)}><DeleteOutlined /></Button>
                         </Space>
                     ) : ((record.title) ? (<Space><Typography>{record.title}</Typography> <InfoCircleFilled style={{ color: '#BFBFBF' }} /></Space>) :
                         (<Space><Typography>{record.title}</Typography></Space>))
@@ -153,7 +146,7 @@ class OpportunitiesThreats extends Component {
                         dataSource={data}
                         columns={columns}
                         pagination={false}
-                        footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.addItem.bind(this)}><PlusOutlined />Add item</Button>)}
+                        footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddItem.bind(this)}><PlusOutlined />Add item</Button>)}
                     />
                 </Card >
             </>
@@ -163,9 +156,10 @@ class OpportunitiesThreats extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        list: state.swotList
+        list: state.swotList,
+        businessPlan: state.selectedBusinessPlan
     };
 }
 
-export default connect(mapStateToProps, { updateSwotList, createNewItem, updateNewItem, deleteNewItem })(OpportunitiesThreats);
+export default connect(mapStateToProps, { updateSwotList, createNewItem, updateItem, deleteItem })(OpportunitiesThreats);
 
