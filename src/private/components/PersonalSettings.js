@@ -67,8 +67,6 @@ class PersonalSettings extends Component {
 
         const fileList = this.state.fileList;
 
-        console.log(userImg);
-
         const propsUpload = {
             onChange: file => {
                 this.setState({

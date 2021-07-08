@@ -32,7 +32,6 @@ class PersonalBusinessPlans extends Component {
     };
 
     closeModal = () => {
-        console.log('Clicked cancel button');
         this.setState({
             isVisible: false,
         });

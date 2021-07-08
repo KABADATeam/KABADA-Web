@@ -13,9 +13,11 @@ export const privatePlansReducer = (state = [], action) => {
     }
 };
 
-export const selectedplanFetchReducer = (state = {}, action) => {
+export const selectedplanFetchReducer = (state = { id: null }, action) => {
     switch (action.type) {
         case "FETCHING_SELECTED_PLAN_SUCCESS":
+            return action.payload;
+        case "UPDATING_SELECTED_PLAN_SUCCESS":
             return action.payload;
         case "CLEARING_SELECTED_PLAN_SUCCESS":
             return action.payload;

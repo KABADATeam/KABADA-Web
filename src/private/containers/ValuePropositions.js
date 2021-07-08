@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Button, Breadcrumb, Row, Col, Typography, Switch, Space, Result, Image, Table } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled, DeleteOutlined } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle } from '../../styles/customStyles';
@@ -126,7 +127,7 @@ class ValuePropositions extends React.Component {
                             <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Space><Link to='/overview'>Kabada Intelligence Ltd.</Link></Space>
+                            <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             Value propositions
@@ -190,5 +191,10 @@ class ValuePropositions extends React.Component {
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        businessPlan: state.selectedBusinessPlan
+    };
+}
 
-export default ValuePropositions;
+export default connect(mapStateToProps, {})(ValuePropositions);

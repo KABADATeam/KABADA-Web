@@ -26,7 +26,6 @@ class KeyPartnersModal extends Component {
     }
 
     render() {
-        console.log(this.props.category);
         return (
             <>
                 <Modal

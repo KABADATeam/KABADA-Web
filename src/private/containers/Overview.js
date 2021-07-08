@@ -5,6 +5,7 @@ import { ArrowLeftOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { discardChanges, saveChanges } from "../../appStore/actions/swotAction";
+import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { withRouter } from 'react-router-dom';
 
 const { TabPane } = Tabs;
@@ -73,7 +74,13 @@ class Overview extends React.Component {
     }
 
     componentDidMount() {
-        
+        if (this.props.businessPlan.id === null) {
+            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                this.props.history.push(`/`);
+            } else {
+                this.props.refreshPlan(localStorage.getItem("plan"));
+            }
+        }
     }
 
     render() {
@@ -92,7 +99,7 @@ class Overview extends React.Component {
                             <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Space><Link to='/overview'>Kabada Intelligence Ltd.</Link></Space>
+                            <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
                         </Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
@@ -101,7 +108,7 @@ class Overview extends React.Component {
                     <Col span={12} offset={2}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
-                            <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Kabada Intelligence Ltd.</Text>
+                            <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>{this.props.businessPlan.name}</Text>
                             <Tag color="#BAE7FF" style={{borderRadius: 50, color: "#262626", marginLeft: '10px'}}> 0% Completed</Tag>
                         </div>
                     </Col>
@@ -128,7 +135,7 @@ class Overview extends React.Component {
                                                 <List.Item key='2' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
                                                     <List.Item.Meta
                                                         avatar={<CheckCircleOutlined />}
-                                                        title={<Space><Link to='/new-product'>Value proposition</Link></Space>}
+                                                        title={<Space><Link to='/value-propositions'>Value proposition</Link></Space>}
                                                         description="Description goes here" />
                                                     <div>...</div>
                                                 </List.Item>
@@ -264,4 +271,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { discardChanges, saveChanges })(withRouter(Overview))
+export default connect(mapStateToProps, { discardChanges, saveChanges, refreshPlan })(withRouter(Overview))

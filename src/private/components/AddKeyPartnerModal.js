@@ -77,7 +77,6 @@ class AddKeyPartnerModal extends Component {
 
 
     render() {
-        console.log(this.props.type);
         return (
             <>
                 <Modal

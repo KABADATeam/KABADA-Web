@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import KeyResourcesCategoriesModal from "../components/KeyResourcesCategoriesModal";
 import EditKeyResourceModal from "../components/EditKeyResourceModal";
 import { getResourcesList, getResourcesCategoriesList, deleteItem, saveEditable, saveChanges } from "../../appStore/actions/resourcesAction";
+import { refreshPlan } from "../../appStore/actions/refreshAction";
 
 const { Text } = Typography;
 
@@ -97,8 +98,20 @@ class KeyResources extends React.Component {
     }
 
     componentDidMount() {
-        this.props.getResourcesList(this.props.businessPlan.id);
-        this.props.getResourcesCategoriesList();
+        if (this.props.businessPlan.id === null) {
+            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                this.props.history.push(`/`);
+            } else {
+                this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                    this.props.getResourcesList(this.props.businessPlan.id);
+                    this.props.getResourcesCategoriesList();
+                });
+            }
+        } else {
+            this.props.getResourcesList(this.props.businessPlan.id);
+            this.props.getResourcesCategoriesList();
+        }
+        
     }
 
     render() {
@@ -145,7 +158,7 @@ class KeyResources extends React.Component {
                             <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Space><Link to='/overview'>Kabada Intelligence Ltd.</Link></Space>
+                            <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             Key Resources
@@ -154,15 +167,14 @@ class KeyResources extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col offset={4}>
-                        <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
-                    </Col>
-                    <Col span={4}>
+                    <Col span={12} offset={4}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Key Resource</Text> <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
+                            <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
+                            <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Key Resource</Text>
+                            <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
                         </div>
                     </Col>
-                    <Col span={11}>
+                    <Col span={4}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                             <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.resources.is_resources_completed} onClick={this.onCompletedChange.bind(this)} />
                         </div>
@@ -220,4 +232,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getResourcesList, getResourcesCategoriesList, deleteItem, saveChanges, saveEditable })(withRouter(KeyResources));
+export default connect(mapStateToProps, { getResourcesList, getResourcesCategoriesList, deleteItem, saveChanges, saveEditable, refreshPlan })(withRouter(KeyResources));

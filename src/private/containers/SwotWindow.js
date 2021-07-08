@@ -7,6 +7,7 @@ import StrengthsWeaknesses from '../components/StrengthsWeaknesses';
 import OpportunitiesThreats from '../components/OpportunitiesThreats';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { getSwotList, discardChanges, saveChanges, saveState } from "../../appStore/actions/swotAction";
+import { refreshPlan } from "../../appStore/actions/refreshAction";
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
@@ -79,7 +80,17 @@ class SwotWindow extends React.Component {
     }
 
     componentDidMount() {
-        this.props.getSwotList(this.props.businessPlan.id);
+        if (this.props.businessPlan.id === null) {
+            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                this.props.history.push(`/`);
+            } else {
+                this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                    this.props.getSwotList(this.props.businessPlan.id);
+                });
+            }
+        } else {
+            this.props.getSwotList(this.props.businessPlan.id);
+        }
     }
 
     render() {
@@ -97,7 +108,7 @@ class SwotWindow extends React.Component {
                             <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Space><Link to='/overview'>Kabada Intelligence Ltd.</Link></Space>
+                            <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             SWOT
@@ -172,4 +183,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSwotList, discardChanges, saveChanges, saveState })(withRouter(SwotWindow));
+export default connect(mapStateToProps, { getSwotList, discardChanges, saveChanges, saveState, refreshPlan })(withRouter(SwotWindow));

@@ -48,6 +48,7 @@ class PlanElementComponent extends Component {
 
     onClick(plan) {
         this.props.getSelectedPlan(plan);
+        localStorage.setItem("plan", plan.id);
         this.props.history.push(`/overview`);
     }
 

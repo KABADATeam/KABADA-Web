@@ -8,6 +8,7 @@ import KeyPartnersModal from "../components/KeyPartnersModal";
 import AddKeyPartnerModal from '../components/AddKeyPartnerModal';
 import EditKeyPartnerModal from '../components/EditKeyPartnerModal';
 import { getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState } from "../../appStore/actions/partnersAction";
+import { refreshPlan } from "../../appStore/actions/refreshAction";
 
 const { Text } = Typography;
 
@@ -161,8 +162,19 @@ class KeyPartners extends React.Component {
     }
 
     componentDidMount() {
-        this.props.getPartners(this.props.businessPlan.id);
-        this.props.getPartnersCategories();
+        if (this.props.businessPlan.id === null) {
+            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                this.props.history.push(`/`);
+            } else {
+                this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                    this.props.getPartners(this.props.businessPlan.id);
+                    this.props.getPartnersCategories();
+                });
+            }
+        } else {
+            this.props.getPartners(this.props.businessPlan.id);
+            this.props.getPartnersCategories();
+        }
     }
 
     render() {
@@ -274,7 +286,7 @@ class KeyPartners extends React.Component {
                             <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Space><Link to='/overview'>Kabada Intelligence Ltd.</Link></Space>
+                            <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             Key Partners
@@ -283,15 +295,13 @@ class KeyPartners extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col offset={4}>
-                        <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
-                    </Col>
-                    <Col span={4}>
+                    <Col span={12} offset={4}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
+                            <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Key Partners</Text>
                         </div>
                     </Col>
-                    <Col span={11}>
+                    <Col span={4}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                             <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.partners.is_partners_completed} onClick={this.onCompletedChange.bind(this)} />
                         </div>
@@ -392,4 +402,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState })(withRouter(KeyPartners));
+export default connect(mapStateToProps, { getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState, refreshPlan })(withRouter(KeyPartners));

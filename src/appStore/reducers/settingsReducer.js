@@ -1,7 +1,6 @@
 export const userSettingsReducer = (state = {}, action) => {
     switch (action.type) {
         case "FETCHING_SETTINGS_SUCCESS":
-            console.log(action.payload);
             return action.payload;
         case "UPDATE_SETTINGS_SUCCESS":
             return action.payload;

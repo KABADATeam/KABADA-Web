@@ -36,6 +36,10 @@ class Header extends Component {
         this.props.history.push(`/public-business-plans`);
     }
 
+    onHomeClick() {
+        this.props.history.push(`/`);
+    }
+
     render() {  
 
         const name = this.props.user.name === '' ? this.props.user.email.substring(0, this.props.user.email.indexOf("@")) : this.props.name;
@@ -47,6 +51,7 @@ class Header extends Component {
                     <span>Settings</span>
                 </Menu.Item>
                 <Menu.Item onClick={() => {
+                        localStorage.removeItem("plan");
                         this.props.logout();
                         this.props.history.push(`/`);
                     }}>
@@ -61,7 +66,7 @@ class Header extends Component {
                 <Row style={headerStyles} align="middle">
                     <Col span={12}>
                     <div style={{paddingLeft:24, display: 'flex', alignItems: 'center'}}>
-                        <KabadaIcon/>
+                        <KabadaIcon onClick={() => this.onHomeClick()}/>
                         <Button 
                             type="text" 
                             style={{...buttonStyle, cursor: 'pointer'}}

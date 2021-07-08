@@ -265,14 +265,14 @@ class NewBusinessPlanModal extends Component {
                             <Form.Item key="country" name="country" label="Country of residence (optional)">
                                 <Select
                                     showSearch
-                                    allowClear
+                                    //allowClear
                                     style={{ width: 315 }}
                                     placeholder="Select country"
-                                    optionFilterProp="children"
+                                    optionFilterProp="label"
                                     filterOption={(input, option) =>
-                                        option.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                    }
-                                >
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }>
+
                                     {countries.map(item => (
                                         <Option key={item.key} value={item.value}>{item.text}</Option>
                                     ))}
@@ -290,9 +290,8 @@ class NewBusinessPlanModal extends Component {
                                     },
                                 ]}
                             >
-                                <Select showSearch
+                                <Select
                                     style={{ width: 315 }}
-                                    allowClear
                                     placeholder="Select language"
                                     optionFilterProp="children"
                                     filterOption={(input, option) =>
