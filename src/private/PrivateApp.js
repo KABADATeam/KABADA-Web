@@ -10,7 +10,7 @@ import KeyResources from './containers/KeyResources';
 import KeyPartners from './containers/KeyPartners';
 import Overview from './containers/Overview';
 import ValuePropositions from './containers/ValuePropositions';
-import NewProduct from './containers/NewProduct';
+import NewProduct from './components/new_product/NewProduct';
 
 
 class PrivateApp extends React.Component {

@@ -1,13 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Button, Breadcrumb, Row, Col, Typography, Space, Card, Divider, Slider } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled, } from '@ant-design/icons';
-import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
-import '../../css/customTable.css';
-import { cardStyle, tableCardBodyStyle, buttonStyle } from '../../styles/customStyles';
-import ProductInfoComponent from '../components/ProductInfoComponent';
-import PriceLevelComponent from '../components/PriceLevelComponent';
-import ProductFeaturesComponent from '../components/ProductFeaturesComponent';
+import UnsavedChangesHeader from '../UnsavedChangesHeader';
+import '../../../css/customTable.css';
+import { cardStyle, tableCardBodyStyle, buttonStyle } from '../../../styles/customStyles';
+import ProductInfoComponent from './ProductInfoComponent';
+import PriceLevelComponent from './PriceLevelComponent';
+import ProductFeaturesComponent from './ProductFeaturesComponent';
+import { refreshPlan } from "../../../appStore/actions/refreshAction";
+import { getProductTypes, getProductPriceLevels, getAditionalIncomeSources, getProductFeatures, saveProduct, getInnovativeLevels, getQualityLevels, getDifferentiationLevels } from "../../../appStore/actions/productActions";
 
 const { Text } = Typography;
 
@@ -64,62 +67,82 @@ class NewProduct extends React.Component {
     };
 
     saveChanges = () => {
+        const postObj = {
+            ...this.props.product,
+            "innovative_level": this.props.productFeatures.innovative[0].id,
+            "quality_level": this.props.productFeatures.quality[0].id,
+            "differentiation_level": this.props.productFeatures.differentiation[0].id,
+            "business_plan_id": this.props.businessPlan.id
+        };
 
+        this.props.saveProduct(postObj, () => {
+            this.props.history.push(`/value-propositions`);
+        });
     };
 
     getUpdatesWindowState() {
         return 'hidden';
     }
 
+    getSliderMarks(array) {
+        const k = 100 / (array.length - 1);
+        const tmp = array.map((item, i) => {
+            return {
+                [i * k]: {
+                    style: { ...sliderTextStyle },
+                    label: item.title
+                }
+            };
+        });
+        const temp = {};
+        for (let i = 0; i < tmp.length; i++) {
+            const key = Object.keys(tmp[i])[0]
+            const value = tmp[i][key];
+            temp[key] = value;
+        }
+        return temp;
+    }
+
+    getPriceSliderDefaultValue() {
+        const index = this.props.productFeatures.priceLevels.findIndex(x => x.id === this.props.product.price_level);
+        const k = 100 / (this.props.productFeatures.priceLevels.length - 1);
+        return index * k;
+    }
+
     componentDidMount() {
+        if (this.props.businessPlan.id === null) {
+            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                this.props.history.push(`/`);
+            } else {
+                this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                    this.props.getProductTypes();
+                    this.props.getProductPriceLevels();
+                    this.props.getAditionalIncomeSources();
+                    this.props.getProductFeatures();
+                    this.props.getInnovativeLevels();
+                    this.props.getQualityLevels();
+                    this.props.getDifferentiationLevels();
+                });
+            }
+        } else {
+            this.props.getProductTypes();
+            this.props.getProductPriceLevels();
+            this.props.getAditionalIncomeSources();
+            this.props.getProductFeatures();
+            this.props.getInnovativeLevels();
+            this.props.getQualityLevels();
+            this.props.getDifferentiationLevels();
+        }
     }
 
     render() {
+        //console.log(this.props.product);
+        //console.log(this.props.productFeatures);
         const isVisibleHeader = this.getUpdatesWindowState();
-
-        const priceMarks = {
-            0: {
-                style: { ...sliderTextStyle, paddingLeft: '15px' },
-                label: 'Free',
-            },
-            100: {
-                style: { ...sliderTextStyle, paddingRight: '15px' },
-                label: "High-end",
-            }
-        };
-
-        const differentiationMarks = {
-            0: {
-                style: { ...sliderTextStyle, paddingLeft: '15px' },
-                label: 'Not',
-            },
-            100: {
-                style: { ...sliderTextStyle, paddingRight: '25px' },
-                label: 'Highly',
-            }
-        };
-
-        const qualityMarks = {
-            0: {
-                style: { ...sliderTextStyle, paddingLeft: '15px' },
-                label: 'Basic',
-            },
-            100: {
-                style: { ...sliderTextStyle, paddingRight: '40px' },
-                label: 'Premium',
-            }
-        };
-
-        const innovativeMarks = {
-            0: {
-                style: { ...sliderTextStyle, paddingLeft: '15px' },
-                label: 'Not',
-            },
-            100: {
-                style: { ...sliderTextStyle, paddingRight: '25px' },
-                label: 'Highly',
-            }
-        };
+        const differentiationMarks = this.getSliderMarks(this.props.productFeatures.differentiation);
+        const priceMarks = this.getSliderMarks(this.props.productFeatures.priceLevels);
+        const qualityMarks = this.getSliderMarks(this.props.productFeatures.quality);
+        const innovativeMarks = this.getSliderMarks(this.props.productFeatures.innovative);
 
         return (
             <>
@@ -134,7 +157,7 @@ class NewProduct extends React.Component {
                             <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Space><Link to='/overview'>Kabada Intelligence Ltd.</Link></Space>
+                            <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             <Space><Link to='/value-propositions'>Value propositions</Link></Space>
@@ -180,13 +203,13 @@ class NewProduct extends React.Component {
                             </p>
 
                             <Text style={categoryTextStyle}>Price</Text>
-                            <Slider marks={priceMarks} disabled={true}></Slider>
+                            <Slider marks={priceMarks} disabled={true} included={true} step={null} value={this.getPriceSliderDefaultValue()}></Slider>
                             <Text style={categoryTextStyle}>Innovative</Text>
-                            <Slider marks={innovativeMarks} disabled={true}></Slider>
+                            <Slider marks={innovativeMarks} disabled={true} included={true} step={null} defaultValue={0}></Slider>
                             <Text style={categoryTextStyle}>Quality</Text>
-                            <Slider marks={qualityMarks} disabled={true}></Slider>
+                            <Slider marks={qualityMarks} disabled={true} included={true} step={null} defaultValue={0}></Slider>
                             <Text style={categoryTextStyle}>Differentiation</Text>
-                            <Slider marks={differentiationMarks} disabled={true}></Slider>
+                            <Slider marks={differentiationMarks} included={true} step={null} disabled={true} defaultValue={0}></Slider>
                         </Card>
                     </Col>
                 </Row>
@@ -207,5 +230,24 @@ class NewProduct extends React.Component {
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        businessPlan: state.selectedBusinessPlan,
+        product: state.product,
+        productFeatures: state.productFeaturesLevels
+    };
+}
 
-export default NewProduct;
+export default connect(
+    mapStateToProps,
+    { 
+        getProductTypes, 
+        getProductPriceLevels, 
+        refreshPlan, 
+        getAditionalIncomeSources, 
+        getProductFeatures, 
+        saveProduct, 
+        getInnovativeLevels,
+        getQualityLevels,
+        getDifferentiationLevels
+    })(NewProduct);

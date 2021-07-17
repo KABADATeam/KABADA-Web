@@ -14,6 +14,7 @@ import { resourcesReducer, resourcesCategoriesReducer, selectedCategoryReducer, 
 import { partnersReducer, partnersCategoriesReducer, selectedPartnersCategoryReducer, selectedPartnersCategoryTypeReducer } from './partnersReducer';
 import { fileReducer } from './userFileReducer';
 import { planLanguagesReducer } from './planLanguageReducer';
+import { productTypesReducer, productReducer, productFeatureLevelsReducer, additionalIncomeSourcesReducer, productFeaturesReducer, productsReducer } from './productReduces';
 
 export default combineReducers({
     activities: activitiesReducer,
@@ -43,5 +44,11 @@ export default combineReducers({
     partners: partnersReducer,
     partnersCategories: partnersCategoriesReducer,
     selectedPartnersCategory: selectedPartnersCategoryReducer,
-    selectedPartnersCategoryType: selectedPartnersCategoryTypeReducer
+    selectedPartnersCategoryType: selectedPartnersCategoryTypeReducer,
+    productTypes: productTypesReducer,
+    product: productReducer,
+    productFeaturesLevels: productFeatureLevelsReducer,
+    additionalIncomeSources: additionalIncomeSourcesReducer,
+    productFeatures: productFeaturesReducer,
+    products: productsReducer
 });
