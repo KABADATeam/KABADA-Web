@@ -11,7 +11,7 @@ import KeyPartners from './containers/KeyPartners';
 import Overview from './containers/Overview';
 import ValuePropositions from './containers/ValuePropositions';
 import NewProduct from './components/new_product/NewProduct';
-
+import RevenueStreams from './containers/RevenueStreams';
 
 class PrivateApp extends React.Component {
     constructor(props) {
@@ -35,6 +35,7 @@ class PrivateApp extends React.Component {
                     <Route exact path="/overview" render={(props) => <MainWindow {...props}> <Overview {...props} /> </MainWindow>} />
                     <Route exact path="/value-propositions" render={(props) => <MainWindow {...props}> <ValuePropositions {...props} /> </MainWindow>} />
                     <Route exact path="/new-product" render={(props) => <MainWindow {...props}> <NewProduct {...props} /> </MainWindow>} />
+                    <Route exact path="/revenue-streams" render={(props) => <MainWindow {...props}> <RevenueStreams {...props} /> </MainWindow>} />
                 </Switch>
             </Router>
 

@@ -62,7 +62,8 @@ class KeyResourcesCategoriesModal extends Component {
                                 key={item.id}
                                 extra={<Button type="text" onClick={this.addNewKeyResource.bind(this, item)}><RightOutlined /></Button>} >
                                 
-                                <List.Item.Meta
+                                <List.Item.Meta style={{ cursor: "pointer" }}
+                                    onClick={this.addNewKeyResource.bind(this, item)}
                                     title={item.title}
                                     description={item.description}                                    
                                 />
