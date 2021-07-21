@@ -16,6 +16,7 @@ import { fileReducer } from './userFileReducer';
 import { planLanguagesReducer } from './planLanguageReducer';
 import { productTypesReducer, productReducer, productFeatureLevelsReducer, additionalIncomeSourcesReducer, productFeaturesReducer, productsReducer } from './productReduces';
 import { revenueTypesReducer, revenuesReducer } from './revenueStreamsReducer';
+import { channelTypesReducer, channelsReducer } from './channelsReducer';
 
 export default combineReducers({
     activities: activitiesReducer,
@@ -53,5 +54,7 @@ export default combineReducers({
     productFeatures: productFeaturesReducer,
     products: productsReducer,
     revenueTypes: revenueTypesReducer,
-    revenues: revenuesReducer
+    revenues: revenuesReducer,
+    channels: channelsReducer,
+    channelTypes: channelTypesReducer
 });

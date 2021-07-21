@@ -4,8 +4,8 @@ import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table,
 import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
 import { connect } from 'react-redux';
-import AddSegmentModal from '../components/revenue_streams/AddSegmentModal';
-import EditSegmentModal from '../components/revenue_streams/EditSegmentModal';
+import AddChannelModal from '../components/channels/AddChannelModal';
+import EditChannelModal from '../components/channels/EditChannelModal';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getStreamTypes, getPrices, getRevenues, saveState, deleteRevenue } from "../../appStore/actions/revenueStreamActions";
 
@@ -44,7 +44,7 @@ const titleButtonStyle = {
     backgroundColor: "transparent",
 }
 
-class RevenueStreams extends React.Component {
+class Channels extends React.Component {
 
     constructor(props) {
         super(props);
@@ -251,7 +251,7 @@ class RevenueStreams extends React.Component {
                             <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            Revenue streams
+                            Channels
                         </Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
@@ -260,7 +260,7 @@ class RevenueStreams extends React.Component {
                     <Col span={12} offset={4}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
-                            <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Revenue streams</Text>
+                            <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Channels</Text>
                             <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
                         </div>
                     </Col>
@@ -343,13 +343,13 @@ class RevenueStreams extends React.Component {
                 
                 {
                     this.state.segmentNumber !== null ?
-                        <AddSegmentModal visibility={true} number={this.state.segmentNumber} onClose={this.onCloseAddSegmentModal} />
+                        <AddChannelModal visibility={true} number={this.state.segmentNumber} onClose={this.onCloseAddSegmentModal} />
                         : null
                 }
                 
                 {
                     this.state.item !== null ? 
-                        <EditSegmentModal visibility={true} item={this.state.item} onClose={this.onCloseEditSegmentModal} />
+                        <EditChannelModal visibility={true} item={this.state.item} onClose={this.onCloseEditSegmentModal} />
                         : null
                 }
             </>
@@ -365,4 +365,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPlan })(withRouter(RevenueStreams));
+export default connect(mapStateToProps, { getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPlan })(withRouter(Channels));

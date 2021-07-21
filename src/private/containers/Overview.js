@@ -142,7 +142,7 @@ class Overview extends React.Component {
                                                 <List.Item key='3' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
                                                     <List.Item.Meta
                                                         avatar={<CheckCircleOutlined />}
-                                                        title="Channels (Revisit)"
+                                                        title={<Space><Link to='/channels'>Channels</Link></Space>}
                                                         description="Description goes here" />
                                                     <div>...</div>
                                                 </List.Item>
