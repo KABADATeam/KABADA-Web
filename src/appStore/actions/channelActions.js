@@ -1,63 +1,51 @@
 import kabadaAPI from './kabadaAPI';
 import { errorHandler } from './errorHandler';
 
-export const getRevenues = (planId) => {
+export const getChannels = (planId) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
         try {
             const token = getState().user.access_token;
-            const response = await kabadaAPI.get('api/revenue/' + planId, { headers: { Authorization: `Bearer ${token}` } });
-            dispatch({ type: "FETCHING_REVENUE_STREAMS_SUCCESS", payload: response.data });
+            const response = await kabadaAPI.get('api/channels/' + planId, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: "FETCHING_CHANNELS_SUCCESS", payload: response.data });
         } finally {
             dispatch({ type: "LOADING", payload: false });
         }
     };
 };
 
-export const getStreamTypes = () => {
+export const getChannelTypes = () => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
         try {
-            const response = await kabadaAPI.get('api/revenue/streamTypes');
-            dispatch({ type: "FETCHING_REVENUE_TYPES_SUCCESS", payload: response.data });
+            const response = await kabadaAPI.get('api/channels/types');
+            dispatch({ type: "FETCHING_CHANNEL_TYPES_SUCCESS", payload: response.data });
         } finally {
             dispatch({ type: "LOADING", payload: false });
         }
     };
 };
 
-export const getPrices = () => {
-    return async (dispatch, getState) => {
-        dispatch({ type: "LOADING", payload: true });
-        try {
-            const response = await kabadaAPI.get('api/revenue/prices');
-            dispatch({ type: "FETCHING_REVENUE_PRICES_SUCCESS", payload: response.data });
-        } finally {
-            dispatch({ type: "LOADING", payload: false });
-        }
-    };
-};
-
-export const saveRevenue = (postObject, reducerObject) => {
+export const saveChannel = (postObject, reducerObject) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
         try {
             const token = getState().user.access_token;
-            const response = await kabadaAPI.post('api/revenue/save', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            dispatch({ type: 'SAVE_REVENUE_SUCCESS', payload: { ...reducerObject, "id": response.data, "key": response.data } });
+            const response = await kabadaAPI.post('api/channels/save', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: 'SAVE_CHANNEL_SUCCESS', payload: { ...reducerObject, "id": response.data, "key": response.data } });
         } finally {
             dispatch({ type: "LOADING", payload: false });
         }
     }
 };
 
-export const updateRevenue = (postObject, reducerObject) => {
+export const updateChannel = (postObject, reducerObject) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
         try {
             const token = getState().user.access_token;
-            await kabadaAPI.post('api/revenue/save', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            dispatch({ type: 'UPDATE_REVENUE_SUCCESS', payload: reducerObject });
+            await kabadaAPI.post('api/channels/save', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: 'UPDATE_CHANNEL_SUCCESS', payload: { ...reducerObject, "id": postObject.id, "key": postObject.id } });
         } finally {
             dispatch({ type: "LOADING", payload: false });
         }
@@ -69,7 +57,7 @@ export const saveState = (planId, is_completed) => {
         dispatch({ type: "LOADING", payload: true });
         try {
             const token = getState().user.access_token;
-            await kabadaAPI.post('api/plans/changeRevenueCompleted', { "business_plan_id": planId, "is_revenue_completed": is_completed }, { headers: { Authorization: `Bearer ${token}` } });
+            await kabadaAPI.post('api/plans/changeChannelsCompleted', { "business_plan_id": planId, "is_channels_completed": is_completed }, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: 'SAVE_STATE_SUCCESS', payload: is_completed });
         } finally {
             dispatch({ type: "LOADING", payload: false });
@@ -77,12 +65,12 @@ export const saveState = (planId, is_completed) => {
     }
 };
 
-export const deleteRevenue = (obj) => {
+export const deleteChannel = (id) => {
     return async (dispatch, getState) => {
         try {
             const token = getState().user.access_token;
-            await kabadaAPI.delete("api/revenue/" + obj.id, { headers: { Authorization: `Bearer ${token}` } });
-            dispatch({ type: "REMOVING_REVENUE_SUCCESS", payload: obj });
+            await kabadaAPI.delete("api/channels/" + id, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: "REMOVING_CHANNEL_SUCCESS", payload: id });
         } catch (error) {
             dispatch({ type: 'ERROR', payload: errorHandler(error) });
         } finally {

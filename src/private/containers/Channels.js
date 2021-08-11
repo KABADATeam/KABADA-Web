@@ -2,12 +2,13 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space } from 'antd';
 import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
-import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
+import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle } from '../../styles/customStyles';
 import { connect } from 'react-redux';
 import AddChannelModal from '../components/channels/AddChannelModal';
 import EditChannelModal from '../components/channels/EditChannelModal';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getStreamTypes, getPrices, getRevenues, saveState, deleteRevenue } from "../../appStore/actions/revenueStreamActions";
+import { getChannelTypes, getChannels, deleteChannel, saveState } from "../../appStore/actions/channelActions";
+import { getProducts } from "../../appStore/actions/productActions";
 
 const { Text } = Typography;
 
@@ -50,7 +51,7 @@ class Channels extends React.Component {
         super(props);
         this.state = {
             item: null,
-            segmentNumber: null
+            showAddChannelModal: false
         };
     }
 
@@ -58,63 +59,31 @@ class Channels extends React.Component {
         this.props.history.push(`/overview`);
     }
 
-    onAddFirstRevenueStream = () => {
+    onAddChannel = () => {
         this.setState({
-            segmentNumber: 1
+            showAddChannelModal: true
         });
     }
 
-    onAddSecondRevenueStream = () => {
+    onCloseAddChannelModal = () => {
         this.setState({
-            segmentNumber: 2
-        });
-    }
-
-    onAddNewOther = () => {
-        this.setState({
-            segmentNumber: 3
-        });
-    }
-
-    onCloseAddSegmentModal = () => {
-        this.setState({
-            segmentNumber: null
+            showAddChannelModal: false
         });
     };
 
-    onCloseEditSegmentModal = () => {
+    onCloseEditChannelModal = () => {
         this.setState({
             item: null
         });
     };
 
-    onDeleteFirstSegment(item) {
-        this.props.deleteRevenue({ "id": item.id, "segment": 1 });
+    onDeleteChannel(item) {
+        this.props.deleteChannel(item.item.id);
     }
 
-    onDeleteSecondSegment(item) {
-        this.props.deleteRevenue({ "id": item.id, "segment": 2 });
-    }
-
-    onDeleteOtherSegment(item) {
-        this.props.deleteRevenue({ "id": item.id, "segment": 3 });
-    }
-
-    onEditFirstSegment(item) {
+    onEditChannel(item) {
         this.setState({
-            item: { ...item, "segment": 1 }
-        });
-    }
-
-    onEditSecondSegment(item) {
-        this.setState({
-            item: { ...item, "segment": 2 }
-        });
-    }
-
-    onEditOther(item) {
-        this.setState({
-            item: { ...item, "segment": 3 }
+            item: item.item
         });
     }
 
@@ -128,70 +97,52 @@ class Channels extends React.Component {
                 this.props.history.push(`/`);
             } else {
                 this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getRevenues(this.props.businessPlan.id);
-                    this.props.getStreamTypes();
-                    this.props.getPrices();
+                    this.props.getChannelTypes();
+                    this.props.getChannels(this.props.businessPlan.id);
+                    this.props.getProducts(this.props.businessPlan.id);
                 });
             }
         } else {
-            this.props.getRevenues(this.props.businessPlan.id);
-            this.props.getStreamTypes();
-            this.props.getPrices();
+            this.props.getChannelTypes();
+            this.props.getChannels(this.props.businessPlan.id);
+            this.props.getProducts(this.props.businessPlan.id);
         }
     }
 
     render() {
-        const firstSegmentColumns = [
-            {
-                title: 'Type',
-                dataIndex: 'stream_type_name',
-                key: 'stream_type_name',
-                width: '25%',
-            },
-            {
-                title: 'Prices',
-                dataIndex: 'price_category_name',
-                key: 'price_category_name',
-                width: '20%',
-            },
-            {
-                title: 'Types of pricing',
-                dataIndex: 'price_type_name',
-                key: 'price_type_name',
-                width: '45%',
-            },
-            {
-                title: '',
-                dataIndex: 'action',
-                key: 'action',
-                width: '10%',
-                render: (obj, record) => (
-                    <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditFirstSegment.bind(this, record)} >Edit</Button>
-                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteFirstSegment.bind(this, record)} ><DeleteOutlined /></Button>
-                    </Space>
-                ),
+        const data = this.props.channels.channels.map(item => {
+            const channel_name = item.channel_type.name;
+            const distribution_names = item.distribution_channels === null ? [] : item.distribution_channels.map(item => item.name);
+            const distribution_name = distribution_names.length === 0 ? "-" : distribution_names.join();
+            const product_names = item.products.map(item => item.name);
+            const product_name = product_names.join();
+            return {
+                "channel_name": channel_name,
+                "distribution_name": distribution_name,
+                "product_name": product_name,
+                "item": item,
+                "key": item.id
             }
-        ];
+        });
 
-        const secondSegmentColumns = [
+        const channelsColumns = [
             {
-                title: 'Type',
-                dataIndex: 'stream_type_name',
-                key: 'stream_type_name',
+                title: 'Channels',
+                dataIndex: 'channel_name',
+                key: 'channel_name',
                 width: '25%',
             },
             {
-                title: 'Prices',
-                dataIndex: 'price_category_name',
-                key: 'price_category_name',
-                width: '20%',
+                title: 'Distribution channel',
+                dataIndex: 'distribution_name',
+                key: 'distribution_name',
+                width: '30%',
             },
             {
-                title: 'Types of pricing',
-                dataIndex: 'price_type_name',
-                key: 'price_type_name',
-                width: '45%',
+                title: 'Product',
+                dataIndex: 'product_name',
+                key: 'product_name',
+                width: '35%',
             },
             {
                 title: '',
@@ -200,41 +151,8 @@ class Channels extends React.Component {
                 width: '10%',
                 render: (obj, record) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditSecondSegment.bind(this, record)} >Edit</Button>
-                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteSecondSegment.bind(this, record)} ><DeleteOutlined /></Button>
-                    </Space>
-                ),
-            }
-        ];
-
-        const otherColumns = [
-            {
-                title: 'Type',
-                dataIndex: 'stream_type_name',
-                key: 'stream_type_name',
-                width: '25%',
-            },
-            {
-                title: 'Prices',
-                dataIndex: 'price_category_name',
-                key: 'price_category_name',
-                width: '20%',
-            },
-            {
-                title: 'Type of pricing',
-                dataIndex: 'price_type_name',
-                key: 'price_type_name',
-                width: '45%',
-            },
-            {
-                title: '',
-                dataIndex: 'action',
-                key: 'action',
-                width: '10%',
-                render: (obj, record) => (
-                    <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditOther.bind(this, record)} >Edit</Button>
-                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteOtherSegment.bind(this, record)} ><DeleteOutlined /></Button>
+                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditChannel.bind(this, record)} >Edit</Button>
+                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteChannel.bind(this, record)} ><DeleteOutlined /></Button>
                     </Space>
                 ),
             }
@@ -266,7 +184,7 @@ class Channels extends React.Component {
                     </Col>
                     <Col span={4}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.revenues.is_revenue_completed} onClick={this.onCompletedChange.bind(this)} />
+                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.channels.is_channels_completed} onClick={this.onCompletedChange.bind(this)} />
                         </div>
                     </Col>
                 </Row>
@@ -280,61 +198,23 @@ class Channels extends React.Component {
                     <Row style={{ marginBottom: "50px" }}>
                         <Col span={7}>
                             <div style={{ marginRight: '40px' }}>
-                                <Typography.Title style={{ ...aboutTitleTextStyle }}>Customer segment 1</Typography.Title>
+                                <Typography.Title style={{ ...aboutTitleTextStyle }}>Channels</Typography.Title>
                                 <Typography.Text style={{ ...textStyle }}>
-                                    Plan a separate Revenue Streams for each Customer Segment as each of them may have different pricing requirements.  You can, actually  have several Revenue streams for each Segment.
+                                    Some - few sentences long description.
                                 </Typography.Text>
                             </div>
                         </Col>
                         <Col span={17}>
                             <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                                 <Table
-                                    dataSource={this.props.revenues.segment_1}
-                                    columns={firstSegmentColumns}
+                                    title={() =>
+                                        <>
+                                            <Typography style={{ ...tableTitleStyle }}>Channels</Typography>
+                                        </>}
+                                    dataSource={data}
+                                    columns={channelsColumns}
                                     pagination={false}
-                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddFirstRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button></Space>)}
-                                />
-                            </Card >
-                        </Col>
-                    </Row>
-                    <Divider />
-                    <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
-                            <div style={{ marginRight: '40px' }}>
-                                <Typography.Title style={{ ...aboutTitleTextStyle }}>Customer segment 2</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Plan a separate Revenue Streams for each Customer Segment as each of them may have different pricing requirements.  You can, actually  have several Revenue streams for each Segment.
-                                </Typography.Text>
-                            </div>
-                        </Col>
-                        <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Table
-                                    dataSource={this.props.revenues.segment_2}
-                                    columns={secondSegmentColumns}
-                                    pagination={false}
-                                    footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddSecondRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button>)}
-                                />
-                            </Card >
-                        </Col>
-                    </Row>
-                    <Divider />
-                    <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
-                            <div style={{ marginRight: '40px' }}>
-                                <Typography.Title style={{ ...aboutTitleTextStyle }}>Other</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.
-                                </Typography.Text>
-                            </div>
-                        </Col>
-                        <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Table
-                                    dataSource={this.props.revenues.other}
-                                    columns={otherColumns}
-                                    pagination={false}
-                                    footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddNewOther.bind(this)}><PlusOutlined />Add Other Revenue Stream</Button>)}
+                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddChannel.bind(this)}><PlusOutlined />Add Channel</Button></Space>)}
                                 />
                             </Card >
                         </Col>
@@ -342,14 +222,14 @@ class Channels extends React.Component {
                 </Col>
                 
                 {
-                    this.state.segmentNumber !== null ?
-                        <AddChannelModal visibility={true} number={this.state.segmentNumber} onClose={this.onCloseAddSegmentModal} />
+                    this.state.showAddChannelModal === true ?
+                        <AddChannelModal visibility={true} onClose={this.onCloseAddChannelModal} />
                         : null
                 }
                 
                 {
                     this.state.item !== null ? 
-                        <EditChannelModal visibility={true} item={this.state.item} onClose={this.onCloseEditSegmentModal} />
+                        <EditChannelModal visibility={true} item={this.state.item} onClose={this.onCloseEditChannelModal} />
                         : null
                 }
             </>
@@ -360,9 +240,8 @@ class Channels extends React.Component {
 const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
-        revenues: state.revenues,
-        categories: state.partnersCategories
+        channels: state.channels
     };
 }
 
-export default connect(mapStateToProps, { getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPlan })(withRouter(Channels));
+export default connect(mapStateToProps, { getChannelTypes, getProducts, getChannels, deleteChannel, saveState, refreshPlan })(withRouter(Channels));

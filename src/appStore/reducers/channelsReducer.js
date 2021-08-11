@@ -1,75 +1,34 @@
 export const channelsReducer = (
     state = {
-        is_revenue_completed: false,
-        segment_1: [],
-        segment_2: [],
-        other: []
+        is_channels_completed: false,
+        channels: []
     }, action) => {
     switch (action.type) {
-        case "FETCHING_REVENUE_STREAMS_SUCCESS":
-            const segment1 = action.payload.segment_1.map(obj=> ({ ...obj, "key": obj.id }));
-            const segment2 = action.payload.segment_2.map(obj=> ({ ...obj, "key": obj.id }));
-            const other = action.payload.other.map(obj=> ({ ...obj, "key": obj.id }));
-            return { ...action.payload, "segment_1": segment1, "segment_2": segment2, "other": other };
-        case "SAVE_REVENUE_SUCCESS":
-            if (action.payload.segment === 1) {
-                const segment = [ ...state.segment_1, { ...action.payload } ];
-                return { ...state, "segment_1": segment };
-            }
-            if (action.payload.segment === 2) {
-                const segment = [ ...state.segment_2, { ...action.payload } ];
-                return { ...state, "segment_2": segment };
-            }
-            if (action.payload.segment === 3) {
-                const segment = [ ...state.other, { ...action.payload } ];
-                return { ...state, "other": segment };
-            }
-            return state;
-        case "UPDATE_REVENUE_SUCCESS":
-            if (action.payload.segment === 1) {
-                const segment = state.segment_1.map(x => x.id === action.payload.id ? action.payload : x);
-                return { ...state, "segment_1": segment };
-            }
-            if (action.payload.segment === 2) {
-                const segment = state.segment_2.map(x => x.id === action.payload.id ? action.payload : x);
-                return { ...state, "segment_2": segment };
-            }
-            if (action.payload.segment === 3) {
-                const segment = state.other.map(x => x.id === action.payload.id ? action.payload : x);
-                return { ...state, "other": segment };
-            }
-            return state;
-        case "REMOVING_REVENUE_SUCCESS":
-            if (action.payload.segment === 1) {
-                const segment = state.segment_1.filter(x => x.id !== action.payload.id);
-                return { ...state, "segment_1": segment };
-            }
-            if (action.payload.segment === 2) {
-                const segment = state.segment_2.filter(x => x.id !== action.payload.id);
-                return { ...state, "segment_2": segment };
-            }
-            if (action.payload.segment === 3) {
-                const segment = state.other.filter(x => x.id !== action.payload.id);
-                return { ...state, "other": segment };
-            }
-            return state;
+        case "FETCHING_CHANNELS_SUCCESS":
+            //console.log(action.payload);
+            return action.payload;
+        case "SAVE_CHANNEL_SUCCESS":
+            const channels = [ ...state.channels, { ...action.payload } ];
+            return { ...state, "channels": channels };
+        case "UPDATE_CHANNEL_SUCCESS":
+            //console.log(action.payload);
+            const channels_ = state.channels.map(x => x.id === action.payload.id ? action.payload : x);
+            //console.log(channels_);
+            return { ...state, "channels": channels_ };
+        case "REMOVING_CHANNEL_SUCCESS":
+            const _channels = state.channels.filter(x => x.id !== action.payload);
+            return { ...state, "channels": _channels };
         case "SAVE_STATE_SUCCESS":
-            return { ...state, "is_revenue_completed": action.payload };
+            return { ...state, "is_channels_completed": action.payload };
         default:
             return state;
     }
 };
 
-export const channelTypesReducer = (
-    state = { 
-        "stream_types": [],
-        "prices": []
-    }, action) => {
+export const channelTypesReducer = (state = [], action) => {
     switch (action.type) {
-        case 'FETCHING_REVENUE_TYPES_SUCCESS':
-            return { ...state, "stream_types": action.payload.stream_types };
-        case 'FETCHING_REVENUE_PRICES_SUCCESS':
-            return { ...state, "prices": action.payload.prices };
+        case 'FETCHING_CHANNEL_TYPES_SUCCESS':
+            return action.payload.channel_types;
         default:
             return state;
     }
