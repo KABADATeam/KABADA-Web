@@ -23,17 +23,10 @@ export const saveInitialPlanData = (title, activityId, countryId, languageId, fi
 
 export const getAllPublicPlans = () => {
     return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true });
         try {
-            dispatch({ type: "FETCHING_ALL_PLANS_SUCCESS", payload: {} });
-        } catch (error) {
-            if (error.response === undefined) {
-                dispatch({
-                    type: "ERROR",
-                    payload: { message: "Oopsie... System error. Try again, later" },
-                });
-            } else {
-                dispatch({ type: "ERROR", payload: error.response.data });
-            }
+            const response = await kabadaAPI.get("api/plans/public");
+            dispatch({ type: "FETCHING_ALL_PLANS_SUCCESS", payload: response.data });
         } finally {
             dispatch({ type: "LOADING", payload: false });
         }
@@ -64,19 +57,11 @@ export const getImage = (plan) => {
 
 export const getPlans = () => {
     return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true });
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get("api/plans", { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: "FETCHING_PLANS_SUCCESS", payload: response.data.privateBusinessPlans.businessPlan });
-        } catch (error) {
-            if (error.response === undefined) {
-                dispatch({
-                    type: "ERROR",
-                    payload: { message: "Oopsie... System error. Try again, later" },
-                });
-            } else {
-                dispatch({ type: "ERROR", payload: error.response.data });
-            }
         } finally {
             dispatch({ type: "LOADING", payload: false });
         }
@@ -147,5 +132,22 @@ export const updatePlanData = (planId, title, activityId, countryId, callback, c
 export const clearSelectedPlan = () => {
     return async (dispatch, getState) => {
         dispatch({ type: 'CLEARING_SELECTED_PLAN_SUCCESS', payload: {} });
+    }
+};
+
+export const updateStatus = (planId, status) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true });
+        try {
+            const token = getState().user.access_token;
+            const postObject = {
+                "business_plan_id": planId,
+                "is_private": !status
+            }
+            await kabadaAPI.post('api/plans/changeStatus', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: 'UPDATING_SELECTED_PLAN_STATUS_SUCCESS', payload: status });
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
+        }
     }
 };

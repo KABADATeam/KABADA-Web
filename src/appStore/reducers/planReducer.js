@@ -21,6 +21,8 @@ export const selectedplanFetchReducer = (state = { id: null }, action) => {
             return action.payload;
         case "CLEARING_SELECTED_PLAN_SUCCESS":
             return action.payload;
+        case "UPDATING_SELECTED_PLAN_STATUS_SUCCESS":
+            return { ...state, "public": action.payload };
         default:
             return state;
     }
@@ -38,7 +40,7 @@ export const updatePlanReducer = (state = null, action) => {
 export const allPublicPlansFetchReducer = (state = [], action) => {
     switch (action.type) {
         case "FETCHING_ALL_PLANS_SUCCESS":
-            return state;
+            return action.payload.publicBusinessPlans.businessPlan.map(item => ({ ...item, "key": item.id  }) );
         default:
             return state;
     }

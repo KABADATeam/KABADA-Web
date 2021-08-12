@@ -24,19 +24,7 @@ class PublicBusinessPlans extends React.Component {
     }
 
     componentDidMount() {
-        this.props.getAllPublicPlans()
-            .then(
-                () => {
-                    this.setState({
-                        planData: this.props.publicPlans
-                    });
-                },
-                (error) => {
-                    this.setState({
-                        error
-                    });
-                }
-            )
+        this.props.getAllPublicPlans();
     }
 
     getFullDate = (date) => {
@@ -231,7 +219,7 @@ class PublicBusinessPlans extends React.Component {
                                         </Col>
                                     </Row>
                                 </Form>
-                                <Table style={{ width: '100%' }} size="default" columns={columns} pagination={{ defaultPageSize: 5, showTotal: (total, range) => <Text style={{ position: 'absolute', left: '50%', transform: 'translate(-50%)' }}>{range[0]}-{range[1]} of {total}</Text>, position: ['bottomLeft'] }} dataSource={this.state.planData} onChange={this.handleChange} />
+                                <Table style={{ width: '100%' }} size="default" columns={columns} pagination={{ defaultPageSize: 5, showTotal: (total, range) => <Text style={{ position: 'absolute', left: '50%', transform: 'translate(-50%)' }}>{range[0]}-{range[1]} of {total}</Text>, position: ['bottomLeft'] }} dataSource={this.props.publicPlans} onChange={this.handleChange} />
                             </Card >
                         </Col>
                     </Row >
