@@ -12,6 +12,7 @@ import Overview from './containers/Overview';
 import ValuePropositions from './containers/ValuePropositions';
 import NewProduct from './components/new_product/NewProduct';
 import RevenueStreams from './containers/RevenueStreams';
+import CostStructure from './containers/CostStructure';
 import Channels from './containers/Channels';
 import CustomerSegments from './containers/CustomerSegments';
 
@@ -38,6 +39,7 @@ class PrivateApp extends React.Component {
                     <Route exact path="/value-propositions" render={(props) => <MainWindow {...props}> <ValuePropositions {...props} /> </MainWindow>} />
                     <Route exact path="/new-product" render={(props) => <MainWindow {...props}> <NewProduct {...props} /> </MainWindow>} />
                     <Route exact path="/revenue-streams" render={(props) => <MainWindow {...props}> <RevenueStreams {...props} /> </MainWindow>} />
+                    <Route exact path="/cost-structure" render={(props) => <MainWindow {...props}> <CostStructure {...props} /> </MainWindow>} />
                     <Route exact path="/channels" render={(props) => <MainWindow {...props}> <Channels {...props} /> </MainWindow>} />
                     <Route exact path="/customer-segments" render={(props) => <MainWindow {...props}> <CustomerSegments {...props} /> </MainWindow>} />
                 </Switch>
