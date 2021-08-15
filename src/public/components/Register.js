@@ -25,7 +25,6 @@ class Register extends React.Component {
 	};
 	
     onFinish = (values) => {
-        //console.log('Success:', values);
         this.props.register("Test", values.email, values.password, () => {
             this.props.history.push("/login");
         });
@@ -36,6 +35,9 @@ class Register extends React.Component {
     };
 
     render() {
+		const query = new URLSearchParams(this.props.location.search);
+		const email = query.get('email');
+
         return (
 				<Card style={cardStyle} bodyStyle={{ padding: "0" }}>
                 <Row>
@@ -94,13 +96,24 @@ class Register extends React.Component {
                     
                     <Divider style={textColor}>OR</Divider>
 
-                    <Form.Item label={<label style={textColor}>Email address</label>} style={inputStyle}>
-						<Form.Item
-							name="email"
-							rules={[{ required: true, message: 'Please enter your email address' }]} >
-							<Input size="large" />
-						</Form.Item>
-					</Form.Item>
+					{
+						email !== null ? 
+							<Form.Item label={<label style={textColor}>Email address</label>} style={inputStyle}>
+								<Form.Item
+									name="email" initialValue={email === null ? '' : email}
+									rules={[{ required: true, message: 'Please enter your email address' }]} >
+									<Input readOnly={true} size="large"  />
+								</Form.Item>
+							</Form.Item>
+							:
+							<Form.Item label={<label style={textColor}>Email address</label>} style={inputStyle}>
+								<Form.Item
+									name="email"
+									rules={[{ required: true, message: 'Please enter your email address' }]} >
+									<Input size="large" />
+								</Form.Item>
+							</Form.Item>
+					}   
 
                     <Form.Item label={<label style={textColor}>Password</label>} style={inputStyle}>
                         <Form.Item

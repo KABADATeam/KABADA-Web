@@ -151,3 +151,43 @@ export const updateStatus = (planId, status) => {
         }
     }
 };
+
+export const inviteMember = (postObject) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true });
+        try {
+            const token = getState().user.access_token;
+            await kabadaAPI.post('api/plans/inviteMember', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            //dispatch({ type: 'UPDATING_SELECTED_PLAN_STATUS_SUCCESS', payload: status });
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
+        }
+    }
+};
+
+export const getMembers = (planId) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true });
+        try {
+            const token = getState().user.access_token;
+            const response = await kabadaAPI.get("api/plans/members/" + planId, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: "FETCHING_PLAN_MEMBERS_SUCCESS", payload: response.data });
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
+        }
+    }
+};
+
+export const deleteMember = (planId, postObject, callback) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true });
+        try {
+            const token = getState().user.access_token;
+            await kabadaAPI.delete('api/plans/member/' + planId, postObject, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: "DELETING_PLAN_MEMBERS_SUCCESS", payload: null });
+            callback();
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
+        }
+    }
+};

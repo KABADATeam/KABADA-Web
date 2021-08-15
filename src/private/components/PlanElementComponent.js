@@ -58,6 +58,8 @@ class PlanElementComponent extends Component {
             this.filterFunction(tabKey)
         )
 
+        console.log(this.props);
+
         return ( 
             <>
             <List

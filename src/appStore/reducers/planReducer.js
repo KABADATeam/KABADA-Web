@@ -23,6 +23,8 @@ export const selectedplanFetchReducer = (state = { id: null }, action) => {
             return action.payload;
         case "UPDATING_SELECTED_PLAN_STATUS_SUCCESS":
             return { ...state, "public": action.payload };
+        case "FETCHING_PLAN_MEMBERS_SUCCESS":
+            return { ...state, "members": action.payload.members }
         default:
             return state;
     }

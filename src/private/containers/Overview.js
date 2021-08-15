@@ -1,13 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select } from 'antd';
+import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar } from 'antd';
 import { ArrowLeftOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { discardChanges, saveChanges } from "../../appStore/actions/swotAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { updateStatus } from "../../appStore/actions/planActions";
+import { updateStatus, getMembers, deleteMember } from "../../appStore/actions/planActions";
 import { withRouter } from 'react-router-dom';
+import InviteMemberModal from '../components/overview/InviteMemberModal';
+import { UserOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
@@ -41,6 +43,10 @@ const titleButtonStyle = {
 
 class Overview extends React.Component {
 
+    state = {
+        showInviteModal: false
+    }
+
     onBackClick() {
         this.props.history.push(`/personal-business-plans`);
     }
@@ -63,6 +69,24 @@ class Overview extends React.Component {
         this.props.updateStatus(this.props.businessPlan.id, status);
     }
 
+    onDeleteMember (item) {
+        this.props.deleteMember(this.props.businessPlan.id, { "user_id": item.user_id }, () => {
+            this.props.getMembers(this.props.businessPlan.id);
+        });
+    }
+
+    onInviteClick () {
+        this.setState({
+            showInviteModal: true
+        });
+    }
+
+    onInviteClose () {
+        this.setState({
+            showInviteModal: false
+        });
+    }
+
     getUpdatesWindowState() {
         return 'hidden';
     }
@@ -72,14 +96,21 @@ class Overview extends React.Component {
             if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
                 this.props.history.push(`/`);
             } else {
-                this.props.refreshPlan(localStorage.getItem("plan"));
+                this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                    this.props.getMembers(this.props.businessPlan.id);
+                });
             }
+        } else {
+            this.props.getMembers(this.props.businessPlan.id);
         }
     }
 
     render() {
         const isVisibleHeader = this.getUpdatesWindowState();
+        const membersList = this.props.businessPlan.members;
+
         console.log(this.props.businessPlan);
+
         return (
             <>
                 <UnsavedChangesHeader
@@ -233,6 +264,22 @@ class Overview extends React.Component {
                                             <Option key="2" value={true}>Public</Option>
                                        </Select>
                                     </Card>
+                                    <Card style={{width: '282px', marginTop: "16px", borderRadius: '8px', backgroundColor: '#FFFFFF',
+                                        backgroundSize:'282px 152px', backgroundRepeat: "no-repeat" }}>
+                                       <h4>Members</h4>
+                                       <List itemLayout="horizontal" dataSource={membersList} renderItem={item => (
+                                            <List.Item actions={[<Button type="link" onClick={this.onDeleteMember.bind(this, item)}><DeleteOutlined /></Button>]}>
+                                                <List.Item.Meta
+                                                    avatar={<Avatar size="small" icon={<UserOutlined />} />}
+                                                    title={item.name + " " + item.surname}
+                                                />
+                                            </List.Item>
+                                            )}>
+                                            <List.Item key='2' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
+                                                <List.Item.Meta title={<Space><Button type="link" style={{ padding: "0px"}} onClick={this.onInviteClick.bind(this)}>+ Invite members</Button></Space>} />
+                                            </List.Item>
+                                       </List>
+                                    </Card>
                                 </Col>
                             </Row>
                         </TabPane>
@@ -262,6 +309,11 @@ class Overview extends React.Component {
                         </TabPane>
                     </Tabs>
                 </Col>
+
+                {
+                    this.state.showInviteModal === false ? null :
+                        <InviteMemberModal visible={true} onClose={this.onInviteClose.bind(this)} />
+                }
             </>
         );
     }
@@ -273,4 +325,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { discardChanges, updateStatus, saveChanges, refreshPlan })(withRouter(Overview))
+export default connect(mapStateToProps, { discardChanges, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember })(withRouter(Overview))
