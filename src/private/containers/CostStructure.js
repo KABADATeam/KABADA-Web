@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space } from 'antd';
 import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
@@ -203,7 +203,7 @@ class CostStructure extends React.Component {
         ];
         return (
             <>
-                <Col span={16} offset={4}>s
+                <Col span={16} offset={4}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
                             <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>

@@ -60,7 +60,7 @@ class AddCostModal extends Component {
 
         }
         const typeTitle = this.props.category.types.find(x => x.type_id = this.state.selectedTypeId) 
-        const type_id = this.state.selectedTypeId;
+        //const type_id = this.state.selectedTypeId;
         const reducerObject = {
             "category_id": this.props.category.category_id,
             "category_title": this.props.category.category_title,

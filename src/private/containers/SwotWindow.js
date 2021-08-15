@@ -133,7 +133,41 @@ class SwotWindow extends React.Component {
 
                 <Col span={16} offset={4}>
                     <Tabs defaultActiveKey="1" >
-                        <TabPane tab="Strengths and weaknesses" key="1">
+                        <TabPane tab="Overall" key="1">
+                            <Row style={{ marginBottom: "50px" }}>
+                                <Col span={8}>
+                                    <div style={{ marginRight: '40px' }}>
+                                        <Typography.Title style={{ ...aboutTitleTextStyle }}>Strengths and weaknesses</Typography.Title>
+                                        <Typography.Text style={{ ...textStyle }}>
+                                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+                                            Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+                                        <br />
+                                            <Typography.Link underline style={{ ...textStyle }}>Read more about SWOT</Typography.Link>
+                                        </Typography.Text>
+                                    </div>
+                                </Col>
+                                <Col span={16}>
+                                    <StrengthsWeaknesses />
+                                </Col>
+                            </Row>
+                            <Row style={{ marginBottom: "50px" }}>
+                                <Col span={8}>
+                                    <div style={{ marginRight: '40px' }}>
+                                        <Typography.Title style={aboutTitleTextStyle}>Opportunities and threats</Typography.Title>
+                                        <Typography.Text style={textStyle}>
+                                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+                                            Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+                                        <br />
+                                            <Typography.Link underline style={{ ...textStyle }}>Read more about SWOT</Typography.Link>
+                                        </Typography.Text>
+                                    </div>
+                                </Col>
+                                <Col span={16}>
+                                    <OpportunitiesThreats />
+                                </Col>
+                            </Row>
+                        </TabPane>
+                        <TabPane tab="Strengths and weaknesses" key="2">
                             <Row style={{ marginBottom: "50px" }}>
                                 <Col span={8}>
                                     <div style={{ marginRight: '40px' }}>
@@ -151,7 +185,7 @@ class SwotWindow extends React.Component {
                                 </Col>
                             </Row>
                         </TabPane>
-                        <TabPane tab="Opportunities and threats" key="2">
+                        <TabPane tab="Opportunities and threats" key="3">
                             <Row style={{ marginBottom: "50px" }}>
                                 <Col span={8}>
                                     <div style={{ marginRight: '40px' }}>
