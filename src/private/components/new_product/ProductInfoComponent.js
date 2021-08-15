@@ -33,7 +33,7 @@ class ProductInfoComponent extends Component {
         const options = this.props.productTypes.map((obj) =>
             <Option key={obj.id} value={obj.id}>{obj.title}</Option>
         );
-        console.log(this.props);
+
         return (
             <>
                 <Card style={{ ...cardStyle, padding: 20 }} bodyStyle={{ ...tableCardBodyStyle, padding: 0 }}>

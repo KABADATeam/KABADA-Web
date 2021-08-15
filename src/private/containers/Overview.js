@@ -1,15 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space } from 'antd';
+import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select } from 'antd';
 import { ArrowLeftOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { discardChanges, saveChanges } from "../../appStore/actions/swotAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
+import { updateStatus } from "../../appStore/actions/planActions";
 import { withRouter } from 'react-router-dom';
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
+const { Option } = Select;
 
 const aboutTitleTextStyle = {
     fontStyle: 'normal',
@@ -57,19 +59,11 @@ class Overview extends React.Component {
         });
     };
 
+    onStatusChange (status) {
+        this.props.updateStatus(this.props.businessPlan.id, status);
+    }
+
     getUpdatesWindowState() {
-        //if (this.props.swot.updates.is_swot_completed !== null) {
-        //    return 'visible';
-        //}
-
-        //if (this.props.swot.updates.strengths.length > 0) {
-        //    return 'visible';
-        //}
-
-        //if (this.props.swot.updates.opportunities.length > 0) {
-        //    return 'visible';
-        //}
-
         return 'hidden';
     }
 
@@ -85,7 +79,7 @@ class Overview extends React.Component {
 
     render() {
         const isVisibleHeader = this.getUpdatesWindowState();
-
+        console.log(this.props.businessPlan);
         return (
             <>
                 <UnsavedChangesHeader
@@ -128,7 +122,7 @@ class Overview extends React.Component {
                                                 <List.Item key='1' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
                                                     <List.Item.Meta
                                                         avatar={<CheckCircleOutlined />}
-                                                        title="Customer segments"
+                                                        title={<Space><Link to='/customer-segments'>Customer segments</Link></Space>}
                                                         description="Description goes here" />
                                                     <div>...</div>
                                                 </List.Item>
@@ -142,7 +136,7 @@ class Overview extends React.Component {
                                                 <List.Item key='3' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
                                                     <List.Item.Meta
                                                         avatar={<CheckCircleOutlined />}
-                                                        title="Channels (Revisit)"
+                                                        title={<Space><Link to='/channels'>Channels</Link></Space>}
                                                         description="Description goes here" />
                                                     <div>...</div>
                                                 </List.Item>
@@ -231,6 +225,14 @@ class Overview extends React.Component {
                                         backgroundSize:'282px 152px', backgroundRepeat: "no-repeat" }}>
                                        <h4 style={{ marginTop: '150px'}}>Cover image</h4>
                                     </Card>
+                                    <Card style={{width: '282px', marginTop: "16px", borderRadius: '8px', backgroundColor: '#FFFFFF',
+                                        backgroundSize:'282px 152px', backgroundRepeat: "no-repeat" }}>
+                                       <h4>Business plan status</h4>
+                                       <Select style={{ width: '100%' }} value={this.props.businessPlan.public} onChange={this.onStatusChange.bind(this)}>
+                                            <Option key="1" value={false}>Private</Option>
+                                            <Option key="2" value={true}>Public</Option>
+                                       </Select>
+                                    </Card>
                                 </Col>
                             </Row>
                         </TabPane>
@@ -271,4 +273,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { discardChanges, saveChanges, refreshPlan })(withRouter(Overview))
+export default connect(mapStateToProps, { discardChanges, updateStatus, saveChanges, refreshPlan })(withRouter(Overview))

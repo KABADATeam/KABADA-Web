@@ -1,0 +1,79 @@
+import kabadaAPI from './kabadaAPI';
+import { errorHandler } from './errorHandler';
+
+export const getChannels = (planId) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true });
+        try {
+            const token = getState().user.access_token;
+            const response = await kabadaAPI.get('api/channels/' + planId, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: "FETCHING_CHANNELS_SUCCESS", payload: response.data });
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
+        }
+    };
+};
+
+export const getChannelTypes = () => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true });
+        try {
+            const response = await kabadaAPI.get('api/channels/types');
+            dispatch({ type: "FETCHING_CHANNEL_TYPES_SUCCESS", payload: response.data });
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
+        }
+    };
+};
+
+export const saveChannel = (postObject, reducerObject) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true });
+        try {
+            const token = getState().user.access_token;
+            const response = await kabadaAPI.post('api/channels/save', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: 'SAVE_CHANNEL_SUCCESS', payload: { ...reducerObject, "id": response.data, "key": response.data } });
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
+        }
+    }
+};
+
+export const updateChannel = (postObject, reducerObject) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true });
+        try {
+            const token = getState().user.access_token;
+            await kabadaAPI.post('api/channels/save', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: 'UPDATE_CHANNEL_SUCCESS', payload: { ...reducerObject, "id": postObject.id, "key": postObject.id } });
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
+        }
+    }
+};
+
+export const saveState = (planId, is_completed) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true });
+        try {
+            const token = getState().user.access_token;
+            await kabadaAPI.post('api/plans/changeChannelsCompleted', { "business_plan_id": planId, "is_channels_completed": is_completed }, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: 'SAVE_STATE_SUCCESS', payload: is_completed });
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
+        }
+    }
+};
+
+export const deleteChannel = (id) => {
+    return async (dispatch, getState) => {
+        try {
+            const token = getState().user.access_token;
+            await kabadaAPI.delete("api/channels/" + id, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: "REMOVING_CHANNEL_SUCCESS", payload: id });
+        } catch (error) {
+            dispatch({ type: 'ERROR', payload: errorHandler(error) });
+        } finally {
+        }
+    }
+};
