@@ -107,7 +107,7 @@ class Overview extends React.Component {
 
     render() {
         const isVisibleHeader = this.getUpdatesWindowState();
-        const membersList = this.props.businessPlan.members;
+        const membersList = this.props.businessPlan.members === null ? [] : this.props.businessPlan.members;
 
         console.log(this.props.businessPlan);
 
