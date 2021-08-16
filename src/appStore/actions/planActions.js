@@ -183,7 +183,7 @@ export const deleteMember = (planId, postObject, callback) => {
         dispatch({ type: "LOADING", payload: true });
         try {
             const token = getState().user.access_token;
-            await kabadaAPI.delete('api/plans/member/' + planId, postObject, { headers: { Authorization: `Bearer ${token}` } });
+            await kabadaAPI.delete('api/plans/' + planId + '/member/' + postObject.user_id, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: "DELETING_PLAN_MEMBERS_SUCCESS", payload: null });
             callback();
         } finally {

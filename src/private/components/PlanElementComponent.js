@@ -40,7 +40,8 @@ class PlanElementComponent extends Component {
             const completedPlans = this.props.personalPlans.filter(item => item.percentage === 100);
             return completedPlans
         } else if (tabKey === "4") {
-            const sharedPlans = this.props.personalPlans.filter(item => item.shareWithMe === true);
+            const sharedPlans = this.props.personalPlans.filter(item => item.sharedWithMe === true);
+            console.log(sharedPlans);
             return sharedPlans
         } else
             return this.props.personalPlans
