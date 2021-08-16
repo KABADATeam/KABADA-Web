@@ -41,8 +41,7 @@ class Header extends Component {
     }
 
     render() {  
-
-        const name = this.props.user.name === '' ? this.props.user.email.substring(0, this.props.user.email.indexOf("@")) : this.props.name;
+        const name = this.props.user.name === '' ? this.props.user.email.substring(0, this.props.user.email.indexOf("@")) : this.props.user.name;
 
         const menu = (
             <Menu>
