@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { discardChanges, saveChanges } from "../../appStore/actions/swotAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { updateStatus, getMembers, deleteMember } from "../../appStore/actions/planActions";
+import { updateStatus, getMembers, deleteMember, getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { withRouter } from 'react-router-dom';
 import InviteMemberModal from '../components/overview/InviteMemberModal';
 import { UserOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -98,10 +98,12 @@ class Overview extends React.Component {
             } else {
                 this.props.refreshPlan(localStorage.getItem("plan"), () => {
                     this.props.getMembers(this.props.businessPlan.id);
+                    this.props.getSelectedPlanOverview(this.props.businessPlan.id);
                 });
             }
         } else {
             this.props.getMembers(this.props.businessPlan.id);
+            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
         }
     }
 
@@ -134,7 +136,7 @@ class Overview extends React.Component {
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>{this.props.businessPlan.name}</Text>
-                            <Tag color="#BAE7FF" style={{borderRadius: 50, color: "#262626", marginLeft: '10px'}}> 0% Completed</Tag>
+                            <Tag color="#BAE7FF" style={{borderRadius: 50, color: "#262626", marginLeft: '10px'}}> {this.props.businessPlan.percentage}% Completed</Tag>
                         </div>
                     </Col>
                     <Col span={4}>
@@ -325,4 +327,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { discardChanges, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember })(withRouter(Overview))
+export default connect(mapStateToProps, { discardChanges, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview })(withRouter(Overview))

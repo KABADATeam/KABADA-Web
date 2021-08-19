@@ -9,6 +9,7 @@ import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getCustomerRelationshipsCategories, getCustomerRelationships, saveState, selectRelationshipCategory, deleteCustomerRelationship } from "../../appStore/actions/customerRelationshipsAction";
 import AddCustomerRelationshipModal from '../components/customer_relationships/AddCustomerRelationshipModal';
 import EditCustomerRelationshipModal from '../components/customer_relationships/EditCustomerRelationshipModal';
+import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 
 const { Text } = Typography;
 
@@ -152,7 +153,9 @@ class CustomerRelationships extends React.Component {
     }
 
     onCompletedChange(state) {
-        this.props.saveState(this.props.businessPlan.id, state);
+        this.props.saveState(this.props.businessPlan.id, state, () => {
+            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+        });
     }
 
     componentDidMount() {
@@ -399,4 +402,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getCustomerRelationshipsCategories, getCustomerRelationships, refreshPlan, saveState, selectRelationshipCategory, deleteCustomerRelationship })(withRouter(CustomerRelationships));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getCustomerRelationshipsCategories, getCustomerRelationships, refreshPlan, saveState, selectRelationshipCategory, deleteCustomerRelationship })(withRouter(CustomerRelationships));

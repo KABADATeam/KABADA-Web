@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { Row, Col, Typography, Button, Tabs, Layout } from 'antd';
 import { buttonStyle, pageHeaderStyle } from '../../styles/customStyles';
 import PlanElementComponent from '../components/PlanElementComponent';
 import NewBusinessPlanModal from "../components/NewBusinessPlanModal";
+import { getPlans, getSelectedPlan, getImage, getPlansOverview } from "../../appStore/actions/planActions";
 
 const { Title } = Typography;
 const { TabPane } = Tabs;
@@ -36,6 +39,16 @@ class PersonalBusinessPlans extends Component {
             isVisible: false,
         });
     };
+
+    componentDidMount() {
+        this.props.getPlans()
+            .then(() => {
+                this.props.personalPlans.forEach(plan => {
+                    this.props.getImage(plan);
+                    this.props.getPlansOverview(plan.id);
+                });
+            });
+    }
 
     render() {
         const isVisible = this.state.isVisible;
@@ -93,4 +106,10 @@ class PersonalBusinessPlans extends Component {
     }
 }
 
-export default PersonalBusinessPlans;
+const mapStateToProps = (state) => {
+    return {
+        personalPlans: state.personalBusinessPlans
+    };
+}
+
+export default connect(mapStateToProps, { getPlans, getSelectedPlan, getImage, getPlansOverview })(withRouter(PersonalBusinessPlans));

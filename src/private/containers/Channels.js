@@ -9,6 +9,7 @@ import EditChannelModal from '../components/channels/EditChannelModal';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getChannelTypes, getChannels, deleteChannel, saveState } from "../../appStore/actions/channelActions";
 import { getProducts } from "../../appStore/actions/productActions";
+import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 
 const { Text } = Typography;
 
@@ -88,7 +89,9 @@ class Channels extends React.Component {
     }
 
     onCompletedChange(state) {
-        this.props.saveState(this.props.businessPlan.id, state);
+        this.props.saveState(this.props.businessPlan.id, state, () => {
+            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+        });
     }
 
     componentDidMount() {
@@ -110,6 +113,8 @@ class Channels extends React.Component {
     }
 
     render() {
+        console.log(this.props)
+;
         const data = this.props.channels.channels.map(item => {
             const channel_name = item.channel_type.name;
             const distribution_names = item.distribution_channels === null ? [] : item.distribution_channels.map(item => item.name);
@@ -244,4 +249,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getChannelTypes, getProducts, getChannels, deleteChannel, saveState, refreshPlan })(withRouter(Channels));
+export default connect(mapStateToProps, { getChannelTypes, getProducts, getChannels, deleteChannel, saveState, refreshPlan, getSelectedPlanOverview })(withRouter(Channels));

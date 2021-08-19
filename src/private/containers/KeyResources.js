@@ -8,6 +8,7 @@ import KeyResourcesCategoriesModal from "../components/KeyResourcesCategoriesMod
 import EditKeyResourceModal from "../components/EditKeyResourceModal";
 import { getResourcesList, getResourcesCategoriesList, deleteItem, saveEditable, saveChanges } from "../../appStore/actions/resourcesAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
+import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 
 const { Text } = Typography;
 
@@ -59,7 +60,9 @@ class KeyResources extends React.Component {
     }
 
     onCompletedChange(state) {
-        this.props.saveChanges(this.props.businessPlan.id, state);
+        this.props.saveChanges(this.props.businessPlan.id, state, () => {
+            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+        });
     }
 
     onAddNewItem = () => {
@@ -232,4 +235,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getResourcesList, getResourcesCategoriesList, deleteItem, saveChanges, saveEditable, refreshPlan })(withRouter(KeyResources));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getResourcesList, getResourcesCategoriesList, deleteItem, saveChanges, saveEditable, refreshPlan })(withRouter(KeyResources));

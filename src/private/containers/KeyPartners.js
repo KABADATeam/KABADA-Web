@@ -9,6 +9,7 @@ import AddKeyPartnerModal from '../components/AddKeyPartnerModal';
 import EditKeyPartnerModal from '../components/EditKeyPartnerModal';
 import { getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState } from "../../appStore/actions/partnersAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
+import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 
 const { Text } = Typography;
 
@@ -158,7 +159,9 @@ class KeyPartners extends React.Component {
     }
 
     onCompletedChange(state) {
-        this.props.saveState(this.props.businessPlan.id, state);
+        this.props.saveState(this.props.businessPlan.id, state, () => {
+            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+        });
     }
 
     componentDidMount() {
@@ -402,4 +405,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState, refreshPlan })(withRouter(KeyPartners));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState, refreshPlan })(withRouter(KeyPartners));

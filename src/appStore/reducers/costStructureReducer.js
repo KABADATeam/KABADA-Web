@@ -12,12 +12,10 @@ export const costStructureReducer = (
         case "SAVE_COST_SUCCESS":
             if (action.payload.number === 1) {
                 const fixed_costs = [ ...state.fixed_costs, { ...action.payload } ];
-                console.log(fixed_costs)
                 return { ...state, "fixed_costs": fixed_costs };
             }
             if (action.payload.number === 2) {
                 const variable_costs = [ ...state.variable_costs, { ...action.payload } ];
-                console.log(variable_costs)
                 return { ...state, "variable_costs": variable_costs };
             }
             return state;
@@ -32,7 +30,6 @@ export const costStructureReducer = (
             }
             return state;
         case "REMOVING_COST_SUCCESS":
-            console.log(action.payload)
             if (action.payload.number === 1) {
                 const fixed_costs = state.fixed_costs.filter(x => x.id !== action.payload.id);
                 return { ...state, "fixed_costs": fixed_costs };
@@ -43,7 +40,6 @@ export const costStructureReducer = (
             }
             return state;
         case "SAVE_STATE_SUCCESS":
-            console.log(action.payload)
             return {...state, "is_cost_completed": action.payload }
         default:
             return state

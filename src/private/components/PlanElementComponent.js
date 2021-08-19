@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Card, Typography, List, Row } from 'antd';
 import { connect } from 'react-redux';
-import { getPlans, getSelectedPlan, getImage } from "../../appStore/actions/planActions";
+import { getSelectedPlan } from "../../appStore/actions/planActions";
 import PlanStatusTag from "./PlanStatusTag";
 import { withRouter } from 'react-router-dom';
 
@@ -21,15 +21,6 @@ const dateTextStyle = {
 
 class PlanElementComponent extends Component {
 
-    componentDidMount() {
-        this.props.getPlans()
-            .then(() => {
-                this.props.personalPlans.forEach(plan => {
-                    this.props.getImage(plan);
-                });
-            });
-    }
-
     filterFunction = (tabKey) => {
         if (tabKey === "1") {
             return this.props.personalPlans
@@ -41,7 +32,6 @@ class PlanElementComponent extends Component {
             return completedPlans
         } else if (tabKey === "4") {
             const sharedPlans = this.props.personalPlans.filter(item => item.sharedWithMe === true);
-            console.log(sharedPlans);
             return sharedPlans
         } else
             return this.props.personalPlans
@@ -58,8 +48,6 @@ class PlanElementComponent extends Component {
         const dataSource = (
             this.filterFunction(tabKey)
         )
-
-        console.log(this.props);
 
         return ( 
             <>
@@ -97,4 +85,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getPlans, getSelectedPlan, getImage })(withRouter(PlanElementComponent));
+export default connect(mapStateToProps, { getSelectedPlan })(withRouter(PlanElementComponent));

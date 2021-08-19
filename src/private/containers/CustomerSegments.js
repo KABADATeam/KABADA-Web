@@ -12,6 +12,7 @@ import AddPublicBodiesSegmentModal from '../components/customer_segments/AddPubl
 import EditPublicBodiesSegmentModal from '../components/customer_segments/EditPublicBodiesSegmentModal';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getCustomerSegmentProperties, getCustomerSegments, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState } from "../../appStore/actions/customerSegmentAction";
+import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 
 const { Text } = Typography;
 
@@ -135,7 +136,9 @@ class CustomerSegments extends React.Component {
     }
 
     onCompletedChange(state) {
-        this.props.saveState(this.props.businessPlan.id, state);
+        this.props.saveState(this.props.businessPlan.id, state, () => {
+            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+        });
     }
 
     componentDidMount() {
@@ -417,4 +420,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getCustomerSegmentProperties, getCustomerSegments, refreshPlan, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState })(withRouter(CustomerSegments));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getCustomerSegmentProperties, getCustomerSegments, refreshPlan, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState })(withRouter(CustomerSegments));
