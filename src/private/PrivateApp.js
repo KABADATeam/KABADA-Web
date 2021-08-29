@@ -15,6 +15,7 @@ import RevenueStreams from './containers/RevenueStreams';
 import CostStructure from './containers/CostStructure';
 import Channels from './containers/Channels';
 import CustomerSegments from './containers/CustomerSegments';
+import KeyActivities from './containers/KeyActivities';
 
 class PrivateApp extends React.Component {
     constructor(props) {
@@ -42,6 +43,7 @@ class PrivateApp extends React.Component {
                     <Route exact path="/cost-structure" render={(props) => <MainWindow {...props}> <CostStructure {...props} /> </MainWindow>} />
                     <Route exact path="/channels" render={(props) => <MainWindow {...props}> <Channels {...props} /> </MainWindow>} />
                     <Route exact path="/customer-segments" render={(props) => <MainWindow {...props}> <CustomerSegments {...props} /> </MainWindow>} />
+                    <Route exact path="/key-activities" render={(props) => <MainWindow {...props}> <KeyActivities {...props} /> </MainWindow>} />
                 </Switch>
             </Router>
 
