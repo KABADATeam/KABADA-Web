@@ -10,6 +10,7 @@ import { getCostStructureList, getCategories, deleteFixedCost, deleteVariableCos
 import CostCategoriesModal from "../components/cost_structure/CostCategoriesModal"
 import EditCostModal from "../components/cost_structure/EditCostModal"
 import AddCostModal from "../components/cost_structure/AddCostModal";
+import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 
 const { Text } = Typography;
 
@@ -118,7 +119,9 @@ class CostStructure extends React.Component {
         })
     }
     onCompletedChange(state) {
-        this.props.saveState(this.props.businessPlan.id, state);
+        this.props.saveState(this.props.businessPlan.id, state, () => {
+            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+        });
     }
 
     componentDidMount() {
@@ -309,4 +312,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, {deleteFixedCost, deleteVariableCost, getCategories, getCostStructureList, refreshPlan, saveState, selectCostCategory})(CostStructure);
+export default connect(mapStateToProps, {getSelectedPlanOverview, deleteFixedCost, deleteVariableCost, getCategories, getCostStructureList, refreshPlan, saveState, selectCostCategory})(CostStructure);

@@ -8,6 +8,7 @@ import AddSegmentModal from '../components/revenue_streams/AddSegmentModal';
 import EditSegmentModal from '../components/revenue_streams/EditSegmentModal';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getStreamTypes, getPrices, getRevenues, saveState, deleteRevenue } from "../../appStore/actions/revenueStreamActions";
+import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 
 const { Text } = Typography;
 
@@ -119,7 +120,9 @@ class RevenueStreams extends React.Component {
     }
 
     onCompletedChange(state) {
-        this.props.saveState(this.props.businessPlan.id, state);
+        this.props.saveState(this.props.businessPlan.id, state, () => {
+            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+        });
     }
 
     componentDidMount() {
@@ -365,4 +368,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPlan })(withRouter(RevenueStreams));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPlan })(withRouter(RevenueStreams));

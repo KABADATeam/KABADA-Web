@@ -8,6 +8,7 @@ import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getProducts, deleteProduct, saveState } from "../../appStore/actions/productActions";
 import EditProduct from "../components/new_product/EditProduct";
 import '../../css/customTable.css';
+import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 
 const { Text } = Typography;
 
@@ -52,7 +53,9 @@ class ValuePropositions extends React.Component {
     }
 
     onCompleteChange(state) {
-        this.props.saveState(this.props.businessPlan.id, state);
+        this.props.saveState(this.props.businessPlan.id, state, () => {
+            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+        });
     }
 
     addKeyProduct = () => {
@@ -212,4 +215,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { refreshPlan, getProducts, deleteProduct, saveState })(ValuePropositions);
+export default connect(mapStateToProps, { getSelectedPlanOverview, refreshPlan, getProducts, deleteProduct, saveState })(ValuePropositions);

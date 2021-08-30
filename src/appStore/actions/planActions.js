@@ -68,21 +68,39 @@ export const getPlans = () => {
     };
 };
 
+export const getPlansOverview = (planId) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true });
+        try {
+            const token = getState().user.access_token;
+            const response = await kabadaAPI.get("api/plans/overview/" + planId, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: "FETCHING_PLAN_OVERVIEW_SUCCESS", payload: { "id": planId, "overview": response.data } });
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
+        }
+    };
+};
+
+export const getSelectedPlanOverview = (planId) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true });
+        try {
+            const token = getState().user.access_token;
+            const response = await kabadaAPI.get("api/plans/overview/" + planId, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: "FETCHING_SELECTED_PLAN_OVERVIEW_SUCCESS", payload: { "overview": response.data } });
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
+        }
+    };
+};
+
 export const removePlan = (planId) => {
     return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true });
         try {
             const token = getState().user.access_token;
             await kabadaAPI.delete("api/plans/remove/" + planId, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: "REMOVING_PLAN_SUCCESS", payload: { data: getState().savedBusinessPlans, id: planId } });
-        } catch (error) {
-            if (error.response === undefined) {
-                dispatch({
-                    type: "ERROR",
-                    payload: { message: "Oopsie... System error. Try again, later" },
-                });
-            } else {
-                dispatch({ type: "ERROR", payload: error.response.data });
-            }
         } finally {
             dispatch({ type: "LOADING", payload: false });
         }
@@ -91,17 +109,9 @@ export const removePlan = (planId) => {
 
 export const getSelectedPlan = (plan) => {
     return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: false });
         try {
             dispatch({ type: 'FETCHING_SELECTED_PLAN_SUCCESS', payload: plan });
-        } catch (error) {
-            if (error.response === undefined) {
-                dispatch({
-                    type: "ERROR",
-                    payload: { message: "Oopsie... System error. Try again, later" },
-                });
-            } else {
-                dispatch({ type: "ERROR", payload: error.response.data });
-            }
         } finally {
             dispatch({ type: "LOADING", payload: false });
         }

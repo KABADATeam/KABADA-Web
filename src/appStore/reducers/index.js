@@ -20,6 +20,7 @@ import { costStructureReducer, costStructureCategoriesReducer, selectedCostCateg
 import { channelTypesReducer, channelsReducer } from './channelsReducer';
 import { customerSegmentReducer, customerSegmentPropertiesReducer } from './customerSegmentReducer';
 import { keyActivitiesReducer, keyActivitiesCategoriesReducer, selectedKeyActivityCategoryReducer } from './keyActivitiesReducer'
+import { customerRelationshipsCategoriesReducer, customerRelationshipsReducer } from './customerRelationshipsReducer'
 
 export default combineReducers({
     activities: activitiesReducer,
@@ -68,4 +69,6 @@ export default combineReducers({
     keyActivities: keyActivitiesReducer,
     keyActivitiesCategoriesList: keyActivitiesCategoriesReducer,
     keyActivityCategory: selectedKeyActivityCategoryReducer,
+    customerRelationshipsCategories: customerRelationshipsCategoriesReducer,
+    customerRelationships: customerRelationshipsReducer,
 });

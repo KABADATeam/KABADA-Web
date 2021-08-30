@@ -64,13 +64,14 @@ export const updateRevenue = (postObject, reducerObject) => {
     }
 };
 
-export const saveState = (planId, is_completed) => {
+export const saveState = (planId, is_completed, callback) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
         try {
             const token = getState().user.access_token;
             await kabadaAPI.post('api/plans/changeRevenueCompleted', { "business_plan_id": planId, "is_revenue_completed": is_completed }, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: 'SAVE_STATE_SUCCESS', payload: is_completed });
+            callback();
         } finally {
             dispatch({ type: "LOADING", payload: false });
         }

@@ -107,6 +107,7 @@ class NewBusinessPlanModal extends Component {
     };
 
     render() {
+        console.log(this.props);
         const isVisible = this.props.visibility;
         const { fileList, enabledSelectActivity } = this.state;
 

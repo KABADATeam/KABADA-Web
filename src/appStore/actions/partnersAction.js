@@ -176,12 +176,13 @@ export const updateOther = (postObject, type_title) => {
     }
 };
 
-export const saveState = (planId, is_completed) => {
+export const saveState = (planId, is_completed, callback) => {
     return async (dispatch, getState) => {
         try {
             const token = getState().user.access_token;
             await kabadaAPI.post('api/plans/changePartnersCompleted', { "business_plan_id": planId, "is_partners_completed": is_completed }, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: 'SAVE_STATE_SUCCESS', payload: is_completed });
+            callback();
         } catch (error) {
             dispatch({ type: 'ERROR', payload: errorHandler(error) });
             //callback2();

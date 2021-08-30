@@ -1,3 +1,24 @@
+const getPercentage = (overview) => {
+    const total = 12;
+    let k = 0;
+
+    k = overview.channels.is_completed === true ? k + 1 : k;
+    k = overview.cost_structure.is_completed === true ? k + 1 : k;
+    k = overview.customer_relationship.is_completed === true ? k + 1 : k;
+    k = overview.customer_segments.is_completed === true ? k + 1 : k;
+    //k = overview.financial_projections.is_completed === true ? k + 1 : k;     // not implemented, yet
+    k = overview.key_activities.is_completed === true ? k + 1 : k;
+    k = overview.key_partners.is_completed === true ? k + 1 : k;
+    k = overview.key_resources.is_completed === true ? k + 1 : k;
+    k = overview.revenue_streams.is_completed === true ? k + 1 : k;
+    k = overview.swot.is_completed === true ? k + 1 : k;
+    //k = overview.team_competencies.is_completed === true ? k + 1 : k;         // not implemented, yet
+    k = overview.value_proposition.is_completed === true ? k + 1 : k;
+
+    return Math.round((k/total) * 100);
+}
+
+
 export const privatePlansReducer = (state = [], action) => {
     switch (action.type) {
         case "FETCHING_PLANS_SUCCESS":
@@ -8,6 +29,11 @@ export const privatePlansReducer = (state = [], action) => {
             return state.map(x => x.id === action.payload.id ? action.payload : x);
         case "REMOVING_PLAN_SUCCESS":
             return action.payload.data.filter(plan => plan.id !== action.payload.id);
+        case "FETCHING_PLAN_OVERVIEW_SUCCESS":
+            const plan = state.filter(x => x.id === action.payload.id)[0];
+            const percentage = getPercentage(action.payload.overview);
+            const new_overview = { ...action.payload.overview, "percentage": percentage };
+            return state.map(x => x.id === action.payload.id ? { ...plan, "overview": new_overview, "percentage": percentage } : x);
         default:
             return state;
     }
@@ -25,6 +51,10 @@ export const selectedplanFetchReducer = (state = { id: null }, action) => {
             return { ...state, "public": action.payload };
         case "FETCHING_PLAN_MEMBERS_SUCCESS":
             return { ...state, "members": action.payload.members }
+        case "FETCHING_SELECTED_PLAN_OVERVIEW_SUCCESS":
+            const percentage = getPercentage(action.payload.overview);
+            const new_overview = { ...action.payload.overview, "percentage": percentage };
+            return { ...state, "overview": new_overview, "percentage": percentage }
         default:
             return state;
     }

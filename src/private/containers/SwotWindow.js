@@ -8,6 +8,7 @@ import OpportunitiesThreats from '../components/OpportunitiesThreats';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { getSwotList, discardChanges, saveChanges, saveState } from "../../appStore/actions/swotAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
+import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
@@ -54,7 +55,9 @@ class SwotWindow extends React.Component {
     }
 
     onCompletedChange(state) {
-        this.props.saveState(this.props.businessPlan.id, state);
+        this.props.saveState(this.props.businessPlan.id, state, () => {
+            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+        });
     }
 
     discardChanges = () => {
@@ -217,4 +220,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSwotList, discardChanges, saveChanges, saveState, refreshPlan })(withRouter(SwotWindow));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getSwotList, discardChanges, saveChanges, saveState, refreshPlan })(withRouter(SwotWindow));
