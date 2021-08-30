@@ -35,16 +35,17 @@ class EditKeyActivity extends Component {
         this.props.onClose()
     }
     onOK = () => {
+        console.log(this.props.item)
         const postObject = {
-            "activity_id": this.props.item.id,
+            "id": this.props.item.id,
             "product_id": this.props.productID,
             "sub_type_id": this.state.sub_type_id,
             "name": this.state.name,
             "description": this.state.description,
-
         }
-        const Data = this.props.categories.activity_categories.find(x => x.id === this.props.item.type_id) 
-        const sub_title = Data.subtypes.find(x => x.id === this.state.sub_type_id)
+        console.log(postObject)
+        const Data = this.props.categories.activity_categories.find(x => x.id === this.props.item.type_id); 
+        const sub_title = Data.subtypes.find(x => x.id === this.state.sub_type_id);
         const reducerObject = {
             "id": this.props.item.id,
             "key": this.props.item.id,
@@ -55,15 +56,11 @@ class EditKeyActivity extends Component {
             "sub_type_title": sub_title.title,
             "name": this.state.name,
             "description": this.state.description,
-        }
-        console.log(reducerObject)
-        this.setState({
-            selectedSubTypeId: null,
-            name: '',
-            description: ''
-        })
+        };
+        console.log(this.props.productID);
+        console.log(reducerObject);
         this.props.updateKeyActivity(postObject, reducerObject);
-        this.props.onClose()
+        this.props.onClose();
     }
 
     onSelectionChange(id) {

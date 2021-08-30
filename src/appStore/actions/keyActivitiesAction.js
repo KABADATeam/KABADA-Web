@@ -87,7 +87,7 @@ export const saveState = (planId, is_completed) => {
         dispatch({ type: "LOADING", payload: true });
         try {
             const token = getState().user.access_token;
-            await kabadaAPI.post('api/plans/changeActivitiesCompleted', { "business_plan_id": planId, "is_cost_completed": is_completed }, { headers: { Authorization: `Bearer ${token}` } });
+            await kabadaAPI.post('api/plans/changeActivitiesCompleted', { "business_plan_id": planId, "is_activities_completed": is_completed }, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: 'SAVE_ACTIVITIES_STATE_SUCCESS', payload: is_completed });
         } finally {
             dispatch({ type: "LOADING", payload: false });

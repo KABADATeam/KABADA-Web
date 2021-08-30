@@ -52,7 +52,7 @@ class AddKeyActivityModal extends Component {
             })
         }*/
         const postObject = {
-            "activity_id": null,
+            "id": null,
             "product_id": this.props.productID,
             "sub_type_id": this.state.selectedSubTypeId,
             "name": this.state.name,

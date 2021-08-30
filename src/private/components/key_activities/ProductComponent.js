@@ -56,11 +56,12 @@ class ProductComponent extends React.Component {
         this.props.onOpen()
     }
     openEditActivityModal = (item) => {
-        this.props.getProductID(item.id)
+        this.props.getProductID(this.props.data.id)
         this.props.onOpenEditModal(item)
     }
     onDeleteActivity = (item) => {
-        this.props.deleteActivity({ "id": item.id });
+        console.log(this.props.data.id)
+        this.props.deleteActivity({ "id": item.id, "product_id": this.props.data.id });
     }
     render() {
         const activitiesColumns = [
