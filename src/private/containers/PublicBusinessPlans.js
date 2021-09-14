@@ -1,10 +1,11 @@
 import React from "react";
-import { Input, Card, Typography, Space, Table, DatePicker, Select, Row, Col, Avatar, Dropdown, Menu, Form, Layout } from 'antd';
+import { Input, Card, Typography, Space, Table, DatePicker, Select, Row, Col, Avatar, Dropdown, Menu, Form, Layout, Button } from 'antd';
 import { SearchOutlined, CaretDownOutlined, CaretDownFilled, UserOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { getAllPublicPlans } from "../../appStore/actions/planActions";
 import { iconColor, pageHeaderStyle, filterStyle } from '../../styles/customStyles';
 import '../../css/publicBusinessPlans.css';
+import { getSelectedPlan } from "../../appStore/actions/planActions";
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -73,7 +74,16 @@ class PublicBusinessPlans extends React.Component {
         });
     };
 
+    onPublicPlanClick = (plan) => {
+        //console.log(plan);
+        this.props.getSelectedPlan(plan);
+        localStorage.setItem("public_plan", plan.id);
+        this.props.history.push(`/public/overview`);
+    }
+
     render() {
+        console.log(this.props.publicPlans);
+
         const menu = (
             <Menu>
                 <Menu.Item key="1">
@@ -92,8 +102,8 @@ class PublicBusinessPlans extends React.Component {
                 sorter: (a, b) => a.name.localeCompare(b.name),
                 sortDirections: ['descend', 'ascend'],
                 render: (text, record) => (
-                    <Text style={{ fontWeight: '600' }}>
-                        {record.name}
+                    <Text style={{ fontWeight: '600', cursor: 'pointer' }}>
+                        <Button type="link">{record.name}</Button>
                     </Text>
                 ),
             },
@@ -219,7 +229,12 @@ class PublicBusinessPlans extends React.Component {
                                         </Col>
                                     </Row>
                                 </Form>
-                                <Table style={{ width: '100%' }} size="default" columns={columns} pagination={{ defaultPageSize: 5, showTotal: (total, range) => <Text style={{ position: 'absolute', left: '50%', transform: 'translate(-50%)' }}>{range[0]}-{range[1]} of {total}</Text>, position: ['bottomLeft'] }} dataSource={this.props.publicPlans} onChange={this.handleChange} />
+                                <Table 
+                                    onRow={(record, rowIndex) => {
+                                        return {
+                                            onClick: () => {this.onPublicPlanClick(record)}
+                                        };
+                                    }} style={{ width: '100%' }} size="default" columns={columns} pagination={{ defaultPageSize: 5, showTotal: (total, range) => <Text style={{ position: 'absolute', left: '50%', transform: 'translate(-50%)' }}>{range[0]}-{range[1]} of {total}</Text>, position: ['bottomLeft'] }} dataSource={this.props.publicPlans} onChange={this.handleChange} />
                             </Card >
                         </Col>
                     </Row >
@@ -238,4 +253,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getAllPublicPlans })(PublicBusinessPlans);
+export default connect(mapStateToProps, { getAllPublicPlans, getSelectedPlan })(PublicBusinessPlans);

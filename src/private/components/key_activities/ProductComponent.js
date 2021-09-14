@@ -1,20 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Divider, Button, Row, Col, Typography, Card, Table, Space } from 'antd';
+import { Button, Row, Col, Typography, Card, Table, Space } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
 import { connect } from 'react-redux';
 //import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { deleteActivity } from "../../../appStore/actions/keyActivitiesAction"
-
-const { Text } = Typography;
-
-const titleTextStyle = {
-    fontStyle: "normal",
-    fontWeight: "600",
-    fontSize: "30px",
-    lineHeight: "38px"
-}
 
 const aboutTitleTextStyle = {
     fontStyle: 'normal',
@@ -39,16 +29,6 @@ const tableTitleStyle = {
     color: '#262626',
 }
 
-const titleButtonStyle = {
-    width: "40px",
-    height: "40px",
-    border: "1px solid #BFBFBF",
-    boxSizing: "border-box",
-    filter: "drop-shadow(0px 1px 0px rgba(0, 0, 0, 0.05))",
-    borderRadius: "4px",
-    backgroundColor: "transparent",
-}
-
 class ProductComponent extends React.Component {
 
     openCategoriesModal = (item) => {
@@ -60,7 +40,6 @@ class ProductComponent extends React.Component {
         this.props.onOpenEditModal(item)
     }
     onDeleteActivity = (item) => {
-        console.log(this.props.data.id)
         this.props.deleteActivity({ "id": item.id, "product_id": this.props.data.id });
     }
     render() {

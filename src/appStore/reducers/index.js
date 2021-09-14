@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import languageReducer from './languageReducer';
 import authenticationReducer from './authenticationReducer';
-import loadingReducer from './loadingReducer';
+import loadingReducer, { imageLoadingReducer } from './loadingReducer';
 import messageReducer from './messageReducer';
 import { privatePlansReducer, selectedplanFetchReducer, updatePlanReducer, allPublicPlansFetchReducer } from './planReducer';
 import { industriesReducer, activitiesReducer, industrySelectedReducer, activitySelectedReducer } from './naceReducer';
@@ -30,6 +30,7 @@ export default combineReducers({
     industries: industriesReducer,
     language: languageReducer,
     loading: loadingReducer,
+    imageLoading: imageLoadingReducer,
     message: messageReducer,
     selectedActivity: activitySelectedReducer,
     selectedCountry: countrySelectedReducer,

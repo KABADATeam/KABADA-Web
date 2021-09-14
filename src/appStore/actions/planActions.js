@@ -40,6 +40,7 @@ const getURL = (bufferArray) => {
 
 export const getImage = (plan) => {
     return async (dispatch, getState) => {
+        dispatch({ type: "IMAGE_LOADING", payload: true });
         try {
             if (plan.planImage !== null) {
                 const token = getState().user.access_token;
@@ -49,8 +50,8 @@ export const getImage = (plan) => {
             } else {
                 return;
             }
-        } catch (error) {
-            
+        } finally {
+            dispatch({ type: "IMAGE_LOADING", payload: false });
         }
     }
 }

@@ -20,22 +20,6 @@ const titleTextStyle = {
     lineHeight: "38px"
 }
 
-const aboutTitleTextStyle = {
-    fontStyle: 'normal',
-    fontWeight: '600',
-    fontSize: '20px',
-    marginBottom: '16px',
-}
-
-const textStyle = {
-    fontSize: '14px',
-    color: '#8C8C8C',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    lineHeight: '22px',
-    marginRight: '40px',
-}
-
 const titleButtonStyle = {
     width: "40px",
     height: "40px",
