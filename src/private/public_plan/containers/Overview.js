@@ -121,7 +121,7 @@ class Overview extends React.Component {
                                                     <List.Item key='1' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
                                                         <List.Item.Meta
                                                             avatar={overview.customer_segments.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} />: <Avatar src="../incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/customer-segments'>Customer segments</Link></Space>}
+                                                            title={<Space><Link to='/public/customer-segments'>Customer segments</Link></Space>}
                                                             description={overview.customer_segments.description} />
                                                         <div>...</div>
                                                     </List.Item>

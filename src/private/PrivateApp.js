@@ -18,6 +18,7 @@ import CustomerSegments from './containers/CustomerSegments';
 import KeyActivities from './containers/KeyActivities';
 import CustomerRelationships from './containers/CustomerRelationships';
 import PublicOverview from './public_plan/containers/Overview';
+import PublicCustomerSegments from './public_plan/containers/CustomerSegments';
 
 class PrivateApp extends React.Component {
     constructor(props) {
@@ -48,6 +49,7 @@ class PrivateApp extends React.Component {
                     <Route exact path="/key-activities" render={(props) => <MainWindow {...props}> <KeyActivities {...props} /> </MainWindow>} />
                     <Route exact path="/customer-relationships" render={(props) => <MainWindow {...props}> <CustomerRelationships {...props} /></MainWindow>} />
                     <Route exact path="/public/overview" render={(props) => <MainWindow {...props}> <PublicOverview {...props} /> </MainWindow>} />
+                    <Route exact path="/public/customer-segments" render={(props) => <MainWindow {...props}> <PublicCustomerSegments {...props} /> </MainWindow>} />
                 </Switch>
             </Router>
 
