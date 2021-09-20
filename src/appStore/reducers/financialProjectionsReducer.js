@@ -2,7 +2,7 @@ export const financialProjectionsReducer = (
     state = {
         country_vats: [],
         fixed_costs: [],
-        variable_costs: []
+        variable_costs: [],
     }, action) => {
         switch(action.type){
             case 'FETCHING_FINANCIAL_PROJECTION_SUCCESS':
@@ -23,6 +23,7 @@ export const financialProjectionsReducer = (
                     const variable_costs = [...state.variable_costs, {...action.payload}]
                     return {...state, "variable_costs":variable_costs}
                 }
+                return state;
             case 'UPDATE_FINANCIAL_PROJECTION_COST_SUCCESS':
                 if(action.payload.number == 1){
                     const fixed_costs = state.fixed_costs.map(x => x.id === action.payload.id ? action.payload : x);
@@ -32,5 +33,8 @@ export const financialProjectionsReducer = (
                     const variable_costs = state.variable_costs.map(x => x.id === action.payload.id ? action.payload : x);
                     return {...state, "variable_costs":variable_costs}
                 }
+                return state;
+            default:
+                return state;
         }
     }
