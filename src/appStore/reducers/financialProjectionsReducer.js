@@ -1,4 +1,4 @@
-export const financialProjectionReducer = (
+export const financialProjectionsReducer = (
     state = {
         country_vats: [],
         fixed_costs: [],
@@ -8,7 +8,7 @@ export const financialProjectionReducer = (
             case 'FETCHING_FINANCIAL_PROJECTION_SUCCESS':
                 console.log(action.payload)
                 const fixed_costs = action.payload.fixed_costs.map(obj => ({...obj, "key": obj.category_id}))
-                const fixed_costs = action.payload.variable_costs.map(obj => ({...obj, "key": obj.category_id}))
+                const variable_costs = action.payload.variable_costs.map(obj => ({...obj, "key": obj.category_id}))
                 return {...action.payload, "fixed_costs": fixed_costs, "variable_costs": variable_costs};
             case 'FETCHING_FINANCIAL_PROJECTION_VAT_SUCCESS':
                 console.log(action.payload)
