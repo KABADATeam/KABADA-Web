@@ -58,12 +58,26 @@ export const saveFinansialProjectionsCost = (postObject, reducerObject) => {
             const token = getState().user.access.token;
             console.log(postObject);
             const response = await kabadaAPI.post('api/cost/costsvf/save', postObject, {headers: {Authorization: `Bearer ${token}` }});
-            dispatch({type: 'SAVE_FINANCIAL_PROJECTION_COST_SUCCESS', payload: {...reducerObject, "id": response.data, "key": response.data}})
+            dispatch({type: 'SAVE_FINANCIAL_PROJECTION_COST_SUCCESS', payload: {...reducerObject, "id": response.data, "key": response.data}});
         }catch(error){
             dispatch({type: "LOADING", payload: false})
         }
         finally{
 
+        }
+    }
+}
+
+export const updateFinansialProjectionCost = (postObject, reducerObject) => {
+    return async(dispatch, getState)=>{
+        dispatch({type: 'LOADING', payload: true})
+        try{
+            const token = getState().user.access.token;
+            await kabadaAPI.post('api/cost/costsvf/save', postObject, {headers: {Authorization: `Bearer ${token}` }});
+            dispatch({type: 'UPDATE_FINANCIAL_PROJECTION_COST_SUCCESS', payload: reducerObject});
+        }
+        finally{
+            dispatch({type: 'LOADING', payload: false})
         }
     }
 }

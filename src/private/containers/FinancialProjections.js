@@ -1,10 +1,13 @@
 import React from 'react';
-import { useContext, useState, useEffect, useRef } from 'react'
+import {  useState, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router';
+import {useDispatch, useSelector} from 'react-redux'
 import { Link, withRouter } from 'react-router-dom';
 import { Select,InputNumber,Form, Popconfirm,Input,Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space } from 'antd';
 import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
+import { refreshPlan } from "../../appStore/actions/refreshAction";
+import {getFinancialProjectionsCostsList, getCountryVat} from '../../appStore/actions/financialProjectionsActions';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -66,24 +69,29 @@ const rentOfBuildingsDataSource = [
   }
 ]
 
-const variableCostsDataSource = [
-  {
-    id: "1",
-    name: "Electricity",
-    price: 0,
-    vat: 21,
-    firstExpenses: "1st mo."
-  },
-]
  
 function FinancialProjections(props) {
+  const dispatch = useDispatch()
+
   const [rentOfBuildingsTableData, setRentOfBuildingsTableData] = useState(rentOfBuildingsDataSource);
   const history = useHistory();
+
+  const businessPlan = useSelector((state) => state.selectedBusinessPlan)
   
   useEffect(() =>{
-    // Set totals on initial render
-    const newData = [...rentOfBuildingsTableData];
-
+    if (businessPlan.id === null) {
+      if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+          history.push(`/`);
+      } else {
+          dispatch(refreshPlan(localStorage.getItem("plan")), () => {
+            dispatch(getCountryVat(businessPlan.id));
+            dispatch(getFinancialProjectionsCostsList(businessPlan.id));
+          });
+      }
+  } else {
+      dispatch(getCountryVat(businessPlan.id));
+      dispatch(getFinancialProjectionsCostsList(businessPlan.id));
+  }
   },[]);
 
   const onBackClick = () => {
@@ -153,7 +161,7 @@ function FinancialProjections(props) {
                         <Space><Link to = '/personal-business-plans'>My Business plans</Link></Space>
                     </Breadcrumb.Item>
                     <Breadcrumb.Item style={{ marginTop: "40px" }}>
-                        <Space><Link to='/overview'>Lbas</Link></Space>
+                        <Space><Link to='/overview'>{businessPlan.name}</Link></Space>
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>
                         <Space>Financial projections</Space>
