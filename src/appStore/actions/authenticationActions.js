@@ -19,12 +19,12 @@ export const login = (email, password) => {
     }
 };
 
-export const googleLogin = (email) => {
+export const googleLogin = (email, token) => {
     return async (dispatch, getState) => {
         dispatch({ type: 'LOADING', payload: true });
         try
         {
-            const response = await kabadaAPI.post('api/auth/google', { 'Email': email });
+            const response = await kabadaAPI.post('api/auth/google', { 'Email': email, 'GoogleToken': token });
             dispatch({ type: 'LOGIN_SUCCESS', payload: response.data });       
         } catch (error) {
             if (error.response === undefined) {

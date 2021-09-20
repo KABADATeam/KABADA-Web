@@ -29,7 +29,7 @@ class Login extends React.Component {
 	responseGoogle = (response) => {
 		const email = response.profileObj.email;
 		this.setState({ googleSignup: response });
-		this.props.googleLogin(email);
+		this.props.googleLogin(email, response.tokenId);
 	};
 
 	responseFailGoogle = (response) => {
