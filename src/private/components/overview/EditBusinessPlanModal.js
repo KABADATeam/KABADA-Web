@@ -167,7 +167,7 @@ class EditBusinessPlanModal extends Component {
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
                     width={700}
-                    title="New business plan"
+                    title="Update business plan"
                     visible={isVisible}
                     onCancel={this.handleCancel}
                     footer={
