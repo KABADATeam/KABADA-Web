@@ -44,7 +44,7 @@ export const selectedplanFetchReducer = (state = { id: null }, action) => {
         case "FETCHING_SELECTED_PLAN_SUCCESS":
             return action.payload;
         case "UPDATING_SELECTED_PLAN_SUCCESS":
-            return action.payload;
+            return { ...state, "name": action.payload.title };
         case "CLEARING_SELECTED_PLAN_SUCCESS":
             return action.payload;
         case "UPDATING_SELECTED_PLAN_STATUS_SUCCESS":

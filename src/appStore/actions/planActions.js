@@ -119,22 +119,22 @@ export const getSelectedPlan = (plan) => {
     }
 };
 
-export const updatePlanData = (planId, title, activityId, countryId, callback, callback2) => {
+export const updatePlanData = (planId, title, activityId, countryId, languageId, fileId) => {
     return async (dispatch, getState) => {
         try {
             const token = getState().user.access_token;
             const postObject = {
-                'Id': planId,
-                'Title': title,
-                'ActivityId': activityId,
-                'CountryId': countryId
+                "id": planId,
+                'title': title,
+                'activityId': activityId,
+                'countryId': countryId,
+                'img': fileId,
+                'languageId': languageId
             }
-            const response = await kabadaAPI.post('api/plans/edit', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            dispatch({ type: 'UPDATING_PLAN_SUCCESS', payload: response.data });
-            callback();
+            const response = await kabadaAPI.post('api/plans/update', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: 'UPDATING_SELECTED_PLAN_SUCCESS', payload: postObject });
         } catch (error) {
             dispatch({ type: 'ERROR', payload: errorHandler(error) });
-            callback2();
         } finally {
         }
     }

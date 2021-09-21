@@ -1,26 +1,27 @@
 import React, { Component } from 'react';
 import { Form, Modal, Button, Input, Upload, Select, Space, Typography, Tooltip } from 'antd';
 import { QuestionCircleOutlined, UploadOutlined } from '@ant-design/icons';
-import { buttonStyle, inputStyle } from '../../styles/customStyles';
-import '../../css/customModal.css';
+import { buttonStyle, inputStyle } from '../../../styles/customStyles';
+import '../../../css/customModal.css';
 import { connect } from 'react-redux';
-import { getCountries } from '../../appStore/actions/countriesActions';
-import { getIndustries, getActivities } from '../../appStore/actions/naceActions';
-import { saveInitialPlanData } from '../../appStore/actions/planActions';
-import { uploadFile } from '../../appStore/actions/userFileAction';
-import { getPlanLanguages } from '../../appStore/actions/planLanguageAction';
-import { getImage } from "../../appStore/actions/planActions";
+import { getCountries } from '../../../appStore/actions/countriesActions';
+import { getIndustries, getActivities } from '../../../appStore/actions/naceActions';
+import { updatePlanData } from '../../../appStore/actions/planActions';
+import { uploadFile } from '../../../appStore/actions/userFileAction';
+import { getPlanLanguages } from '../../../appStore/actions/planLanguageAction';
+import { getImage } from "../../../appStore/actions/planActions";
 
 const { Option } = Select;
 const { Text } = Typography;
 
-class NewBusinessPlanModal extends Component {
+class EditBusinessPlanModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
             fileList: [],
-            isVisible: false,
+            isVisible: true,
             enabledSelectActivity: false,
+            updatingPlanData: null,
         };
     }
     formRef = React.createRef();
@@ -29,6 +30,7 @@ class NewBusinessPlanModal extends Component {
         this.props.getCountries();
         this.props.getIndustries();
         this.props.getPlanLanguages();
+
     }
 
     handleOk = (values) => {
@@ -46,7 +48,7 @@ class NewBusinessPlanModal extends Component {
             this.props.uploadFile(formData)
                 .then(
                     () => {
-                        this.props.saveInitialPlanData(values.name, values.activity, values.country, values.language, this.props.uploadedFile)
+                        this.props.updatePlanData(this.props.updatingPlan.id, values.name, values.activity, values.country, values.language, this.props.uploadedFile)
                             .then(() => {
                                 const plan = this.props.personalPlans[this.props.personalPlans.length - 1];
                                 this.props.getImage(plan);
@@ -55,17 +57,17 @@ class NewBusinessPlanModal extends Component {
                 )
         }
         else {
-            this.props.saveInitialPlanData(values.name, values.activity, values.country, values.language, '');
+            this.props.updatePlanData(this.props.updatingPlan.id, values.name, values.activity, values.country, values.language, '');
         }
 
         this.setState({
             isVisible: true,
         });
-        this.props.handleClose();
+        this.props.onClose();
     };
 
     handleCancel = () => {
-        this.props.handleClose();
+        this.props.onClose();
         this.setState({
             isVisible: false,
         });
@@ -107,6 +109,9 @@ class NewBusinessPlanModal extends Component {
     };
 
     render() {
+        const updatePlanData = this.props.personalPlans.find(({ id }) => id === this.props.updatingPlan.id);
+
+        const oldName = this.props.updatingPlan.name;
         const isVisible = this.props.visibility;
         const { fileList, enabledSelectActivity } = this.state;
 
@@ -178,6 +183,9 @@ class NewBusinessPlanModal extends Component {
                         id="myForm"
                         name="myForm"
                         onFinish={this.handleOk}
+                        initialValues={{
+                            name: oldName
+                        }}
                     >
                         <Form.Item key="name" name="name" label="Project name"
                             rules={[
@@ -324,9 +332,9 @@ export default connect(mapStateToProps, {
     getCountries,
     getActivities,
     getIndustries,
-    saveInitialPlanData,
+    updatePlanData,
     uploadFile,
     getPlanLanguages,
     getImage
-})(NewBusinessPlanModal);
+})(EditBusinessPlanModal);
 
