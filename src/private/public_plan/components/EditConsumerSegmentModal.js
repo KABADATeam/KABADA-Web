@@ -233,38 +233,38 @@ class EditConsumerSegmentModal extends Component {
 
                         <Form.Item key="gender" name="gender" label="Gender"
                             validateStatus={this.state.genderTypeError !== '' ? 'error' : 'success'}>
-                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Select gender" onChange={this.onGenderTypeChange.bind(this)} >
+                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Select gender" onChange={this.onGenderTypeChange.bind(this)} disabled={true}>
                                 {genderOptions}
                             </Select>
                         </Form.Item>
 
-                        <Form.Item key="isChildren" name="isChildren" label="Children"
-                            validateStatus={this.state.isChildrenError !== '' ? 'error' : 'success'}>
-                            <Radio.Group onChange={this.onIsChildrenChange} value={isChildren}>
-                                <Space direction="vertical">
-                                    <Radio value={true}>Yes</Radio>
-                                    <Radio value={false}>No</Radio>
+                        <Form.Item key="isChildren" name="isChildren" label="Children" 
+                            validateStatus={this.state.isChildrenError !== '' ? 'error' : 'success'} >
+                            <Radio.Group onChange={this.onIsChildrenChange} value={isChildren}> 
+                                <Space direction="vertical" >
+                                    <Radio value={true} disabled={true}>Yes</Radio > 
+                                    <Radio value={false} disabled={true}>No</Radio>
                                 </Space>
                             </Radio.Group>
                         </Form.Item>
 
                         <Form.Item key="education" name="education" label="Education"
                             validateStatus={this.state.educationTypeError !== '' ? 'error' : 'success'}>
-                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Choose education" onChange={this.onEducationTypeChange.bind(this)} >
+                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Choose education" onChange={this.onEducationTypeChange.bind(this)} disabled={true}>
                                 {educationOptions}
                             </Select>
                         </Form.Item>
 
                         <Form.Item key="income" name="income" label="Income"
                             validateStatus={this.state.incomeTypeError !== '' ? 'error' : 'success'}>
-                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Choose income" onChange={this.onIncomeTypeChange.bind(this)} >
+                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Choose income" onChange={this.onIncomeTypeChange.bind(this)} disabled={true}>
                                 {incomeOptions}
                             </Select>
                         </Form.Item>
 
                         <Form.Item key="geographicLocation" name="geographicLocation" label="Geographic Location"
                             validateStatus={this.state.locationTypeError !== '' ? 'error' : 'success'}>
-                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Choose geographic location" onChange={this.onLocationTypeChange.bind(this)} >
+                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Choose geographic location" onChange={this.onLocationTypeChange.bind(this)} disabled={true}>
                                 {locationOptions}
                             </Select>
                         </Form.Item>
