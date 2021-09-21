@@ -17,6 +17,7 @@ import Channels from './containers/Channels';
 import CustomerSegments from './containers/CustomerSegments';
 import KeyActivities from './containers/KeyActivities';
 import CustomerRelationships from './containers/CustomerRelationships';
+import BusinessInvestmentsWindow from './containers/BusinessInvestmentsWindow';
 import PublicOverview from './public_plan/containers/Overview';
 import PublicCustomerSegments from './public_plan/containers/CustomerSegments';
 import FinancialProjections from './containers/FinancialProjections';
@@ -49,6 +50,7 @@ class PrivateApp extends React.Component {
                     <Route exact path="/customer-segments" render={(props) => <MainWindow {...props}> <CustomerSegments {...props} /> </MainWindow>} />
                     <Route exact path="/key-activities" render={(props) => <MainWindow {...props}> <KeyActivities {...props} /> </MainWindow>} />
                     <Route exact path="/customer-relationships" render={(props) => <MainWindow {...props}> <CustomerRelationships {...props} /></MainWindow>} />
+                    <Route exact path="/business-start-up-investments" render={(props) => <MainWindow {...props}> <BusinessInvestmentsWindow {...props} /></MainWindow>} />
                     <Route exact path="/public/overview" render={(props) => <MainWindow {...props}> <PublicOverview {...props} /> </MainWindow>} />
                     <Route exact path="/public/customer-segments" render={(props) => <MainWindow {...props}> <PublicCustomerSegments {...props} /> </MainWindow>} />
                     <Route exact path="/financial-projections" render={(props) => <MainWindow {...props}> <FinancialProjections {...props} /> </MainWindow>}/>
