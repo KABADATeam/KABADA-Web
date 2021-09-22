@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
-import { Form, Input, Button, Typography, Card, Space, Divider, Row } from 'antd';
-import { FacebookFilled, GoogleCircleFilled } from '@ant-design/icons';
+import { Form, Input, Button, Typography, Card, Space, Divider, Row, Alert } from 'antd';
+import { FacebookFilled, GoogleCircleFilled, SafetyCertificateFilled } from '@ant-design/icons';
 import FacebookLogin from "react-facebook-login";
 import GoogleLogin from "react-google-login";
 import { register } from '../../appStore/actions/authenticationActions';
@@ -16,6 +16,10 @@ const { Text, Title } = Typography
 
 class Register extends React.Component {
 
+	state = {
+		submited: false
+	}
+
 	responseFacebook = (response) => {
 		//console.log(response);
 	};
@@ -25,6 +29,9 @@ class Register extends React.Component {
 	};
 
 	onFinish = (values) => {
+		this.setState({
+			submited: true
+		})
 		this.props.register("Test", values.email, values.password, () => {
 			this.props.history.push("/login");
 		});
@@ -154,6 +161,15 @@ class Register extends React.Component {
 							<Input.Password size="large" />
 						</Form.Item>
 					</Form.Item>
+					{
+						this.props.message.type === 'error' && this.state.submited === true ?
+							(<Alert
+								style={{ padding: '3px 3px', marginBottom: '15px' }}
+								description={this.props.message.message}
+								type="error"
+								showIcon
+							/>) : (<></>)
+					}
 					<Form.Item {...tailLayout} style={{ marginBottom: '8px' }}>
 						<Button type="primary" size="large" style={buttonStyle} loading={this.props.loading} htmlType="submit" block="true">
 							Create Account
@@ -172,7 +188,8 @@ class Register extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		loading: state.loading
+		loading: state.loading,
+		message: state.message,
 	};
 }
 
