@@ -10,57 +10,57 @@ import { Link } from 'react-router-dom';
 import KabadaIcon from './KabadaIcon';
 
 import { cardStyle, buttonStyle, textColor, inputStyle, bottomDisclaimerStyle } from '../../styles/customStyles';
-import { tailLayout} from '../../styles/customLayouts';
+import { tailLayout } from '../../styles/customLayouts';
 
 const { Text, Title } = Typography
 
 class Register extends React.Component {
 
-    responseFacebook = (response) => {
-        //console.log(response);
-	};
-
-    responseGoogle = (response) => {
+	responseFacebook = (response) => {
 		//console.log(response);
 	};
-	
-    onFinish = (values) => {
-        this.props.register("Test", values.email, values.password, () => {
-            this.props.history.push("/login");
-        });
-    };
 
-    onFinishFailed = (errorInfo) => {
-        //console.log('Failed:', errorInfo);
-    };
+	responseGoogle = (response) => {
+		//console.log(response);
+	};
 
-    render() {
+	onFinish = (values) => {
+		this.props.register("Test", values.email, values.password, () => {
+			this.props.history.push("/login");
+		});
+	};
+
+	onFinishFailed = (errorInfo) => {
+		//console.log('Failed:', errorInfo);
+	};
+
+	render() {
 		const query = new URLSearchParams(this.props.location.search);
 		const email = query.get('email');
 
-        return (
-				<Card style={cardStyle} bodyStyle={{ padding: "0" }}>
-                <Row>
+		return (
+			<Card style={cardStyle} bodyStyle={{ padding: "0" }}>
+				<Row>
 					<Space direction="vertical" size={40}>
-                        <KabadaIcon />
-                        <Title level={3} style={{ ...textColor, marginBottom: '4px' }}>Sign up</Title>
-                    </Space>
-                </Row>
-                
-                <Row>
-                    <Space style={{ marginBottom: '32px' }}>
-                        Already have an account? <Link to='/login'>Sign in</Link>
-                    </Space>
-                </Row> 
+						<KabadaIcon />
+						<Title level={3} style={{ ...textColor, marginBottom: '4px' }}>Sign up</Title>
+					</Space>
+				</Row>
 
-                <Form
-                    layout="vertical"
-                    name="basic"
-                    initialValues={{ remember: true }}
-                    onFinish={this.onFinish}
-                    onFinishFailed={this.onFinishFailed} >
+				<Row>
+					<Space style={{ marginBottom: '32px' }}>
+						Already have an account? <Link to='/login'>Sign in</Link>
+					</Space>
+				</Row>
 
-                    <Form.Item {...tailLayout} block="true" style={{ marginBottom: '16px' }}>
+				<Form
+					layout="vertical"
+					name="basic"
+					initialValues={{ remember: true }}
+					onFinish={this.onFinish}
+					onFinishFailed={this.onFinishFailed} >
+
+					<Form.Item {...tailLayout} block="true" style={{ marginBottom: '16px' }}>
 						<FacebookLogin
 							appId="243803703658185"
 							autoLoad={false}
@@ -73,7 +73,7 @@ class Register extends React.Component {
 							onClick={this.responseFacebook.bind(this)} />
 					</Form.Item>
 
-                    <Form.Item {...tailLayout}>
+					<Form.Item {...tailLayout}>
 						<GoogleLogin
 							clientId="959683655410-qvc3ilj5rppsntbv68lnkcp95i3t8d29.apps.googleusercontent.com"
 							render={(renderProps) => (
@@ -81,7 +81,7 @@ class Register extends React.Component {
 									size="large"
 									style={buttonStyle}
 									onClick={renderProps.onClick}
-									icon={<GoogleCircleFilled />} 
+									icon={<GoogleCircleFilled />}
 									block="true"
 								>
 									Continue in with Google
@@ -93,87 +93,87 @@ class Register extends React.Component {
 							onSuccess={this.responseGoogle.bind(this)}
 							onFailure={this.responseGoogle.bind(this)} />
 					</Form.Item>
-                    
-                    <Divider style={textColor}>OR</Divider>
+
+					<Divider style={textColor}>OR</Divider>
 
 					{
-						email !== null ? 
+						email !== null ?
 							<Form.Item label={<label style={textColor}>Email address</label>} style={inputStyle}>
 								<Form.Item
 									name="email" initialValue={email === null ? '' : email}
-									rules={[{ required: true, message: 'Please enter your email address' }]} >
-									<Input readOnly={true} size="large"  />
+									rules={[{ type: 'email', required: true, message: 'Please enter your email address' }]} >
+									<Input readOnly={true} size="large" />
 								</Form.Item>
 							</Form.Item>
 							:
 							<Form.Item label={<label style={textColor}>Email address</label>} style={inputStyle}>
 								<Form.Item
 									name="email"
-									rules={[{ required: true, message: 'Please enter your email address' }]} >
+									rules={[{ type: 'email', required: true, message: 'Please enter your email address' }]} >
 									<Input size="large" />
 								</Form.Item>
 							</Form.Item>
-					}   
+					}
 
-                    <Form.Item label={<label style={textColor}>Password</label>} style={inputStyle}>
-                        <Form.Item
+					<Form.Item label={<label style={textColor}>Password</label>} style={inputStyle}>
+						<Form.Item
 							name="password"
 							hasFeedback="true"
 							rules={[
 								{
-									required: true, 
+									required: true,
 									message: 'Please enter your password',
 								},
-								{ min: 5, message:  'Password must contain at least 5 characters'}
-							]} 
+								{ min: 5, message: 'Password must contain at least 5 characters' }
+							]}
 						>
 							<Input.Password size="large" />
 						</Form.Item>
-                    </Form.Item>
+					</Form.Item>
 
-                    <Form.Item label={<label style={textColor}>Confirm password</label>} style={inputStyle}>
-                        <Form.Item
+					<Form.Item label={<label style={textColor}>Confirm password</label>} style={inputStyle}>
+						<Form.Item
 							name="confirmedPassword"
 							hasFeedback="true"
 							dependencies={['password']}
 							rules={[
-								{ 
-									required: true, 
-									message: 'Please confirm your password', 
+								{
+									required: true,
+									message: 'Please confirm your password',
 								},
 								({ getFieldValue }) => ({
 									validator(_, value) {
-									if (!value || getFieldValue('password') === value) {
-										return Promise.resolve();
-									}
-									return Promise.reject(new Error('Password do not match!'));
+										if (!value || getFieldValue('password') === value) {
+											return Promise.resolve();
+										}
+										return Promise.reject(new Error('Password do not match!'));
 									},
 								}),
 							]}
 						>
-						<Input.Password size="large" />
+							<Input.Password size="large" />
 						</Form.Item>
-                    </Form.Item>
-                    <Form.Item {...tailLayout} style={{ marginBottom: '8px' }}>
+					</Form.Item>
+					<Form.Item {...tailLayout} style={{ marginBottom: '8px' }}>
 						<Button type="primary" size="large" style={buttonStyle} loading={this.props.loading} htmlType="submit" block="true">
 							Create Account
 						</Button>
 					</Form.Item>
-                </Form>
-                <Space direction="horizontal" style={bottomDisclaimerStyle}>
+				</Form>
+				<Space direction="horizontal" style={bottomDisclaimerStyle}>
 					<Text style={bottomDisclaimerStyle}>
 						By continuing, you agree with Terms of service and Privacy Policy.
 					</Text>
 				</Space>
-            </Card>            
-        )
-    }
+			</Card>
+		)
+	}
 }
 
 const mapStateToProps = (state) => {
-    return {
-        loading: state.loading
-    };
+	return {
+		loading: state.loading
+	};
 }
 
 export default connect(mapStateToProps, { register })(withRouter(Register));

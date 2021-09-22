@@ -14,95 +14,41 @@ const { Title } = Typography;
 
 class ResetPassword extends Component {
 
-    state = {
-        email: '',
-        errorMessage: "Enter valid email",
-        status: "success",
-        count: 0
-    };
-
-    onChange = (e) => {
-        if (this.state.count === 0) {
-            this.setState({
-                email: e.target.value
-            });
-        } else {
-            if (this.isEmailValid(e.target.value)) {
-                this.setState({
-                    email: e.target.value,
-                    status: 'success'
-                });
-            } else {
-                this.setState({
-                    email: e.target.value,
-                    status: 'error'
-                });
-            }
-        }
-    }
-
-    isEmailValid(email){
-        const mailformat = /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/;
-        if (email && email.match(mailformat)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    onFinish = () => {
-        this.setState({
-            count: 1
+    onFinish = (values) => {
+        this.props.forgotPassword(values.email, () => {
+            window.location.href = '/password-sent';
         });
-
-        if (this.isEmailValid(this.state.email)) {
-            this.props.forgotPassword(this.state.email, () => {
-                window.location.href = '/password-sent';
-                
-            });
-
-            this.setState({
-                status: "success"
-            });
-        } else {
-            this.setState({
-                status: "error"
-            });
-        }
-        
-        
     };
 
     render() {
         return (
             <Card style={{ ...cardStyle, ...textColor }} bodyStyle={{ padding: "0" }}>
                 <Row>
-					<Space direction="vertical" size={40}>
-						<KabadaIcon />
-						<Title level={3} style={{ ...textColor, marginBottom: '0px' }}>Reset your password</Title>
-					</Space>
-				</Row>
+                    <Space direction="vertical" size={40}>
+                        <KabadaIcon />
+                        <Title level={3} style={{ ...textColor, marginBottom: '0px' }}>Reset your password</Title>
+                    </Space>
+                </Row>
 
-				<Row>
-					<Space style={{ 'marginBottom': '32px', paddingTop: '16px' }}>
+                <Row>
+                    <Space style={{ 'marginBottom': '32px', paddingTop: '16px' }}>
                         Enter the email address associated with your account and we'll send you a link to reset your password.
-					</Space>
-				</Row>
+                    </Space>
+                </Row>
 
-                <Form 
+                <Form
                     layout="vertical"
                     name="basic"
                     onFinish={this.onFinish} >
 
-                    <Form.Item
-                        label="Email address"
-                        name="email"
-                        validateStatus={this.state.status}
-                        help={this.state.status === 'error' ? this.state.errorMessage : null } >
-
-                        <Input onChange={this.onChange}/>
+                    <Form.Item label={<label style={textColor}>Email address</label>}>
+                        <Form.Item
+                            name="email"
+                            rules={[{ type: 'email', required: true, message: 'Please enter your email address' }]}
+                        >
+                            <Input size="large" />
+                        </Form.Item>
                     </Form.Item>
-
                     <Form.Item >
                         <Button type="primary" htmlType="submit" size='large' style={buttonStyle} block={true}>
                             Continue
@@ -121,11 +67,11 @@ class ResetPassword extends Component {
 }
 
 const mapStateToProps = (state) => {
-	return {
-		loading: state.loading,
-		error: state.error,
-		message: state.message,
-	};
+    return {
+        loading: state.loading,
+        error: state.error,
+        message: state.message,
+    };
 }
 
 export default connect(mapStateToProps, { forgotPassword })(withRouter(ResetPassword));
