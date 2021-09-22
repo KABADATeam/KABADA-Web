@@ -3,21 +3,14 @@ import {  useState, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router';
 import {useDispatch, useSelector} from 'react-redux'
 import { Link, withRouter } from 'react-router-dom';
-import { Select,InputNumber,Form, Popconfirm,Input,Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space } from 'antd';
+import { Form,Select,InputNumber, Popconfirm,Input,Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space } from 'antd';
 import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import {getFinancialProjectionsCostsList, getCountryVat} from '../../appStore/actions/financialProjectionsActions';
+import {getFinancialProjectionsCosts, getCountryVat} from '../../appStore/actions/financialProjectionsActions';
 
 const { Option } = Select;
 const { Text } = Typography;
-// interface IMyTableData {
-//     id: String;
-//     name: String;
-//     price: Number;
-//     vat: Number;
-//     expensesDuration: String;
-// }
 
 const titleTextStyle = {
     fontStyle: "normal",
@@ -52,67 +45,55 @@ const titleButtonStyle = {
     backgroundColor: "transparent",
 }
 
-const rentOfBuildingsDataSource = [
-  {
-    id: "1",
-    name: "Manufacturing buildings",
-    price: 0,
-    vat: 21,
-    firstExpenses: "1st mo."
-  },
-  {
-    id: "2",
-    name: "Office",
-    price: 24,
-    vat: 21,
-    firstExpenses: "1st mo."
-  }
-]
-
  
 function FinancialProjections(props) {
   const dispatch = useDispatch()
-
-  const [rentOfBuildingsTableData, setRentOfBuildingsTableData] = useState(rentOfBuildingsDataSource);
   const history = useHistory();
 
+  const [price,setPrice] = useState({});
+  const [editingKey, setEditingKey] = useState('');
+
+
   const businessPlan = useSelector((state) => state.selectedBusinessPlan)
-  
+  const {id: busineessPlanId} = businessPlan;
+  const financialProjections = useSelector((state) => state.financialProjections)
+  const countryVats = useSelector((state)=> state.countryVats)
+
+
   useEffect(() =>{
-    if (businessPlan.id === null) {
+    if (busineessPlanId === null) {
       if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
           history.push(`/`);
       } else {
           dispatch(refreshPlan(localStorage.getItem("plan")), () => {
-            dispatch(getCountryVat(businessPlan.id));
-            dispatch(getFinancialProjectionsCostsList(businessPlan.id));
+            dispatch(getCountryVat('LT'));
+            dispatch(getFinancialProjectionsCosts(businessPlan.id));
           });
       }
   } else {
-      dispatch(getCountryVat(businessPlan.id));
-      dispatch(getFinancialProjectionsCostsList(businessPlan.id));
+      dispatch(getCountryVat('LT'));
+      dispatch(getFinancialProjectionsCosts(businessPlan.id));
   }
-  },[]);
+  },[dispatch,busineessPlanId,history]);
+  
 
   const onBackClick = () => {
     history.push(`/overview`);
   };
-
-  const onInputChange = (key, index) => (
+  
+  const onInputChange = (key, id,text) => (
     event
   ) => {
-    const newData = [...rentOfBuildingsTableData];
-    newData[index][key] = Number(event.target.value);
-    setRentOfBuildingsTableData(newData);
+    
   };
 
   // const onConfirm = () => {
   //   console.log(tableData);
   // };
-  const columns = [
+  const fixed_costs_columns = [
     {
       title: 'Name',
-      dataIndex: 'name',
+      dataIndex: 'type_title',
       width: '55%',
     },
     {
@@ -120,7 +101,7 @@ function FinancialProjections(props) {
       dataIndex: 'price',
       width: '20%',
       render: (text, record, index) => (
-        <Input value={text} onChange={onInputChange("price", index)}/>
+        <Input value={text === null?0:text}/>
       )
     },
     {
@@ -129,24 +110,79 @@ function FinancialProjections(props) {
       width: '10%',
       render: (text, record, index) => (
         <Input.Group compact>
-          <Select defaultValue={text+"%"}>
-            <Option value={text}>{text+"%"}</Option>
-            <Option value={20}>{20+"%"}</Option>
-            <Option value={10}>{10+"%"}</Option>
+          <Select defaultValue={countryVats.standardRate+"%"}>
+            <Option value={countryVats.standardRate}>{countryVats.standardRate+"%"}</Option>
+            <Option value={countryVats.reducedRates2}>{countryVats.reducedRates2+"%"}</Option>
+            <Option value={countryVats.reducedRates1}>{countryVats.reducedRates1+"%"}</Option>
+            <Option value={countryVats.superReducedRate}>{countryVats.superReducedRate === null?"Null":countryVats.superReducedRate}</Option>
           </Select>
         </Input.Group>
       )
     },
     {
       title: 'First expenses',
-      dataIndex: 'firstExpenses',
+      dataIndex: 'first_expenses',
       width: '15%',
       render: (text, record, index) => (
         <Input.Group compact>
-          <Select defaultValue={text}>
-            <Option value={text}>{text}</Option>
+          <Select defaultValue={text === null? "1st mo.":text}>
+            <Option value={"1st mo."}>{"1st mo."}</Option>
             <Option value={"2nd mo."}>{"2nd mo."}</Option>
             <Option value={"3rd mo."}>{"3rd mo."}</Option>
+            <Option value={"6th mo."}>{"6th mo."}</Option>
+            <Option value={"1st y."}>{"1st y."}</Option>
+            <Option value={"2nd y."}>{"2nd y."}</Option>
+            <Option value={"3rd y."}>{"3rd y."}</Option>
+            <Option value={"4th y."}>{"4th y."}</Option>
+          </Select>
+        </Input.Group>
+      )
+    },
+  ];
+  const variable_costs_columns = [
+    {
+      title: 'Name',
+      dataIndex: 'type_title',
+      width: '55%',
+    },
+    {
+      title: 'Price (€/mo.)',
+      dataIndex: 'price',
+      width: '20%',
+      render: (text, record, index) => (
+        <Input value={text === null?0:text}/>
+      )
+    },
+    {
+      title: 'VAT Rate',
+      dataIndex: 'vat',
+      width: '10%',
+      render: (text, record, index) => (
+        <Input.Group compact>
+          <Select defaultValue={countryVats.standardRate+"%"}>
+            <Option value={countryVats.standardRate}>{countryVats.standardRate+"%"}</Option>
+            <Option value={countryVats.reducedRates2}>{countryVats.reducedRates2+"%"}</Option>
+            <Option value={countryVats.reducedRates1}>{countryVats.reducedRates1+"%"}</Option>
+            <Option value={countryVats.superReducedRate}>{countryVats.superReducedRate === null?"Null":countryVats.superReducedRate}</Option>
+          </Select>
+        </Input.Group>
+      )
+    },
+    {
+      title: 'First expenses',
+      dataIndex: 'first_expenses',
+      width: '15%',
+      render: (text, record, index) => (
+        <Input.Group compact>
+          <Select defaultValue={text === null? "1st mo.":text}>
+            <Option value={"1st mo."}>{"1st mo."}</Option>
+            <Option value={"2nd mo."}>{"2nd mo."}</Option>
+            <Option value={"3rd mo."}>{"3rd mo."}</Option>
+            <Option value={"6th mo."}>{"6th mo."}</Option>
+            <Option value={"1st y."}>{"1st y."}</Option>
+            <Option value={"2nd y."}>{"2nd y."}</Option>
+            <Option value={"3rd y."}>{"3rd y."}</Option>
+            <Option value={"4th y."}>{"4th y."}</Option>
           </Select>
         </Input.Group>
       )
@@ -155,6 +191,7 @@ function FinancialProjections(props) {
 
   return (
     <>
+    {/* <p>{JSON.stringify(businessPlan.id)}</p> */}
             <Col span={16} offset={4}>
                 <Breadcrumb style={{ marginTop: "40px" }}>
                     <Breadcrumb.Item style={{ marginTop: "40px" }}>
@@ -200,8 +237,8 @@ function FinancialProjections(props) {
                         <Card size={'small'} style={{...tableCardStyle}} bodyStyle={{...tableCardBodyStyle}}>
                         <Table
                           rowKey="id"
-                          columns={columns}
-                          dataSource={rentOfBuildingsTableData}
+                          columns={fixed_costs_columns}
+                          dataSource={financialProjections.fixed_types}
                           pagination={false}
                         />
                         </Card>
@@ -221,8 +258,8 @@ function FinancialProjections(props) {
                         <Card size={'small'} style={{...tableCardStyle}} bodyStyle={{...tableCardBodyStyle}}>
                         <Table
                           rowKey="id"
-                          columns={columns}
-                          dataSource={rentOfBuildingsTableData}
+                          columns={variable_costs_columns}
+                          dataSource={financialProjections.variable_types}
                           pagination={false}
                         />
                         </Card>

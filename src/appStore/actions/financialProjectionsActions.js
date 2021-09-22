@@ -1,18 +1,18 @@
 import kabadaAPI from './kabadaAPI';
 import { errorHandler } from './errorHandler';
 
-export const getFinancialProjectionsCostsList = (planId) => {
-    return async(dispatch, getState) => {
+export const getFinancialProjectionsCosts = (planId) => {
+    return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
         try{
-            const token = getState().user.access.token;
-            const response = await kabadaAPI.get('api/costsvf/'+planId, {headers: {Authorization: `Bearer ${token}` }});
+            const token = getState().user.access_token;
+            const response = await kabadaAPI.get('api/cost/costsvf/'+planId, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: "FETCHING_FINANCIAL_PROJECTION_SUCCESS", payload: response.data });
         }catch(error){
-            if(error.response === undefined){
+            if (error.response === undefined) {
                 dispatch({
                     type: "ERROR",
-                    payload: {message : "Oopsie... System error. Try again, later"}
+                    payload: { message: "Oopsie... System error. Try again, later" },
                 });
             }else{
                 dispatch({
@@ -21,7 +21,7 @@ export const getFinancialProjectionsCostsList = (planId) => {
             }
         }
         finally{
-            dispatch({type: "LOADING", payload: false})
+            dispatch({ type: "LOADING", payload: false });
         }
     }
 }
@@ -30,7 +30,7 @@ export const getCountryVat = (countryCode) => {
     return async(dispatch, getState) =>{
         dispatch({ type: "LOADING", payload: true });
         try{
-            const token = getState().user.access.token;
+            const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/cost/vat/'+countryCode, {headers: {Authorization: `Bearer ${token}` }});
             dispatch({ type: "FETCHING_FINANCIAL_PROJECTION_VAT_SUCCESS", payload: response.data });
         }catch(error){
@@ -55,7 +55,7 @@ export const getCountryVat = (countryCode) => {
 export const saveFinansialProjectionsCost = (postObject, reducerObject) => {
     return async(dispatch, getState) => {
         try{
-            const token = getState().user.access.token;
+            const token = getState().user.access_token;
             console.log(postObject);
             const response = await kabadaAPI.post('api/cost/costsvf/save', postObject, {headers: {Authorization: `Bearer ${token}` }});
             dispatch({type: 'SAVE_FINANCIAL_PROJECTION_COST_SUCCESS', payload: {...reducerObject, "id": response.data, "key": response.data}});
@@ -68,13 +68,20 @@ export const saveFinansialProjectionsCost = (postObject, reducerObject) => {
     }
 }
 
-export const updateFinansialProjectionCost = (postObject, reducerObject) => {
+export const updateFinansialProjectionCost = (postObject) => {
     return async(dispatch, getState)=>{
-        dispatch({type: 'LOADING', payload: true})
         try{
-            const token = getState().user.access.token;
-            await kabadaAPI.post('api/cost/costsvf/save', postObject, {headers: {Authorization: `Bearer ${token}` }});
-            dispatch({type: 'UPDATE_FINANCIAL_PROJECTION_COST_SUCCESS', payload: reducerObject});
+            const token = getState().user.access_token;
+            await kabadaAPI.post('api/cost/costsvf/save', obj, {headers: {Authorization: `Bearer ${token}` }});
+            const obj = {
+                "cost_item_id":postObject.cost_item_id,
+                "type_title": postObject.type_title,
+                "type_id": postObject.type_id,
+                "price" : postObject.price,
+                "vat" : postObject.vat,
+                "first_expenses": postObject.first_expenses,
+            }
+            dispatch({type: 'UPDATE_FINANCIAL_PROJECTION_COST_SUCCESS', payload: obj});
         }
         finally{
             dispatch({type: 'LOADING', payload: false})
