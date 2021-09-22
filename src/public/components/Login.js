@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Button, Card, Divider, Typography, Space, Row, Col } from 'antd';
+import { Form, Input, Button, Card, Divider, Typography, Space, Row, Col, Alert } from 'antd';
 import { FacebookFilled, GoogleCircleFilled } from '@ant-design/icons';
 import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login";
@@ -23,6 +23,7 @@ class Login extends React.Component {
 			data: "",
 			picture: "",
 			googleSignup: "",
+			submited: false
 		};
 	}
 
@@ -42,10 +43,14 @@ class Login extends React.Component {
 	};
 
 	onFinish = (values) => {
-		this.props.login(values.username, values.password);
+		this.props.login(values.username, values.password)
+			.then(
+				this.setState({ submited: true })
+			);
 	};
 
 	render() {
+		console.log(this.props)
 		return (
 			<Card style={cardStyle} bodyStyle={{ padding: "0" }}>
 				<Row>
@@ -65,8 +70,8 @@ class Login extends React.Component {
 					layout="vertical"
 					name="basic"
 					initialValues={{ remember: false }}
-					onFinish={this.onFinish} >
-
+					onFinish={this.onFinish}
+				>
 					<Form.Item {...tailLayout} style={{ marginBottom: '16px' }}>
 						<FacebookLogin
 							isDisabled={true}
@@ -131,14 +136,21 @@ class Login extends React.Component {
 						</Form.Item>
 
 					</Form.Item>
-
+					{
+						this.props.message.type === 'error' && this.state.submited === true ?
+							(<Alert
+								style={{ padding: '3px 3px', marginBottom: '15px' }}
+								description={this.props.message.message}
+								type="error"
+								showIcon
+							/>) : (<></>)
+					}
 					<Form.Item {...tailLayout} style={{ marginBottom: '8px' }}>
 						<Button type="primary" loading={this.props.loading} size="large" style={buttonStyle} htmlType="submit" block="true" >
 							Sign In
 						</Button>
 					</Form.Item>
 				</Form>
-
 				<Space direction="horizontal" style={bottomDisclaimerStyle}>
 					<Text style={bottomDisclaimerStyle}>
 						By continuing, you agree with Terms of service and Privacy Policy.
@@ -151,7 +163,9 @@ class Login extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		loading: state.loading
+		loading: state.loading,
+		error: state.error,
+		message: state.message,
 	};
 }
 
