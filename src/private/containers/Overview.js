@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar } from 'antd';
+import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar, message } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
@@ -75,6 +75,7 @@ class Overview extends React.Component {
 
     onStatusChange(status) {
         this.props.updateStatus(this.props.businessPlan.id, status);
+        message.info("Business plan status is changed")
     }
 
     onDeleteMember(item) {
