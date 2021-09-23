@@ -3,7 +3,7 @@ import {  useState, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router';
 import {useDispatch, useSelector} from 'react-redux'
 import { Link, withRouter } from 'react-router-dom';
-import { Form,Select,InputNumber, Popconfirm,Input,Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space } from 'antd';
+import { Form,Select,InputNumber, Popconfirm,Input,Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tooltip } from 'antd';
 import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
@@ -210,7 +210,9 @@ function FinancialProjections(props) {
                     <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                         <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => onBackClick()}></Button>
                         <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Fixed and Variables Costs</Text>
-                        <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
+                        <Tooltip title="Tooltip text">
+                                <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
+                            </Tooltip>
                     </div>
                 </Col>
                 <Col span={4}>

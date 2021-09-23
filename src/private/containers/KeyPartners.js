@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space } from 'antd';
+import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tooltip } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle } from '../../styles/customStyles';
 import { connect } from 'react-redux';
@@ -334,7 +334,7 @@ class KeyPartners extends React.Component {
                                     dataSource={this.props.partners.distributors}
                                     columns={distributorsColumns}
                                     pagination={false}
-                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} disabled={this.props.partners.distributors.length === 3 ? true : false} onClick={this.onAddNewDistributor.bind(this)}><PlusOutlined />Add Distributor</Button><Text>Maximum distributors: {this.props.partners.distributors.length}/3 <InfoCircleFilled style={{ fontSize: '16px', color: '#BFBFBF', marginLeft: '5px' }} /></Text></Space>)}
+                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} disabled={this.props.partners.distributors.length === 3 ? true : false} onClick={this.onAddNewDistributor.bind(this)}><PlusOutlined />Add Distributor</Button><Text>Maximum distributors: {this.props.partners.distributors.length}/3 <Tooltip title="Tooltip text"><InfoCircleFilled style={{ fontSize: '16px', color: '#BFBFBF', marginLeft: '5px' }} /></Tooltip></Text></Space>)}
                                 />
                             </Card >
                         </Col>
