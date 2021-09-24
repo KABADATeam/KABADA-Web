@@ -261,9 +261,9 @@ class Overview extends React.Component {
                                                             description={overview.financial_projections === "" || overview.financial_projections === null ? "Fixed and variable costs" : overview.financial_projections.description} />
                                                         <div>...</div>
                                                     </List.Item>
-                                                    <List.Item key='10' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
+                                                    <List.Item key='11' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} />: <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                            avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/business-start-up-investments'>Business start-up investments</Link></Space>}
                                                             description="Description goes here" />
                                                         <div>...</div>
