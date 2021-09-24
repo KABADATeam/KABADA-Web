@@ -178,7 +178,7 @@ class Overview extends React.Component {
                                                 <List>
                                                     <List.Item key='11' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={overview.swot.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                            avatar={<Avatar src="complete.png" style={avatarStyle} />}
                                                             title={<Button style={{ paddingLeft: '0px' }} type="text" onClick={this.onEditBusinessPlan.bind(this)}>Create Bussines Plan</Button>}
                                                             description={overview.nace === "" || overview.nace === null ? "NACE: " : "NACE: " + overview.nace.activity_code} />
                                                         <div>...</div>
