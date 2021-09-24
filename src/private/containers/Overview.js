@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar } from 'antd';
+import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar, Dropdown, Menu } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
@@ -10,7 +10,7 @@ import { updateStatus, getMembers, deleteMember, getSelectedPlanOverview, getSel
 import { withRouter } from 'react-router-dom';
 import InviteMemberModal from '../components/overview/InviteMemberModal';
 import EditBusinessPlanModal from '../components/overview/EditBusinessPlanModal';
-import { UserOutlined, DeleteOutlined } from '@ant-design/icons';
+import { UserOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
@@ -133,7 +133,12 @@ class Overview extends React.Component {
         const isVisibleHeader = this.getUpdatesWindowState();
         const membersList = this.props.businessPlan.members === null ? [] : this.props.businessPlan.members;
         const overview = this.props.businessPlan.overview;
-
+        const menu = (
+            <Menu>
+                <Menu.Item key="1">Something</Menu.Item>
+                <Menu.Item key="2">Something</Menu.Item>
+            </Menu>
+        );
         if (this.props.businessPlan.overview === undefined) {
             return (<div></div>)
         } else {
@@ -164,7 +169,20 @@ class Overview extends React.Component {
                             </div>
                         </Col>
                         <Col span={4}>
-
+                            <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
+                                <Space wrap>
+                                    <Dropdown overlay={menu}>
+                                        <a className="ant-dropdown-link">
+                                            View <DownOutlined />
+                                        </a>
+                                    </Dropdown>
+                                    <Dropdown overlay={menu}>
+                                        <a className="ant-dropdown-link">
+                                            More Actions <DownOutlined />
+                                        </a>
+                                    </Dropdown>
+                                </Space>
+                            </div>
                         </Col>
                     </Row>
 
@@ -296,11 +314,12 @@ class Overview extends React.Component {
                                     </Col>
                                     <Col span={6}>
                                         <Card style={{
-                                            width: '282px', height: '236px', borderRadius: '8px', backgroundColor: '#FFFFFF',
+                                            width: '282px', height: '246px', borderRadius: '8px', backgroundColor: '#FFFFFF',
                                             backgroundImage: this.props.businessPlan.coverImage === null ? `url(businessPlan.webp)` : `url(${this.props.businessPlan.coverImage})`,
                                             backgroundSize: '282px 152px', backgroundRepeat: "no-repeat"
                                         }}>
                                             <h4 style={{ marginTop: '150px' }}>Cover image</h4>
+                                            <Button type="link" style={{ paddingLeft: '0px', fontWeight: 600 }} onClick={this.onEditBusinessPlan.bind(this)}>Change</Button>
                                         </Card>
                                         <Card style={{
                                             width: '282px', marginTop: "16px", borderRadius: '8px', backgroundColor: '#FFFFFF',
