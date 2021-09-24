@@ -128,7 +128,7 @@ class Overview extends React.Component {
                                                     <List.Item key='2' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
                                                         <List.Item.Meta
                                                             avatar={overview.value_proposition.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} />: <Avatar src="../incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/value-propositions'>Value proposition</Link></Space>}
+                                                            title={<Space><Link to='/public/value-propositions'>Value proposition</Link></Space>}
                                                             description={overview.value_proposition.description === "" ? "Proposed products" : overview.value_proposition.description } />
                                                         <div>...</div>
                                                     </List.Item>

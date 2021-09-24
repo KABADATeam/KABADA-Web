@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space } from 'antd';
+import { Divider, Button, Breadcrumb, Row, Col, Typography, Card, Table, Space } from 'antd';
 import { ArrowLeftOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle, tableDescriptionStyle } from '../../../styles/customStyles';
 import { connect } from 'react-redux';
