@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Typography, Space, Card, Checkbox } from 'antd';
 import { cardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
-import { setProductFeatures,getProductFeatures } from "../../../appStore/actions/productActions";
+import { setProductFeatures,getProduct } from "../../../appStore/actions/productActions";
 import { thisExpression } from '@babel/types';
 
 const { Text } = Typography;
@@ -55,14 +55,12 @@ class EditProductFeaturesComponent extends Component {
                     <Space direction="vertical">
                         <Text style={infoTextStyle}>Product features</Text>
                         <Text style={descriptionTextStyle}>Up to 5 of mixed characteristics</Text>
-                        {/* {console.log(JSON.stringify(this.props.product.product_features))} */}
                         {console.log(this.state)}
                         <Checkbox.Group onChange={this.onChange} value={this.props.product.product_features}>
                             <Space direction="vertical">
                                 {this.props.features.map((obj) =>(
                                     <Checkbox value={obj.id} key={obj.key} disabled={this.isDisabled(obj.id)}>{obj.title}</Checkbox>
                                 ))}
-                                {/* {checkBoxes} */}
                             </Space>
                         </Checkbox.Group>
                     </Space>
@@ -79,4 +77,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { setProductFeatures })(EditProductFeaturesComponent);
+export default connect(mapStateToProps, { setProductFeatures,getProduct })(EditProductFeaturesComponent);
