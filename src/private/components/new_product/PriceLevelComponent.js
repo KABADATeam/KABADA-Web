@@ -28,7 +28,6 @@ class PriceLevelComponent extends Component {
       }
       //everytime you check checkbox it will add id of income source to checked array ['7878787','898954654654654']
       onChange = checkedValues => {
-          console.log(checkedValues)
         this.setState(() => {
           return { checked: checkedValues };
         });
@@ -45,9 +44,6 @@ class PriceLevelComponent extends Component {
         this.props.setProductPriceLevel(id);
     }
 
-    onIncomeSourcesChanged = (values) => {
-        this.props.setIncomeSources(values);
-    }
 
     render() {
         const options = this.props.priceLevels.map((obj) =>
