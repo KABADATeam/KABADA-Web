@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space } from 'antd';
+import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tooltip } from 'antd';
 import { ArrowLeftOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle, tableDescriptionStyle } from '../../../styles/customStyles';
 import { connect } from 'react-redux';
@@ -263,7 +263,9 @@ class CustomerSegments extends React.Component {
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Customer segments</Text>
+                            <Tooltip title="Tooltip text">
                             <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
+                            </Tooltip>
                         </div>
                     </Col>
                    {/*  <Col span={4}>

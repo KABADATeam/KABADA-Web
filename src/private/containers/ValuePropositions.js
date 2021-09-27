@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button, Breadcrumb, Row, Col, Typography, Switch, Space, Result, Image, Table } from 'antd';
+import { Button, Breadcrumb, Row, Col, Typography, Switch, Space, Result, Image, Table, Tooltip } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled, DeleteOutlined } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle } from '../../styles/customStyles';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
@@ -156,7 +156,9 @@ class ValuePropositions extends React.Component {
                             <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                                 <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                                 <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Value propositions</Text>
+                                <Tooltip title="Tooltip text">
                                 <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
+                                </Tooltip>
                             </div>
                         </Col>
                         <Col span={6}>
@@ -196,7 +198,7 @@ class ValuePropositions extends React.Component {
                                             dataSource={data}
                                             columns={valuePropositionsColumns}
                                             pagination={false}
-                                            footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Text>Maximum products: {keyProductsCount}/3 <InfoCircleFilled style={{ fontSize: '16px', color: '#BFBFBF', marginLeft: '5px' }} /></Text></Space>)}
+                                            footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Text>Maximum products: {keyProductsCount}/3 <Tooltip title="Tooltip text"><InfoCircleFilled style={{ fontSize: '16px', color: '#BFBFBF', marginLeft: '5px' }} /></Tooltip></Text></Space>)}
                                         />
                                     </Col>
                                 </Row>

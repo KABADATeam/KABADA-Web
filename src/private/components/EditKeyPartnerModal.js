@@ -107,7 +107,7 @@ class EditKeyPartnerModal extends Component {
                             </Radio.Group>
                         </Form.Item>
 
-                        <Form.Item key="website" name="website" label="Companty website (optional)" initialValue={this.props.item.website}>
+                        <Form.Item key="website" name="website" label="Company website (optional)" initialValue={this.props.item.website}>
                             <Input size="large" style={inputStyle} onChange={this.onWebsiteChange} />
                         </Form.Item>
 

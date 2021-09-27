@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Divider, Row, Col, Typography, Card } from 'antd';
+import { Divider, Row, Col, Typography, Card, InputNumber } from 'antd';
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
 import { connect } from 'react-redux';
 ;
@@ -11,8 +11,8 @@ const { Text } = Typography;
 const titleTextStyle = {
     fontStyle: "normal",
     fontWeight: "600",
-    fontSize: "30px",
-    lineHeight: "38px"
+    fontSize: "16px",
+    lineHeight: "24px"
 }
 
 const aboutTitleTextStyle = {
@@ -52,14 +52,36 @@ class BusinessStartUpInvestments extends React.Component {
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Business Financing</Typography.Title>
                                 <Typography.Text style={{ ...textStyle }}>
-                                Explanation … In previous section we understood total needed amount of invetsments …. Now we have to understand how to finance these investments. Do you have the means to fund your startup, or will you need to borrow money
+                                    Explanation … In previous section we understood total needed amount of invetsments …. Now we have to understand how to finance these investments. Do you have the means to fund your startup, or will you need to borrow money
                                 </Typography.Text>
                             </div>
                         </Col>
                         <Col span={16}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Text>text</Text>
-                            </Card >
+                            <div>
+                                <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                                    <div style={{ display: 'flex' }}>
+                                        <Col span={16}>
+                                            <div style={{ marginTop: 20, marginLeft: 16 }}>
+                                                <Text style={{ ...titleTextStyle }}>How much of your own money (savings) will you invest?</Text>
+                                            </div>
+                                        </Col>
+                                        <Col span={8}>
+                                            <div style={{ float: "right", marginTop: 16, marginBottom: 16, marginRight: 16 }}>
+                                                <InputNumber
+                                                    formatter={value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                                />
+                                            </div>
+                                        </Col>
+                                    </div>
+                                </Card >
+                            </div>
+                            <div style={{marginTop: 24}}>
+                                <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                                    <div style={{ marginTop: 20, marginLeft: 16 }}>
+                                        <Text style={{ ...titleTextStyle }}>Business Financing</Text>
+                                    </div>
+                                </Card >
+                            </div>
                         </Col>
                     </Row>
                 </Col>

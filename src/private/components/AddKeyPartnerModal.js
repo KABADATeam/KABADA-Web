@@ -115,7 +115,7 @@ class AddKeyPartnerModal extends Component {
                             </Radio.Group>
                         </Form.Item>
 
-                        <Form.Item key="website" name="website" label="Companty website (optional)">
+                        <Form.Item key="website" name="website" label="Company website (optional)">
                             <Input size="large" style={inputStyle} onChange={this.onWebsiteChange} />
                         </Form.Item>
 
