@@ -185,6 +185,8 @@ class NewBusinessPlanModal extends Component {
                                     validator: async (_, name) => {
                                         if (!name || name.length < 1) {
                                             return Promise.reject(new Error('Enter project name'));
+                                        } else if (name.length > 100) {
+                                            return Promise.reject(new Error('Project name is to long'));
                                         }
                                     },
                                 },
