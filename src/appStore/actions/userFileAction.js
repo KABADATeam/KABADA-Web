@@ -16,3 +16,19 @@ export const uploadFile = (file, callback) => {
         }
     }
 };
+
+export const deleteFile = (fileId, callback) => {
+    return async (dispatch, getState) => {
+        try {
+            const token = getState().user.access_token;
+            const response = await kabadaAPI.delete('api/files/' + fileId, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: 'DELETING_FILE_SUCCESS', payload: response.data });
+            callback();
+        } catch (error) {
+            dispatch({ type: 'ERROR', payload: errorHandler(error) });
+
+        } finally {
+
+        }
+    }
+};

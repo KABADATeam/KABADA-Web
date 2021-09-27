@@ -20,10 +20,25 @@ const descriptionTextStyle = {
 }
 
 class ProductFeaturesComponent extends Component {
-
-    onProductFeaturesChanged = (values) => {
-        this.props.setProductFeatures(values);
-    }
+    constructor(props) {
+        super(props);
+        this.state = {
+          checked: []
+        };
+      }
+      //everytime you check checkbox it will add id of income source to checked array ['7878787','898954654654654']
+      onChange = checkedValues => {
+        this.setState(() => {
+          return { checked: checkedValues };
+        });
+        this.props.setProductFeatures(checkedValues);
+      };
+    
+      isDisabled = id => {
+        return (
+          this.state.checked.length > 4 && this.state.checked.indexOf(id) === -1
+        );
+      };
 
     render() {
         const checkBoxes = this.props.features.map((obj) =>
@@ -36,9 +51,11 @@ class ProductFeaturesComponent extends Component {
                     <Space direction="vertical">
                         <Text style={infoTextStyle}>Product features</Text>
                         <Text style={descriptionTextStyle}>Up to 5 of mixed characteristics</Text>
-                        <Checkbox.Group onChange={this.onProductFeaturesChanged}>
+                        <Checkbox.Group onChange={this.onChange}>
                             <Space direction="vertical">
-                                {checkBoxes}
+                                {this.props.features.map((obj) =>(
+                                    <Checkbox value={obj.id} key={obj.key} disabled={this.isDisabled(obj.id)}>{obj.title}</Checkbox>
+                                ))}
                             </Space>
                         </Checkbox.Group>
                     </Space>

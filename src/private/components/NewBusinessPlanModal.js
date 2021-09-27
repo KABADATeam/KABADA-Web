@@ -265,7 +265,7 @@ class NewBusinessPlanModal extends Component {
                             <Form.Item key="country" name="country" label="Country of residence (optional)">
                                 <Select
                                     showSearch
-                                    //allowClear
+                                    allowClear
                                     style={{ width: 315 }}
                                     placeholder="Select country"
                                     optionFilterProp="label"

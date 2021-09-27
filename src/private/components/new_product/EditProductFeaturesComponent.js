@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Typography, Space, Card, Checkbox } from 'antd';
 import { cardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
-import { setProductFeatures } from "../../../appStore/actions/productActions";
+import { setProductFeatures,getProduct } from "../../../appStore/actions/productActions";
+import { thisExpression } from '@babel/types';
 
 const { Text } = Typography;
 
@@ -20,25 +21,46 @@ const descriptionTextStyle = {
 }
 
 class EditProductFeaturesComponent extends Component {
-
-    onProductFeaturesChanged = (values) => {
-        this.props.setProductFeatures(values);
+    constructor(props) {
+        super(props);
+        this.state = {
+          checked: this.props.product.product_features
+        };
+      }
+      //everytime you check checkbox it will add id of income source to checked array ['7878787','898954654654654']
+      onChange = checkedValues => {
+        this.setState(() => {
+          return { checked: checkedValues };
+        });
+        this.props.setProductFeatures(checkedValues);
+      };
+    
+      isDisabled = id => {
+        return (
+          this.state.checked.length > 4 && this.state.checked.indexOf(id) === -1
+        );
+      }; 
+    
+    componentDidMount(){
+        this.setState(() => {
+            return { checked: this.props.product.product_features };
+          });
     }
 
-    render() {
-        const checkBoxes = this.props.features.map((obj) =>
-            <Checkbox value={obj.id} key={obj.key}>{obj.title}</Checkbox>
-        );
 
+    render() {
         return (
             <>
                 <Card style={{ ...cardStyle, padding: 20 }} bodyStyle={{ ...tableCardBodyStyle, padding: 0 }}>
                     <Space direction="vertical">
                         <Text style={infoTextStyle}>Product features</Text>
                         <Text style={descriptionTextStyle}>Up to 5 of mixed characteristics</Text>
-                        <Checkbox.Group onChange={this.onProductFeaturesChanged} value={this.props.product.product_features}>
+                        {console.log(this.state)}
+                        <Checkbox.Group onChange={this.onChange} value={this.props.product.product_features}>
                             <Space direction="vertical">
-                                {checkBoxes}
+                                {this.props.features.map((obj) =>(
+                                    <Checkbox value={obj.id} key={obj.key} disabled={this.isDisabled(obj.id)}>{obj.title}</Checkbox>
+                                ))}
                             </Space>
                         </Checkbox.Group>
                     </Space>
@@ -55,4 +77,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { setProductFeatures })(EditProductFeaturesComponent);
+export default connect(mapStateToProps, { setProductFeatures,getProduct })(EditProductFeaturesComponent);
