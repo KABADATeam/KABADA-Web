@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, Breadcrumb, Row, Col, Typography, Space, Card, Divider, Slider } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled, } from '@ant-design/icons';
-import UnsavedChangesHeader from '../UnsavedChangesHeader';
+//import UnsavedChangesHeader from '../UnsavedChangesHeader';
+import UnsavedChangesHeader from '../../public_plan/components/UnsavedChangesHeader';
 import '../../../css/customTable.css';
 import { cardStyle, tableCardBodyStyle, buttonStyle } from '../../../styles/customStyles';
 import EditProductInfoComponent from './EditProductInfoComponent';
@@ -261,10 +262,10 @@ class EditProduct extends React.Component {
                         <Divider />
                         <Space style={{ display: 'flex', float: 'right' }}>
                             <Button size="large" style={{ ...buttonStyle }}
-                                onClick={this.discardChanges.bind(this)}>
+                                onClick={this.discardChanges.bind(this)}> 
                                 Discard
                             </Button>
-                            <Button size="large" type={'primary'} style={{ ...buttonStyle }} onClick={this.saveChanges.bind(this)}>Save</Button>
+                            {/* <Button size="large" type={'primary'} style={{ ...buttonStyle }} onClick={this.saveChanges.bind(this)}>Save</Button> */}
                         </Space>
                     </Col>
                 </Row>

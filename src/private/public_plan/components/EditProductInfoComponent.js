@@ -45,17 +45,17 @@ class EditProductInfoComponent extends Component {
                         <Form layout="vertical" style={{ marginTop: '20px' }}>
                             <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 8px)', marginRight: "10px" }}
                                 key="name" label="Product name" 
-                                validateStatus={this.props.product.title === '' ? 'error' : 'success'}
-                                help={this.props.product.title === '' ? 'Enter product name' : ''}>
-                                <Input id="name" size="large" style={{ ...inputStyle, width: '100%' }} onChange={this.onTitleChanged} value={this.props.product.title} />
+                                validateStatus={this.props.product.title === '' ? 'error' : 'success' }
+                                help={this.props.product.title === '' ? 'Enter product name' : ''} >
+                                <Input id="name" size="large" style={{ ...inputStyle, width: '100%' }} onChange={this.onTitleChanged} value={this.props.product.title} disabled={true}/>
                             </Form.Item>
-                            <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 8px)' }} key="type" label="Product type" disabled = {true}>
-                                <Select style={{ width: '100%' }} placeholder="Select product type" value={this.props.product.product_type} onChange={this.onSelectionChange.bind(this)} >
+                            <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 8px)' }} key="type" label="Product type">
+                                <Select style={{ width: '100%' }} placeholder="Select product type" value={this.props.product.product_type} onChange={this.onSelectionChange.bind(this)} disabled={true}>
                                     {options}
                                 </Select>
                             </Form.Item>
                             <Form.Item style={{ marginBottom: '0px' }} key="description" label="Short description of Product (2-3 sentences)">
-                                <TextArea style={inputStyle} rows={3} value={this.props.product.description} onChange={this.onDescriptionChanged}/>
+                                <TextArea style={inputStyle} rows={3} value={this.props.product.description} onChange={this.onDescriptionChanged} disabled={true}/>
                             </Form.Item>
                         </Form>
                     </Card>

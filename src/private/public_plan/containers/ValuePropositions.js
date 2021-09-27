@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button, Breadcrumb, Row, Col, Typography, Switch, Space, Result, Image, Table } from 'antd';
-import { ArrowLeftOutlined, InfoCircleFilled, DeleteOutlined } from '@ant-design/icons';
-import { buttonStyle, leftButtonStyle, rightButtonStyle } from '../../../styles/customStyles';
+import { Button, Breadcrumb, Row, Col, Typography, Space, Result, Image, Table } from 'antd';
+import { ArrowLeftOutlined, InfoCircleFilled } from '@ant-design/icons';
+import { buttonStyle, leftButtonStyle } from '../../../styles/customStyles';
 import { refreshPlan } from "../../../appStore/actions/refreshAction";
 import { getProducts, deleteProduct, saveState } from "../../../appStore/actions/productActions";
-import EditProduct from "../../components/new_product/EditProduct";
+//import EditProduct from "../../components/new_product/EditProduct";
+import EditProduct from "../components/EditProduct";
 import '../../../css/customTable.css';
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
 
@@ -120,8 +121,8 @@ class ValuePropositions extends React.Component {
                 width: '20%',
                 render: (obj, record) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditItem.bind(this, record)} >Edit</Button>
-                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.deleteItem.bind(this, record)} ><DeleteOutlined /></Button>
+                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditItem.bind(this, record)} >View</Button>
+                        {/* <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.deleteItem.bind(this, record)} ><DeleteOutlined /></Button> */}
                     </Space>
                 ),
             }
