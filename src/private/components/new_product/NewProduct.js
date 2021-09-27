@@ -63,7 +63,7 @@ class NewProduct extends React.Component {
     }
 
     discardChanges = () => {
-        this.props.discardChanges();
+        this.props.history.push(`/value-propositions`);
     };
 
     saveChanges = () => {
@@ -240,13 +240,13 @@ const mapStateToProps = (state) => {
 
 export default connect(
     mapStateToProps,
-    { 
-        getProductTypes, 
-        getProductPriceLevels, 
-        refreshPlan, 
-        getAditionalIncomeSources, 
-        getProductFeatures, 
-        saveProduct, 
+    {
+        getProductTypes,
+        getProductPriceLevels,
+        refreshPlan,
+        getAditionalIncomeSources,
+        getProductFeatures,
+        saveProduct,
         getInnovativeLevels,
         getQualityLevels,
         getDifferentiationLevels

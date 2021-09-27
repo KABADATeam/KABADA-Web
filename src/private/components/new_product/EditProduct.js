@@ -67,6 +67,7 @@ class EditProduct extends React.Component {
 
     discardChanges = () => {
         this.props.discardChanges(JSON.parse(JSON.stringify(this.state.originalProduct)));
+        this.props.onBack();
     };
 
     saveChanges = () => {
@@ -93,14 +94,14 @@ class EditProduct extends React.Component {
         if (a === b) return true;
         if (a == null || b == null) return false;
         if (a.length !== b.length) return false;
-      
+
         a = a.sort();
         b = b.sort();
         for (var i = 0; i < a.length; ++i) {
             if (a[i] !== b[i]) return false;
         }
         return true;
-      }
+    }
 
     getUpdatesWindowState() {
         const original = this.state.originalProduct;
@@ -283,7 +284,7 @@ const mapStateToProps = (state) => {
 }
 
 export default connect(mapStateToProps,
-    { 
+    {
         getProduct,
         getProductTypes,
         getProductPriceLevels,
@@ -294,4 +295,4 @@ export default connect(mapStateToProps,
         getQualityLevels,
         getDifferentiationLevels,
         discardChanges
-     })(EditProduct);
+    })(EditProduct);
