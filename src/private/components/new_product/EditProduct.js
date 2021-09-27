@@ -225,17 +225,17 @@ class EditProduct extends React.Component {
                     <Col span={11} offset={4}>
                         <Row style={{ marginBottom: "20px" }}>
                             <Col span={23} >
-                                <EditProductInfoComponent />
+                                <EditProductInfoComponent/>
                             </Col>
                         </Row>
                         <Row style={{ marginBottom: "20px" }}>
                             <Col span={23} >
-                                <EditPriceLevelComponent />
+                                <EditPriceLevelComponent productId={this.props.productId}/>
                             </Col>
                         </Row>
                         <Row style={{ marginBottom: "20px" }}>
                             <Col span={23} >
-                                <EditProductFeaturesComponent />
+                                <EditProductFeaturesComponent productId={this.props.productId}/>
                             </Col>
                         </Row>
                     </Col >

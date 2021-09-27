@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Typography, Space, Card, Checkbox } from 'antd';
 import { cardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
-import { setProductFeatures,getProduct } from "../../../appStore/actions/productActions";
+import { setProductFeatures,getProduct ,getProductFeatures} from "../../../appStore/actions/productActions";
 import { thisExpression } from '@babel/types';
 
 const { Text } = Typography;
@@ -24,7 +24,7 @@ class EditProductFeaturesComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          checked: this.props.product.product_features
+          checked: []
         };
       }
       //everytime you check checkbox it will add id of income source to checked array ['7878787','898954654654654']
@@ -35,17 +35,21 @@ class EditProductFeaturesComponent extends Component {
         this.props.setProductFeatures(checkedValues);
       };
     
-      isDisabled = id => {
+      isDisabled(id){
         return (
           this.state.checked.length > 4 && this.state.checked.indexOf(id) === -1
         );
       }; 
     
     componentDidMount(){
-        this.setState(() => {
-            return { checked: this.props.product.product_features };
-          });
+        this.props.getProduct(this.props.productId, (data) => {
+            this.setState({
+                checked: this.props.product.product_features
+            })
+        });
+        this.props.getProductFeatures();
     }
+    
 
 
     render() {
@@ -77,4 +81,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { setProductFeatures,getProduct })(EditProductFeaturesComponent);
+export default connect(mapStateToProps, { setProductFeatures, getProduct,getProductFeatures })(EditProductFeaturesComponent);

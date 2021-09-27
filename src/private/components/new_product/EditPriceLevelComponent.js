@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Typography, Space, Card, Divider, Select, Checkbox } from 'antd';
 import { cardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
-import { setProductPriceLevel, setIncomeSources,getProduct } from "../../../appStore/actions/productActions";
+import { setProductPriceLevel, setIncomeSources,getProduct,getProductPriceLevels,getAditionalIncomeSources } from "../../../appStore/actions/productActions";
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -23,7 +23,7 @@ class EditPriceLevelComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            checked: this.props.product.selected_additional_income_sources
+            checked: []
         };
       }
       //everytime you check checkbox it will add id of income source to checked array ['7878787','898954654654654']
@@ -41,10 +41,10 @@ class EditPriceLevelComponent extends Component {
       }; 
     
     componentDidMount(){
-        this.setState(() => {
-            return { checked: this.props.product.selected_additional_income_sources };
-          });
+        
     }
+
+
 
     onSelectionChange(id) {
         this.props.setProductPriceLevel(id);
@@ -96,4 +96,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { setProductPriceLevel, setIncomeSources })(EditPriceLevelComponent);
+export default connect(mapStateToProps, { setProductPriceLevel, setIncomeSources,getProduct,getProductPriceLevels,getAditionalIncomeSources })(EditPriceLevelComponent);
