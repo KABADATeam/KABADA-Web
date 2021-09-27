@@ -41,7 +41,13 @@ class EditPriceLevelComponent extends Component {
       }; 
     
     componentDidMount(){
-        
+        this.props.getProduct(this.props.productId,(data)=>{
+            this.setState({
+                checked: this.props.product.selected_additional_income_sources
+            })
+        });
+        this.props.getProductPriceLevels();
+        this.props.getAditionalIncomeSources();
     }
 
 
