@@ -65,6 +65,9 @@ class EditProduct extends React.Component {
 
     onCompleteChange() {
     }
+    onCancel = () => {
+        this.props.onClose();
+    }
 
     discardChanges = () => {
         this.props.discardChanges(JSON.parse(JSON.stringify(this.state.originalProduct)));
@@ -193,6 +196,7 @@ class EditProduct extends React.Component {
                 <UnsavedChangesHeader
                     visibility={isVisibleHeader}
                     discardChanges={this.discardChanges}
+                    onCancel={this.onCancel}
                     saveChanges={this.saveChanges}
                 />
                 <Col span={16} offset={4}>
@@ -262,8 +266,8 @@ class EditProduct extends React.Component {
                         <Divider />
                         <Space style={{ display: 'flex', float: 'right' }}>
                             <Button size="large" style={{ ...buttonStyle }}
-                                onClick={this.discardChanges.bind(this)}> 
-                                Discard
+                            onClick={this.onCancel.bind(this)}>
+                                Cancel
                             </Button>
                             {/* <Button size="large" type={'primary'} style={{ ...buttonStyle }} onClick={this.saveChanges.bind(this)}>Save</Button> */}
                         </Space>

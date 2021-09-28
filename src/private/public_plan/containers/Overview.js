@@ -135,7 +135,7 @@ class Overview extends React.Component {
                                                     <List.Item key='3' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
                                                         <List.Item.Meta
                                                             avatar={overview.channels.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} />: <Avatar src="../incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/channels'>Channels</Link></Space>}
+                                                            title={<Space><Link to='/public/channels'>Channels</Link></Space>}
                                                             description={overview.channels.description === "" || overview.channels.description === null ? "Distribution channels" : overview.channels.description } />
                                                         <div>...</div>
                                                     </List.Item>
