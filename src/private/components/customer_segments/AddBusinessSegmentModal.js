@@ -22,11 +22,6 @@ class AddBusinessSegmentModal extends Component {
         locationType: null,
         annualRevenue: null,
         budget: null,
-        typeError: '',
-        companySizeError: '',
-        locationTypeError: '',
-        annualRevenueError: '',
-        budgetError: '',
     }
 
     onCancel = () => {
@@ -38,38 +33,6 @@ class AddBusinessSegmentModal extends Component {
     }
 
     onOK = () => {
-        if (this.state.type === null) {
-            this.setState({
-                typeError: 'Select business type'
-            });
-            return;
-        } else {
-            this.setState({
-                typeError: ''
-            });
-        }
-
-        if (this.state.companySize === null) {
-            this.setState({
-                companySizeError: 'Select company size'
-            });
-            return;
-        } else {
-            this.setState({
-                companySizeError: ''
-            });
-        }
-
-        if (this.state.locationType === null) {
-            this.setState({
-                locationTypeError: 'Select geographical location'
-            });
-            return;
-        } else {
-            this.setState({
-                locationTypeError: ''
-            });
-        }
 
         const postObj = {
             "id": null,
@@ -158,37 +121,37 @@ class AddBusinessSegmentModal extends Component {
                     footer={
                         <div>
                             <Button key="customCancel" onClick={this.onCancel.bind(this)}>Cancel</Button>
-                            <Button key="customSubmit" form="myForm" onClick={this.onOK} htmlType="submit" type={'primary'}>Add</Button>
+                            <Button type="primary" htmlType="submit" key="customSubmit" form="addBusinessSegmentForm">Add</Button>
                         </div>
                     }
                 >
-                    <Form layout="vertical" id="myForm" name="myForm" onFinish={this.handleOk}>
+                    <Form hideRequiredMark layout="vertical" id="addBusinessSegmentForm" name="addBusinessSegmentForm" onFinish={this.onOK.bind(this)}>
                         <Form.Item key="type" name="type" label="Type"
-                            validateStatus={this.state.typeError !== '' ? 'error' : 'success'}>
+                            rules={[{ required: true, message: 'Select business type' }]}>
                             <Select style={{ width: '100%' }} mode="multiple" placeholder="Select type" onChange={this.onTypeChange.bind(this)} >
                                 {typeOptions}
                             </Select>
                         </Form.Item>
 
                         <Form.Item key="size" name="size" label="Company size"
-                            validateStatus={this.state.companySizeError !== '' ? 'error' : 'success'}>
+                            rules={[{ required: true, message: 'Select company size' }]}>
                             <Select style={{ width: '100%' }} mode="multiple" placeholder="Select company size" onChange={this.onCompanySizeChange.bind(this)} >
                                 {companySizeOptions}
                             </Select>
                         </Form.Item>
 
                         <Form.Item key="annualRevenue" name="annualRevenue" label="Annual revenue"
-                            validateStatus={this.state.annualRevenueError !== '' ? 'error' : 'success'}>
+                            rules={[{ required: true, message: 'Enter annual revenue in Euros' }]}>
                             <InputNumber size="large" style={inputStyle} onChange={this.onAnnualRevenueChange.bind(this)} placeholder="Enter annual revenue in Euros" />
                         </Form.Item>
 
                         <Form.Item key="budget" name="budget" label="Budget"
-                            validateStatus={this.state.budgetError !== '' ? 'error' : 'success'}>
+                            rules={[{ required: true, message: 'Enter budget in Euros' }]}>
                             <InputNumber size="large" style={inputStyle} placeholder="Enter budget in Euros" onChange={this.onBudgetChange.bind(this)} />
                         </Form.Item>
 
                         <Form.Item key="geographicLocation" name="geographicLocation" label="Geographic Location"
-                            validateStatus={this.state.locationTypeError !== '' ? 'error' : 'success'}>
+                            rules={[{ required: true, message: 'Choose geographic location' }]}>
                             <Select style={{ width: '100%' }} mode="multiple" placeholder="Choose geographic location" onChange={this.onLocationTypeChange.bind(this)} >
                                 {locationOptions}
                             </Select>

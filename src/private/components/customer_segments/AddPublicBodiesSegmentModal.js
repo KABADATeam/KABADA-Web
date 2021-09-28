@@ -10,7 +10,6 @@ const { Option } = Select;
 class AddPublicBodiesSegmentModal extends Component {
     state = {
         ngoType: null,
-        ngoTypeError: '',
     }
 
     onCancel = () => {
@@ -22,17 +21,6 @@ class AddPublicBodiesSegmentModal extends Component {
     }
 
     onOK = () => {
-        if (this.state.ngoType === null) {
-            this.setState({
-                ngoTypeError: 'Select business type'
-            });
-            return;
-        } else {
-            this.setState({
-                ngoTypeError: ''
-            });
-        }
-
         const postObj = {
             "id": null,
             "business_plan_id": this.props.businessPlan.id,
@@ -75,13 +63,13 @@ class AddPublicBodiesSegmentModal extends Component {
                     footer={
                         <div>
                             <Button key="customCancel" onClick={this.onCancel.bind(this)}>Cancel</Button>
-                            <Button key="customSubmit" form="myForm" onClick={this.onOK} htmlType="submit" type={'primary'}>Add</Button>
+                            <Button key="customSubmit" form="addPublicBodiesNgoForm" htmlType="submit" type={'primary'}>Add</Button>
                         </div>
                     }
                 >
-                    <Form layout="vertical" id="myForm" name="myForm" onFinish={this.handleOk}>
+                    <Form hideRequiredMark layout="vertical" id="addPublicBodiesNgoForm" name="addPublicBodiesNgoForm" onFinish={this.onOK}>
                         <Form.Item key="type" name="type" label="Type"
-                            validateStatus={this.state.ngoTypeError !== '' ? 'error' : 'success'}>
+                            rules={[{ required: true, message: 'Select type' }]}>
                             <Select style={{ width: '100%' }} mode="multiple" allowClear placeholder="Select type" onChange={this.onNgoTypeChange.bind(this)} >
                                 {typeOptions}
                             </Select>
