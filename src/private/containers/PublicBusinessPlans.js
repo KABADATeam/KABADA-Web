@@ -6,6 +6,7 @@ import { getAllPublicPlans } from "../../appStore/actions/planActions";
 import { iconColor, pageHeaderStyle, filterStyle } from '../../styles/customStyles';
 import '../../css/publicBusinessPlans.css';
 import { getSelectedPlan } from "../../appStore/actions/planActions";
+import { isEmptyStatement } from "@babel/types";
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -19,14 +20,22 @@ class PublicBusinessPlans extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            planData: [],
-            sorting: false,
+            planData: this.props.publicPlans,
+            sorting: false
         };
     }
 
     componentDidMount() {
         this.props.getAllPublicPlans();
+        console.log("ww")
+        this.setState({
+            planData: this.props.publicPlans
+        });
+        console.log(this.props.publicPlans);
+        console.log("ww")
     }
+
+
 
     getFullDate = (date) => {
         const dateAndTime = date.split('T');
@@ -35,11 +44,13 @@ class PublicBusinessPlans extends React.Component {
 
     onFinish = (values) => {
         console.log(values);
+
     };
 
     search = (values, changedValues) => {
         let sorted = false;
         let filteredData = this.props.publicPlans;
+
         Object.keys(changedValues).forEach(function (key, index) {
             if (changedValues[key] !== undefined) {
                 if (key === "dateCreated") {
@@ -48,6 +59,7 @@ class PublicBusinessPlans extends React.Component {
                             return (
                                 item[key].indexOf(changedValues[key].toISOString().split('T')[0]) >= 0
                             )
+
                         });
                     }
                 }
@@ -62,6 +74,7 @@ class PublicBusinessPlans extends React.Component {
                     filteredData = filteredData.filter(item => {
                         return (
                             item[key].toLowerCase().indexOf(changedValues[key].toLowerCase()) >= 0
+
                         )
                     });
                 }
@@ -75,32 +88,36 @@ class PublicBusinessPlans extends React.Component {
     };
 
     onPublicPlanClick = (plan) => {
-        //console.log(plan);
+        console.log(plan);
         this.props.getSelectedPlan(plan);
         localStorage.setItem("public_plan", plan.id);
         this.props.history.push(`/public/overview`);
     }
 
     render() {
+        if (this.state.planData.length === 0) {
+            this.state.planData = this.props.publicPlans
+        }
         console.log(this.props.publicPlans);
+        console.log(this.state.planData);
 
         const menu = (
             <Menu>
                 <Menu.Item key="1">
                     1st action
-              </Menu.Item>
+                </Menu.Item>
                 <Menu.Item key="2">
                     2nd action
-              </Menu.Item>
+                </Menu.Item>
             </Menu>
         );
         const columns = [
             {
                 title: 'Name',
                 dataIndex: 'name',
+                sortDirections: ['descend', 'ascend'],
                 key: 'name',
                 sorter: (a, b) => a.name.localeCompare(b.name),
-                sortDirections: ['descend', 'ascend'],
                 render: (text, record) => (
                     <Text style={{ fontWeight: '600', cursor: 'pointer' }}>
                         <Button type="link">{record.name}</Button>
@@ -119,6 +136,7 @@ class PublicBusinessPlans extends React.Component {
                 title: 'Country',
                 dataIndex: 'country',
                 key: 'country',
+                sortDirections: ['descend', 'ascend']
             },
             {
                 title: 'Date Created',
@@ -126,7 +144,6 @@ class PublicBusinessPlans extends React.Component {
                 key: 'dateCreated',
                 sorter: (a, b) => new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime(),
                 sortDirections: ['descend', 'ascend'],
-                sortOrder: this.state.sorting,
                 render: (text, record) => this.getFullDate(record.dateCreated),
             },
             {
@@ -170,8 +187,8 @@ class PublicBusinessPlans extends React.Component {
         });
 
         return (
-            <Layout style={{ backgroundColor: '#F5F5F5'}}>
-                <Content style={{ marginTop: "40px"}}>
+            <Layout style={{ backgroundColor: '#F5F5F5' }}>
+                <Content style={{ marginTop: "40px" }}>
                     <Row wrap={false} justify="center" align="middle">
                         <Col span={20}>
                             <Title level={2} style={{ ...pageHeaderStyle, marginBottom: '0px', textAlign: 'left', color: '#262626' }}>Public business plans</Title>
@@ -206,6 +223,7 @@ class PublicBusinessPlans extends React.Component {
                                                 </Select>
                                             </Form.Item>
                                         </Col>
+
                                         <Col span={8}>
                                             <Form.Item noStyle={true} name="dateCreated">
                                                 <DatePicker style={filterStyle} placeholder="Date Created" />
@@ -229,12 +247,17 @@ class PublicBusinessPlans extends React.Component {
                                         </Col>
                                     </Row>
                                 </Form>
-                                <Table 
+                                <Table
                                     onRow={(record, rowIndex) => {
                                         return {
-                                            onClick: () => {this.onPublicPlanClick(record)}
+                                            onClick: () => { this.onPublicPlanClick(record) }
                                         };
-                                    }} style={{ width: '100%' }} size="default" columns={columns} pagination={{ defaultPageSize: 5, showTotal: (total, range) => <Text style={{ position: 'absolute', left: '50%', transform: 'translate(-50%)' }}>{range[0]}-{range[1]} of {total}</Text>, position: ['bottomLeft'] }} dataSource={this.props.publicPlans} onChange={this.handleChange} />
+                                    }} style={{ width: '100%' }} size="default"
+                                    columns={columns} pagination={{
+                                        defaultPageSize: 5, showTotal: (total, range) =>
+                                            <Text style={{ position: 'absolute', left: '50%', transform: 'translate(-50%)' }}>
+                                                {range[0]}-{range[1]} of {total}</Text>, position: ['bottomLeft']
+                                    }} dataSource={this.state.planData} onChange={this.handleChange} />
                             </Card >
                         </Col>
                     </Row >
