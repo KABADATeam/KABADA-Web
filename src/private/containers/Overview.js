@@ -15,6 +15,7 @@ import { UserOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
 const { TabPane } = Tabs;
 const { Text } = Typography;
 const { Option } = Select;
+const { Meta } = Card;
 
 const aboutTitleTextStyle = {
     fontStyle: 'normal',
@@ -314,13 +315,14 @@ class Overview extends React.Component {
                                         </div>
                                     </Col>
                                     <Col span={6}>
-                                        <Card style={{
-                                            width: '282px', height: '246px', borderRadius: '8px', backgroundColor: '#FFFFFF',
-                                            backgroundImage: this.props.businessPlan.coverImage === null ? `url(businessPlan.webp)` : `url(${this.props.businessPlan.coverImage})`,
-                                            backgroundSize: '282px 152px', backgroundRepeat: "no-repeat"
-                                        }}>
-                                            <h4 style={{ marginTop: '150px' }}>Cover image</h4>
-                                            <Button type="link" style={{ paddingLeft: '0px', fontWeight: 600 }} onClick={this.onEditBusinessPlan.bind(this)}>Change</Button>
+                                        <Card
+                                            cover={<img alt="coverImage" style={{
+                                                height: '152px', borderRadius: '8px 8px 0 0', objectFit: 'cover'
+                                            }} src={this.props.businessPlan.coverImage === null ? `businessPlan.webp` : this.props.businessPlan.coverImage} />}
+                                            style={{
+                                                width: '282px', height: '246px', borderRadius: '8px', backgroundColor: '#FFFFFF'
+                                            }}>
+                                            <Meta title={<><h4>Cover image</h4> <Button type="link" style={{ paddingLeft: '0px', fontWeight: 600 }} onClick={this.onEditBusinessPlan.bind(this)}>Change</Button></>} />
                                         </Card>
                                         <Card style={{
                                             width: '282px', marginTop: "16px", borderRadius: '8px', backgroundColor: '#FFFFFF',

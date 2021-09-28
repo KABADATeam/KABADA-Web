@@ -5,7 +5,7 @@ import { getSelectedPlan } from "../../appStore/actions/planActions";
 import PlanStatusTag from "./PlanStatusTag";
 import { withRouter } from 'react-router-dom';
 
-const {Text} = Typography;
+const { Text } = Typography;
 
 const planTitleTextStyle = {
     fontStyle: 'normal',
@@ -43,37 +43,40 @@ class PlanElementComponent extends Component {
         this.props.history.push(`/overview`);
     }
 
-    render () {
-        const {tabKey} = this.props;
+    render() {
+        const { tabKey } = this.props;
         const dataSource = (
             this.filterFunction(tabKey)
         )
 
-        return ( 
+        return (
             <>
-            <List
-                grid={{ gutter: 16}}
-                dataSource={dataSource}
-                renderItem={item => (
-                    <List.Item onClick={this.onClick.bind(this, item)} style={{ cursor: 'pointer' }}>
-                        <Card style={{width: '282px', height: '236px', borderRadius: '8px', backgroundColor: '#FFFFFF',
-                             backgroundImage: item.coverImage === null ? `url(businessPlan.webp)` : `url(${item.coverImage})`,
-                             backgroundSize:'282px 152px', backgroundRepeat: "no-repeat" 
-                        }}>
+                <List
+                    grid={{ gutter: 16 }}
+                    dataSource={dataSource}
+                    renderItem={item => (
+                        <List.Item onClick={this.onClick.bind(this, item)} style={{ cursor: 'pointer' }}>
+                            <Card
+                                cover={<img alt="coverImage" style={{
+                                    height: '152px', borderRadius: '8px 8px 0 0', objectFit: 'cover'
+                                }} src={item.coverImage === null ? `businessPlan.webp` : item.coverImage} />}
+                                style={{
+                                    width: '282px', height: '236px', borderRadius: '8px', backgroundColor: '#FFFFFF'
+                                }}>
 
-                        <Row>
-                            <PlanStatusTag planStatusValue={item.percentage}/>
-                        </Row>
-                        <Row style={{marginTop: 131}}>
-                            <Text style={{...planTitleTextStyle}}>{item.name}</Text>
-                        </Row>
-                        <Row>
-                            <Text style={{...dateTextStyle}}>{(new Date(item.dateCreated)).toLocaleDateString('lt-lt')} {item.planType}</Text>
-                        </Row>                                                            
-                        </Card>
-                    </List.Item>
-                )}
-            />
+                                <Row>
+                                    <PlanStatusTag planStatusValue={item.percentage} />
+                                </Row>
+                                <Row style={{ marginTop: 131 }}>
+                                    <Text style={{ ...planTitleTextStyle }}>{item.name}</Text>
+                                </Row>
+                                <Row>
+                                    <Text style={{ ...dateTextStyle }}>{(new Date(item.dateCreated)).toLocaleDateString('lt-lt')} {item.planType}</Text>
+                                </Row>
+                            </Card>
+                        </List.Item>
+                    )}
+                />
             </>
         )
     }
