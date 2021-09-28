@@ -13,7 +13,9 @@ class AddKeyPartnerModal extends Component {
         website: '',
         comment: ''
     }
-
+    test = () => {
+        console.log(this.state.companyName);
+    }
     onCancel = () => {
         this.props.onClose();
     }
@@ -44,6 +46,7 @@ class AddKeyPartnerModal extends Component {
             website: '',
             comment: ''
         });
+        
         this.props.onClose();
     }
 
@@ -80,6 +83,7 @@ class AddKeyPartnerModal extends Component {
         return (
             <>
                 <Modal
+                    destroyOnClose={true}
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
                     title={<Space><ArrowLeftOutlined onClick={this.onBack} />  {this.props.type.title}</Space>}
@@ -92,7 +96,7 @@ class AddKeyPartnerModal extends Component {
                         </div>
                     }
                 >
-                    <Form layout="vertical" id="myForm" name="myForm" onFinish={this.handleOk}>
+                    <Form layout="vertical" id="myForm" name="myForm">
                         <Form.Item key="name" name="name" label="Company Name"
                             rules={[
                                 {
