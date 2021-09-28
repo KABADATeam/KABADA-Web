@@ -12,7 +12,6 @@ class EditPublicBodiesSegmentModal extends Component {
         super(props);
         this.state = {
             ngoType: this.props.item.ngo_types.map(e => e.id),
-            ngoTypeError: '',
         }
     }
 
@@ -25,16 +24,6 @@ class EditPublicBodiesSegmentModal extends Component {
     }
 
     onOK = () => {
-        if (this.state.priceType === null) {
-            this.setState({
-                priceTypeError: 'Select price type'
-            });
-            return;
-        } else {
-            this.setState({
-                priceTypeError: ''
-            });
-        }
 
         const postObj = {
             "id": this.props.item.id,
@@ -79,16 +68,16 @@ class EditPublicBodiesSegmentModal extends Component {
                     footer={
                         <div>
                             <Button key="customCancel" onClick={this.onCancel.bind(this)}>Cancel</Button>
-                            <Button key="customSubmit" form="myForm" onClick={this.onOK} htmlType="submit" type={'primary'}>Add</Button>
+                            <Button key="customSubmit" form="editPublicBodiesNgoForm" htmlType="submit" type={'primary'}>Add</Button>
                         </div>
                     }
                 >
-                    <Form layout="vertical" id="myForm" name="myForm" onFinish={this.handleOk}
+                    <Form hideRequiredMark layout="vertical" id="editPublicBodiesNgoForm" name="editPublicBodiesNgoForm" onFinish={this.onOK}
                         initialValues={{
                             type: this.props.item.ngo_types.map(e => e.id),
                         }}>
                         <Form.Item key="type" name="type" label="Type"
-                            validateStatus={this.state.ngoTypeError !== '' ? 'error' : 'success'}>
+                            rules={[{ required: true, message: 'Select type' }]}>
                             <Select style={{ width: '100%' }} mode="multiple" placeholder="Select type" onChange={this.onNgoTypeChange.bind(this)} >
                                 {typeOptions}
                             </Select>

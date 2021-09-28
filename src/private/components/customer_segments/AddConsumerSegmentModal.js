@@ -15,12 +15,6 @@ class AddConsumerSegmentModal extends Component {
         educationType: null,
         incomeType: null,
         locationType: null,
-        ageGroupError: '',
-        genderTypeError: '',
-        isChildrenError: '',
-        educationTypeError: '',
-        incomeTypeError: '',
-        locationTypeError: ''
     }
 
     onCancel = () => {
@@ -32,72 +26,6 @@ class AddConsumerSegmentModal extends Component {
     }
 
     onOK = () => {
-        if (this.state.ageGroup === null) {
-            this.setState({
-                ageGroupError: 'Select age group'
-            });
-            return;
-        } else {
-            this.setState({
-                ageGroupError: ''
-            });
-        }
-
-        if (this.state.genderType === null) {
-            this.setState({
-                genderTypeError: 'Select gender'
-            });
-            return;
-        } else {
-            this.setState({
-                genderTypeError: ''
-            });
-        }
-
-        if (this.state.isChildren === null) {
-            this.setState({
-                isChildrenError: 'Select if consumers are children or not'
-            });
-            return;
-        } else {
-            this.setState({
-                isChildrenError: ''
-            });
-        }
-
-        if (this.state.educationType === null) {
-            this.setState({
-                educationTypeError: 'Select education'
-            });
-            return;
-        } else {
-            this.setState({
-                educationTypeError: ''
-            });
-        }
-
-        if (this.state.incomeType === null) {
-            this.setState({
-                incomeTypeError: 'Select income'
-            });
-            return;
-        } else {
-            this.setState({
-                incomeTypeError: ''
-            });
-        }
-
-        if (this.state.locationType === null) {
-            this.setState({
-                locationTypeError: 'Select geographical location'
-            });
-            return;
-        } else {
-            this.setState({
-                locationTypeError: ''
-            });
-        }
-
         const postObj = {
             "id": null,
             "business_plan_id": this.props.businessPlan.id,
@@ -203,27 +131,27 @@ class AddConsumerSegmentModal extends Component {
                     footer={
                         <div>
                             <Button key="customCancel" onClick={this.onCancel.bind(this)}>Cancel</Button>
-                            <Button key="customSubmit" form="myForm" onClick={this.onOK} htmlType="submit" type={'primary'}>Add</Button>
+                            <Button key="customSubmit" form="addConsumerForm" htmlType="submit" type={'primary'}>Add</Button>
                         </div>
                     }
                 >
-                    <Form layout="vertical" id="myForm" name="myForm" onFinish={this.handleOk}>
+                    <Form hideRequiredMark layout="vertical" id="addConsumerForm" name="addConsumerForm" onFinish={this.onOK}>
                         <Form.Item key="name" name="name" label="Age group (years)"
-                            validateStatus={this.state.ageGroupError !== '' ? 'error' : 'success'}>
+                            rules={[{ required: true, message: 'Select age group (years)' }]}>
                             <Select style={{ width: '100%' }} mode="multiple" placeholder="Select age group (years)" onChange={this.onAgeGroupChange.bind(this)} >
                                 {ageGroupOptions}
                             </Select>
                         </Form.Item>
 
                         <Form.Item key="gender" name="gender" label="Gender"
-                            validateStatus={this.state.genderTypeError !== '' ? 'error' : 'success'}>
+                            rules={[{ required: true, message: 'Select gender' }]}>
                             <Select style={{ width: '100%' }} mode="multiple" placeholder="Select gender" onChange={this.onGenderTypeChange.bind(this)} >
                                 {genderOptions}
                             </Select>
                         </Form.Item>
 
                         <Form.Item key="isChildren" name="isChildren" label="Children"
-                            validateStatus={this.state.isChildrenError !== '' ? 'error' : 'success'}>
+                            rules={[{ required: true, message: 'Select if consumers are children' }]}>
                             <Radio.Group onChange={this.onIsChildrenChange} value={isChildren}>
                                 <Space direction="vertical">
                                     <Radio value={true}>Yes</Radio>
@@ -233,21 +161,21 @@ class AddConsumerSegmentModal extends Component {
                         </Form.Item>
 
                         <Form.Item key="education" name="education" label="Education"
-                            validateStatus={this.state.educationTypeError !== '' ? 'error' : 'success'}>
+                            rules={[{ required: true, message: 'Select education' }]}>
                             <Select style={{ width: '100%' }} mode="multiple" placeholder="Choose education" onChange={this.onEducationTypeChange.bind(this)} >
                                 {educationOptions}
                             </Select>
                         </Form.Item>
 
                         <Form.Item key="income" name="income" label="Income"
-                            validateStatus={this.state.incomeTypeError !== '' ? 'error' : 'success'}>
+                            rules={[{ required: true, message: 'Select income' }]}>
                             <Select style={{ width: '100%' }} mode="multiple" placeholder="Choose income" onChange={this.onIncomeTypeChange.bind(this)} >
                                 {incomeOptions}
                             </Select>
                         </Form.Item>
 
                         <Form.Item key="geographicLocation" name="geographicLocation" label="Geographic Location"
-                            validateStatus={this.state.locationTypeError !== '' ? 'error' : 'success'}>
+                            rules={[{ required: true, message: 'Select geographic location' }]}>
                             <Select style={{ width: '100%' }} mode="multiple" placeholder="Choose geographic location" onChange={this.onLocationTypeChange.bind(this)} >
                                 {locationOptions}
                             </Select>
