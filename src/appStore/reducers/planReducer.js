@@ -39,12 +39,16 @@ export const privatePlansReducer = (state = [], action) => {
     }
 };
 
-export const selectedplanFetchReducer = (state = { id: null }, action) => {
+export const selectedplanFetchReducer = (state = { 'id': null }, action) => {
     switch (action.type) {
         case "FETCHING_SELECTED_PLAN_SUCCESS":
             return action.payload;
+        case "FETCHING_SELECTED_PLAN_DETAILS_SUCCESS":
+            return { ...state, "name": action.payload.title, "activityId": action.payload.activity ? action.payload.activity.id : null, "industryId": action.payload.activity ? action.payload.activity.industryId : null, "countryId": action.payload.country ? action.payload.country.id : null, "planImage": action.payload.img ? action.payload.img : null, "languageId": action.payload.language ? action.payload.language.id : null };
         case "UPDATING_SELECTED_PLAN_SUCCESS":
-            return { ...state, "name": action.payload.title };
+            return { ...state, ...action.payload };
+        case "UPDATING_IMAGE_SUCCESS":
+            return { ...state, "coverImage": action.payload };
         case "CLEARING_SELECTED_PLAN_SUCCESS":
             return action.payload;
         case "UPDATING_SELECTED_PLAN_STATUS_SUCCESS":

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Checkbox, Table, Button, Input, Typography, Space } from 'antd';
+import { Card, Checkbox, Table, Button, Input, Typography, Space, Tooltip } from 'antd';
 import { PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { buttonStyle, inputStyle, tableTitleStyle, tableDescriptionStyle, tableCardBodyStyle, tableCardStyle } from '../../styles/customStyles';
 import '../../css/swotStyle.css';
@@ -100,7 +100,7 @@ class OpportunitiesThreats extends Component {
                             />
                             <Button size="large" style={{ ...buttonStyle }} onClick={this.onDeleteItem.bind(this, record)}><DeleteOutlined /></Button>
                         </Space>
-                    ) : ((record.title) ? (<Space><Typography>{record.title}</Typography> <InfoCircleFilled style={{ color: '#BFBFBF' }} /></Space>) :
+                    ) : ((record.title) ? (<Space><Typography>{record.title}</Typography> <Tooltip title="Tooltip text"><InfoCircleFilled style={{ color: '#BFBFBF' }} /></Tooltip></Space>) :
                         (<Space><Typography>{record.title}</Typography></Space>))
                 ),
                 width: '54%',

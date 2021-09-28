@@ -185,6 +185,8 @@ class NewBusinessPlanModal extends Component {
                                     validator: async (_, name) => {
                                         if (!name || name.length < 1) {
                                             return Promise.reject(new Error('Enter project name'));
+                                        } else if (name.length > 100) {
+                                            return Promise.reject(new Error('Project name is to long'));
                                         }
                                     },
                                 },
@@ -265,7 +267,7 @@ class NewBusinessPlanModal extends Component {
                             <Form.Item key="country" name="country" label="Country of residence (optional)">
                                 <Select
                                     showSearch
-                                    //allowClear
+                                    allowClear
                                     style={{ width: 315 }}
                                     placeholder="Select country"
                                     optionFilterProp="label"
