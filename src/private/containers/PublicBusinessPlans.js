@@ -26,13 +26,12 @@ class PublicBusinessPlans extends React.Component {
     }
 
     componentDidMount() {
-        this.props.getAllPublicPlans();
-        console.log("ww")
-        this.setState({
-            planData: this.props.publicPlans
-        });
-        console.log(this.props.publicPlans);
-        console.log("ww")
+        this.props.getAllPublicPlans((data => {
+            this.setState({
+                planData: this.props.publicPlans
+            })
+        }));
+
     }
 
 
@@ -95,9 +94,7 @@ class PublicBusinessPlans extends React.Component {
     }
 
     render() {
-        if (this.state.planData.length === 0) {
-            this.state.planData = this.props.publicPlans
-        }
+
         console.log(this.props.publicPlans);
         console.log(this.state.planData);
 
