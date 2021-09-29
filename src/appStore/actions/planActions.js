@@ -21,12 +21,13 @@ export const saveInitialPlanData = (title, activityId, countryId, languageId, fi
     }
 };
 
-export const getAllPublicPlans = () => {
+export const getAllPublicPlans = (callback) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
         try {
             const response = await kabadaAPI.get("api/plans/public");
             dispatch({ type: "FETCHING_ALL_PLANS_SUCCESS", payload: response.data });
+            callback();
         } finally {
             dispatch({ type: "LOADING", payload: false });
         }
@@ -34,7 +35,7 @@ export const getAllPublicPlans = () => {
 };
 
 const getURL = (bufferArray) => {
-    var blob = new Blob([ bufferArray ], { type: "image/png" } );
+    var blob = new Blob([bufferArray], { type: "image/png" });
     return URL.createObjectURL(blob);
 }
 
@@ -46,7 +47,7 @@ export const getImage = (plan) => {
                 const token = getState().user.access_token;
 
                 const response = await kabadaAPI.get("api/files/" + plan.planImage, { headers: { Authorization: `Bearer ${token}` }, responseType: 'arraybuffer' });
-                dispatch({ type: "FETCHING_IMAGE_SUCCESS", payload: { ...plan, coverImage: getURL(response.data)  }});
+                dispatch({ type: "FETCHING_IMAGE_SUCCESS", payload: { ...plan, coverImage: getURL(response.data) } });
             } else {
                 return;
             }
