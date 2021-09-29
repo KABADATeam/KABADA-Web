@@ -316,13 +316,13 @@ class Overview extends React.Component {
                                     </Col>
                                     <Col span={6}>
                                         <Card
-                                            cover={<img alt="coverImage" style={{
-                                                height: '152px', borderRadius: '8px 8px 0 0', objectFit: 'cover'
-                                            }} src={this.props.businessPlan.coverImage === null ? `businessPlan.webp` : this.props.businessPlan.coverImage} />}
                                             style={{
-                                                width: '282px', height: '246px', borderRadius: '8px', backgroundColor: '#FFFFFF'
+                                                width: '282px', height: '246px', borderRadius: '8px', backgroundColor: '#FFFFFF',
+                                                backgroundImage: 'linear-gradient(to bottom, rgba(255, 255, 252, 0) 62%, rgba(255, 255, 255, 1) 38%), ' + (this.props.businessPlan.coverImage === null ? `url(businessPlan.webp)` : `url(${this.props.businessPlan.coverImage})`),
+                                                objectFit: 'cover', backgroundSize: '100% auto', backgroundRepeat: 'no-repeat', backgroundPosition: 'center top',
                                             }}>
-                                            <Meta title={<><h4>Cover image</h4> <Button type="link" style={{ paddingLeft: '0px', fontWeight: 600 }} onClick={this.onEditBusinessPlan.bind(this)}>Change</Button></>} />
+                                            <h4 style={{ marginTop: '145px', marginBottom: 0, fontSize: '16px' }}>Cover image</h4>
+                                            <Button type="link" style={{ paddingLeft: '0px', fontWeight: 600, fontSize: '14px' }} onClick={this.onEditBusinessPlan.bind(this)}>Change</Button>
                                         </Card>
                                         <Card style={{
                                             width: '282px', marginTop: "16px", borderRadius: '8px', backgroundColor: '#FFFFFF',

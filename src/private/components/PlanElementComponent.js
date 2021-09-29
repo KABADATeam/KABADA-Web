@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Card, Typography, List, Row } from 'antd';
+import { Card, Typography, List, Row, Col } from 'antd';
 import { connect } from 'react-redux';
 import { getSelectedPlan } from "../../appStore/actions/planActions";
 import PlanStatusTag from "./PlanStatusTag";
 import { withRouter } from 'react-router-dom';
 
 const { Text } = Typography;
+const { Meta } = Card;
 
 const planTitleTextStyle = {
     fontStyle: 'normal',
@@ -56,23 +57,25 @@ class PlanElementComponent extends Component {
                     dataSource={dataSource}
                     renderItem={item => (
                         <List.Item onClick={this.onClick.bind(this, item)} style={{ cursor: 'pointer' }}>
-                            <Card
-                                cover={<img alt="coverImage" style={{
-                                    height: '152px', borderRadius: '8px 8px 0 0', objectFit: 'cover'
-                                }} src={item.coverImage === null ? `businessPlan.webp` : item.coverImage} />}
-                                style={{
-                                    width: '282px', height: '236px', borderRadius: '8px', backgroundColor: '#FFFFFF'
-                                }}>
 
+                            <Card
+                                style={{
+                                    width: '282px', height: '236px', borderRadius: '8px', backgroundColor: '#FFFFFF',
+                                    backgroundImage: 'linear-gradient(to bottom, rgba(255, 255, 252, 0) 64.5%, rgba(255, 255, 255, 1) 35.5%), ' + (item.coverImage === null ? `url(businessPlan.webp)` : `url(${item.coverImage})`),
+                                    objectFit: 'cover', backgroundSize: '100% auto', backgroundRepeat: 'no-repeat'
+                                }}
+                            >
                                 <Row>
                                     <PlanStatusTag planStatusValue={item.percentage} />
                                 </Row>
-                                <Row style={{ marginTop: 131 }}>
-                                    <Text style={{ ...planTitleTextStyle }}>{item.name}</Text>
-                                </Row>
-                                <Row>
-                                    <Text style={{ ...dateTextStyle }}>{(new Date(item.dateCreated)).toLocaleDateString('lt-lt')} {item.planType}</Text>
-                                </Row>
+                                <Col>
+                                    <Row style={{ marginTop: 131 }}>
+                                        <Text style={{ ...planTitleTextStyle }}>{item.name}</Text>
+                                    </Row>
+                                    <Row>
+                                        <Text style={{ ...dateTextStyle }}>{(new Date(item.dateCreated)).toLocaleDateString('lt-lt')} {item.planType}</Text>
+                                    </Row>
+                                </Col>
                             </Card>
                         </List.Item>
                     )}
