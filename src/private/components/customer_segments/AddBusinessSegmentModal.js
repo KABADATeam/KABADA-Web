@@ -115,7 +115,7 @@ class AddBusinessSegmentModal extends Component {
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
-                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />Consumers</Space>}
+                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />Business Segments</Space>}
                     visible={this.props.visibility}
                     onCancel={this.onCancel}
                     footer={

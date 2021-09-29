@@ -26,11 +26,10 @@ export const customerRelationshipsReducer = (
         case "SAVE_STATE_SUCCESS":
             return { ...state, "is_customer_relationship_completed": action.payload };
         case "FETCHING_CUSTOMER_RELATIONSHIPS_SUCCESS":
-            const how_to_get_new = action.payload.how_to_get_new ? action.payload.how_to_get_new.map(obj => ({ ...obj, "key": obj.id })) : state.how_to_get_new;
-            const how_to_keep_existing = action.payload.how_to_keep_existing ? action.payload.how_to_keep_existing.map(obj => ({ ...obj, "key": obj.id })) : state.how_to_keep_existing;
-            const how_to_make_spend = action.payload.how_to_make_spend ? action.payload.how_to_make_spend.map(obj => ({ ...obj, "key": obj.id })) : state.how_to_make_spend;
-
-            return { ...action.payload, "how_to_get_new": how_to_get_new, "how_to_keep_existing": how_to_keep_existing, "how_to_make_spend": how_to_make_spend, "is_customer_relationship_completed": action.payload.is_customer_relationship_completed };
+            const how_to_get_new_w_k = action.payload.how_to_get_new ? action.payload.how_to_get_new.map(obj => ({ ...obj, "key": obj.id })) : [];
+            const how_to_keep_existing_w_k = action.payload.how_to_keep_existing ? action.payload.how_to_keep_existing.map(obj => ({ ...obj, "key": obj.id })) : [];
+            const how_to_make_spend_w_k = action.payload.how_to_make_spend ? action.payload.how_to_make_spend.map(obj => ({ ...obj, "key": obj.id })) : [];
+            return { ...state, "how_to_get_new": how_to_get_new_w_k, "how_to_keep_existing": how_to_keep_existing_w_k, "how_to_make_spend": how_to_make_spend_w_k, "is_customer_relationship_completed": action.payload.is_customer_relationship_completed };
         case "SAVE_CUSTOMER_RELATIONSHIP_SUCCESS":
             if (action.payload.group === 1) {
                 const segment = [...state.how_to_get_new, { ...action.payload }];
