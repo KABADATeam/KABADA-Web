@@ -168,16 +168,17 @@ class NewBusinessPlanModal extends Component {
                     footer={
                         <div>
                             <Button key="customCancel" onClick={this.handleCancel.bind(this)}>Cancel</Button>
-                            <Button key="customSubmit" form="myForm" htmlType="submit" type={'primary'}>Submit</Button>
+                            <Button key="customSubmit" form="newBusinessPlanForm" htmlType="submit" type={'primary'}>Submit</Button>
                         </div>
                     }
                 >
                     <Form
                         ref={this.formRef}
                         layout="vertical"
-                        id="myForm"
-                        name="myForm"
+                        id="newBusinessPlanForm"
+                        name="newBusinessPlanForm"
                         onFinish={this.handleOk}
+                        hideRequiredMark
                     >
                         <Form.Item key="name" name="name" label="Project name"
                             rules={[
@@ -205,15 +206,8 @@ class NewBusinessPlanModal extends Component {
                             </Upload>
                         </Form.Item>
                         <Form.Item key="industry" name="industry" label={<Space><Text>NACE Rev. 2 Section</Text><Tooltip title={aboutNACE}><QuestionCircleOutlined style={{ color: "#8C8C8C" }} /></Tooltip></Space>}
-                            rules={[
-                                {
-                                    validator: async (_, industry) => {
-                                        if (!industry || industry.length < 1) {
-                                            return Promise.reject(new Error('Select NACE Rev. 2 Section'));
-                                        }
-                                    },
-                                },
-                            ]}>
+                            rules={[{ required: true, message: 'Select NACE Rev. 2 Section' }]}
+                        >
                             <Select
                                 showSearch
                                 allowClear
@@ -232,15 +226,7 @@ class NewBusinessPlanModal extends Component {
                             </Select>
                         </Form.Item>
                         <Form.Item key="activity" name="activity" label="NACE Rev. 2 Division, Group, Class"
-                            rules={[
-                                {
-                                    validator: async (_, NACEcode) => {
-                                        if (!NACEcode || NACEcode.length < 1) {
-                                            return Promise.reject(new Error('Select Division, Group or Class'));
-                                        }
-                                    },
-                                },
-                            ]}>
+                            rules={[{ required: true, message: 'Select Division, Group or Class' }]}>
                             <Select
                                 showSearch
                                 allowClear
@@ -264,17 +250,17 @@ class NewBusinessPlanModal extends Component {
 
 
                         <Space size={26}>
-                            <Form.Item key="country" name="country" label="Country of residence (optional)">
+                            <Form.Item key="country" name="country" label="Country of residence" rules={[{ required: true, message: 'Select country' }]}>
                                 <Select
                                     showSearch
                                     allowClear
                                     style={{ width: 315 }}
                                     placeholder="Select country"
                                     optionFilterProp="label"
+
                                     filterOption={(input, option) =>
                                         option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                     }>
-
                                     {countries.map(item => (
                                         <Option key={item.key} value={item.value}>{item.text}</Option>
                                     ))}
@@ -282,16 +268,7 @@ class NewBusinessPlanModal extends Component {
                             </Form.Item>
 
                             <Form.Item key="language" name="language" label="Language of bussines plan?" initialValue={languages.length > 0 ? languages[0].value : ""}
-                                rules={[
-                                    {
-                                        validator: async (_, language) => {
-                                            if (!language || language.length < 1) {
-                                                return Promise.reject(new Error('Select language of bussines plan'));
-                                            }
-                                        },
-                                    },
-                                ]}
-                            >
+                                rules={[{ required: true, message: 'Select language' }]}>
                                 <Select
                                     style={{ width: 315 }}
                                     placeholder="Select language"

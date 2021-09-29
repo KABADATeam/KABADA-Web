@@ -205,16 +205,17 @@ class EditBusinessPlanModal extends Component {
                     footer={
                         <div>
                             <Button key="customCancel" onClick={this.handleCancel.bind(this)}>Cancel</Button>
-                            <Button key="customSubmit" form="myForm" htmlType="submit" type={'primary'}>Submit</Button>
+                            <Button key="customSubmit" form="editBusinessPlanForm" htmlType="submit" type={'primary'}>Submit</Button>
                         </div>
                     }
                 >
                     <Form
                         ref={this.formRef}
                         layout="vertical"
-                        id="myForm"
-                        name="myForm"
+                        id="editBusinessPlanForm"
+                        name="editBusinessPlanForm"
                         onFinish={this.handleOk}
+                        hideRequiredMark
                         initialValues={{
                             name: oldName,
                             industry: oldIndustry,
@@ -306,7 +307,7 @@ class EditBusinessPlanModal extends Component {
 
 
                         <Space size={26}>
-                            <Form.Item key="country" name="country" label="Country of residence (optional)">
+                            <Form.Item key="country" name="country" label="Country of residence" rules={[{ required: true, message: 'Select country' }]}>
                                 <Select
                                     showSearch
                                     allowClear
