@@ -80,7 +80,7 @@ class ValuePropositions extends React.Component {
                 this.props.refreshPlan(localStorage.getItem("plan"), () => {
                     this.props.getProducts(this.props.businessPlan.id);
                 });
-                
+
             }
         } else {
             this.props.getProducts(this.props.businessPlan.id);
@@ -132,7 +132,7 @@ class ValuePropositions extends React.Component {
 
         if (this.state.selectedProduct !== null) {
             return (
-                <EditProduct onBack={() => this.setState({ selectedProduct: null })} productId={this.state.selectedProduct} onClose={() => this.setState({ selectedProduct: null })}/>
+                <EditProduct onBack={() => this.setState({ selectedProduct: null })} productId={this.state.selectedProduct} onClose={() => this.setState({ selectedProduct: null })} />
             );
         } else {
             return (
@@ -150,14 +150,14 @@ class ValuePropositions extends React.Component {
                             </Breadcrumb.Item>
                         </Breadcrumb>
                     </Col>
-    
+
                     <Row align="middle" style={{ marginTop: "9px", marginBottom: "25px" }}>
                         <Col span={10} offset={4}>
                             <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                                 <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                                 <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Value propositions</Text>
                                 <Tooltip title="Tooltip text">
-                                <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
+                                    <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
                                 </Tooltip>
                             </div>
                         </Col>
@@ -168,7 +168,7 @@ class ValuePropositions extends React.Component {
                             </div>
                         </Col>
                     </Row>
-    
+
                     <Col span={16} offset={4}>
                         {keyProductsCount === 0 ?
                             (
@@ -177,6 +177,7 @@ class ValuePropositions extends React.Component {
                                         <Result
                                             icon={
                                                 <Image
+                                                    preview={false}
                                                     width={226}
                                                     src="image.png"
                                                 />}
