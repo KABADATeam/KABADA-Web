@@ -142,7 +142,7 @@ class Overview extends React.Component {
                                                     <List.Item key='4' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
                                                         <List.Item.Meta
                                                             avatar={overview.customer_relationship.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} />: <Avatar src="../incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/customer-relationships'>Customer relationships</Link></Space>}
+                                                            title={<Space><Link to='/public/customer-relationships'>Customer relationships</Link></Space>}
                                                             description={overview.customer_relationship.description === "" || overview.customer_relationship.description === null ? "Customer relations management" : overview.customer_relationship.description } />
                                                         <div>...</div>
                                                     </List.Item>

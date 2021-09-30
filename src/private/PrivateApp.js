@@ -22,6 +22,7 @@ import PublicOverview from './public_plan/containers/Overview';
 import PublicCustomerSegments from './public_plan/containers/CustomerSegments';
 import PublicValuePropositions from './public_plan/containers/ValuePropositions';
 import PublicChannels from './public_plan/containers/Channels';
+import PublicCustomerRelationships from './public_plan/containers/CustomerRelationships';
 import FinancialProjections from './containers/FinancialProjections';
 
 class PrivateApp extends React.Component {
@@ -57,6 +58,7 @@ class PrivateApp extends React.Component {
                     <Route exact path="/public/customer-segments" render={(props) => <MainWindow {...props}> <PublicCustomerSegments {...props} /> </MainWindow>} />
                     <Route exact path="/public/value-propositions" render={(props) => <MainWindow {...props}> <PublicValuePropositions {...props} /> </MainWindow>} />
                     <Route exact path="/public/channels" render={(props) => <MainWindow {...props}> <PublicChannels {...props} /> </MainWindow>} />
+                    <Route exact path="/public/customer-relationships" render={(props) => <MainWindow {...props}> <PublicCustomerRelationships {...props} /></MainWindow>} />
                     <Route exact path="/financial-projections" render={(props) => <MainWindow {...props}> <FinancialProjections {...props} /> </MainWindow>}/>
                 </Switch>
             </Router>
