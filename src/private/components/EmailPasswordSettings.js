@@ -56,7 +56,6 @@ class EmailPasswordSettings extends Component {
 
     render() {
         const email = this.props.user.email;
-        const passLatChanged = 1;
         return (
             <Row style={{ marginBottom: "16px" }}>
                 <Col span={24}>
@@ -91,9 +90,6 @@ class EmailPasswordSettings extends Component {
                         <Card.Grid hoverable={false} style={{ ...CardRowStyle }}>
                             <div>
                                 <Text style={textStyle}>Password</Text>
-                            </div>
-                            <div style={{ marginTop: "8px" }}>
-                                <Text style={editableTextStyle}>You changed your last password almost {passLatChanged} year(s) ago</Text>
                             </div>
                             <Button style={{ ...buttonStyle, marginTop: "29px" }} onClick={this.openChangePasswordModal.bind(this)}>Change password</Button>
                         </Card.Grid>
