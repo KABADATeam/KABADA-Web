@@ -65,4 +65,16 @@ export const financialProjectionsReducer = (
                     return state;
             }
         }
+
+        export const countryShortCodeReducer = (
+            state = {shortCode: null}, action) => {
+                switch(action.type){
+                    case 'FETCH_FINANCIAL_PROJECTIONS_COUNTRY_CODE':
+                        const shortCode = action.payload;
+                        console.log('In reducer: ' + shortCode)
+                        return {...state, "shortCode":shortCode}
+                    default:
+                        return state;
+                }
+            }
     
