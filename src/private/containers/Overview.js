@@ -288,6 +288,15 @@ class Overview extends React.Component {
                                                             description="Description goes here" />
                                                         <div>...</div>
                                                     </List.Item>
+                                                    <List.Item key='13' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                        <List.Item.Meta
+                                                            avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                            title={<Space><Link to="/sales-forecast">Sales Forecast</Link></Space>}
+                                                            description="something"
+                                                        />
+
+                                                        <div>...</div>
+                                                    </List.Item>
                                                 </List>
                                             </Card>
                                             <Card style={{ marginTop: '10px' }}>
@@ -303,7 +312,7 @@ class Overview extends React.Component {
                                             </Card>
                                             <Card style={{ marginTop: '10px' }}>
                                                 <List >
-                                                    <List.Item key='13' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                    <List.Item key='14' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
                                                             avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title="Team and competencies"

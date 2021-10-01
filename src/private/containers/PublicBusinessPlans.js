@@ -6,7 +6,6 @@ import { getAllPublicPlans } from "../../appStore/actions/planActions";
 import { iconColor, pageHeaderStyle, filterStyle } from '../../styles/customStyles';
 import '../../css/publicBusinessPlans.css';
 import { getSelectedPlan } from "../../appStore/actions/planActions";
-import { isEmptyStatement } from "@babel/types";
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
