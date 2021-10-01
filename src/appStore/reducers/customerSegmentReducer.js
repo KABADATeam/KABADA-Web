@@ -26,14 +26,20 @@ export const customerSegmentReducer = (
             const newNgoSegment = [...state.public_bodies_ngo, { ...action.payload }];
             return { ...state, "public_bodies_ngo": newNgoSegment };
         case "FETCHING_CUSTOMER_SEGMENTS_SUCCESS":
-            const consumers = action.payload.consumers ? action.payload.consumers.map(obj => ({
-                ...obj, "key": obj.id, "age_titles": obj.age.map(e => e.title).join(", "),
-                "gender_titles": obj.gender.map(e => e.title).join(", "),
-                "location_titles": obj.geographic_location.map(e => e.title).join(", ")
-            })) : state.consumers;
-            const business = action.payload.business ? action.payload.business.map(obj => ({ ...obj, "key": obj.id, "business_type_titles": obj.business_type.map(e => e.title).join(", "), "company_size_titles": obj.company_size.map(e => e.title).join(", ") })) : state.business;
-            const public_bodies_ngo = action.payload.public_bodies_ngo ? action.payload.public_bodies_ngo.map(obj => ({ ...obj, "key": obj.id, "ngo_types_titles": obj.ngo_types.map(e => e.title).join(", ") })) : state.public_bodies_ngo;
-            return { ...action.payload, "consumers": consumers, "business": business, "public_bodies_ngo": public_bodies_ngo, "is_customer_segments_completed": action.payload.is_customer_segments_completed };
+            const consumers_w_k = action.payload.consumers ? action.payload.consumers.map(obj => ({ ...obj, "key": obj.id })) : [];
+            const business_w_k = action.payload.business ? action.payload.business.map(obj => ({ ...obj, "key": obj.id })) : [];
+            const public_bodies_ngo_w_k = action.payload.public_bodies_ngo ? action.payload.public_bodies_ngo.map(obj => ({ ...obj, "key": obj.id })) : [];
+            const consumers_w_titles = consumers_w_k ? consumers_w_k.map(v => ({
+                ...v, age_titles: v.age.map(e => e.title).join(", "), gender_titles: v.gender.map(e => e.title).join(", "),
+                location_titles: v.geographic_location.map(e => e.title).join(", ")
+            })) : [];
+            const business_w_titles = business_w_k ? business_w_k.map(v => ({
+                ...v, business_type_titles: v.business_type.map(e => e.title).join(", "), company_size_titles: v.company_size.map(e => e.title).join(", ")
+            })) : [];
+            const ngo_w_titles = public_bodies_ngo_w_k ? public_bodies_ngo_w_k.map(v => ({
+                ...v, ngo_types_titles: v.ngo_types.map(e => e.title).join(", ")
+            })) : [];
+            return { ...state, "consumers": consumers_w_titles, "business": business_w_titles, "public_bodies_ngo": ngo_w_titles };
         case "UPDATE_CONSUMER_SEGMENT_SUCCESS":
             const updatedConsumerSegment = state.consumers.map(x => x.id === action.payload.id ? action.payload : x);
             return { ...state, "consumers": updatedConsumerSegment };

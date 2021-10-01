@@ -57,28 +57,26 @@ class PlanElementComponent extends Component {
                     dataSource={dataSource}
                     renderItem={item => (
                         <List.Item onClick={this.onClick.bind(this, item)} style={{ cursor: 'pointer' }}>
-
                             <Card
                                 style={{
                                     width: '282px', height: '236px', borderRadius: '8px', backgroundColor: '#FFFFFF',
-                                    backgroundImage: 'linear-gradient(to bottom, rgba(255, 255, 252, 0) 64.5%, rgba(255, 255, 255, 1) 35.5%), ' + (item.coverImage === null ? `url(businessPlan.webp)` : `url(${item.coverImage})`),
+                                    backgroundImage: 'linear-gradient(to bottom, rgba(255, 255, 252, 0) 64.5%, rgba(255, 255, 255, 1) 35.5%), ' + (item.coverImage ? `url(${item.coverImage})` : `url(businessPlan.webp)`),
                                     objectFit: 'cover', backgroundSize: '100% auto', backgroundRepeat: 'no-repeat'
                                 }}
                             >
                                 <Row>
                                     <PlanStatusTag planStatusValue={item.percentage} />
                                 </Row>
-                                <Col>
-                                    <Row style={{ marginTop: 131 }}>
-                                        <Text style={{ ...planTitleTextStyle }}>{item.name}</Text>
-                                    </Row>
-                                    <Row>
-                                        <Text style={{ ...dateTextStyle }}>{(new Date(item.dateCreated)).toLocaleDateString('lt-lt')} {item.planType}</Text>
-                                    </Row>
-                                </Col>
+                                <Row style={{ marginTop: 131 }}>
+                                    <Text ellipsis={true} style={{ ...planTitleTextStyle }}>{item.name}</Text>
+                                </Row>
+                                <Row>
+                                    <Text style={{ ...dateTextStyle }}>{(new Date(item.dateCreated)).toLocaleDateString('lt-lt')} {item.planType}</Text>
+                                </Row>
                             </Card>
                         </List.Item>
-                    )}
+                    )
+                    }
                 />
             </>
         )

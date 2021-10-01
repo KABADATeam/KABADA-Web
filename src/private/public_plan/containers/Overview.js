@@ -142,21 +142,21 @@ class Overview extends React.Component {
                                                     <List.Item key='4' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
                                                         <List.Item.Meta
                                                             avatar={overview.customer_relationship.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} />: <Avatar src="../incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/customer-relationships'>Customer relationships</Link></Space>}
+                                                            title={<Space><Link to='/public/customer-relationships'>Customer relationships</Link></Space>}
                                                             description={overview.customer_relationship.description === "" || overview.customer_relationship.description === null ? "Customer relations management" : overview.customer_relationship.description } />
                                                         <div>...</div>
                                                     </List.Item>
                                                     <List.Item key='5' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
                                                         <List.Item.Meta
                                                             avatar={overview.revenue_streams.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} />: <Avatar src="../incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/revenue-streams'>Revenue streams</Link></Space>}
+                                                            title={<Space><Link to='/public/revenue-streams'>Revenue streams</Link></Space>}
                                                             description={overview.revenue_streams.description === "" || overview.revenue_streams.description === null ? "Customer segments revenue streams" : overview.revenue_streams.description } />
                                                         <div>...</div>
                                                     </List.Item>
                                                     <List.Item key='6' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
                                                         <List.Item.Meta
                                                             avatar={overview.key_resources.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} />: <Avatar src="../incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/key-resources'>Key resources</Link></Space>}
+                                                            title={<Space><Link to='/public/key-resources'>Key resources</Link></Space>}
                                                             description={overview.key_resources.description === "" || overview.key_resources.description === null ? "Key resources list" : overview.key_resources.description } />
                                                         <div>...</div>
                                                     </List.Item>

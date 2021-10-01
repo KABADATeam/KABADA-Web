@@ -1,5 +1,6 @@
 import React from 'react';
-import { Divider, Button, Breadcrumb, Row, Col, Typography } from 'antd';
+import { Link } from 'react-router-dom';
+import { Divider, Button, Breadcrumb, Row, Col, Typography, Space } from 'antd';
 import LoginServicesSettings from '../components/LoginServicesSettings';
 import NotificationSettings from '../components/NotificationSettings';
 import EmailPasswordSettings from '../components/EmailPasswordSettings';
@@ -189,7 +190,7 @@ class UserSettingsWindow extends React.Component {
                 <Col span={16} offset={4}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
-                            <a href="personal-business-plans">My Business plans</a>
+                            <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             Settings
