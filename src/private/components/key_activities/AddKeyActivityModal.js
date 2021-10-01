@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Form, Select, Button, Input, Space } from 'antd';
-import  '../../../css/customModal.css';
-import {ArrowLeftOutlined} from '@ant-design/icons';
+import '../../../css/customModal.css';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { saveActivity } from "../../../appStore/actions/keyActivitiesAction";
 
-const {Option} = Select;
+const { Option } = Select;
 
 const inputStyle = {
     border: '1px solid #BFBFBF',
@@ -59,7 +59,7 @@ class AddKeyActivityModal extends Component {
             "description": this.state.description,
 
         }
-        const subTypeTitle = this.props.activity_category.subtypes.find(x => x.id = this.state.selectedSubTypeId) 
+        const subTypeTitle = this.props.activity_category.subtypes.find(x => x.id = this.state.selectedSubTypeId)
         const reducerObject = {
             "category_id": this.props.activity_category.id,
             "category_title": this.props.activity_category.title,
@@ -75,7 +75,7 @@ class AddKeyActivityModal extends Component {
             description: ''
         })
         this.props.saveActivity(postObject, reducerObject);
-        this.props.onClose();  
+        this.props.onClose();
     }
     onSelectionChange(id) {
         this.setState({
@@ -121,9 +121,9 @@ class AddKeyActivityModal extends Component {
                 >
                     <Form layout="vertical">
                         <Form.Item key={100} label="Type">
-                            <Select placeholder="Select type" value={this.state.selectedTypeId} onChange={this.onSelectionChange.bind(this)} style={{width:548}}>
+                            <Select placeholder="Select type" value={this.state.selectedTypeId} onChange={this.onSelectionChange.bind(this)} style={{ width: 548 }}>
                                 {options}
-                            </Select>                                                           
+                            </Select>
                         </Form.Item>
                         <Form.Item key={101} label="Name"
                             rules={[
@@ -136,15 +136,15 @@ class AddKeyActivityModal extends Component {
                                 },
                             ]}
                         >
-                            <Input placeholder="Your description goes here" value={this.state.name} onChange={this.onChangeName.bind(this)} size="large" style={{...inputStyle, width:548}}/>                                                
+                            <Input placeholder="Your description goes here" value={this.state.name} onChange={this.onChangeName.bind(this)} size="large" style={{ ...inputStyle, width: 548 }} />
                         </Form.Item>
                         <Form.Item key={102} label="Description (optional)">
-                            <Input placeholder="Your description goes here" value={this.state.description} onChange={this.onChangeDescription.bind(this)} size="large" style={{...inputStyle, width:548}}/>                                                
-                        </Form.Item>    
-                                          
-                    </Form> 
+                            <Input placeholder="Your description goes here" value={this.state.description} onChange={this.onChangeDescription.bind(this)} size="large" style={{ ...inputStyle, width: 548 }} />
+                        </Form.Item>
+
+                    </Form>
                 </Modal >
-    
+
             </>
         )
     }
@@ -158,6 +158,6 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, {saveActivity} )(AddKeyActivityModal);
+export default connect(mapStateToProps, { saveActivity })(AddKeyActivityModal);
 
 
