@@ -129,14 +129,14 @@ function SalesForecast() {
             dataIndex: 'withoutVAT',
             key: 'withoutVAT',
             width: '5%',
-            render: text => <input style={{ width: '87px' }} placeholder={text} />,
+            render: text => <input className="input-in-table" placeholder={text} />,
         },
         {
             title: 'Qty',
             dataIndex: 'Qty',
             key: 'Qty',
             width: '5%',
-            render: text => <input style={{ width: '87px' }} placeholder={text} />,
+            render: text => <input className="input-in-table" placeholder={text} />,
         },
         {
             title: 'Total',
@@ -176,41 +176,6 @@ function SalesForecast() {
         },
     ];
 
-
-    const titleTextStyle = {
-        fontStyle: "normal",
-        fontWeight: "600",
-        fontSize: "30px",
-        lineHeight: "38px"
-    }
-
-    const aboutTitleTextStyle = {
-        fontStyle: 'normal',
-        fontWeight: '600',
-        fontSize: '28px',
-        marginBottom: '16px',
-    }
-
-    const textStyle = {
-        fontSize: '14px',
-        color: '#8C8C8C',
-        fontStyle: 'normal',
-        fontWeight: 'normal',
-        lineHeight: '22px',
-        marginRight: '40px',
-    }
-
-    const titleButtonStyle = {
-        width: "40px",
-        height: "40px",
-        border: "1px solid #BFBFBF",
-        boxSizing: "border-box",
-        filter: "drop-shadow(0px 1px 0px rgba(0, 0, 0, 0.05))",
-        borderRadius: "4px",
-        backgroundColor: "transparent",
-    }
-        ;
-
     const businessPlan = useSelector((state) => state.selectedBusinessPlan)
     const { id: busineessPlanId } = businessPlan;
     const product = useSelector(state => state.salesForecast)
@@ -242,11 +207,11 @@ function SalesForecast() {
         <Row align="middle">
             <Col span={20} offset={2}>
                 <Col span={16} offset={4}>
-                    <Breadcrumb style={{ marginTop: "40px" }}>
-                        <Breadcrumb.Item style={{ marginTop: "40px" }}>
+                    <Breadcrumb className="margin-top-links">
+                        <Breadcrumb.Item className="margin-top-links">
                             <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item style={{ marginTop: "40px" }}>
+                        <Breadcrumb.Item className="margin-top-links">
                             <Space><Link to='/overview'>{businessPlan.name}</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
@@ -255,16 +220,16 @@ function SalesForecast() {
                     </Breadcrumb>
                 </Col>
 
-                <Row align="middle" style={{ marginTop: "9px", marginBottom: "25px" }}>
+                <Row className="margin-heading" align="middle">
                     <Col span={12} offset={4}>
-                        <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
-                            <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => onBackClick()}></Button>
-                            <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Sales Forecust</Text>
+                        <div className="button-style-heading-section">
+                            <Button className="back-button-style" icon={<ArrowLeftOutlined />} onClick={() => onBackClick()}></Button>
+                            <Text className="titleTextStyle" >Sales Forecust</Text>
                         </div>
                     </Col>
                     <Col span={4}>
-                        <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch />
+                        <div className="button-style-heading-section">
+                            <Text className="mark-as-completed-style">Mark as completed: </Text><Switch className="margin-left-8px" />
                         </div>
 
                     </Col>
@@ -274,26 +239,24 @@ function SalesForecast() {
                     {product.products.map(x => (
                         <>
                             <TabPane tab={x.name} key={x.id}>
-                                <Row align="middle" style={{ marginTop: "9px" }}>
-                                    <Col span={6}>
-                                        <div style={{ marginRight: '40px' }}>
-                                            <Typography.Title style={{ ...aboutTitleTextStyle }}>{x.name}</Typography.Title>
-                                            <Typography.Text style={{ ...textStyle }}>
+                                <Row className="margin-top-links about-Title-section-Style" align="middle">
+                                    <Col span={6} >
+                                        <div style={{ marginRight: '40px', position: "absolute" }}>
+                                            <Typography.Title className="about-Title-heading-Style">{x.name}</Typography.Title>
+                                            <Typography.Text className="text-Style">
                                                 Product description Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-
                                                 You can add products at Value proposition
                                             </Typography.Text>
                                         </div>
                                     </Col>
-                                    <Col span={12} offset={2} >
-                                        <Card style={{ borderRadius: "15px", height: "72px" }}  >
+                                    <Col span={12} offset={2} className="margin-top-5px" >
+                                        <Card className="card-style-height-border-radius"  >
                                             <Row>
 
-                                                <Col span={9}><p style={{ fontSize: "16px", lineHeight: "24px", fontWeight: "600" }}>When Ready?</p></Col>
+                                                <Col span={9}><p className="card-style-font">When Ready?</p></Col>
                                                 <Col span={3} offset={12}>
 
-
-                                                    <Input.Group compact style={{ width: "94px", marginTop: "-8px" }}>
+                                                    <Input.Group compact className="card-input-Group-style">
                                                         <Select defaultValue="Option1">
                                                             <Option value="Option1">1st Mo.</Option>
                                                             <Option value="Option2">2st Mo.</Option>
@@ -306,16 +269,13 @@ function SalesForecast() {
 
                                     </Col>
                                 </Row>
-
-                                <Row align="middle" style={{ marginTop: "-25px" }}>
+                                <Row align="middle" className="margin-top-20px">
                                     <Col span={12} offset={8} >
-                                        <Card style={{ borderRadius: "15px", height: "72px" }}  >
+                                        <Card className="card-style-height-border-radius"  >
                                             <Row>
-                                                <Col span={9}><p style={{ fontSize: "16px", lineHeight: "24px", fontWeight: "600", }}>Do you have plan to export?</p></Col>
+                                                <Col span={9}><p className="card-style-font">Do you have plan to export?</p></Col>
                                                 <Col span={3} offset={12}>
-
-
-                                                    <Input.Group compact style={{ width: "94px", height: "10px", marginTop: "-8px" }}>
+                                                    <Input.Group compact className="card-input-Group-style">
                                                         <Select defaultValue="Option1">
                                                             <Option value="Option1">Yes</Option>
                                                             <Option value="Option2">NO</Option>
@@ -327,14 +287,17 @@ function SalesForecast() {
                                         </Card>
                                     </Col>
                                 </Row>
-                                <Row align="middle" style={{ marginTop: "20px" }}>
+
+
+
+                                <Row align="middle" className="margin-top-20px">
                                     <Col span={12} offset={8} >
 
                                         <Table title={() => 'Sales forecast in EU'} columns={columns} dataSource={dataSource} pagination={false} />
                                     </Col>
                                 </Row>
 
-                                <Row align="middle" style={{ marginTop: "20px" }}>
+                                <Row align="middle" className="margin-top-20px">
                                     <Col span={12} offset={8} >
 
                                         <Table title={() => 'Sales forecast outside EU'} columns={columns} dataSource={dataSource} pagination={false} />
