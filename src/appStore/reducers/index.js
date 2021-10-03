@@ -19,10 +19,11 @@ import { revenueTypesReducer, revenuesReducer } from './revenueStreamsReducer';
 import { costStructureReducer, costStructureCategoriesReducer, selectedCostCategoryReducer } from './costStructureReducer'
 import { channelTypesReducer, channelsReducer } from './channelsReducer';
 import { customerSegmentReducer, customerSegmentPropertiesReducer } from './customerSegmentReducer';
-import { keyActivitiesReducer, keyActivitiesCategoriesReducer, selectedKeyActivityCategoryReducer } from './keyActivitiesReducer'
-import { customerRelationshipsCategoriesReducer, customerRelationshipsReducer } from './customerRelationshipsReducer'
-import { financialProjectionsReducer, countryVatsReducer, countryShortCodeReducer } from './financialProjectionsReducer'
-import { salesForecastReducer } from './salesForecastReducer'
+import { keyActivitiesReducer, keyActivitiesCategoriesReducer, selectedKeyActivityCategoryReducer } from './keyActivitiesReducer';
+import { customerRelationshipsCategoriesReducer, customerRelationshipsReducer } from './customerRelationshipsReducer';
+import { financialProjectionsReducer, countryVatsReducer, countryShortCodeReducer } from './financialProjectionsReducer';
+import { salesForecastReducer } from './salesForecastReducer';
+import { businessInvestmentReducer } from './businessInvestmentReducer';
 
 
 
@@ -79,5 +80,6 @@ export default combineReducers({
     financialProjections: financialProjectionsReducer,
     countryVats: countryVatsReducer,
     salesForecast: salesForecastReducer,
-    countryShortCode: countryShortCodeReducer    
+    countryShortCode: countryShortCodeReducer ,
+    businessInvestment: businessInvestmentReducer,   
 });
