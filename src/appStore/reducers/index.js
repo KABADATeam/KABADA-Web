@@ -5,7 +5,7 @@ import loadingReducer, { imageLoadingReducer } from './loadingReducer';
 import messageReducer from './messageReducer';
 import { privatePlansReducer, selectedplanFetchReducer, updatePlanReducer, allPublicPlansFetchReducer } from './planReducer';
 import { industriesReducer, activitiesReducer, industrySelectedReducer, activitySelectedReducer } from './naceReducer';
-import { countrySelectedReducer, countriesReducer } from './countryReducer';
+import { countrySelectedReducer, countriesReducer, countryShortNameReducer } from './countryReducer';
 import { eurostatDataReducer } from '../reducers/eurostat/eurostatReducer';
 import { eurostatAllDataReducer } from '../reducers/eurostat/eurostatAllReducer';
 import { userSettingsReducer } from './settingsReducer';
@@ -81,5 +81,6 @@ export default combineReducers({
     countryVats: countryVatsReducer,
     salesForecast: salesForecastReducer,
     countryShortCode: countryShortCodeReducer ,
-    businessInvestment: businessInvestmentReducer,   
+    businessInvestment: businessInvestmentReducer, 
+    countryShortCode: countryShortNameReducer,
 });

@@ -16,3 +16,15 @@ export const countrySelectedReducer = (state = null, action) => {
     }
 }
 
+export const countryShortNameReducer = (
+    state = { 
+        countryShortCode: null, 
+    }, action) => {
+    switch (action.type) {
+        case 'FETCH_SHORT_COUNTRY_CODE':
+            const shortCode = action.payload.country.shortCode;
+            return {...state, "countryShortCode": shortCode};
+        default:
+            return state;
+    }
+}

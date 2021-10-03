@@ -7,6 +7,7 @@ import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { discardChanges, saveChanges } from "../../appStore/actions/swotAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { updateStatus, getMembers, deleteMember, getSelectedPlanOverview, getSelectedPlanDetails, getImage } from "../../appStore/actions/planActions";
+import { getCountryShortCode } from "../../appStore/actions/countriesActions"
 import { withRouter } from 'react-router-dom';
 import InviteMemberModal from '../components/overview/InviteMemberModal';
 import EditBusinessPlanModal from '../components/overview/EditBusinessPlanModal';
@@ -122,12 +123,17 @@ class Overview extends React.Component {
                     this.props.getMembers(this.props.businessPlan.id);
                     this.props.getSelectedPlanDetails(this.props.businessPlan.id);
                     this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+                    const obj = {id: this.props.businessPlan.id}
+                    this.props.getCountryShortCode(this.props.getCountryShortCode(obj))
                 });
             }
         } else {
             this.props.getMembers(this.props.businessPlan.id);
             this.props.getSelectedPlanDetails(this.props.businessPlan.id);
             this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+            const obj = {id: this.props.businessPlan.id}
+            this.props.getCountryShortCode(this.props.getCountryShortCode(obj))
+
         }
     }
 
@@ -408,8 +414,8 @@ class Overview extends React.Component {
 const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
-        uploadedFile: state.uploadedFile
+        uploadedFile: state.uploadedFile,
     };
 }
 
-export default connect(mapStateToProps, { getImage, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview })(withRouter(Overview))
+export default connect(mapStateToProps, { getImage, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, getCountryShortCode })(withRouter(Overview))
