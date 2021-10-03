@@ -34,7 +34,6 @@ class FixedCosts extends React.Component {
         return (
             <>
                 {this.props.financialProjections.fixed.map((obj, index) => {
-                    {/* return (<FixedCostTable data={obj.types} category_title={obj.category_title} category_id={obj.category_id} />) */ }
                     return (
                         <div style={{marginBottom: 24}}>
                         <Col span={24}>
