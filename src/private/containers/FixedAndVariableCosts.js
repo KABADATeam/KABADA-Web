@@ -21,22 +21,6 @@ const titleTextStyle = {
   lineHeight: "38px"
 }
 
-const aboutTitleTextStyle = {
-  fontStyle: 'normal',
-  fontWeight: '600',
-  fontSize: '20px',
-  marginBottom: '16px',
-}
-
-const textStyle = {
-  fontSize: '14px',
-  color: '#8C8C8C',
-  fontStyle: 'normal',
-  fontWeight: 'normal',
-  lineHeight: '22px',
-  marginRight: '40px',
-}
-
 const titleButtonStyle = {
   width: "40px",
   height: "40px",
@@ -58,17 +42,6 @@ class FixedAndVariableCosts extends React.Component {
       vats: {}
     };
   }
-
-  // const [price,setPrice] = useState({});
-  // const [editingKey, setEditingKey] = useState('');
-
-
-  // const businessPlan = useSelector((state) => state.selectedBusinessPlan)
-  // const {id: busineessPlanId} = businessPlan;
-  // const financialProjections = useSelector((state) => state.financialProjections)
-  // const country = useSelector((state)=>state.countryShortCode)
-  // const countryVats = useSelector((state)=> state.countryVats)
-  // defining function
   onBackClick() {
     this.props.history.push(`/overview`);
   }
@@ -93,8 +66,6 @@ class FixedAndVariableCosts extends React.Component {
       this.props.getFinancialProjectionsCosts(this.props.businessPlan.id);
       const obj = { id: this.props.businessPlan.id }
       this.props.getCountryShortCode(obj, (data) => {
-        // console.log('Country code in container:'+country.countryCode)
-        console.log('Country code in container:' + JSON.stringify(this.props.country))
         this.props.getCountryVat(this.props.country.shortCode);
         this.setState({
           vats: this.props.countryVats
@@ -105,106 +76,6 @@ class FixedAndVariableCosts extends React.Component {
 
 
   render() {
-
-    const fixed_costs_columns = [
-      {
-        title: 'Name',
-        dataIndex: 'type_title',
-        width: '55%',
-      },
-      {
-        title: 'Euro/mo. without VAT',
-        dataIndex: 'price',
-        width: '20%',
-        render: (text, record, index) => (
-          <Input value={text === null ? 0 : text} />
-        )
-      },
-      {
-        title: 'VAT Rate',
-        dataIndex: 'vat',
-        width: '10%',
-        render: (text, record, index) => (
-          <Input.Group compact>
-            <Select defaultValue={this.props.countryVats.standardRate === undefined ? 'Null' : this.props.countryVats.standardRate}>
-              <Option value={this.props.countryVats.standardRate}>{this.props.countryVats.standardRate + "%"}</Option>
-              <Option value={this.props.countryVats.reducedRates2}>{this.props.countryVats.reducedRates2 + "%"}</Option>
-              <Option value={this.props.countryVats.reducedRates1}>{this.props.countryVats.reducedRates1 + "%"}</Option>
-              <Option value={this.props.countryVats.superReducedRate}>{this.props.countryVats.superReducedRate === null ? "Null" : this.props.countryVats.superReducedRate}</Option>
-            </Select>
-          </Input.Group>
-        )
-      },
-      {
-        title: 'First expenses',
-        dataIndex: 'first_expenses',
-        width: '15%',
-        render: (text, record, index) => (
-          <Input.Group compact>
-            <Select defaultValue={text === null ? "1st mo." : text}>
-              <Option value={"1st mo."}>{"1st mo."}</Option>
-              <Option value={"2nd mo."}>{"2nd mo."}</Option>
-              <Option value={"3rd mo."}>{"3rd mo."}</Option>
-              <Option value={"6th mo."}>{"6th mo."}</Option>
-              <Option value={"1st y."}>{"1st y."}</Option>
-              <Option value={"2nd y."}>{"2nd y."}</Option>
-              <Option value={"3rd y."}>{"3rd y."}</Option>
-              <Option value={"4th y."}>{"4th y."}</Option>
-            </Select>
-          </Input.Group>
-        )
-      },
-    ];
-    const variable_costs_columns = [
-      {
-        title: 'Name',
-        dataIndex: 'type_title',
-        width: '55%',
-      },
-      {
-        title: 'Euro/mo. without VAT',
-        dataIndex: 'price',
-        width: '20%',
-        render: (text, record, index) => (
-          <Input value={text === null ? 0 : text} />
-        )
-      },
-      {
-        title: 'VAT Rate',
-        dataIndex: 'vat',
-        width: '10%',
-        render: (text, record, index) => (
-          <Input.Group compact>
-            <Select defaultValue={this.props.countryVats.standardRate === undefined ? 'Null' : this.props.countryVats.standardRate}>
-              <Option value={this.props.countryVats.standardRate}>{this.props.countryVats.standardRate + "%"}</Option>
-              <Option value={this.props.countryVats.reducedRates2}>{this.props.countryVats.reducedRates2 + "%"}</Option>
-              <Option value={this.props.countryVats.reducedRates1}>{this.props.countryVats.reducedRates1 + "%"}</Option>
-              <Option value={this.props.countryVats.superReducedRate}>{this.props.countryVats.superReducedRate === null ? "Null" : this.props.countryVats.superReducedRate}</Option>
-            </Select>
-          </Input.Group>
-        )
-      },
-      {
-        title: 'First expenses',
-        dataIndex: 'first_expenses',
-        width: '15%',
-        render: (text, record, index) => (
-          <Input.Group compact>
-            <Select defaultValue={text === null ? "1st mo." : text}>
-              <Option value={"1st mo."}>{"1st mo."}</Option>
-              <Option value={"2nd mo."}>{"2nd mo."}</Option>
-              <Option value={"3rd mo."}>{"3rd mo."}</Option>
-              <Option value={"6th mo."}>{"6th mo."}</Option>
-              <Option value={"1st y."}>{"1st y."}</Option>
-              <Option value={"2nd y."}>{"2nd y."}</Option>
-              <Option value={"3rd y."}>{"3rd y."}</Option>
-              <Option value={"4th y."}>{"4th y."}</Option>
-            </Select>
-          </Input.Group>
-        )
-      },
-    ];
-
     return (
       <>
         <Col span={16} offset={4}>
@@ -257,11 +128,6 @@ class FixedAndVariableCosts extends React.Component {
 // selecting part of data from store. selecting states basically as with useSelector
 //It is called every time the store state changes.
 const mapStateToProps = (state) => {
-  // const businessPlan = useSelector((state) => state.selectedBusinessPlan)
-  // const {id: busineessPlanId} = businessPlan;
-  // const financialProjections = useSelector((state) => state.financialProjections)
-  // const country = useSelector((state)=>state.countryShortCode)
-  // const countryVats = useSelector((state)=> state.countryVats)
   return {
     businessPlan: state.selectedBusinessPlan,
     financialProjections: state.financialProjections,
