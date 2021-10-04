@@ -29,7 +29,7 @@ class FixedCostTable extends React.Component {
                 width: '10%',
                 render: (text, record, index) => (
                     <Input.Group compact>
-                        <Select defaultValue={this.props.countryVats.standardRate === undefined ? 'Null' : this.props.countryVats.standardRate}>
+                        <Select defaultValue={text === null? 'Null':text}>
                             <Option value={this.props.countryVats.standardRate}>{this.props.countryVats.standardRate + "%"}</Option>
                             <Option value={this.props.countryVats.reducedRates2}>{this.props.countryVats.reducedRates2 + "%"}</Option>
                             <Option value={this.props.countryVats.reducedRates1}>{this.props.countryVats.reducedRates1 + "%"}</Option>
