@@ -1,12 +1,39 @@
 import React from 'react'
 import { Link, withRouter } from 'react-router-dom';
 import { buttonStyle, tableCardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
-import { Form, Select, InputNumber, Popconfirm, Input, Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tooltip } from 'antd';
+import { Form, Modal, Dropdown, Select, InputNumber, Popconfirm, Input, Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tooltip } from 'antd';
+import VariableCostPopUp from './VariableCostPopUp';
 
 const { Option } = Select;
 const { Text } = Typography;
 
 class VariableCostTable extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            visible: false
+        }
+    }
+    showModal = () => {
+        this.setState({
+            visible: true,
+        });
+    };
+
+    handleOk = e => {
+        console.log(e);
+        this.setState({
+            visible: false,
+        });
+    };
+
+    handleCancel = e => {
+        console.log(e);
+        this.setState({
+            visible: false,
+        });
+    };
+
     render() {
         const variable_costs_columns = [
             {
@@ -19,7 +46,7 @@ class VariableCostTable extends React.Component {
                 dataIndex: 'price',
                 width: '20%',
                 render: (text, record, index) => (
-                    <Input value={text === null ? 0 : text} />
+                    <Input value={text === null ? 0 : text} onClick={this.showModal}/>
                 )
             },
             {
@@ -28,7 +55,7 @@ class VariableCostTable extends React.Component {
                 width: '10%',
                 render: (text, record, index) => (
                     <Input.Group compact>
-                        <Select defaultValue={text === null? 'Null':text}>
+                        <Select defaultValue={text === null ? 'Null' : text}>
                             <Option value={this.props.countryVats.standardRate}>{this.props.countryVats.standardRate + "%"}</Option>
                             <Option value={this.props.countryVats.reducedRates2}>{this.props.countryVats.reducedRates2 + "%"}</Option>
                             <Option value={this.props.countryVats.reducedRates1}>{this.props.countryVats.reducedRates1 + "%"}</Option>
@@ -62,7 +89,7 @@ class VariableCostTable extends React.Component {
                 <Col span={17}>
                     <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                         <Table
-                            
+
                             rowKey="id"
                             columns={variable_costs_columns}
                             dataSource={this.props.data}
@@ -71,10 +98,16 @@ class VariableCostTable extends React.Component {
                         />
                     </Card>
                 </Col>
+                {this.props.visible!==false?
+                    <VariableCostPopUp category_title={this.props.category_title}
+                    visible={this.state.visible} handleOk={this.handleOk} handleCancel={this.handleCancel}/>
+                    : null
+                }
+                
             </>
         )
     }
-    
+
 }
 
 export default VariableCostTable
