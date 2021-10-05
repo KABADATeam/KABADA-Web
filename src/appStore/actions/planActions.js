@@ -101,7 +101,10 @@ export const removePlan = (planId) => {
         dispatch({ type: "LOADING", payload: true });
         try {
             const token = getState().user.access_token;
-            await kabadaAPI.delete("api/plans/remove/" + planId, { headers: { Authorization: `Bearer ${token}` } });
+            const postObject = {
+                'id': planId,
+            }
+            await kabadaAPI.post("api/plans/remove/", postObject, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: "REMOVING_PLAN_SUCCESS", payload: { data: getState().savedBusinessPlans, id: planId } });
         } finally {
             dispatch({ type: "LOADING", payload: false });
