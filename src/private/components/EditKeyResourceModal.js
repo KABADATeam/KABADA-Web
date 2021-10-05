@@ -38,10 +38,11 @@ class EditKeyResourceModal extends Component {
     }
 
     onOk = () => {
+        const arrayOfSelections = this.transformSelections();
         const category = this.props.categories.find(x => x.id === this.props.resource.category.id);
         let type = category.types.find(x => x.id === (this.state.selectedItemId === null ? this.props.resource.type_id : this.state.selectedItemId));
         const selections = type.selections.map((item, i) => {
-            const options = item.options.map((x, j) => j === this.state.selections[i] ? { title: x.title, selected: true } : x);
+            const options = item.options.map((x, j) => (j === this.state.selections[i] && this.state.is_changed[i]) ? { title: x.title, selected: true } : ((j === arrayOfSelections[i] && !this.state.is_changed[i]) ? { title: x.title, selected: true } : x));
             return { title: item.title, options: options }
         });
 
