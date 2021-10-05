@@ -71,7 +71,11 @@ class VariableCostPopUp extends React.Component {
                 dataIndex: 'price',
                 width: '35%',
                 render: (text, record, index) => (
-                    <Input value={text === 0 || text===undefined ? 0 : text}/>
+                    <InputNumber
+                        size="large"
+                        defaultValue={text === null ? 0 : text}
+                        formatter={value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    />
                 )
             }
         ]

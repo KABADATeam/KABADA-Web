@@ -309,7 +309,7 @@ class CustomerSegments extends React.Component {
                                     pagination={false}
                                     footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddConsumerSegment.bind(this)}><PlusOutlined />Add segment</Button></Space>)}
                                 />
-                            </Card >
+                            </Card>
                         </Col>
                     </Row>
                     <Divider />

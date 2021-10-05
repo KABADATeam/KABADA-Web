@@ -46,7 +46,12 @@ class VariableCostTable extends React.Component {
                 dataIndex: 'price',
                 width: '20%',
                 render: (text, record, index) => (
-                    <Input value={text === null ? 0 : text} onClick={this.showModal}/>
+                    <InputNumber
+                        size="large"
+                        defaultValue={text === null ? 0 : text}
+                        onClick={this.showModal}
+                        formatter={value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    />
                 )
             },
             {
@@ -74,11 +79,16 @@ class VariableCostTable extends React.Component {
                             <Option value={"1st mo."}>{"1st mo."}</Option>
                             <Option value={"2nd mo."}>{"2nd mo."}</Option>
                             <Option value={"3rd mo."}>{"3rd mo."}</Option>
+                            <Option value={"4th mo."}>{"4th mo."}</Option>
+                            <Option value={"5th mo."}>{"5th mo."}</Option>
                             <Option value={"6th mo."}>{"6th mo."}</Option>
-                            <Option value={"1st y."}>{"1st y."}</Option>
-                            <Option value={"2nd y."}>{"2nd y."}</Option>
-                            <Option value={"3rd y."}>{"3rd y."}</Option>
-                            <Option value={"4th y."}>{"4th y."}</Option>
+                            <Option value={"7th mo."}>{"7th mo."}</Option>
+                            <Option value={"8th mo."}>{"8th mo."}</Option>
+                            <Option value={"9th mo."}>{"9th mo."}</Option>
+                            <Option value={"10th mo."}>{"10th mo."}</Option>
+                            <Option value={"11th mo."}>{"11th mo."}</Option>
+                            <Option value={"11th mo."}>{"11th mo."}</Option>
+                            <Option value={"12th mo."}>{"12th mo."}</Option>
                         </Select>
                     </Input.Group>
                 )
@@ -98,12 +108,12 @@ class VariableCostTable extends React.Component {
                         />
                     </Card>
                 </Col>
-                {this.props.visible!==false?
+                {this.props.visible !== false ?
                     <VariableCostPopUp category_title={this.props.category_title}
-                    visible={this.state.visible} handleOk={this.handleOk} handleCancel={this.handleCancel}/>
+                        visible={this.state.visible} handleOk={this.handleOk} handleCancel={this.handleCancel} />
                     : null
                 }
-                
+
             </>
         )
     }
