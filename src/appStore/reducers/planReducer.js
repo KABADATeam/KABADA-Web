@@ -81,3 +81,13 @@ export const allPublicPlansFetchReducer = (state = [], action) => {
             return state;
     }
 };
+
+export const overviewTestReducer = (state = [], action) => {
+    switch (action.type) {
+        case "FETCHING_OVERVIEW_TEST":
+            console.log(action.payload);
+            return state
+        default:
+            return state;
+    }
+};
