@@ -83,14 +83,14 @@ const workinCapitalDataSource = [
 const businessInvestmentsColumns = [
     {
         title: 'Asset',
-        dataIndex: 'title',
-        key: 'asset_title',
+        dataIndex: 'resource_title',
+        key: 'resource_id',
         width: '45%',
     },
     {
         title: 'Statuss',
-        dataIndex: 'status',
-        key: 'status_title',
+        dataIndex: 'resource_status',
+        key: 'resource_id',
         width: '10%',
         align: 'center',
         render: (text, obj, record) => (
@@ -100,8 +100,8 @@ const businessInvestmentsColumns = [
 
     {
         title: 'Total amount with VAT',
-        dataIndex: 'total_amount',
-        key: 'total_amount',
+        dataIndex: 'amount',
+        key: 'resource_id',
         width: '25%',
         align: 'right',
         render: (text, obj, record) => (
@@ -142,7 +142,10 @@ const businessInvestmentsColumns = [
 
 class BusinessStartUpInvestments extends React.Component {
     render() {
-
+        const ownAndBuyAssets = this.props.investments.physical_assets.filter(obj => obj.resource_status === 'Own'|| obj.resource_status === 'Buy' || obj.resource_status === null );
+        console.log(ownAndBuyAssets);
+        const rentAssets = this.props.investments.physical_assets.filter(obj => obj.resource_status === 'Rent');
+        console.log(rentAssets);
         return (
             <>
                 <Col span={24} >
@@ -200,7 +203,7 @@ class BusinessStartUpInvestments extends React.Component {
                                         <Text style={{ ...titleTextStyle }}>Physical and Intellectual assets</Text>
                                     </div>
                                     <Table
-                                        dataSource={assetsDataSource}
+                                        dataSource={ownAndBuyAssets}
                                         columns={businessInvestmentsColumns}
                                         pagination={false}
                                     />
@@ -212,7 +215,7 @@ class BusinessStartUpInvestments extends React.Component {
                                         <Text style={{ ...titleTextStyle }}>Working capital</Text>
                                     </div>
                                     <Table
-                                        dataSource={workinCapitalDataSource}
+                                        dataSource={rentAssets}
                                         columns={businessInvestmentsColumns}
                                         pagination={false}
                                     />
@@ -284,6 +287,7 @@ class BusinessStartUpInvestments extends React.Component {
 const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
+        investments: state.businessInvestment,
     };
 }
 

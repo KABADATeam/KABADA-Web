@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import BusinessStartUpInvestments from '../components/businessFinancialInvestments/BusinessStartUpInvestments';
 import BusinessFinancing from '../components/businessFinancialInvestments/BusinessFinancing';
+import { getBusinessInvestmentInformation } from "../../appStore/actions/businessInvestmentAction";
 
 const { Text } = Typography;
 const { TabPane } = Tabs
@@ -49,7 +50,7 @@ class BusinessInvestmentsWindow extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            vats: {}
         }
     }
 
@@ -63,9 +64,11 @@ class BusinessInvestmentsWindow extends React.Component {
                 this.props.history.push(`/`);
             } else {
                 this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                    this.props.getBusinessInvestmentInformation(this.props.businessPlan.id);
                 });
             }
         } else {
+            this.props.getBusinessInvestmentInformation(this.props.businessPlan.id);
         }
     }
     render() {
@@ -102,10 +105,10 @@ class BusinessInvestmentsWindow extends React.Component {
                 <Col span={16} offset={4}>
                     <Tabs defaultActiveKey="1"  >
                         <TabPane tab="Business start-up investments" key="1">
-                            <BusinessStartUpInvestments/>
+                            <BusinessStartUpInvestments investments={this.props.investments} />
                         </TabPane>
                         <TabPane tab="Business Financing" key="2">
-                            <BusinessFinancing/>
+                            <BusinessFinancing investments={this.props.investments} />
                         </TabPane>
                     </Tabs>
                 </Col>
@@ -118,6 +121,8 @@ class BusinessInvestmentsWindow extends React.Component {
 const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
+        investments: state.businessInvestment,
+        countryCode: state.countryShortCode,
     };
 }
-export default connect(mapStateToProps, { refreshPlan })(BusinessInvestmentsWindow);
+export default connect(mapStateToProps, { refreshPlan, getBusinessInvestmentInformation})(BusinessInvestmentsWindow);
