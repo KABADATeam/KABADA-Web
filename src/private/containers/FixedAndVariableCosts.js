@@ -5,7 +5,8 @@ import { Form, Select, InputNumber, Popconfirm, Input, Divider, Button, Breadcru
 import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getFinancialProjectionsCosts, getCountryShortCode, getCountryVat } from '../../appStore/actions/financialProjectionsActions';
+import { getFinancialProjectionsCosts, getCountryVat } from '../../appStore/actions/financialProjectionsActions';
+import {getCountryShortCode} from '../../appStore/actions/countriesActions'
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import FixedCosts from '../components/fixed_and_variable_costs/FixedCosts';
 import VariableCosts from '../components/fixed_and_variable_costs/VariableCosts';
@@ -55,7 +56,7 @@ class FixedAndVariableCosts extends React.Component {
           this.props.getFinancialProjectionsCosts(this.props.businessPlan.id);
           const obj = { id: this.props.businessPlan.id }
           this.props.getCountryShortCode(obj, (data) => {
-            this.props.getCountryVat(this.props.country.shortCode);
+            this.props.getCountryVat(this.props.country.countryShortCode);
             this.setState({
               vats: this.props.countryVats
             });
@@ -66,7 +67,7 @@ class FixedAndVariableCosts extends React.Component {
       this.props.getFinancialProjectionsCosts(this.props.businessPlan.id);
       const obj = { id: this.props.businessPlan.id }
       this.props.getCountryShortCode(obj, (data) => {
-        this.props.getCountryVat(this.props.country.shortCode);
+        this.props.getCountryVat(this.props.country.countryShortCode);
         this.setState({
           vats: this.props.countryVats
         });
@@ -114,10 +115,10 @@ class FixedAndVariableCosts extends React.Component {
         <Col offset={4} span={16}>
           <Tabs defaultActiveKey="1">
             <TabPane tab="Fixed Costs" key="1">
-              <FixedCosts financialProjections={this.props.financialProjections} countryVats={this.props.countryVats} countryShortCode={this.props.countryShortCode} planId={this.props.businessPlan.id} />
+              <FixedCosts financialProjections={this.props.financialProjections} countryVats={this.props.countryVats} countryShortCode={this.props.country.countryShortCode} planId={this.props.businessPlan.id} />
             </TabPane>
             <TabPane tab="Variable Costs" key="2">
-              <VariableCosts financialProjections={this.props.financialProjections} countryVats={this.props.countryVats} countryShortCode={this.props.countryShortCode} planId={this.props.businessPlan.id} />
+              <VariableCosts financialProjections={this.props.financialProjections} countryVats={this.props.countryVats} countryShortCode={this.props.country.countryShortCode} planId={this.props.businessPlan.id} />
             </TabPane>
           </Tabs>
         </Col>

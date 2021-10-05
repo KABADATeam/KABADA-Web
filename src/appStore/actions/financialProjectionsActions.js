@@ -26,33 +26,6 @@ export const getFinancialProjectionsCosts = (planId) => {
     }
 }
 
-export const getCountryShortCode = (postObject,callback) => {
-    return async(dispatch, getState) => {
-        dispatch({ type: "LOADING", payload: true })
-        try{
-            const token = getState().user.access_token;
-            const response = await kabadaAPI.post('api/plans/fetch', postObject, {headers: {Authorization: `Bearer ${token}` }});
-            dispatch({type: 'FETCH_FINANCIAL_PROJECTIONS_COUNTRY_CODE', payload: response.data});
-            callback()
-        }catch(error){
-            if(error.response === undefined){
-                dispatch({
-                    type: "ERROR",
-                    payload: {message: "Oopsie... System error. Try again, later"}
-                });
-            }else{
-                dispatch({
-                    type: "ERROR",
-                    payload: error.response.data
-                });
-            }
-        }
-        finally{
-            dispatch({type: "LOADING", payload: false})
-        }
-    }
-}
-
 //country(string) for ex. "LT"
 export const getCountryVat = (countryCode,callback) => {
     return async(dispatch, getState) =>{

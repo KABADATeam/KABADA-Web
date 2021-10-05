@@ -7,7 +7,6 @@ export const financialProjectionsReducer = (
         switch(action.type){
             case 'FETCHING_FINANCIAL_PROJECTION_SUCCESS':
                 // console.log("YEEEE") 
-                console.log(action.payload)   
                 const fixed_types = [];
                 const variable_types = [];
                 const all_types = [];
@@ -54,18 +53,6 @@ export const financialProjectionsReducer = (
                 return state;
         }
     }
-
-    export const countryShortCodeReducer = (
-        state = {shortCode: null}, action) => {
-            switch(action.type){
-                case 'FETCH_FINANCIAL_PROJECTIONS_COUNTRY_CODE':
-                    const code = action.payload.country.shortCode;
-                    console.log('In reducer: ' + code)
-                    return {...action.payload, "shortCode":code};
-                default:
-                    return state;
-            }
-        }
     export const countryVatsReducer = (
         state = {}, action) => {
             switch(action.type){
