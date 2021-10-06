@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Breadcrumb, Col, Space, Row, Button, Typography, Switch, Card, Tabs, Input, Select, Table } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getProducts } from '../../appStore/actions/salesForecastActions';
+import { getProducts, changState } from '../../appStore/actions/salesForecastActions';
 import '../../css/SalesForecast.css'
 
 function SalesForecast() {
@@ -14,6 +14,8 @@ function SalesForecast() {
     const { TabPane } = Tabs;
 
     const { Option } = Select;
+
+    const [tabKey, setTabKey] = useState("");
 
     const dataSource = [
         {
@@ -176,10 +178,10 @@ function SalesForecast() {
         },
     ];
 
+
     const businessPlan = useSelector((state) => state.selectedBusinessPlan)
     const { id: busineessPlanId } = businessPlan;
     const product = useSelector(state => state.salesForecast)
-
     const dispatch = useDispatch()
     const history = useHistory();
 
@@ -190,11 +192,11 @@ function SalesForecast() {
             } else {
                 dispatch(refreshPlan(localStorage.getItem("plan")), () => {
                     dispatch(getProducts(businessPlan.id));
+
                 });
             }
         } else {
             dispatch(getProducts(businessPlan.id));
-            console.log(businessPlan.id + "test")
 
         }
     }, [dispatch, busineessPlanId, businessPlan, history]);
@@ -203,6 +205,14 @@ function SalesForecast() {
         history.push(`/overview`)
     }
 
+    const changePlan = (id) => {
+        dispatch(changState(id))
+    }
+
+    const getKey = (key) => {
+        console.log(key);
+        setTabKey(key);
+    }
     return (
         <Row align="middle">
             <Col span={20} offset={2}>
@@ -235,16 +245,17 @@ function SalesForecast() {
                     </Col>
                 </Row>
 
-                <Tabs defaultActiveKey="1" >
-                    {product.products.map(x => (
+                <Tabs defaultActiveKey={tabKey} onChange={getKey} >
+                    {product.products.map((x) =>
                         <>
-                            <TabPane tab={x.name} key={x.id}>
+                            <TabPane tab={x.name} key={x.id} >
                                 <Row className="margin-top-links about-Title-section-Style" align="middle">
                                     <Col span={6} >
                                         <div style={{ marginRight: '40px', position: "absolute" }}>
                                             <Typography.Title className="about-Title-heading-Style">{x.name}</Typography.Title>
                                             <Typography.Text className="text-Style">
-                                                Product description Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+                                                Product description Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+                                                Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
                                                 You can add products at Value proposition
                                             </Typography.Text>
                                         </div>
@@ -257,9 +268,10 @@ function SalesForecast() {
                                                 <Col span={3} offset={12}>
 
                                                     <Input.Group compact className="card-input-Group-style">
-                                                        <Select defaultValue="Option1">
-                                                            <Option value="Option1">1st Mo.</Option>
-                                                            <Option value="Option2">2st Mo.</Option>
+                                                        <Select defaultValue="1">
+                                                            {dataSource.map(x => (
+                                                                <option value={x.month}>{x.month}</option>
+                                                            ))}
                                                         </Select>
 
                                                     </Input.Group>
@@ -271,17 +283,17 @@ function SalesForecast() {
                                 </Row>
                                 <Row align="middle" className="margin-top-20px">
                                     <Col span={12} offset={8} >
-                                        <Card className="card-style-height-border-radius"  >
+                                        <Card className="card-style-height-border-radius" >
                                             <Row>
                                                 <Col span={9}><p className="card-style-font">Do you have plan to export?</p></Col>
                                                 <Col span={3} offset={12}>
-                                                    <Input.Group compact className="card-input-Group-style">
-                                                        <Select defaultValue="Option1">
-                                                            <Option value="Option1">Yes</Option>
-                                                            <Option value="Option2">NO</Option>
+                                                    <Input.Group compact className="card-input-Group-style" >
+                                                        <Select defaultValue={x.Expoted === true ? "yes" : "No"} onChange={() => changePlan(x.id)}  >
+                                                            <Option value="yes" >Yes</Option>
+                                                            <Option value="no" >NO</Option>
                                                         </Select>
-
                                                     </Input.Group>
+
                                                 </Col>
                                             </Row>
                                         </Card>
@@ -297,7 +309,7 @@ function SalesForecast() {
                                     </Col>
                                 </Row>
 
-                                <Row align="middle" className="margin-top-20px">
+                                <Row align="middle" className={`margin-top-20px ${x.Expoted === false ? `display-none` : `fake`}`} >
                                     <Col span={12} offset={8} >
 
                                         <Table title={() => 'Sales forecast outside EU'} columns={columns} dataSource={dataSource} pagination={false} />
@@ -307,7 +319,8 @@ function SalesForecast() {
 
                             </TabPane>
                         </>
-                    ))}
+
+                    )}
                 </Tabs>
 
 
