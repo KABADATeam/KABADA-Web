@@ -7,7 +7,6 @@ export const getProducts = (planId) => {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/products/' + planId, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: "FETCHING_PRODUCTS_SUCCESS", payload: response.data });
-            console.log(response.data)
         } catch (error) {
             if (error.response === undefined) {
                 dispatch({
@@ -22,3 +21,9 @@ export const getProducts = (planId) => {
         }
     };
 };
+
+export const changState = (id) => {
+    return async (dispatch) => {
+        dispatch({ type: "SETING_PRODUCTS_SUCCESS", payload: id });
+    }
+}
