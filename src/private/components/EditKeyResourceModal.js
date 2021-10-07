@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Form, Space, Select, Radio, Input} from 'antd';
+import { Modal, Button, Form, Space, Select, Radio, Input } from 'antd';
 import '../../css/customModal.css';
 import { updateResource } from "../../appStore/actions/resourcesAction";
 
@@ -22,26 +22,27 @@ const inputStyle = {
 class EditKeyResourceModal extends Component {
     state = {
         selectedItemId: null,
-        selections: [ 0, 0 ],
+        selections: [0, 0],
         name: null,
-        is_changed: [ false, false ]
+        is_changed: [false, false]
     }
 
     onCancel = () => {
         this.setState({
             selectedItemId: null,
-            selections: [ 0, 0 ],
+            selections: [0, 0],
             name: null,
-            is_changed: [ false, false ]
+            is_changed: [false, false]
         });
-        this.props.handleClose(); 
+        this.props.handleClose();
     }
 
     onOk = () => {
+        const arrayOfSelections = this.transformSelections();
         const category = this.props.categories.find(x => x.id === this.props.resource.category.id);
         let type = category.types.find(x => x.id === (this.state.selectedItemId === null ? this.props.resource.type_id : this.state.selectedItemId));
         const selections = type.selections.map((item, i) => {
-            const options = item.options.map((x, j) => j === this.state.selections[i] ? { title: x.title, selected: true } : x);
+            const options = item.options.map((x, j) => (j === this.state.selections[i] && this.state.is_changed[i]) ? { title: x.title, selected: true } : ((j === arrayOfSelections[i] && !this.state.is_changed[i]) ? { title: x.title, selected: true } : x));
             return { title: item.title, options: options }
         });
 
@@ -52,13 +53,13 @@ class EditKeyResourceModal extends Component {
             "name": this.state.name === null ? this.props.resource.name : this.state.name,
             "selections": selections
         };
-        
+
         this.props.updateResource(postObject, category);
         this.setState({
             selectedItemId: null,
-            selections: [ 0, 0 ],
+            selections: [0, 0],
             name: null,
-            is_changed: [ false, false ]
+            is_changed: [false, false]
         });
         this.props.handleClose();
     }
@@ -72,13 +73,15 @@ class EditKeyResourceModal extends Component {
     transformSelections() {
         let array = [];
         if (this.props.resource !== null && this.props.resource !== undefined) {
-            this.props.resource.selections.forEach(item =>
-                item.options.forEach((o, j) => {
-                    if (o.selected === true) {
-                        array.push(j);
-                    }
-                })
-            );
+            if (this.props.resource.selections !== null) {
+                this.props.resource.selections.forEach(item =>
+                    item.options.forEach((o, j) => {
+                        if (o.selected === true) {
+                            array.push(j);
+                        }
+                    })
+                );
+            }
         }
         return array;
     }
@@ -100,14 +103,14 @@ class EditKeyResourceModal extends Component {
             );
             return uiElements;
         }
-        else{
+        else {
             return <div></div>
         }
     }
 
     getInitialSelections() {
         const array = this.transformSelections();
-        const uiElements = this.props.resource.selections.map((item, i) =>
+        const uiElements = this.props.resource.selections !== null ? this.props.resource.selections.map((item, i) =>
             <Form.Item key={i} label={item.title}>
                 <Radio.Group key={i} onChange={this.onRadioSelection.bind(this, i)} value={this.state.is_changed[i] === false ? array[i] : this.state.selections[i]} >
                     <Space direction="vertical">
@@ -118,7 +121,8 @@ class EditKeyResourceModal extends Component {
                     </Space>
                 </Radio.Group>
             </Form.Item>
-        );
+        )
+            : []
         return uiElements;
     }
 
@@ -136,7 +140,7 @@ class EditKeyResourceModal extends Component {
     onSelectionChange(id) {
         this.setState({
             selectedItemId: id,
-            selections: [ 0, 0 ]
+            selections: [0, 0]
         });
     }
 
@@ -180,16 +184,16 @@ class EditKeyResourceModal extends Component {
 
                     <Form layout="vertical">
                         <Form.Item key={100} label="Type">
-                            <Select defaultValue={defaultValue} value={this.state.selectedItemId === null ? defaultValue : this.state.selectedItemId} onChange={this.onSelectionChange.bind(this)} style={{width:548}}>
+                            <Select defaultValue={defaultValue} value={this.state.selectedItemId === null ? defaultValue : this.state.selectedItemId} onChange={this.onSelectionChange.bind(this)} style={{ width: 548 }}>
                                 {options}
-                            </Select>                                                           
+                            </Select>
                         </Form.Item>
 
                         <Form.Item key={101} label="Description (optional)">
-                            <Input placeholder="Your description goes here" value={this.state.name === null ? this.props.resource.name : this.state.name} onChange={this.onChange.bind(this)} size="large" style={{...inputStyle, width:548}}/>                                                
-                        </Form.Item>    
-                        {elements}                   
-                    </Form>            
+                            <Input placeholder="Your description goes here" value={this.state.name === null ? this.props.resource.name : this.state.name} onChange={this.onChange.bind(this)} size="large" style={{ ...inputStyle, width: 548 }} />
+                        </Form.Item>
+                        {elements}
+                    </Form>
                 </Modal >
             </>
         )
@@ -204,5 +208,5 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { updateResource } )(EditKeyResourceModal);
+export default connect(mapStateToProps, { updateResource })(EditKeyResourceModal);
 

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar, Dropdown, Menu, message } from 'antd';
+import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar, Dropdown, Menu, message, Popconfirm } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { discardChanges, saveChanges } from "../../appStore/actions/swotAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { updateStatus, getMembers, deleteMember, getSelectedPlanOverview, getSelectedPlanDetails, getImage } from "../../appStore/actions/planActions";
+import { updateStatus, getMembers, deleteMember, getSelectedPlanOverview, getSelectedPlanDetails, getImage, overviewTest, removePlan } from "../../appStore/actions/planActions";
 import { getCountryShortCode } from "../../appStore/actions/countriesActions"
 import { withRouter } from 'react-router-dom';
 import InviteMemberModal from '../components/overview/InviteMemberModal';
@@ -114,6 +114,11 @@ class Overview extends React.Component {
         });
     }
 
+    onMoreActionsMenuClick = () => {
+        this.props.removePlan(this.props.businessPlan.id)
+        this.props.history.push(`/personal-business-plans`);
+    };
+
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
             if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
@@ -123,16 +128,18 @@ class Overview extends React.Component {
                     this.props.getMembers(this.props.businessPlan.id);
                     this.props.getSelectedPlanDetails(this.props.businessPlan.id);
                     this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-                    const obj = {id: this.props.businessPlan.id}
+                    const obj = { id: this.props.businessPlan.id }
                     this.props.getCountryShortCode(this.props.getCountryShortCode(obj))
+                    this.props.overviewTest(this.props.businessPlan.id);
                 });
             }
         } else {
             this.props.getMembers(this.props.businessPlan.id);
             this.props.getSelectedPlanDetails(this.props.businessPlan.id);
             this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-            const obj = {id: this.props.businessPlan.id}
+            const obj = { id: this.props.businessPlan.id }
             this.props.getCountryShortCode(this.props.getCountryShortCode(obj))
+            this.props.overviewTest(this.props.businessPlan.id);
 
         }
     }
@@ -141,10 +148,23 @@ class Overview extends React.Component {
         const isVisibleHeader = this.getUpdatesWindowState();
         const membersList = this.props.businessPlan.members === null ? [] : this.props.businessPlan.members;
         const overview = this.props.businessPlan.overview;
-        const menu = (
+        const viewMenu = (
             <Menu>
-                <Menu.Item key="1">Something</Menu.Item>
-                <Menu.Item key="2">Something</Menu.Item>
+                <Menu.Item key="1">View</Menu.Item>
+            </Menu>
+        );
+        const moreActionsMenu = (
+            <Menu >
+                <Menu.Item key="1">
+                    <Popconfirm
+                        title="Are you sure to delete this business plan?"
+                        onConfirm={this.onMoreActionsMenuClick}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <a href="#">Delete</a>
+                    </Popconfirm>
+                </Menu.Item>
             </Menu>
         );
         if (this.props.businessPlan.overview === undefined) {
@@ -179,12 +199,12 @@ class Overview extends React.Component {
                         <Col span={4}>
                             <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                                 <Space wrap>
-                                    <Dropdown overlay={menu}>
+                                    <Dropdown overlay={viewMenu}>
                                         <a className="ant-dropdown-link">
                                             View <DownOutlined />
                                         </a>
                                     </Dropdown>
-                                    <Dropdown overlay={menu}>
+                                    <Dropdown overlay={moreActionsMenu}>
                                         <a className="ant-dropdown-link">
                                             More Actions <DownOutlined />
                                         </a>
@@ -280,18 +300,18 @@ class Overview extends React.Component {
                                             </Card>
                                             <Card style={{ marginTop: '10px' }}>
                                                 <List>
-                                                    <List.Item key='10' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to="/fixed-and-variable-costs">Fixed and Variable Costs</Link></Space>}
-                                                            description={overview.financial_projections === "" || overview.financial_projections === null ? "Fixed and variable costs" : overview.financial_projections.description} />
-                                                        <div>...</div>
-                                                    </List.Item>
                                                     <List.Item key='11' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
                                                             avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/business-start-up-investments'>Business start-up investments</Link></Space>}
                                                             description="Description goes here" />
+                                                        <div>...</div>
+                                                    </List.Item>
+                                                    <List.Item key='10' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                        <List.Item.Meta
+                                                            avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                            title={<Space><Link to="/fixed-and-variable-costs">Fixed and Variable Costs</Link></Space>}
+                                                            description={overview.financial_projections === "" || overview.financial_projections === null ? "Fixed and variable costs" : overview.financial_projections.description} />
                                                         <div>...</div>
                                                     </List.Item>
                                                     <List.Item key='13' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
@@ -415,7 +435,8 @@ const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
         uploadedFile: state.uploadedFile,
+        overviewTest: state.overviewTestLink
     };
 }
 
-export default connect(mapStateToProps, { getImage, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, getCountryShortCode })(withRouter(Overview))
+export default connect(mapStateToProps, { getImage, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, getCountryShortCode, overviewTest, removePlan })(withRouter(Overview))

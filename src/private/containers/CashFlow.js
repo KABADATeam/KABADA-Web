@@ -1,38 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tab, Tabs } from 'antd';
-import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
+import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Space, Table } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import BusinessStartUpInvestments from '../components/businessFinancialInvestments/BusinessStartUpInvestments';
-import BusinessFinancing from '../components/businessFinancialInvestments/BusinessFinancing';
-import { getBusinessInvestmentInformation } from "../../appStore/actions/businessInvestmentAction";
+import { tableTitleStyle } from '../../styles/customStyles';
 
 const { Text } = Typography;
-const { TabPane } = Tabs
+const { Title } = Typography;
 
 const titleTextStyle = {
     fontStyle: "normal",
     fontWeight: "600",
     fontSize: "30px",
     lineHeight: "38px"
-}
-
-const aboutTitleTextStyle = {
-    fontStyle: 'normal',
-    fontWeight: '600',
-    fontSize: '20px',
-    marginBottom: '16px',
-}
-
-const textStyle = {
-    fontSize: '14px',
-    color: '#8C8C8C',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    lineHeight: '22px',
-    marginRight: '40px',
 }
 
 const titleButtonStyle = {
@@ -44,18 +25,29 @@ const titleButtonStyle = {
     borderRadius: "4px",
     backgroundColor: "transparent",
 }
-
-class BusinessInvestmentsWindow extends React.Component {
+const textStyle = {
+    fontSize: '14px',
+    color: '#8C8C8C',
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    lineHeight: '22px',
+    marginRight: '40px',
+}
+class CashFlow extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            vats: {}
-        }
+
+        };
     }
 
     onBackClick() {
         this.props.history.push(`/overview`);
+    }
+
+    onCompletedChange(state) {
+        //this.props.saveState(this.props.businessPlan.id, state);
     }
 
     componentDidMount() {
@@ -64,15 +56,14 @@ class BusinessInvestmentsWindow extends React.Component {
                 this.props.history.push(`/`);
             } else {
                 this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getBusinessInvestmentInformation(this.props.businessPlan.id);
                 });
             }
         } else {
-            this.props.getBusinessInvestmentInformation(this.props.businessPlan.id);
+
         }
     }
     render() {
-
+        console.log(this.props.businessPlan.id)
         return (
             <>
                 <Col span={16} offset={4}>
@@ -84,45 +75,66 @@ class BusinessInvestmentsWindow extends React.Component {
                             <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            Financial projections
+                            Cash flow
                         </Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
 
-                <Row align="middle" style={{ marginTop: "9px", marginBottom: "25px" }}>
+                <Row align="middle" style={{ marginTop: "9px" }}>
                     <Col span={12} offset={4}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
-                            <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Business start-up investments</Text>
+                            <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Cash flow</Text>
                         </div>
                     </Col>
                     <Col span={4}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch />
+                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={false} onClick={this.onCompletedChange.bind(this)} />
                         </div>
                     </Col>
                 </Row>
                 <Col span={16} offset={4}>
-                    <Tabs defaultActiveKey="1"  >
-                        <TabPane tab="Business start-up investments" key="1">
-                            <BusinessStartUpInvestments investments={this.props.investments} />
-                        </TabPane>
-                        <TabPane tab="Business Financing" key="2">
-                            <BusinessFinancing investments={this.props.investments} />
-                        </TabPane>
-                    </Tabs>
+                    <Divider />
                 </Col>
+                <Col offset={4} span={16}>
+                    <Row style={{ marginBottom: "50px" }}>
+                        <Col span={12}>
+                            <Title level={4}>Cash flow</Title>
+                            <Typography.Text>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</Typography.Text>
+                        </Col>
+                    </Row>
+                    <Row style={{ marginBottom: "50px" }}>
+                        <Col span={24}>
+                            <Table
+                                pagination={false}
+                            />
+                        </Col>
+                    </Row>
+                    <Row style={{ marginBottom: "50px" }}>
+                        <Col span={24}>
+                            <Table
+                                pagination={false}
+                            />
+                        </Col>
+                    </Row>
+                    <Row style={{ marginBottom: "50px" }}>
+                        <Col span={24}>
+                            <Table
+                                pagination={false}
+                            />
+                        </Col>
+                    </Row>
+                </Col>
+
             </>
         );
     }
 }
 
-
 const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
-        investments: state.businessInvestment,
-        countryCode: state.countryShortCode,
     };
 }
-export default connect(mapStateToProps, { refreshPlan, getBusinessInvestmentInformation})(BusinessInvestmentsWindow);
+
+export default connect(mapStateToProps, { refreshPlan })(CashFlow);

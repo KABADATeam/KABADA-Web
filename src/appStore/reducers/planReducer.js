@@ -15,20 +15,20 @@ const getPercentage = (overview) => {
     //k = overview.team_competencies.is_completed === true ? k + 1 : k;         // not implemented, yet
     k = overview.value_proposition.is_completed === true ? k + 1 : k;
 
-    return Math.round((k/total) * 100);
+    return Math.round((k / total) * 100);
 }
 
 
 export const privatePlansReducer = (state = [], action) => {
     switch (action.type) {
         case "FETCHING_PLANS_SUCCESS":
-            return action.payload.map(obj=> ({ ...obj, coverImage: null }));
+            return action.payload.map(obj => ({ ...obj, coverImage: null }));
         case 'SAVING_PLAN_SUCCESS':
-            return [ ...state, action.payload ];
+            return [...state, action.payload];
         case 'FETCHING_IMAGE_SUCCESS':
             return state.map(x => x.id === action.payload.id ? action.payload : x);
         case "REMOVING_PLAN_SUCCESS":
-            return action.payload.data.filter(plan => plan.id !== action.payload.id);
+            return state.filter(plan => plan.id !== action.payload.id);
         case "FETCHING_PLAN_OVERVIEW_SUCCESS":
             const plan = state.filter(x => x.id === action.payload.id)[0];
             const percentage = getPercentage(action.payload.overview);
@@ -76,7 +76,17 @@ export const updatePlanReducer = (state = null, action) => {
 export const allPublicPlansFetchReducer = (state = [], action) => {
     switch (action.type) {
         case "FETCHING_ALL_PLANS_SUCCESS":
-            return action.payload.publicBusinessPlans.businessPlan.map(item => ({ ...item, "key": item.id  }) );
+            return action.payload.publicBusinessPlans.businessPlan.map(item => ({ ...item, "key": item.id }));
+        default:
+            return state;
+    }
+};
+
+export const overviewTestReducer = (state = [], action) => {
+    switch (action.type) {
+        case "FETCHING_OVERVIEW_TEST":
+            console.log(action.payload);
+            return state
         default:
             return state;
     }

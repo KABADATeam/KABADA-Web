@@ -101,7 +101,10 @@ export const removePlan = (planId) => {
         dispatch({ type: "LOADING", payload: true });
         try {
             const token = getState().user.access_token;
-            await kabadaAPI.delete("api/plans/remove/" + planId, { headers: { Authorization: `Bearer ${token}` } });
+            const postObject = {
+                'id': planId,
+            }
+            await kabadaAPI.post("api/plans/remove/", postObject, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: "REMOVING_PLAN_SUCCESS", payload: { data: getState().savedBusinessPlans, id: planId } });
         } finally {
             dispatch({ type: "LOADING", payload: false });
@@ -211,7 +214,7 @@ export const getSelectedPlanDetails = (planId) => {
 
 export const updateImage = (plan) => {
     return async (dispatch, getState) => {
-        dispatch({ type: "IMAGE_LOADING", payload: true });
+        dispatch({ type: "LOADING", payload: true });
         try {
             if (plan.planImage !== null) {
                 const token = getState().user.access_token;
@@ -221,7 +224,21 @@ export const updateImage = (plan) => {
                 return;
             }
         } finally {
-            dispatch({ type: "IMAGE_LOADING", payload: false });
+            dispatch({ type: "LOADING", payload: false });
+        }
+    }
+}
+
+export const overviewTest = (planId) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true });
+        try {
+            const token = getState().user.access_token;
+            const response = await kabadaAPI.get('api/Technical/test/' + planId, { headers: { Authorization: `Bearer ${token}` } });
+            console.log(response);
+            dispatch({ type: "FETCHING_OVERVIEW_TEST", payload: response.data });
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
         }
     }
 }

@@ -1,12 +1,14 @@
 const getOwnership = (obj) => {
     let ownership = "";
-    obj.selections.forEach(selection => {
-        selection.options.forEach(option => {
-            if (option.selected === true) {
-                ownership = ownership + option.title + " ";
-            }
+    if (obj.selections) {
+        obj.selections.forEach(selection => {
+            selection.options.forEach(option => {
+                if (option.selected === true) {
+                    ownership = ownership + option.title + " ";
+                }
+            });
         });
-    });
+    }
     return ownership;
 }
 
@@ -17,15 +19,16 @@ export const resourcesReducer = (
     }, action) => {
     switch (action.type) {
         case "FETCHING_RESOURCES_SUCCESS":
-            const resources = action.payload.key_resources.map(obj=> ({ ...obj, "key": obj.resource_id, "ownership": getOwnership(obj) }));
+            const resources = action.payload.key_resources.map(obj => ({ ...obj, "key": obj.resource_id, "ownership": getOwnership(obj) }));
             return { ...action.payload, "key_resources": resources };
         case "SAVE_RESOURCE_SUCCESS":
-            const _resources = [ ...state.key_resources, { ...action.payload, "ownership": getOwnership(action.payload) } ];
+            const _resources = [...state.key_resources, { ...action.payload, "ownership": getOwnership(action.payload) }];
             return { ...state, "key_resources": _resources };
         case "REMOVING_RESOURCE_SUCCESS":
             const resources_ = state.key_resources.filter(x => x.resource_id !== action.payload);
             return { ...state, "key_resources": resources_ };
         case "UPDATE_RESOURCE_SUCCESS":
+            console.log(action.payload)
             const _resources_ = state.key_resources.map(x => x.resource_id === action.payload.resource_id ? { ...action.payload, "ownership": getOwnership(action.payload) } : x);
             return { ...state, "key_resources": _resources_ };
         case "SAVE_CHANGES_SUCCESS":
