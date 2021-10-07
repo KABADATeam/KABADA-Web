@@ -72,7 +72,6 @@ class FixedCostTable extends React.Component {
                             <Option value={"9th mo."}>{"9th mo."}</Option>
                             <Option value={"10th mo."}>{"10th mo."}</Option>
                             <Option value={"11th mo."}>{"11th mo."}</Option>
-                            <Option value={"11th mo."}>{"11th mo."}</Option>
                             <Option value={"12th mo."}>{"12th mo."}</Option>
                         </Select>
                     </Input.Group>
