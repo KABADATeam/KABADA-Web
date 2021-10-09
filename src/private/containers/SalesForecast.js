@@ -6,6 +6,9 @@ import { Breadcrumb, Col, Space, Row, Button, Typography, Switch, Card, Tabs, In
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getProducts, changState } from '../../appStore/actions/salesForecastActions';
+import SalesForecastInEUTable from '../components/sales_Forecast/SalesForecastInEUTable';
+import SalesForecastOutsideEUTable from '../components/sales_Forecast/SalesForecastOutsideEUTable';
+import SalesForecastSelect from '../components/sales_Forecast/SalesForecastSelect';
 import '../../css/SalesForecast.css'
 
 function SalesForecast() {
@@ -15,169 +18,49 @@ function SalesForecast() {
 
     const { Option } = Select;
 
+    const [readyMonth, setReadyMonth] = useState("12th mo");
     const [tabKey, setTabKey] = useState("");
 
     const dataSource = [
         {
             key: '1',
-            month: 1,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
-            vat: 21 + '%',
-            paid: 'Immediate',
+            month: "1st mo."
         }, {
             key: '2',
-            month: 2,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
-            vat: 21 + '%',
-            paid: 'Immediate',
+            month: '2nd mo.',
         }, {
             key: '3',
-            month: 3,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
-            vat: 21 + '%',
-            paid: 'Immediate',
+            month: '3rd mo.',
         }, {
             key: '4',
-            month: 4,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
-            vat: 21 + '%',
-            paid: 'Immediate',
+            month: '4th mo.',
         }, {
             key: '5',
-            month: 5,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
-            vat: 21 + '%',
-            paid: 'Immediate',
+            month: "5th mo.",
         }, {
             key: '6',
-            month: 6,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
-            vat: 21 + '%',
-            paid: 'Immediate',
+            month: '6th mo.',
         }, {
             key: '7',
-            month: 7,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
-            vat: 21 + '%',
-            paid: 'Immediate',
+            month: '7th mo.',
         }, {
             key: '8',
-            month: 8,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
-            vat: 21 + '%',
-            paid: 'Immediate',
+            month: '8th mo.',
         }, {
             key: '9',
-            month: 9,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
-            vat: 21 + '%',
-            paid: 'Immediate',
+            month: '9th mo.',
         }, {
             key: '10',
-            month: 10,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
-            vat: 21 + '%',
-            paid: 'Immediate',
+            month: '10th mo.',
         }, {
             key: '11',
-            month: 11,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
-            vat: 21 + '%',
-            paid: 'Immediate',
+            month: '11th mo.',
         }, {
             key: '12',
-            month: 12,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
-            vat: 21 + '%',
-            paid: 'Immediate',
+            month: '12th mo.',
         },
 
     ];
-
-    const columns = [
-        {
-            title: 'Month',
-            dataIndex: 'month',
-            key: 'month',
-
-
-        },
-        {
-            title: 'Euro/pc without VAT',
-            dataIndex: 'withoutVAT',
-            key: 'withoutVAT',
-            width: '5%',
-            render: text => <input className="input-in-table" placeholder={text} />,
-        },
-        {
-            title: 'Qty',
-            dataIndex: 'Qty',
-            key: 'Qty',
-            width: '5%',
-            render: text => <input className="input-in-table" placeholder={text} />,
-        },
-        {
-            title: 'Total',
-            dataIndex: 'total',
-            key: 'total',
-            width: '5%',
-        },
-        {
-            title: 'VAT',
-            dataIndex: 'vat',
-            key: 'vat',
-            width: '10%',
-            render: () => (
-                <Input.Group compact>
-                    <Select defaultValue="21%">
-                        <Option value="21">21 %</Option>
-                        <Option value="30">30 %</Option>
-                        <Option value="40">40 %</Option>
-                    </Select>
-                </Input.Group>
-            )
-        },
-        {
-            title: 'When paid',
-            dataIndex: 'paid',
-            key: 'paid',
-            width: '10%',
-            render: () => (
-                <Input.Group compact>
-                    <Select defaultValue="Immediate">
-                        <Option value="Immediate">Immediate</Option>
-                        <Option value="Later">Later</Option>
-                        <Option value="Immediate1">Immediate</Option>
-                    </Select>
-                </Input.Group>
-            )
-        },
-    ];
-
 
     const businessPlan = useSelector((state) => state.selectedBusinessPlan)
     const { id: busineessPlanId } = businessPlan;
@@ -204,7 +87,16 @@ function SalesForecast() {
     const onBackClick = () => {
         history.push(`/overview`)
     }
+    const handelMonth = (value) => {
+        console.log("selected value " + value);
+        if (value == 5) {
+            console.log("working")
 
+        } else {
+            console.log("Not")
+        }
+
+    }
     const changePlan = (id) => {
         dispatch(changState(id))
     }
@@ -215,8 +107,8 @@ function SalesForecast() {
     }
     return (
         <Row align="middle">
-            <Col span={20} offset={2}>
-                <Col span={16} offset={4}>
+            <Col span={20} offset={3}>
+                <Col span={16} offset={0}>
                     <Breadcrumb className="margin-top-links">
                         <Breadcrumb.Item className="margin-top-links">
                             <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
@@ -225,19 +117,19 @@ function SalesForecast() {
                             <Space><Link to='/overview'>{businessPlan.name}</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Space>Sales Forecast</Space>
+                            <Space>Sales forecast</Space>
                         </Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
 
                 <Row className="margin-heading" align="middle">
-                    <Col span={12} offset={4}>
+                    <Col span={12} offset={0}>
                         <div className="button-style-heading-section">
                             <Button className="back-button-style" icon={<ArrowLeftOutlined />} onClick={() => onBackClick()}></Button>
-                            <Text className="titleTextStyle" >Sales Forecust</Text>
+                            <Text className="titleTextStyle" >Sales forecust</Text>
                         </div>
                     </Col>
-                    <Col span={4}>
+                    <Col span={4} offset={6}>
                         <div className="button-style-heading-section">
                             <Text className="mark-as-completed-style">Mark as completed: </Text><Switch className="margin-left-8px" />
                         </div>
@@ -268,11 +160,13 @@ function SalesForecast() {
                                                 <Col span={3} offset={12}>
 
                                                     <Input.Group compact className="card-input-Group-style">
-                                                        <Select defaultValue="1">
+                                                        <SalesForecastSelect defaultValue={readyMonth} onChange={handelMonth} />
+                                                        {/* <Select style={{ width: '100px' }} defaultValue={readyMonth} onChange={handelMonth}>
                                                             {dataSource.map(x => (
-                                                                <option value={x.month}>{x.month}</option>
+                                                                <option key={x.key} value={x.key}>{x.month}</option>
                                                             ))}
-                                                        </Select>
+
+                                                        </Select> */}
 
                                                     </Input.Group>
                                                 </Col>
@@ -304,15 +198,14 @@ function SalesForecast() {
 
                                 <Row align="middle" className="margin-top-20px">
                                     <Col span={12} offset={8} >
-
-                                        <Table title={() => 'Sales forecast in EU'} columns={columns} dataSource={dataSource} pagination={false} />
+                                        <SalesForecastInEUTable />
                                     </Col>
+
                                 </Row>
 
-                                <Row align="middle" className={`margin-top-20px ${x.Expoted === false ? `display-none` : `fake`}`} >
+                                <Row align="middle" className={`margin-top-20px ${x.Expoted === false ? `display-none` : ``}`} >
                                     <Col span={12} offset={8} >
-
-                                        <Table title={() => 'Sales forecast outside EU'} columns={columns} dataSource={dataSource} pagination={false} />
+                                        <SalesForecastOutsideEUTable />
                                     </Col>
                                 </Row>
 

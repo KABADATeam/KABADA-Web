@@ -146,7 +146,7 @@ export const updateProduct = (postObject, callback) => {
                 "product_type": productType.title,
                 "value": qualityLevel.title
             }
-            
+
             dispatch({ type: 'UPDATE_PRODUCT_SUCCESS', payload: obj });
             callback();
         } catch (error) {
