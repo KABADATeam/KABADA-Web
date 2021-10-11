@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Typography, Space, Card, Divider, Select, Checkbox } from 'antd';
 import { cardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
-import { setProductPriceLevel, setIncomeSources,getProduct,getProductPriceLevels,getAditionalIncomeSources } from "../../../appStore/actions/productActions";
+import { setProductPriceLevel, setIncomeSources, getProduct, getProductPriceLevels, getAditionalIncomeSources } from "../../../appStore/actions/productActions";
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -25,23 +25,23 @@ class EditPriceLevelComponent extends Component {
         this.state = {
             checked: []
         };
-      }
-      //everytime you check checkbox it will add id of income source to checked array ['7878787','898954654654654']
-      onChange = checkedValues => {
+    }
+    //everytime you check checkbox it will add id of income source to checked array ['7878787','898954654654654']
+    onChange = checkedValues => {
         this.setState(() => {
-          return { checked: checkedValues };
+            return { checked: checkedValues };
         });
         this.props.setIncomeSources(checkedValues);
-      };
-    
-      isDisabled = id => {
+    };
+
+    isDisabled = id => {
         return (
-          this.state.checked.length > 4 && this.state.checked.indexOf(id) === -1
+            this.state.checked.length > 4 && this.state.checked.indexOf(id) === -1
         );
-      }; 
-    
-    componentDidMount(){
-        this.props.getProduct(this.props.productId,(data)=>{
+    };
+
+    componentDidMount() {
+        this.props.getProduct(this.props.productId, (data) => {
             this.setState({
                 checked: this.props.product.selected_additional_income_sources
             })
@@ -82,7 +82,7 @@ class EditPriceLevelComponent extends Component {
                         <Text style={descriptionTextStyle}>Select up to 5 sources</Text>
                         <Checkbox.Group onChange={this.onChange} value={this.props.product.selected_additional_income_sources}>
                             <Space direction="vertical">
-                                {this.props.incomeSources.map((obj) =>(
+                                {this.props.incomeSources.map((obj) => (
                                     <Checkbox value={obj.id} key={obj.key} disabled={this.isDisabled(obj.id)}>{obj.title}</Checkbox>
                                 ))}
                             </Space>
@@ -102,4 +102,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { setProductPriceLevel, setIncomeSources,getProduct,getProductPriceLevels,getAditionalIncomeSources })(EditPriceLevelComponent);
+export default connect(mapStateToProps, { setProductPriceLevel, setIncomeSources, getProduct, getProductPriceLevels, getAditionalIncomeSources })(EditPriceLevelComponent);

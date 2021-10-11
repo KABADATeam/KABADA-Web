@@ -1,32 +1,31 @@
-
 export const productsReducer = (
     state = {
         is_proposition_completed: false,
         products: []
     }, action) => {
-        switch (action.type) {
-            case "FETCHING_PRODUCTS_SUCCESS":
-                return { ...state, "products": action.payload.products.map(obj=> ({ ...obj, key: obj.id })), "is_proposition_completed": action.payload.is_proposition_completed };
-            case "SAVE_PRODUCT_SUCCESS":
-                const products = [ ...state.products, { ...action.payload } ];
-                return { ...state, "products": products };
-            case "UPDATE_PRODUCT_SUCCESS":
-                const products_ = state.products.map(x => x.id === action.payload.id ? action.payload : x);
-                return { ...state, "products": products_ };
-            case "REMOVING_PRODUCT_SUCCESS":
-                const _products = state.products.filter(x => x.id !== action.payload);
-                return { ...state, "products": _products };
-            case "SAVE_STATE_SUCCESS":
-                return { ...state, "is_proposition_completed": action.payload };
-            default:
-                return state;
-        }
+    switch (action.type) {
+        case "FETCHING_PRODUCTS_SUCCESS":
+            return { ...state, "products": action.payload.products.map(obj => ({ ...obj, key: obj.id })), "is_proposition_completed": action.payload.is_proposition_completed };
+        case "SAVE_PRODUCT_SUCCESS":
+            const products = [...state.products, { ...action.payload }];
+            return { ...state, "products": products };
+        case "UPDATE_PRODUCT_SUCCESS":
+            const products_ = state.products.map(x => x.id === action.payload.id ? action.payload : x);
+            return { ...state, "products": products_ };
+        case "REMOVING_PRODUCT_SUCCESS":
+            const _products = state.products.filter(x => x.id !== action.payload);
+            return { ...state, "products": _products };
+        case "SAVE_STATE_SUCCESS":
+            return { ...state, "is_proposition_completed": action.payload };
+        default:
+            return state;
+    }
 };
 
 export const productTypesReducer = (state = [], action) => {
     switch (action.type) {
         case "FETCHING_PRODUCT_TYPES_SUCCESS":
-            return action.payload.map(obj=> ({ ...obj, key: obj.id }));
+            return action.payload.map(obj => ({ ...obj, key: obj.id }));
         default:
             return state;
     }
@@ -35,13 +34,13 @@ export const productTypesReducer = (state = [], action) => {
 export const productFeatureLevelsReducer = (state = { "priceLevels": [], "innovative": [], "quality": [], "differentiation": [] }, action) => {
     switch (action.type) {
         case "FETCHING_PRODUCT_PRICE_LEVELS_SUCCESS":
-            return { ...state, "priceLevels": action.payload.map(obj=> ({ ...obj, key: obj.id })) };
+            return { ...state, "priceLevels": action.payload.map(obj => ({ ...obj, key: obj.id })) };
         case "FETCHING_PRODUCT_INNOVATIVE_LEVELS_SUCCESS":
-            return { ...state, "innovative": action.payload.map(obj=> ({ ...obj, key: obj.id })) };
+            return { ...state, "innovative": action.payload.map(obj => ({ ...obj, key: obj.id })) };
         case "FETCHING_PRODUCT_QUALITY_LEVELS_SUCCESS":
-            return { ...state, "quality": action.payload.map(obj=> ({ ...obj, key: obj.id })) };
+            return { ...state, "quality": action.payload.map(obj => ({ ...obj, key: obj.id })) };
         case "FETCHING_PRODUCT_DIFFERENTIATION_LEVELS_SUCCESS":
-            return { ...state, "differentiation": action.payload.map(obj=> ({ ...obj, key: obj.id })) };
+            return { ...state, "differentiation": action.payload.map(obj => ({ ...obj, key: obj.id })) };
         default:
             return state;
     }
@@ -50,7 +49,7 @@ export const productFeatureLevelsReducer = (state = { "priceLevels": [], "innova
 export const additionalIncomeSourcesReducer = (state = [], action) => {
     switch (action.type) {
         case "FETCHING_ADDITIONAL_INCOME_SOURCES_SUCCESS":
-            return action.payload.map(obj=> ({ ...obj, key: obj.id }));
+            return action.payload.map(obj => ({ ...obj, key: obj.id }));
         default:
             return state;
     }
@@ -59,7 +58,7 @@ export const additionalIncomeSourcesReducer = (state = [], action) => {
 export const productFeaturesReducer = (state = [], action) => {
     switch (action.type) {
         case "FETCHING_PRODUCT_FEATURES_SUCCESS":
-            return action.payload.map(obj=> ({ ...obj, key: obj.id }));
+            return action.payload.map(obj => ({ ...obj, key: obj.id }));
         default:
             return state;
     }
