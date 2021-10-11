@@ -1,13 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tab, Tabs } from 'antd';
-import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined, RightSquareFilled } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
 import { connect } from 'react-redux';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import BusinessStartUpInvestments from '../components/businessFinancialInvestments/BusinessStartUpInvestments';
 import BusinessFinancing from '../components/businessFinancialInvestments/BusinessFinancing';
 import { getBusinessInvestmentInformation } from "../../appStore/actions/businessInvestmentAction";
+import { getCountryShortCode } from '../../appStore/actions/countriesActions';
+import { getCountryVat } from '../../appStore/actions/financialProjectionsActions';
 
 const { Text } = Typography;
 const { TabPane } = Tabs
@@ -50,7 +52,6 @@ class BusinessInvestmentsWindow extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            vats: {}
         }
     }
 
@@ -65,14 +66,40 @@ class BusinessInvestmentsWindow extends React.Component {
             } else {
                 this.props.refreshPlan(localStorage.getItem("plan"), () => {
                     this.props.getBusinessInvestmentInformation(this.props.businessPlan.id);
+                    const obj = { id: this.props.businessPlan.id }
+                    this.props.getCountryShortCode(obj, (data) => {
+                        this.props.getCountryVat(this.props.country.countryShortCode);
+                        this.setState({
+                            vats: this.props.countryVats
+                        });
+                    })
                 });
             }
         } else {
             this.props.getBusinessInvestmentInformation(this.props.businessPlan.id);
+            const obj = { id: this.props.businessPlan.id }
+            this.props.getCountryShortCode(obj, (data) => {
+                this.props.getCountryVat(this.props.countryCode.countryShortCode);
+            })
         }
     }
-    render() {
 
+
+    render() {
+        let vatArray = [];
+        let objectValues = Object.values(this.props.countryVats);
+        let objectPropertyName = Object.keys(this.props.countryVats);
+        let length = objectPropertyName.length
+        for (let i = 0; i < length; i++) {
+            if (objectValues[i] !== null) {
+                vatArray.push({
+                    key: i,
+                    vatTitle: objectPropertyName[i],
+                    vatValue: objectValues[i]
+                }) 
+            }
+        }
+        console.log(this.props.investments)
         return (
             <>
                 <Col span={16} offset={4}>
@@ -105,10 +132,10 @@ class BusinessInvestmentsWindow extends React.Component {
                 <Col span={16} offset={4}>
                     <Tabs defaultActiveKey="1"  >
                         <TabPane tab="Business start-up investments" key="1">
-                            <BusinessStartUpInvestments investments={this.props.investments} />
+                            <BusinessStartUpInvestments data={this.props.investments}  vat={vatArray} />
                         </TabPane>
                         <TabPane tab="Business Financing" key="2">
-                            <BusinessFinancing investments={this.props.investments} />
+                            <BusinessFinancing data={this.props.investments} />
                         </TabPane>
                     </Tabs>
                 </Col>
@@ -123,6 +150,7 @@ const mapStateToProps = (state) => {
         businessPlan: state.selectedBusinessPlan,
         investments: state.businessInvestment,
         countryCode: state.countryShortCode,
+        countryVats: state.countryVats,
     };
 }
-export default connect(mapStateToProps, { refreshPlan, getBusinessInvestmentInformation})(BusinessInvestmentsWindow);
+export default connect(mapStateToProps, { refreshPlan, getBusinessInvestmentInformation, getCountryShortCode, getCountryVat })(BusinessInvestmentsWindow);

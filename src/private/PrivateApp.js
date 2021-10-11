@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import SiteHeader from './containers/SiteHeader';
 import MainWindow from './containers/MainWindow';
 import PublicBusinessPlans from './containers/PublicBusinessPlans';

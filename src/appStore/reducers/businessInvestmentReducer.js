@@ -17,6 +17,7 @@ export const businessInvestmentReducer = (
     switch (action.type) {
         case 'FETCHING_INVESTMENT_SUCCESS':
             const physical_assets = action.payload.physical_assets.map(obj => ({...obj, "key": obj.resource_id}))
+            console.log(physical_assets)
             const working_capital = action.payload.working_capital.map(obj => ({...obj, "key": obj.recource_id}))
             return { ...action.payload, "physical_assets": physical_assets, "working_capital": working_capital};
         default:
