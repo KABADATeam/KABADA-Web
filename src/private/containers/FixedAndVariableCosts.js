@@ -4,10 +4,12 @@ import { Link, withRouter } from 'react-router-dom';
 import { Form, Select, InputNumber, Popconfirm, Input, Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tooltip, Tabs } from 'antd';
 import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
+import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getFinancialProjectionsCosts, getCountryVat } from '../../appStore/actions/financialProjectionsActions';
 import { getCountryShortCode } from '../../appStore/actions/countriesActions'
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import { jSXClosingElement } from '@babel/types';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -60,11 +62,21 @@ class FixedAndVariableCosts extends React.Component {
       vats: {},
       selectedPeriod: [],
       cost_items: [],
+      original_cost_items: [],
     };
   }
   onBackClick() {
     this.props.history.push(`/overview`);
   }
+
+  saveChanges = () => {
+    console.log('Saving changes')
+  }
+
+  discardChanges = () => {
+    console.log('Discarding changes')
+  }
+
   //setting array of months available
   monthsSet = () => {
     const months = []
@@ -75,9 +87,10 @@ class FixedAndVariableCosts extends React.Component {
       selectedPeriod: months,
     })
   }
-  // Settomg array of fixed costs. just restructuring to be simplier
+  // function to get cost_items array. which is basically array
+  // which consist of all fixed and variable costs. they are connected to cost_items array(state)
+  // which i later change based on user input
   setItems = (fixedArray, variableArray) => {
-    // console.log('SetItems function'+JSON.stringify(fixedArray))
     const array = []
     //looping through fixed array and pushing all items to array
     fixedArray.forEach(element => {
@@ -89,7 +102,7 @@ class FixedAndVariableCosts extends React.Component {
           cost_item_id: element1.cost_item_id,
           price: element1.price === null ? 0 : element1.price,
           vat: element1.vat,
-          first_expenses: element1.first_expenses
+          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses
         }
         array.push(obj)
       });
@@ -104,19 +117,57 @@ class FixedAndVariableCosts extends React.Component {
           cost_item_id: element1.cost_item_id,
           price: element1.price === null ? 0 : element1.price,
           vat: element1.vat,
-          first_expenses: element1.first_expenses
+          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses
         }
         array.push(obj)
       })
     })
 
     this.setState({
-      cost_items: array
+      cost_items: array,
     });
-    console.log('Fixed and Variable array array' + JSON.stringify(this.state.cost_items))
-
   }
+  // function to get original_cost_items array. which is basically array
+  // which consist of all fixed and variable costs. they are connected to original_cost_items array(state).
+  // this array doesnt change. i later compare cost_items and original_cost_items to display UnsavedChangesHeader
+  getOriginalCostArray = (fixedArray, variableArray) => {
+    const array = []
+    //looping through fixed array and pushing all items to array
+    fixedArray.forEach(element => {
+      // for each object in types array create new object and add it to array
+      element.types.forEach(element1 => {
+        const obj = {
+          category_title: element.category_title,
+          category_id: element.category_id,
+          cost_item_id: element1.cost_item_id,
+          price: element1.price === null ? 0 : element1.price,
+          vat: element1.vat,
+          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses
+        }
+        array.push(obj)
+      });
+    });
+    //looping through variable array and pushing all items to array. so now array will have
+    //both fixed and variable costs
+    variableArray.forEach(element => {
+      element.types.forEach(element1 => {
+        const obj = {
+          category_title: element.category_title,
+          category_id: element.category_id,
+          cost_item_id: element1.cost_item_id,
+          price: element1.price === null ? 0 : element1.price,
+          vat: element1.vat,
+          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses
+        }
+        array.push(obj)
+      })
+    })
 
+    this.setState({
+      original_cost_items: array
+    })
+  }
+  //to update state (cost_items) which holds both variable and fixed costs
   updateCostItemsProperties = (value, record, inputName) => {
     const array = this.state.cost_items;
     // loop though each object in cost_items array. check for item with given id
@@ -128,20 +179,58 @@ class FixedAndVariableCosts extends React.Component {
         } else if (inputName === "vat") {
           element.vat = value;
         } else if (inputName === "first_expenses") {
-          element.first_expenses = value;
+          // get first character of string ('1st mo.). convert '1' to number
+          const st = value.charAt(0);
+          element.first_expenses = Number(st)
         }
       }
     });
     this.setState({
       cost_items: array
     });
-    // props.changeItemsCosts(array);
-    console.log(JSON.stringify(this.state.cost_items));
+    // console.log('Cost_items:'+JSON.stringify(this.state.cost_items))
+  }
+  // function to check if cost_items array value are equal to original_cost_items
+  // if it doesnt equal then return false. and then i would be able to display UnsavedChangesHeader component to
+  // save or discard changes
+  arraysEqual = (array1, array2) => {
+    let a = JSON.parse(JSON.stringify(array1));
+    let b = JSON.parse(JSON.stringify(array2));
+    let original = array1;
+    let modified = array2;
 
-    //if array is not equal to original one then
-    // if (arraysEqual(original_items, array) === false) {
-    //     props.setSaveVisible();
-    // }
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length !== b.length) return false;
+
+    a = a.sort();
+    b = b.sort();
+    for (var i = 0; i < original.length; ++i) {
+      if (original[i].price !== modified[i].price || original[i].vat !== modified[i].vat || original[i].first_expenses !== modified[i].first_expenses) {
+        // console.log('Original price:' + original[i].price + ", modified price is: " + modified[i].price)
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // method to check if UnsavedChangesHeader should be visible or not.
+  // with help of arrayEqual method i can compare if cost_items is equal or not to 
+  // original array.
+  getUpdatesWindowState() {
+    const original = this.state.original_cost_items;
+    const modified = this.state.cost_items;
+
+    if (original === null) {
+      return 'hidden';
+    }
+    if (modified === null) {
+      return 'hidden';
+    }
+    if (this.arraysEqual(original, modified) === false) {
+      return 'visible';
+    }
+    return 'hidden';
   }
 
   componentDidMount() {
@@ -158,7 +247,7 @@ class FixedAndVariableCosts extends React.Component {
                 vats: this.props.countryVats
               });
             });
-            console.log(JSON.stringify(this.props.financialProjections.fixed))
+            this.getOriginalCostArray(this.props.financialProjections.fixed, this.props.financialProjections.variable);
             this.setItems(this.props.financialProjections.fixed, this.props.financialProjections.variable);
             this.monthsSet();
           });
@@ -174,7 +263,7 @@ class FixedAndVariableCosts extends React.Component {
             vats: this.props.countryVats
           });
         });
-        console.log(JSON.stringify(this.props.financialProjections.fixed))
+        this.getOriginalCostArray(this.props.financialProjections.fixed, this.props.financialProjections.variable);
         this.setItems(this.props.financialProjections.fixed, this.props.financialProjections.variable);
         this.monthsSet();
       });
@@ -183,6 +272,8 @@ class FixedAndVariableCosts extends React.Component {
 
 
   render() {
+    //everytime screen rerenders it will call getUpdatesWindowState method which set const isVisibleHeader to 'visible' or 'hidden'
+    const isVisibleHeader = this.getUpdatesWindowState();
     const fixed_costs_columns = [
       {
         title: 'Name',
@@ -221,9 +312,9 @@ class FixedAndVariableCosts extends React.Component {
         width: '15%',
         render: (text, record, index) => (
           <Input.Group compact>
-            <Select defaultValue={text === null ? "1st mo." : text} onChange={e => this.updateCostItemsProperties(e, record, "first_expenses")}>
+            <Select defaultValue={text === null ? "1st mo." : text + "st mo."} onChange={e => this.updateCostItemsProperties(e, record, "first_expenses")}>
               {this.state.selectedPeriod.map((value, index) => (
-                <Option value={value + "mo."}>{value + "mo."}</Option>
+                <Option value={value + "st mo."}>{value + "st mo."}</Option>
               ))}
             </Select>
           </Input.Group>
@@ -271,20 +362,10 @@ class FixedAndVariableCosts extends React.Component {
         width: '15%',
         render: (text, record, index) => (
           <Input.Group compact>
-            <Select defaultValue={text === null ? "1st mo." : text} onChange={e => this.updateCostItemsProperties(e, record, "first_expenses")}>
-              <Option value={"1st mo."}>{"1st mo."}</Option>
-              <Option value={"2nd mo."}>{"2nd mo."}</Option>
-              <Option value={"3rd mo."}>{"3rd mo."}</Option>
-              <Option value={"4th mo."}>{"4th mo."}</Option>
-              <Option value={"5th mo."}>{"5th mo."}</Option>
-              <Option value={"6th mo."}>{"6th mo."}</Option>
-              <Option value={"7th mo."}>{"7th mo."}</Option>
-              <Option value={"8th mo."}>{"8th mo."}</Option>
-              <Option value={"9th mo."}>{"9th mo."}</Option>
-              <Option value={"10th mo."}>{"10th mo."}</Option>
-              <Option value={"11th mo."}>{"11th mo."}</Option>
-              <Option value={"11th mo."}>{"11th mo."}</Option>
-              <Option value={"12th mo."}>{"12th mo."}</Option>
+            <Select defaultValue={text === null ? "1st mo." : text + "st mo."} onChange={e => this.updateCostItemsProperties(e, record, "first_expenses")}>
+              {this.state.selectedPeriod.map((value, index) => (
+                <Option value={value + "st mo."}>{value + "st mo."}</Option>
+              ))}
             </Select>
           </Input.Group>
         )
@@ -292,6 +373,11 @@ class FixedAndVariableCosts extends React.Component {
     ];
     return (
       <>
+        <UnsavedChangesHeader
+          visibility={isVisibleHeader}
+          discardChanges={this.discardChanges}
+          saveChanges={this.saveChanges}
+        />
         <Col span={16} offset={4}>
           <Breadcrumb style={{ marginTop: "40px" }}>
             <Breadcrumb.Item style={{ marginTop: "40px" }}>
