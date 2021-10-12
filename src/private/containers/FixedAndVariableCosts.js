@@ -4,16 +4,33 @@ import { Link, withRouter } from 'react-router-dom';
 import { Form, Select, InputNumber, Popconfirm, Input, Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tooltip, Tabs } from 'antd';
 import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
+import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getFinancialProjectionsCosts, getCountryVat } from '../../appStore/actions/financialProjectionsActions';
-import {getCountryShortCode} from '../../appStore/actions/countriesActions'
+import { getCountryShortCode } from '../../appStore/actions/countriesActions'
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
-import FixedCosts from '../components/fixed_and_variable_costs/FixedCosts';
-import VariableCosts from '../components/fixed_and_variable_costs/VariableCosts';
+import { jSXClosingElement } from '@babel/types';
 
 const { Option } = Select;
 const { Text } = Typography;
 const { TabPane } = Tabs;
+
+const aboutTitleTextStyle = {
+  fontStyle: 'normal',
+  fontWeight: '600',
+  fontSize: '20px',
+  marginBottom: '16px',
+}
+
+const textStyle = {
+  fontSize: '14px',
+  color: '#8C8C8C',
+  fontStyle: 'normal',
+  fontWeight: 'normal',
+  lineHeight: '22px',
+  marginRight: '40px',
+}
+
 
 const titleTextStyle = {
   fontStyle: "normal",
@@ -33,6 +50,8 @@ const titleButtonStyle = {
 }
 
 
+
+
 class FixedAndVariableCosts extends React.Component {
   constructor(props) {
     super(props)
@@ -40,11 +59,178 @@ class FixedAndVariableCosts extends React.Component {
       fixed_costs: [],
       variable_costs: [],
       price: {},
-      vats: {}
+      vats: {},
+      selectedPeriod: [],
+      cost_items: [],
+      original_cost_items: [],
     };
   }
   onBackClick() {
     this.props.history.push(`/overview`);
+  }
+
+  saveChanges = () => {
+    console.log('Saving changes')
+  }
+
+  discardChanges = () => {
+    console.log('Discarding changes')
+  }
+
+  //setting array of months available
+  monthsSet = () => {
+    const months = []
+    for (var a = 1; a < 13; a++) {
+      months.push(a);
+    }
+    this.setState({
+      selectedPeriod: months,
+    })
+  }
+  // function to get cost_items array. which is basically array
+  // which consist of all fixed and variable costs. they are connected to cost_items array(state)
+  // which i later change based on user input
+  setItems = (fixedArray, variableArray) => {
+    const array = []
+    //looping through fixed array and pushing all items to array
+    fixedArray.forEach(element => {
+      // for each object in types array create new object and add it to array
+      element.types.forEach(element1 => {
+        const obj = {
+          category_title: element.category_title,
+          category_id: element.category_id,
+          cost_item_id: element1.cost_item_id,
+          price: element1.price === null ? 0 : element1.price,
+          vat: element1.vat,
+          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses
+        }
+        array.push(obj)
+      });
+    });
+    //looping through variable array and pushing all items to array. so now array will have
+    //both fixed and variable costs
+    variableArray.forEach(element => {
+      element.types.forEach(element1 => {
+        const obj = {
+          category_title: element.category_title,
+          category_id: element.category_id,
+          cost_item_id: element1.cost_item_id,
+          price: element1.price === null ? 0 : element1.price,
+          vat: element1.vat,
+          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses
+        }
+        array.push(obj)
+      })
+    })
+
+    this.setState({
+      cost_items: array,
+    });
+  }
+  // function to get original_cost_items array. which is basically array
+  // which consist of all fixed and variable costs. they are connected to original_cost_items array(state).
+  // this array doesnt change. i later compare cost_items and original_cost_items to display UnsavedChangesHeader
+  getOriginalCostArray = (fixedArray, variableArray) => {
+    const array = []
+    //looping through fixed array and pushing all items to array
+    fixedArray.forEach(element => {
+      // for each object in types array create new object and add it to array
+      element.types.forEach(element1 => {
+        const obj = {
+          category_title: element.category_title,
+          category_id: element.category_id,
+          cost_item_id: element1.cost_item_id,
+          price: element1.price === null ? 0 : element1.price,
+          vat: element1.vat,
+          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses
+        }
+        array.push(obj)
+      });
+    });
+    //looping through variable array and pushing all items to array. so now array will have
+    //both fixed and variable costs
+    variableArray.forEach(element => {
+      element.types.forEach(element1 => {
+        const obj = {
+          category_title: element.category_title,
+          category_id: element.category_id,
+          cost_item_id: element1.cost_item_id,
+          price: element1.price === null ? 0 : element1.price,
+          vat: element1.vat,
+          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses
+        }
+        array.push(obj)
+      })
+    })
+
+    this.setState({
+      original_cost_items: array
+    })
+  }
+  //to update state (cost_items) which holds both variable and fixed costs
+  updateCostItemsProperties = (value, record, inputName) => {
+    const array = this.state.cost_items;
+    // loop though each object in cost_items array. check for item with given id
+    //update price,firstexpenses, or vat rate fields. depending on given input name
+    array.forEach(element => {
+      if (element.cost_item_id === record.cost_item_id) {
+        if (inputName === "price") {
+          element.price = value;
+        } else if (inputName === "vat") {
+          element.vat = value;
+        } else if (inputName === "first_expenses") {
+          // get first character of string ('1st mo.). convert '1' to number
+          const st = value.charAt(0);
+          element.first_expenses = Number(st)
+        }
+      }
+    });
+    this.setState({
+      cost_items: array
+    });
+    // console.log('Cost_items:'+JSON.stringify(this.state.cost_items))
+  }
+  // function to check if cost_items array value are equal to original_cost_items
+  // if it doesnt equal then return false. and then i would be able to display UnsavedChangesHeader component to
+  // save or discard changes
+  arraysEqual = (array1, array2) => {
+    let a = JSON.parse(JSON.stringify(array1));
+    let b = JSON.parse(JSON.stringify(array2));
+    let original = array1;
+    let modified = array2;
+
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length !== b.length) return false;
+
+    a = a.sort();
+    b = b.sort();
+    for (var i = 0; i < original.length; ++i) {
+      if (original[i].price !== modified[i].price || original[i].vat !== modified[i].vat || original[i].first_expenses !== modified[i].first_expenses) {
+        // console.log('Original price:' + original[i].price + ", modified price is: " + modified[i].price)
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // method to check if UnsavedChangesHeader should be visible or not.
+  // with help of arrayEqual method i can compare if cost_items is equal or not to 
+  // original array.
+  getUpdatesWindowState() {
+    const original = this.state.original_cost_items;
+    const modified = this.state.cost_items;
+
+    if (original === null) {
+      return 'hidden';
+    }
+    if (modified === null) {
+      return 'hidden';
+    }
+    if (this.arraysEqual(original, modified) === false) {
+      return 'visible';
+    }
+    return 'hidden';
   }
 
   componentDidMount() {
@@ -53,32 +239,145 @@ class FixedAndVariableCosts extends React.Component {
         this.props.history.push(`/`);
       } else {
         this.props.refreshPlan(localStorage.getItem("plan"), () => {
-          this.props.getFinancialProjectionsCosts(this.props.businessPlan.id);
-          const obj = { id: this.props.businessPlan.id }
-          this.props.getCountryShortCode(obj, (data) => {
-            this.props.getCountryVat(this.props.country.countryShortCode);
-            this.setState({
-              vats: this.props.countryVats
+          this.props.getFinancialProjectionsCosts(this.props.businessPlan.id, () => {
+            const obj = { id: this.props.businessPlan.id }
+            this.props.getCountryShortCode(obj, (data) => {
+              this.props.getCountryVat(this.props.country.countryShortCode);
+              this.setState({
+                vats: this.props.countryVats
+              });
             });
-          })
+            this.getOriginalCostArray(this.props.financialProjections.fixed, this.props.financialProjections.variable);
+            this.setItems(this.props.financialProjections.fixed, this.props.financialProjections.variable);
+            this.monthsSet();
+          });
+
         });
       }
     } else {
-      this.props.getFinancialProjectionsCosts(this.props.businessPlan.id);
-      const obj = { id: this.props.businessPlan.id }
-      this.props.getCountryShortCode(obj, (data) => {
-        this.props.getCountryVat(this.props.country.countryShortCode);
-        this.setState({
-          vats: this.props.countryVats
+      this.props.getFinancialProjectionsCosts(this.props.businessPlan.id, () => {
+        const obj = { id: this.props.businessPlan.id }
+        this.props.getCountryShortCode(obj, (data) => {
+          this.props.getCountryVat(this.props.country.countryShortCode);
+          this.setState({
+            vats: this.props.countryVats
+          });
         });
+        this.getOriginalCostArray(this.props.financialProjections.fixed, this.props.financialProjections.variable);
+        this.setItems(this.props.financialProjections.fixed, this.props.financialProjections.variable);
+        this.monthsSet();
       });
     }
   }
 
 
   render() {
+    //everytime screen rerenders it will call getUpdatesWindowState method which set const isVisibleHeader to 'visible' or 'hidden'
+    const isVisibleHeader = this.getUpdatesWindowState();
+    const fixed_costs_columns = [
+      {
+        title: 'Name',
+        dataIndex: 'type_title',
+        width: '55%',
+      },
+      {
+        title: 'Euro/mo. without VAT',
+        dataIndex: 'price',
+        width: '20%',
+        render: (text, record, index) => (
+          <InputNumber
+            min={0}
+            size="large"
+            defaultValue={text === null ? 0 : text}
+            onChange={e => this.updateCostItemsProperties(e, record, "price")}
+          />
+        )
+      },
+      {
+        title: 'VAT Rate',
+        dataIndex: 'vat',
+        width: '10%',
+        render: (text, record, index) => (
+          <Select defaultValue={text === null ? 'Null' : text} onChange={e => this.updateCostItemsProperties(e, record, "vat")}>
+            <Option value={this.props.countryVats.standardRate}>{this.props.countryVats.standardRate + "%"}</Option>
+            <Option value={this.props.countryVats.reducedRates2}>{this.props.countryVats.reducedRates2 + "%"}</Option>
+            <Option value={this.props.countryVats.reducedRates1}>{this.props.countryVats.reducedRates1 + "%"}</Option>
+            <Option value={this.props.countryVats.superReducedRate}>{this.props.countryVats.superReducedRate === null ? "Null" : this.props.countryVats.superReducedRate}</Option>
+          </Select>
+        )
+      },
+      {
+        title: 'First expenses',
+        dataIndex: 'first_expenses',
+        width: '15%',
+        render: (text, record, index) => (
+          <Input.Group compact>
+            <Select defaultValue={text === null ? "1st mo." : text + "st mo."} onChange={e => this.updateCostItemsProperties(e, record, "first_expenses")}>
+              {this.state.selectedPeriod.map((value, index) => (
+                <Option value={value + "st mo."}>{value + "st mo."}</Option>
+              ))}
+            </Select>
+          </Input.Group>
+        )
+      },
+    ];
+
+    const variable_costs_columns = [
+      {
+        title: 'Name',
+        dataIndex: 'type_title',
+        width: '55%',
+      },
+      {
+        title: 'Euro/mo. without VAT',
+        dataIndex: 'price',
+        width: '20%',
+        render: (text, record, index) => (
+          <InputNumber
+            min={0}
+            size="large"
+            defaultValue={text === null ? 0 : text}
+            onChange={e => this.updateCostItemsProperties(e, record, "price")}
+          />
+        )
+      },
+      {
+        title: 'VAT Rate',
+        dataIndex: 'vat',
+        width: '10%',
+        render: (text, record, index) => (
+          <Input.Group compact>
+            <Select defaultValue={text === null ? 'Null' : text} onChange={e => this.updateCostItemsProperties(e, record, "vat")}>
+              <Option value={this.props.countryVats.standardRate}>{this.props.countryVats.standardRate + "%"}</Option>
+              <Option value={this.props.countryVats.reducedRates2}>{this.props.countryVats.reducedRates2 + "%"}</Option>
+              <Option value={this.props.countryVats.reducedRates1}>{this.props.countryVats.reducedRates1 + "%"}</Option>
+              <Option value={this.props.countryVats.superReducedRate}>{this.props.countryVats.superReducedRate === null ? "Null" : this.props.countryVats.superReducedRate}</Option>
+            </Select>
+          </Input.Group>
+        )
+      },
+      {
+        title: 'First expenses',
+        dataIndex: 'first_expenses',
+        width: '15%',
+        render: (text, record, index) => (
+          <Input.Group compact>
+            <Select defaultValue={text === null ? "1st mo." : text + "st mo."} onChange={e => this.updateCostItemsProperties(e, record, "first_expenses")}>
+              {this.state.selectedPeriod.map((value, index) => (
+                <Option value={value + "st mo."}>{value + "st mo."}</Option>
+              ))}
+            </Select>
+          </Input.Group>
+        )
+      },
+    ];
     return (
       <>
+        <UnsavedChangesHeader
+          visibility={isVisibleHeader}
+          discardChanges={this.discardChanges}
+          saveChanges={this.saveChanges}
+        />
         <Col span={16} offset={4}>
           <Breadcrumb style={{ marginTop: "40px" }}>
             <Breadcrumb.Item style={{ marginTop: "40px" }}>
@@ -115,10 +414,71 @@ class FixedAndVariableCosts extends React.Component {
         <Col offset={4} span={16}>
           <Tabs defaultActiveKey="1">
             <TabPane tab="Fixed Costs" key="1">
-              <FixedCosts financialProjections={this.props.financialProjections} countryVats={this.props.countryVats} countryShortCode={this.props.country.countryShortCode} planId={this.props.businessPlan.id} />
+              {this.props.financialProjections.fixed.map((obj, index) => {
+                return (
+                  <div style={{ marginBottom: 24 }}>
+                    <Col span={24}>
+                      <Row>
+                        <Col span={7}>
+                          {index === 0 ?
+                            <div style={{ marginRight: '40px' }}>
+                              <Typography.Title style={{ ...aboutTitleTextStyle }}>Fixed Costs</Typography.Title>
+                              <Typography.Text style={{ ...textStyle }}>
+                                Please indicate the amount of fixed and variable costs (all shown cost are based on pre-filled information in canvas)A60
+                              </Typography.Text>
+                            </div> : <div></div>}
+                        </Col>
+                        {/* returns second column with table */}
+                        {/* <FixedCostTable data={obj.types} countryVats={this.props.countryVats} category_title={obj.category_title} category_id={obj.category_id} /> */}
+                        <Col span={17}>
+                          <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                            <Table
+                              rowKey="id"
+                              columns={fixed_costs_columns}
+                              dataSource={obj.types}
+                              pagination={false}
+                              title={() => obj.category_title}
+                            />
+                          </Card>
+                        </Col>
+
+                      </Row>
+                    </Col>
+                  </div>)
+              })}
             </TabPane>
             <TabPane tab="Variable Costs" key="2">
-              <VariableCosts financialProjections={this.props.financialProjections} countryVats={this.props.countryVats} countryShortCode={this.props.country.countryShortCode} planId={this.props.businessPlan.id} />
+              {this.props.financialProjections.variable.map((obj, index) => {
+                return (
+                  <div style={{ marginBottom: 24 }}>
+                    <Col span={24}>
+                      <Row>
+                        <Col span={7}>
+                          {index === 0 ?
+                            <div style={{ marginRight: '40px' }}>
+                              <Typography.Title style={{ ...aboutTitleTextStyle }}>Variable Costs</Typography.Title>
+                              <Typography.Text style={{ ...textStyle }}>
+                                Please indicate the amount of fixed and variable costs (all shown cost are based on pre-filled information in canvas)A60
+                              </Typography.Text>
+                            </div> : <div></div>}
+                        </Col>
+                        {/* returns second column with table */}
+                        <Col span={17}>
+                          <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                            <Table
+                              rowKey="id"
+                              columns={variable_costs_columns}
+                              dataSource={obj.types}
+                              pagination={false}
+                              title={() => obj.category_title}
+                            />
+                          </Card>
+                        </Col>
+
+                      </Row>
+                    </Col>
+                  </div>)
+              })}
             </TabPane>
           </Tabs>
         </Col>

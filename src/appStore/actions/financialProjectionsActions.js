@@ -1,13 +1,14 @@
 import kabadaAPI from './kabadaAPI';
 import { errorHandler } from './errorHandler';
 
-export const getFinancialProjectionsCosts = (planId) => {
+export const getFinancialProjectionsCosts = (planId,callback) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
         try{
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/cost/costsvf/'+planId, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: "FETCHING_FINANCIAL_PROJECTION_SUCCESS", payload: response.data });
+            callback()
         }catch(error){
             if (error.response === undefined) {
                 dispatch({

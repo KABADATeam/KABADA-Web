@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Breadcrumb, Col, Space, Row, Button, Typography, Switch, Card, Tabs, Input, Select, Table } from 'antd';
+import { Breadcrumb, Col, Space, Row, Button, Typography, Switch, Card, Tabs, Input, Select, InputNumber } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getProducts, changState } from '../../appStore/actions/salesForecastActions';
 import SalesForecastTable from '../components/sales_Forecast/SalesForecastTable';
-//import SalesForecastOutsideEUTable from '../components/sales_Forecast/SalesForecastOutsideEUTable';
 import SalesForecastSelect from '../components/sales_Forecast/SalesForecastSelect';
+import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import '../../css/SalesForecast.css'
 
 function SalesForecast() {
@@ -18,104 +18,265 @@ function SalesForecast() {
 
     const { Option } = Select;
 
-    const [readyname, setReadyname] = useState("12th mo");
+    const [readyMonth, setReadyMonth] = useState("12th mo");
     const [tabKey, setTabKey] = useState("");
-    const dataSource = [
+    const [isVisibleHeader, setIsVisibleHeader] = useState("hidden");
+    const [totalinEu, setTotalInEu] = useState("0");
+    const [totalOutEu, setTotalOutEu] = useState("0");
+    const [inEuData, setInEuData] = useState([]);
+    const [outEuData, setoutEuData] = useState([]);
+
+
+    const inEuChange = (text, record, inputName) => {
+
+        console.log(text, record.id)
+        const array = inEuData;
+        array.forEach(element => {
+            if (element.id === record.id) {
+                if (inputName === 'withoutVAT') {
+                    element.withoutVAT = text;
+                    element.total = element.withoutVAT * element.Qty;
+                    setTotalInEu(element.total);
+                }
+                if (inputName === 'Qty') {
+                    element.Qty = text;
+                    element.total = element.withoutVAT * element.Qty;
+                    setTotalInEu(element.total);
+                }
+                if (inputName === 'vat') {
+                    element.vat = text;
+                }
+                if (inputName === 'paid') {
+                    element.paid = text;
+                }
+            }
+        })
+
+        setInEuData(array);
+        getUpdatesWindowState();
+        console.log(isVisibleHeader)
+
+    }
+    const outEuChange = (text, record, inputName) => {
+
+        console.log(text, record.id)
+        const array = outEuData;
+        array.forEach(element => {
+            if (element.id === record.id) {
+                if (inputName === 'withoutVAT') {
+                    element.withoutVAT = text;
+                    element.total = element.withoutVAT * element.Qty;
+                    setTotalOutEu(element.total);
+                }
+                if (inputName === 'Qty') {
+                    element.Qty = text;
+                    element.total = element.withoutVAT * element.Qty;
+                    setTotalOutEu(element.total);
+                }
+                if (inputName === 'vat') {
+                    element.vat = text;
+                }
+                if (inputName === 'paid') {
+                    element.paid = text;
+                }
+            }
+        })
+
+        setoutEuData(array);
+        console.log(outEuData)
+    }
+
+
+    const dataSourceTableInEu = [
         {
-            key: '1',
-            name: 1,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
+            id: 1,
+            month: 1,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
             vat: 21 + '%',
             paid: 'Immediate',
         }, {
-            key: '2',
-            name: 2,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
+
+            id: 2,
+            month: 2,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
             vat: 21 + '%',
             paid: 'Immediate',
         }, {
-            key: '3',
-            name: 3,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
+            id: 3,
+            month: 3,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
             vat: 21 + '%',
             paid: 'Immediate',
         }, {
-            key: '4',
-            name: 4,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
+
+            id: 4,
+            month: 4,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
             vat: 21 + '%',
             paid: 'Immediate',
         }, {
-            key: '5',
-            name: 5,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
+            id: 5,
+            month: 5,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
             vat: 21 + '%',
             paid: 'Immediate',
         }, {
-            key: '6',
-            name: 6,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
+            id: 6,
+            month: 6,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
             vat: 21 + '%',
             paid: 'Immediate',
         }, {
-            key: '7',
-            name: 7,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
+
+            id: 7,
+            month: 7,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
             vat: 21 + '%',
             paid: 'Immediate',
         }, {
-            key: '8',
-            name: 8,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
+            id: 8,
+            month: 8,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
             vat: 21 + '%',
             paid: 'Immediate',
         }, {
-            key: '9',
-            name: 9,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
+            id: 9,
+            month: 9,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
             vat: 21 + '%',
             paid: 'Immediate',
         }, {
-            key: '10',
-            name: 10,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
+            id: 10,
+            month: 10,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
             vat: 21 + '%',
             paid: 'Immediate',
         }, {
-            key: '11',
-            name: 11,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
+            id: 11,
+            month: 11,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
             vat: 21 + '%',
             paid: 'Immediate',
         }, {
-            key: '12',
-            name: 12,
-            withoutVAT: 5,
-            Qty: 100,
-            total: '$' + 500.00,
+            id: 12,
+            month: 12,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
             vat: 21 + '%',
+            paid: 'Immediate',
+        },
+
+    ];
+    const dataSourceTableOutEu = [
+        {
+            id: 1,
+            month: 1,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
+            paid: 'Immediate',
+        }, {
+
+            id: 2,
+            month: 2,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
+            paid: 'Immediate',
+        }, {
+            id: 3,
+            month: 3,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
+            paid: 'Immediate',
+        }, {
+
+            id: 4,
+            month: 4,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
+            paid: 'Immediate',
+        }, {
+            id: 5,
+            month: 5,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
+            paid: 'Immediate',
+        }, {
+            id: 6,
+            month: 6,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
+            paid: 'Immediate',
+        }, {
+
+            id: 7,
+            month: 7,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
+            paid: 'Immediate',
+        }, {
+            id: 8,
+            month: 8,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
+            paid: 'Immediate',
+        }, {
+            id: 9,
+            month: 9,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
+            paid: 'Immediate',
+        }, {
+            id: 10,
+            month: 10,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
+            paid: 'Immediate',
+        }, {
+            id: 11,
+            month: 11,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
+            paid: 'Immediate',
+        }, {
+            id: 12,
+            month: 12,
+            withoutVAT: 0,
+            Qty: 0,
+            total: 0,
             paid: 'Immediate',
         },
 
@@ -123,10 +284,9 @@ function SalesForecast() {
 
     const columns = [
         {
-            title: 'name',
-            dataIndex: 'name',
-            key: 'name',
-
+            title: 'Month',
+            dataIndex: 'month',
+            key: 'month',
 
         },
         {
@@ -134,29 +294,34 @@ function SalesForecast() {
             dataIndex: 'withoutVAT',
             key: 'withoutVAT',
             width: '5%',
-            render: text => <input className="input-in-table" placeholder={text} />,
+            render: (text, record, index) => (
+                <InputNumber defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'withoutVAT')} />
+            ),
         },
         {
             title: 'Qty',
             dataIndex: 'Qty',
             key: 'Qty',
             width: '5%',
-            render: text => <input className="input-in-table" placeholder={text} />,
+            render: (text, record, index) =>
+                <InputNumber defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'Qty')} />,
         },
         {
             title: 'Total',
             dataIndex: 'total',
             key: 'total',
             width: '5%',
+            render: (text, record, index) =>
+                <Text> {inEuData[index].total} </Text>,
         },
         {
             title: 'VAT',
             dataIndex: 'vat',
             key: 'vat',
-            width: '10%',
-            render: () => (
+            width: '15%',
+            render: (text, record) => (
                 <Input.Group compact>
-                    <Select defaultValue="21%">
+                    <Select defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'vat')}>
                         <Option value="21">21 %</Option>
                         <Option value="30">30 %</Option>
                         <Option value="40">40 %</Option>
@@ -169,14 +334,14 @@ function SalesForecast() {
             dataIndex: 'paid',
             key: 'paid',
             width: '10%',
-            render: () => (
+            render: (text, record) => (
                 <Input.Group compact>
-                    <Select defaultValue="Immediate">
+                    <Select defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'paid')}>
                         <Option value="Immediate">Immediate</Option>
-                        <Option value="Next name">Next name</Option>
-                        <Option value="After two names">After two names</Option>
-                        <Option value="After three names">After three names</Option>
-                        <Option value="One name in advance">One name in advance</Option>
+                        <Option value="Next month">Next month</Option>
+                        <Option value="After two months">After two months</Option>
+                        <Option value="After three months ">After three months</Option>
+                        <Option value="One month  in advance">One month in advance</Option>
                     </Select>
                 </Input.Group>
             )
@@ -184,10 +349,9 @@ function SalesForecast() {
     ];
     const columnsOutEU = [
         {
-            title: 'name',
-            dataIndex: 'name',
-            key: 'name',
-
+            title: 'Month',
+            dataIndex: 'month',
+            key: 'month',
 
         },
         {
@@ -195,88 +359,93 @@ function SalesForecast() {
             dataIndex: 'withoutVAT',
             key: 'withoutVAT',
             width: '5%',
-            render: text => <input className="input-in-table" placeholder={text} />,
+            render: (text, record, index) => (
+                <InputNumber defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'withoutVAT')} />
+            ),
         },
         {
             title: 'Qty',
             dataIndex: 'Qty',
             key: 'Qty',
             width: '5%',
-            render: text => <input className="input-in-table" placeholder={text} />,
+            render: (text, record, index) =>
+                <InputNumber defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'Qty')} />,
         },
         {
             title: 'Total',
             dataIndex: 'total',
             key: 'total',
             width: '5%',
+            render: (text, record, index) =>
+                <Text> {record.total} </Text>,
         },
         {
             title: 'When paid',
             dataIndex: 'paid',
             key: 'paid',
             width: '10%',
-            render: () => (
+            render: (text, record) => (
                 <Input.Group compact>
-                    <Select defaultValue="Immediate">
+                    <Select defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'paid')}>
                         <Option value="Immediate">Immediate</Option>
-                        <Option value="Next name">Next name</Option>
-                        <Option value="After two names">After two names</Option>
-                        <Option value="After three names">After three names</Option>
-                        <Option value="One name in advance">One name in advance</Option>
+                        <Option value="Next month">Next month</Option>
+                        <Option value="After two months">After two months</Option>
+                        <Option value="After three months ">After three months</Option>
+                        <Option value="One month  in advance">One month in advance</Option>
                     </Select>
                 </Input.Group>
             )
         },
     ];
-    const dataSourcename = [
+    const dataSourceMonth = [
         {
             key: '1',
             name: "1st mo.",
-            value: "-1"
+            value: "1"
         }, {
             key: '2',
             name: '2nd mo.',
-            value: "-2"
+            value: "2"
         }, {
             key: '3',
             name: '3rd mo.',
-            value: "-3"
+            value: "3"
         }, {
             key: '4',
             name: '4th mo.',
-            value: "-4"
+            value: "4"
         }, {
             key: '5',
             name: "5th mo.",
-            value: "-5"
+            value: "5"
         }, {
             key: '6',
             name: '6th mo.',
-            value: "-6"
+            value: "6"
         }, {
             key: '7',
             name: '7th mo.',
-            value: "-7"
+            value: "7"
         }, {
             key: '8',
             name: '8th mo.',
-            value: "-8"
+            value: "8"
         }, {
             key: '9',
             name: '9th mo.',
-            value: "-9"
+            value: "9"
         }, {
             key: '10',
             name: '10th mo.',
-            value: "-10"
+            value: "10"
         }, {
             key: '11',
             name: '11th mo.',
-            value: "-11"
+            value: "11"
         }, {
             key: '12',
             name: '12th mo.',
-            value: "-12"
+            value: "12"
         },
 
     ];
@@ -313,6 +482,9 @@ function SalesForecast() {
         } else {
             dispatch(getProducts(businessPlan.id));
             console.log(businessPlan.id);
+            setInEuData(dataSourceTableInEu);
+            setoutEuData(dataSourceTableOutEu);
+            //getUpdatesWindowState()
 
         }
     }, [dispatch, busineessPlanId, businessPlan, history]);
@@ -322,12 +494,41 @@ function SalesForecast() {
     }
     const handelname = (value) => {
         console.log("selected value " + value);
-        setReadyname(value);
-        console.log(readyname)
+        setReadyMonth(value);
+        console.log(readyMonth)
+
+    }
+    const getUpdatesWindowState = () => {
+        const original = dataSourceTableInEu;
+        const modified = inEuData;
+
+        // if (original === null) {
+        //     setIsVisibleHeader('hidden')
+        // }
+
+        // if (original.description !== modified.description) {
+        //     return 'visible';
+        // }
+
+        // if (original.product_type !== modified.product_type) {
+        //     return 'visible';
+        // }
+
+        // if (original.price_level !== modified.price_level) {
+        //     return 'visible';
+        // }
+
+        if (JSON.stringify(original) !== JSON.stringify(modified)) {
+            setIsVisibleHeader('visible')
+        } else {
+            setIsVisibleHeader('hidden')
+        }
+
 
     }
     const changePlan = (id) => {
         dispatch(changState(id))
+
     }
 
     const getKey = (key) => {
@@ -335,7 +536,13 @@ function SalesForecast() {
         setTabKey(key);
     }
     return (
+
         <Row align="middle">
+            <UnsavedChangesHeader
+                visibility={isVisibleHeader}
+            // discardChanges={this.discardChanges}
+            // saveChanges={this.saveChanges}
+            />
             <Col span={20} offset={3}>
                 <Col span={16} offset={0}>
                     <Breadcrumb className="margin-top-links">
@@ -355,7 +562,7 @@ function SalesForecast() {
                     <Col span={12} offset={0}>
                         <div className="button-style-heading-section">
                             <Button className="back-button-style" icon={<ArrowLeftOutlined />} onClick={() => onBackClick()}></Button>
-                            <Text className="titleTextStyle" >Sales forecust</Text>
+                            <Text className="titleTextStyle" >Sales forecast</Text>
                         </div>
                     </Col>
                     <Col span={4} offset={6}>
@@ -389,7 +596,7 @@ function SalesForecast() {
                                                 <Col span={3} offset={12}>
 
                                                     <Input.Group compact className="card-input-Group-style">
-                                                        <SalesForecastSelect defaultValue={readyname} onChange={handelname} dataSource={dataSourcename} />
+                                                        <SalesForecastSelect defaultValue={readyMonth} onChange={handelname} dataSource={dataSourceMonth} />
 
                                                     </Input.Group>
                                                 </Col>
@@ -418,14 +625,14 @@ function SalesForecast() {
 
                                 <Row align="middle" className="margin-top-20px">
                                     <Col span={12} offset={8} >
-                                        <SalesForecastTable columns={columns} dataSource={dataSource} />
+                                        <SalesForecastTable columns={columns} dataSource={dataSourceTableInEu.slice(readyMonth)} />
                                     </Col>
 
                                 </Row>
 
                                 <Row align="middle" className={`margin-top-20px ${x.Expoted === false ? `display-none` : ``}`} >
                                     <Col span={12} offset={8} >
-                                        <SalesForecastTable columns={columnsOutEU} dataSource={dataSource} />
+                                        <SalesForecastTable columns={columnsOutEU} dataSource={dataSourceTableOutEu.slice(readyMonth)} />
                                     </Col>
                                 </Row>
 
