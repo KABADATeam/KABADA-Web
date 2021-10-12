@@ -8,6 +8,7 @@ import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getProducts, changState } from '../../appStore/actions/salesForecastActions';
 import SalesForecastTable from '../components/sales_Forecast/SalesForecastTable';
 import SalesForecastSelect from '../components/sales_Forecast/SalesForecastSelect';
+import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import '../../css/SalesForecast.css'
 
 function SalesForecast() {
@@ -19,6 +20,7 @@ function SalesForecast() {
 
     const [readyMonth, setReadyMonth] = useState("12th mo");
     const [tabKey, setTabKey] = useState("");
+    const [isVisibleHeader, setIsVisibleHeader] = useState("hidden");
     const [totalinEu, setTotalInEu] = useState("0");
     const [totalOutEu, setTotalOutEu] = useState("0");
     const [inEuData, setInEuData] = useState([]);
@@ -51,7 +53,9 @@ function SalesForecast() {
         })
 
         setInEuData(array);
-        console.log(inEuData)
+        getUpdatesWindowState();
+        console.log(isVisibleHeader)
+
     }
     const outEuChange = (text, record, inputName) => {
 
@@ -334,10 +338,10 @@ function SalesForecast() {
                 <Input.Group compact>
                     <Select defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'paid')}>
                         <Option value="Immediate">Immediate</Option>
-                        <Option value="Next name">Next name</Option>
-                        <Option value="After two names">After two names</Option>
-                        <Option value="After three names">After three names</Option>
-                        <Option value="One name in advance">One name in advance</Option>
+                        <Option value="Next month">Next month</Option>
+                        <Option value="After two months">After two months</Option>
+                        <Option value="After three months ">After three months</Option>
+                        <Option value="One month  in advance">One month in advance</Option>
                     </Select>
                 </Input.Group>
             )
@@ -373,7 +377,7 @@ function SalesForecast() {
             key: 'total',
             width: '5%',
             render: (text, record, index) =>
-                <Text> {outEuData[index].total} </Text>,
+                <Text> {record.total} </Text>,
         },
         {
             title: 'When paid',
@@ -384,10 +388,10 @@ function SalesForecast() {
                 <Input.Group compact>
                     <Select defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'paid')}>
                         <Option value="Immediate">Immediate</Option>
-                        <Option value="Next name">Next name</Option>
-                        <Option value="After two names">After two names</Option>
-                        <Option value="After three names">After three names</Option>
-                        <Option value="One name in advance">One name in advance</Option>
+                        <Option value="Next month">Next month</Option>
+                        <Option value="After two months">After two months</Option>
+                        <Option value="After three months ">After three months</Option>
+                        <Option value="One month  in advance">One month in advance</Option>
                     </Select>
                 </Input.Group>
             )
@@ -397,51 +401,51 @@ function SalesForecast() {
         {
             key: '1',
             name: "1st mo.",
-            value: "-1"
+            value: "1"
         }, {
             key: '2',
             name: '2nd mo.',
-            value: "-2"
+            value: "2"
         }, {
             key: '3',
             name: '3rd mo.',
-            value: "-3"
+            value: "3"
         }, {
             key: '4',
             name: '4th mo.',
-            value: "-4"
+            value: "4"
         }, {
             key: '5',
             name: "5th mo.",
-            value: "-5"
+            value: "5"
         }, {
             key: '6',
             name: '6th mo.',
-            value: "-6"
+            value: "6"
         }, {
             key: '7',
             name: '7th mo.',
-            value: "-7"
+            value: "7"
         }, {
             key: '8',
             name: '8th mo.',
-            value: "-8"
+            value: "8"
         }, {
             key: '9',
             name: '9th mo.',
-            value: "-9"
+            value: "9"
         }, {
             key: '10',
             name: '10th mo.',
-            value: "-10"
+            value: "10"
         }, {
             key: '11',
             name: '11th mo.',
-            value: "-11"
+            value: "11"
         }, {
             key: '12',
             name: '12th mo.',
-            value: "-12"
+            value: "12"
         },
 
     ];
@@ -480,6 +484,7 @@ function SalesForecast() {
             console.log(businessPlan.id);
             setInEuData(dataSourceTableInEu);
             setoutEuData(dataSourceTableOutEu);
+            //getUpdatesWindowState()
 
         }
     }, [dispatch, busineessPlanId, businessPlan, history]);
@@ -493,8 +498,37 @@ function SalesForecast() {
         console.log(readyMonth)
 
     }
+    const getUpdatesWindowState = () => {
+        const original = dataSourceTableInEu;
+        const modified = inEuData;
+
+        // if (original === null) {
+        //     setIsVisibleHeader('hidden')
+        // }
+
+        // if (original.description !== modified.description) {
+        //     return 'visible';
+        // }
+
+        // if (original.product_type !== modified.product_type) {
+        //     return 'visible';
+        // }
+
+        // if (original.price_level !== modified.price_level) {
+        //     return 'visible';
+        // }
+
+        if (JSON.stringify(original) !== JSON.stringify(modified)) {
+            setIsVisibleHeader('visible')
+        } else {
+            setIsVisibleHeader('hidden')
+        }
+
+
+    }
     const changePlan = (id) => {
         dispatch(changState(id))
+
     }
 
     const getKey = (key) => {
@@ -502,7 +536,13 @@ function SalesForecast() {
         setTabKey(key);
     }
     return (
+
         <Row align="middle">
+            <UnsavedChangesHeader
+                visibility={isVisibleHeader}
+            // discardChanges={this.discardChanges}
+            // saveChanges={this.saveChanges}
+            />
             <Col span={20} offset={3}>
                 <Col span={16} offset={0}>
                     <Breadcrumb className="margin-top-links">
@@ -522,7 +562,7 @@ function SalesForecast() {
                     <Col span={12} offset={0}>
                         <div className="button-style-heading-section">
                             <Button className="back-button-style" icon={<ArrowLeftOutlined />} onClick={() => onBackClick()}></Button>
-                            <Text className="titleTextStyle" >Sales forecust</Text>
+                            <Text className="titleTextStyle" >Sales forecast</Text>
                         </div>
                     </Col>
                     <Col span={4} offset={6}>
