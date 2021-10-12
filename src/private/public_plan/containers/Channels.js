@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tooltip } from 'antd';
 import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
-import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle } from '../../../styles/customStyles';
+import { buttonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle } from '../../../styles/customStyles';
 import { connect } from 'react-redux';
 import AddChannelModal from '../../components/channels/AddChannelModal';
 //import EditChannelModal from '../../components/channels/EditChannelModal';
@@ -47,7 +47,7 @@ const titleButtonStyle = {
     backgroundColor: "transparent",
 }
 
-class Channels extends React.Component {
+class PublicChannels extends React.Component {
 
     constructor(props) {
         super(props);
@@ -58,7 +58,7 @@ class Channels extends React.Component {
     }
 
     onBackClick() {
-        this.props.history.push(`/overview`);
+        this.props.history.push(`/public/overview`);
     }
 
     onAddChannel = () => {
@@ -97,10 +97,10 @@ class Channels extends React.Component {
 
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
                 this.props.history.push(`/`);
             } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                this.props.refreshPlan(localStorage.getItem("public_plan"), () => {
                     this.props.getChannelTypes();
                     this.props.getChannels(this.props.businessPlan.id);
                     this.props.getProducts(this.props.businessPlan.id);
@@ -115,7 +115,7 @@ class Channels extends React.Component {
 
     render() {
         console.log(this.props)
-;
+            ;
         const data = this.props.channels.channels.map(item => {
             const channel_name = item.channel_type.name;
             const distribution_names = item.distribution_channels === null ? [] : item.distribution_channels.map(item => item.name);
@@ -157,7 +157,7 @@ class Channels extends React.Component {
                 width: '10%',
                 render: (obj, record) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditChannel.bind(this, record)} >View</Button>
+                        <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditChannel.bind(this, record)} >View</Button>
                         {/* <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteChannel.bind(this, record)} ><DeleteOutlined /></Button> */}
                     </Space>
                 ),
@@ -169,10 +169,10 @@ class Channels extends React.Component {
                 <Col span={16} offset={4}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
-                            <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
+                            <Space><Link to='/public-business-plans'>Public Business plans</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
+                            <Space><Link to='/public/overview'>{this.props.businessPlan.name}</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             Channels
@@ -222,21 +222,21 @@ class Channels extends React.Component {
                                     dataSource={data}
                                     columns={channelsColumns}
                                     pagination={false}
-                                    //footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddChannel.bind(this)}><PlusOutlined />Add Channel</Button></Space>)}
+                                //footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddChannel.bind(this)}><PlusOutlined />Add Channel</Button></Space>)}
                                 />
                             </Card >
                         </Col>
                     </Row>
                 </Col>
-                
+
                 {
                     this.state.showAddChannelModal === true ?
                         <AddChannelModal visibility={true} onClose={this.onCloseAddChannelModal} />
                         : null
                 }
-                
+
                 {
-                    this.state.item !== null ? 
+                    this.state.item !== null ?
                         <EditChannelModal visibility={true} item={this.state.item} onClose={this.onCloseEditChannelModal} />
                         : null
                 }
@@ -252,4 +252,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getChannelTypes, getProducts, getChannels, deleteChannel, saveState, refreshPlan, getSelectedPlanOverview })(withRouter(Channels));
+export default connect(mapStateToProps, { getChannelTypes, getProducts, getChannels, deleteChannel, saveState, refreshPlan, getSelectedPlanOverview })(withRouter(PublicChannels));

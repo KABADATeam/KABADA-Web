@@ -4,7 +4,7 @@ import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space,
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { refreshPlan } from "../../../appStore/actions/refreshAction";
-import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
+import { getSelectedPlanOverview, getSelectedPlanDetails, getImage } from "../../../appStore/actions/planActions";
 import { withRouter } from 'react-router-dom';
 
 const { TabPane } = Tabs;
@@ -42,7 +42,7 @@ const avatarStyle = {
     marginTop: "10px"
 }
 
-class Overview extends React.Component {
+class PublicOverview extends React.Component {
 
     onBackClick() {
         this.props.history.push(`/public-business-plans`);
@@ -54,36 +54,31 @@ class Overview extends React.Component {
                 this.props.history.push(`/`);
             } else {
                 this.props.refreshPlan(localStorage.getItem("public_plan"), () => {
+                    console.log("img {0}", this.props.businessPlan.planImage);
+                    this.props.getSelectedPlanDetails(this.props.businessPlan.id).
+                        then(() => {
+                            this.props.getImage(this.props.businessPlan);
+                        });
                     this.props.getSelectedPlanOverview(this.props.businessPlan.id);
                 });
             }
         } else {
+            console.log("img2 {0}", this.props.businessPlan.planImage);
+            this.props.getSelectedPlanDetails(this.props.businessPlan.id).
+                then(() => {
+                    this.props.getImage(this.props.businessPlan);
+                });
             this.props.getSelectedPlanOverview(this.props.businessPlan.id);
         }
     }
 
     render() {
         const overview = this.props.businessPlan.overview;
-        console.log(overview);
-
-        
-        
-
+        console.log("bp {0}", this.props.businessPlan);
 
         if (this.props.loading === true || this.props.businessPlan.overview === undefined) {
             return (<div></div>)
         } else {
-            let image = {};
-            if (this.props.imageLoading === false) {
-                image = <Card style={{width: '282px', height: '236px', borderRadius: '8px', backgroundColor: '#FFFFFF',
-                            backgroundImage: this.props.businessPlan.coverImage === null? `url(../businessPlan.webp)` : `url(${this.props.businessPlan.coverImage})`,
-                            backgroundSize:'282px 152px', backgroundRepeat: "no-repeat" }}>
-                            <h4 style={{ marginTop: '150px'}}>Cover image</h4>
-                        </Card>
-            } else {
-                image = <div></div>
-            }
-            
             return (
                 <>
                     <Col span={20} offset={2}>
@@ -102,11 +97,11 @@ class Overview extends React.Component {
                             <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                                 <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                                 <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>{this.props.businessPlan.name}</Text>
-                                <Tag color="#BAE7FF" style={{borderRadius: 50, color: "#262626", marginLeft: '10px'}}> {this.props.businessPlan.percentage}% Completed</Tag>
+                                <Tag color="#BAE7FF" style={{ borderRadius: 50, color: "#262626", marginLeft: '10px' }}> {this.props.businessPlan.percentage}% Completed</Tag>
                             </div>
                         </Col>
                         <Col span={4}>
-                            
+
                         </Col>
                     </Row>
 
@@ -118,76 +113,76 @@ class Overview extends React.Component {
                                         <div style={{ marginRight: '40px' }}>
                                             <Card title="Business canvas" style={{ marginTop: '10px' }}>
                                                 <List>
-                                                    <List.Item key='1' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
+                                                    <List.Item key='1' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={overview.customer_segments.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} />: <Avatar src="../incomplete.png" style={avatarStyle} />}
+                                                            avatar={overview.customer_segments.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/public/customer-segments'>Customer segments</Link></Space>}
                                                             description={overview.customer_segments.description} />
                                                         <div>...</div>
                                                     </List.Item>
-                                                    <List.Item key='2' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
+                                                    <List.Item key='2' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={overview.value_proposition.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} />: <Avatar src="../incomplete.png" style={avatarStyle} />}
+                                                            avatar={overview.value_proposition.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/public/value-propositions'>Value proposition</Link></Space>}
-                                                            description={overview.value_proposition.description === "" ? "Proposed products" : overview.value_proposition.description } />
+                                                            description={overview.value_proposition.description === "" ? "Proposed products" : overview.value_proposition.description} />
                                                         <div>...</div>
                                                     </List.Item>
-                                                    <List.Item key='3' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
+                                                    <List.Item key='3' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={overview.channels.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} />: <Avatar src="../incomplete.png" style={avatarStyle} />}
+                                                            avatar={overview.channels.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/public/channels'>Channels</Link></Space>}
-                                                            description={overview.channels.description === "" || overview.channels.description === null ? "Distribution channels" : overview.channels.description } />
+                                                            description={overview.channels.description === "" || overview.channels.description === null ? "Distribution channels" : overview.channels.description} />
                                                         <div>...</div>
                                                     </List.Item>
-                                                    <List.Item key='4' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
+                                                    <List.Item key='4' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={overview.customer_relationship.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} />: <Avatar src="../incomplete.png" style={avatarStyle} />}
+                                                            avatar={overview.customer_relationship.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/public/customer-relationships'>Customer relationships</Link></Space>}
-                                                            description={overview.customer_relationship.description === "" || overview.customer_relationship.description === null ? "Customer relations management" : overview.customer_relationship.description } />
+                                                            description={overview.customer_relationship.description === "" || overview.customer_relationship.description === null ? "Customer relations management" : overview.customer_relationship.description} />
                                                         <div>...</div>
                                                     </List.Item>
-                                                    <List.Item key='5' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
+                                                    <List.Item key='5' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={overview.revenue_streams.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} />: <Avatar src="../incomplete.png" style={avatarStyle} />}
+                                                            avatar={overview.revenue_streams.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/public/revenue-streams'>Revenue streams</Link></Space>}
-                                                            description={overview.revenue_streams.description === "" || overview.revenue_streams.description === null ? "Customer segments revenue streams" : overview.revenue_streams.description } />
+                                                            description={overview.revenue_streams.description === "" || overview.revenue_streams.description === null ? "Customer segments revenue streams" : overview.revenue_streams.description} />
                                                         <div>...</div>
                                                     </List.Item>
-                                                    <List.Item key='6' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
+                                                    <List.Item key='6' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={overview.key_resources.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} />: <Avatar src="../incomplete.png" style={avatarStyle} />}
+                                                            avatar={overview.key_resources.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/public/key-resources'>Key resources</Link></Space>}
-                                                            description={overview.key_resources.description === "" || overview.key_resources.description === null ? "Key resources list" : overview.key_resources.description } />
+                                                            description={overview.key_resources.description === "" || overview.key_resources.description === null ? "Key resources list" : overview.key_resources.description} />
                                                         <div>...</div>
                                                     </List.Item>
-                                                    <List.Item key='7' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
+                                                    <List.Item key='7' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={overview.key_activities.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} />: <Avatar src="../incomplete.png" style={avatarStyle} />}
+                                                            avatar={overview.key_activities.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/key-activities'>Key activities</Link></Space>}
-                                                            description={overview.key_activities.description === "" || overview.key_activities.description === null ? "Key activities list" : overview.key_activities.description } />
+                                                            description={overview.key_activities.description === "" || overview.key_activities.description === null ? "Key activities list" : overview.key_activities.description} />
                                                         <div>...</div>
                                                     </List.Item>
-                                                    <List.Item key='8' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
+                                                    <List.Item key='8' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={overview.key_partners.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} />: <Avatar src="../incomplete.png" style={avatarStyle} />}
+                                                            avatar={overview.key_partners.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/key-partners'>Key partners</Link></Space>}
-                                                            description={overview.key_partners.description === "" || overview.key_partners.description === null ? "Key partners list" : overview.key_partners.description } />
+                                                            description={overview.key_partners.description === "" || overview.key_partners.description === null ? "Key partners list" : overview.key_partners.description} />
                                                         <div>...</div>
                                                     </List.Item>
-                                                    <List.Item key='9' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
+                                                    <List.Item key='9' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={overview.cost_structure.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} />: <Avatar src="../incomplete.png" style={avatarStyle} />}
+                                                            avatar={overview.cost_structure.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/cost-structure'>Cost structure</Link></Space>}
-                                                            description={overview.cost_structure.description === "" || overview.cost_structure.description === null ? "Fixed and variable costs" : overview.cost_structure.description } />
+                                                            description={overview.cost_structure.description === "" || overview.cost_structure.description === null ? "Fixed and variable costs" : overview.cost_structure.description} />
                                                         <div>...</div>
                                                     </List.Item>
                                                 </List>
                                             </Card>
                                             <Card style={{ marginTop: '10px' }}>
                                                 <List>
-                                                    <List.Item key='10' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
+                                                    <List.Item key='10' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={false === true ? <Avatar src="../complete.png" style={avatarStyle} />: <Avatar src="../incomplete.png" style={avatarStyle} />}
+                                                            avatar={false === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
                                                             title="Financial projections"
                                                             description="Description goes here" />
                                                         <div>...</div>
@@ -196,20 +191,20 @@ class Overview extends React.Component {
                                             </Card>
                                             <Card style={{ marginTop: '10px' }}>
                                                 <List>
-                                                    <List.Item key='11' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
+                                                    <List.Item key='11' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={overview.swot.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} />: <Avatar src="../incomplete.png" style={avatarStyle} />}
+                                                            avatar={overview.swot.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/swot'>SWOT</Link></Space>}
-                                                            description={overview.swot.description === "" || overview.swot.description === null ? "Strengths/Weaknesses and Threats/Oportunities" : overview.swot.description } />
+                                                            description={overview.swot.description === "" || overview.swot.description === null ? "Strengths/Weaknesses and Threats/Oportunities" : overview.swot.description} />
                                                         <div>...</div>
                                                     </List.Item>
                                                 </List>
                                             </Card>
                                             <Card style={{ marginTop: '10px' }}>
                                                 <List >
-                                                    <List.Item key='12' style={{ paddingTop: '0px', paddingBottom: '0px'}}>
+                                                    <List.Item key='12' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={false === true ? <Avatar src="../complete.png" style={avatarStyle} />: <Avatar src="../incomplete.png" style={avatarStyle} />}
+                                                            avatar={false === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
                                                             title="Team and competencies"
                                                             description="Description goes here" />
                                                         <div>...</div>
@@ -219,7 +214,13 @@ class Overview extends React.Component {
                                         </div>
                                     </Col>
                                     <Col span={6}>
-                                        {image}
+                                        <Card style={{
+                                            width: '282px', height: '236px', borderRadius: '8px', backgroundColor: '#FFFFFF',
+                                            backgroundImage: 'linear-gradient(to bottom, rgba(255, 255, 252, 0) 62%, rgba(255, 255, 255, 1) 38%), ' + (this.props.businessPlan.coverImage ? `url(${this.props.businessPlan.coverImage})` : `url(businessPlan.webp)`),
+                                            objectFit: 'cover', backgroundSize: '100% auto', backgroundRepeat: 'no-repeat', backgroundPosition: 'center top',
+                                        }}>
+                                            <h4 style={{ marginTop: '150px' }}>Cover image</h4>
+                                        </Card>
                                     </Col>
                                 </Row>
                             </TabPane>
@@ -231,7 +232,7 @@ class Overview extends React.Component {
                                         </div>
                                     </Col>
                                     <Col span={16}>
-                                        
+
                                     </Col>
                                 </Row>
                             </TabPane>
@@ -263,4 +264,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { refreshPlan, getSelectedPlanOverview })(withRouter(Overview))
+export default connect(mapStateToProps, { refreshPlan, getSelectedPlanOverview, getSelectedPlanDetails, getImage })(withRouter(PublicOverview))

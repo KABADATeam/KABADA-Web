@@ -20,7 +20,7 @@ class EditChannelModal extends Component {
         const sub_type = sub_channel === null ? { types: null } : sub_channel;
 
         this.state = {
-            error : {
+            error: {
                 distribution: "",
                 product: "",
                 channel: "",
@@ -28,7 +28,7 @@ class EditChannelModal extends Component {
             },
 
             selected_channel: channel,
-            selected_subtype:  { ...sub_type, "shop": { type: shop_type, location: shop_location }, "distribution": distribution },
+            selected_subtype: { ...sub_type, "shop": { type: shop_type, location: shop_location }, "distribution": distribution },
             selected_products: props.item.products.map(x => x.id)
         }
     }
@@ -42,21 +42,21 @@ class EditChannelModal extends Component {
     }
 
     onOK = () => {
-        
+
         if (this.state.selected_subtype.shop.type !== null && this.state.selected_subtype.distribution.length === 0) {
             this.setState({
                 error: { ...this.state.error, distribution: "Select distribution channel" }
             });
             return;
         }
-        
+
         if (this.state.selected_products.length === 0) {
             this.setState({
                 error: { ...this.state.error, product: "Select product" }
             });
             return;
         }
-        
+
         if (this.state.selected_channel === null) {
             this.setState({
                 error: { ...this.state.error, channel: "Select channel" }
@@ -106,7 +106,7 @@ class EditChannelModal extends Component {
         this.props.onClose();
     }
 
-    onProductChange (id) {
+    onProductChange(id) {
         this.setState({
             selected_products: id,
             error: { ...this.state.error, product: "" }
@@ -134,7 +134,7 @@ class EditChannelModal extends Component {
 
     onDistributionChannelChange(id) {
         this.setState({
-            selected_subtype: { ...this.state.selected_subtype, "distribution": id},
+            selected_subtype: { ...this.state.selected_subtype, "distribution": id },
             error: { ...this.state.error, distribution: "" }
         });
     }
@@ -163,14 +163,13 @@ class EditChannelModal extends Component {
         const channelOptions = this.props.types.map((obj) =>
             <Option key={obj.id} value={obj.id}>{obj.name}</Option>
         );
-        
+
         const subTypes = this.state.selected_channel.subtypes === null ? [] : this.state.selected_channel.subtypes;
-        const subtypeOptions = subTypes.map((obj) =>
-            {
-                return (obj.name !== "" ? <Option key={obj.id} value={obj.id}>{obj.name}</Option> : null)
-            }
+        const subtypeOptions = subTypes.map((obj) => {
+            return (obj.name !== "" ? <Option key={obj.id} value={obj.id}>{obj.name}</Option> : null)
+        }
         );
-        
+
         const shopTypeOptions = this.state.selected_subtype.types === null ? [] : this.state.selected_subtype.types.map((obj) =>
             <Radio key={obj.id} value={obj.id}>{obj.name}</Radio>
         );
@@ -188,7 +187,7 @@ class EditChannelModal extends Component {
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
-                    title={<Space><ArrowLeftOutlined onClick={this.onBack}/>Add New Channel</Space>}
+                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />Channel</Space>}
                     visible={this.props.visibility}
                     onCancel={this.onCancel}
                     footer={
@@ -201,7 +200,7 @@ class EditChannelModal extends Component {
                     <Form layout="vertical" id="myForm" name="myForm" onFinish={this.handleOk}>
                         <Form.Item key="product" name="product" initialValue={this.state.selected_products} label="Choose product"
                             validateStatus={this.state.error.product !== '' ? 'error' : 'success'} >
-                            <Select style={{ width: '100%' }} mode="multiple"  placeholder="Select product(s)" onChange={this.onProductChange.bind(this)} disabled={true}>
+                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Select product(s)" onChange={this.onProductChange.bind(this)} disabled={true}>
                                 {productOptions}
                             </Select>
                         </Form.Item>
@@ -217,7 +216,7 @@ class EditChannelModal extends Component {
                             this.state.selected_channel.subtypes === null ? null :
                                 <Form.Item key="channelSubtype" name="subType" label="Direct sales channel" initialValue={this.state.selected_subtype.id}
                                     validateStatus={this.state.error.sub_channel !== '' ? 'error' : 'success'}>
-                                    <Select style={{ width: '100%' }} placeholder="Select channel" onChange={this.onChannelSubtypeChange.bind(this)} >
+                                    <Select disabled={true} style={{ width: '100%' }} placeholder="Select channel" onChange={this.onChannelSubtypeChange.bind(this)} >
                                         {subtypeOptions}
                                     </Select>
                                 </Form.Item>
@@ -226,20 +225,20 @@ class EditChannelModal extends Component {
                         {
                             this.state.selected_subtype.types === null ? null :
                                 <Form.Item key="ownShopType" label="Own Shop Type">
-                                    <Radio.Group key="groupOne" onChange={this.onShopTypeSelection.bind(this)} value={this.state.selected_subtype.shop.type.id}>
+                                    <Radio.Group disabled={true} key="groupOne" onChange={this.onShopTypeSelection.bind(this)} value={this.state.selected_subtype.shop.type.id}>
                                         <Space direction="vertical">
                                             {shopTypeOptions}
                                         </Space>
                                     </Radio.Group>
                                 </Form.Item>
                         }
-                        
+
                         {
                             this.state.selected_subtype.shop.type === null ? null :
-                                this.state.selected_subtype.shop.type.name === "Physical" ? 
+                                this.state.selected_subtype.shop.type.name === "Physical" ?
                                     <>
                                         <Form.Item key="physicalLocation" label="Physical store location">
-                                            <Radio.Group key="groupTwo" onChange={this.onLocationSelection.bind(this)} value={this.state.selected_subtype.shop.location.id}>
+                                            <Radio.Group disabled={true} key="groupTwo" onChange={this.onLocationSelection.bind(this)} value={this.state.selected_subtype.shop.location.id}>
                                                 <Space direction="vertical">
                                                     {locationTypeOptions}
                                                 </Space>
@@ -248,7 +247,7 @@ class EditChannelModal extends Component {
 
                                         <Form.Item key="distributionChannel" name="distributionChannel" label="Distribution channels" initialValue={this.state.selected_subtype.distribution}
                                             validateStatus={this.state.error.distribution !== '' ? 'error' : 'success'}>
-                                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Select distribution channel" onChange={this.onDistributionChannelChange.bind(this)} >
+                                            <Select disabled={true} style={{ width: '100%' }} mode="multiple" placeholder="Select distribution channel" onChange={this.onDistributionChannelChange.bind(this)} >
                                                 {distributionTypeOptions}
                                             </Select>
                                         </Form.Item>
@@ -256,7 +255,7 @@ class EditChannelModal extends Component {
                                     :
                                     <>
                                         <Form.Item key="onlineLocation" label="Online store location">
-                                            <Radio.Group key="groupThree" onChange={this.onLocationSelection.bind(this)} value={this.state.selected_subtype.shop.location.id}>
+                                            <Radio.Group disabled={true} key="groupThree" onChange={this.onLocationSelection.bind(this)} value={this.state.selected_subtype.shop.location.id}>
                                                 <Space direction="vertical">
                                                     {locationTypeOptions}
                                                 </Space>
@@ -265,7 +264,7 @@ class EditChannelModal extends Component {
 
                                         <Form.Item key="distributionChannel2" name="distributionChannel2" label="Distribution channels" initialValue={this.state.selected_subtype.distribution}
                                             validateStatus={this.state.error.distribution !== '' ? 'error' : 'success'}>
-                                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Select distribution channel" onChange={this.onDistributionChannelChange.bind(this)} >
+                                            <Select disabled={true} style={{ width: '100%' }} mode="multiple" placeholder="Select distribution channel" onChange={this.onDistributionChannelChange.bind(this)} >
                                                 {distributionTypeOptions}
                                             </Select>
                                         </Form.Item>

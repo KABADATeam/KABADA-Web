@@ -22,6 +22,9 @@ import PublicOverview from './public_plan/containers/Overview';
 import PublicCustomerSegments from './public_plan/containers/CustomerSegments';
 import PublicValuePropositions from './public_plan/containers/ValuePropositions';
 import PublicChannels from './public_plan/containers/Channels';
+import PublicKeyResources from './public_plan/containers/KeyResources'
+import PublicCustomerRelationships from './public_plan/containers/CustomerRelationships';
+import PublicRevenueStreams from './public_plan/containers/RevenueStreams';
 import FixedAndVariableCosts from './containers/FixedAndVariableCosts';
 import SalesForecast from './containers/SalesForecast';
 import CashFlow from './containers/CashFlow';
@@ -59,6 +62,9 @@ class PrivateApp extends React.Component {
                     <Route exact path="/public/customer-segments" render={(props) => <MainWindow {...props}> <PublicCustomerSegments {...props} /> </MainWindow>} />
                     <Route exact path="/public/value-propositions" render={(props) => <MainWindow {...props}> <PublicValuePropositions {...props} /> </MainWindow>} />
                     <Route exact path="/public/channels" render={(props) => <MainWindow {...props}> <PublicChannels {...props} /> </MainWindow>} />
+                    <Route exact path="/public/key-resources" render={(props) => <MainWindow {...props}> <PublicKeyResources {...props} /> </MainWindow>} />
+                    <Route exact path="/public/revenue-streams" render={(props) => <MainWindow {...props}> <PublicRevenueStreams {...props} /> </MainWindow>} />
+                    <Route exact path="/public/customer-relationships" render={(props) => <MainWindow {...props}> <PublicCustomerRelationships {...props} /> </MainWindow>} />
                     <Route exact path="/fixed-and-variable-costs" render={(props) => <MainWindow {...props}> <FixedAndVariableCosts {...props} /> </MainWindow>} />
                     <Route exact path="/sales-forecast" render={(props) => <MainWindow {...props}> <SalesForecast {...props} /> </MainWindow>} />
                     <Route exact path="/cash-flow" render={(props) => <MainWindow {...props}> <CashFlow {...props} /> </MainWindow>} />

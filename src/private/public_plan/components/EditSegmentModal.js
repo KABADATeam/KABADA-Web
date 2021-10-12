@@ -64,7 +64,7 @@ class EditSegmentModal extends Component {
         this.props.onClose();
     }
 
-    onNameChange (id) {
+    onNameChange(id) {
         this.setState({
             revenue: id
         });
@@ -94,15 +94,15 @@ class EditSegmentModal extends Component {
 
         const priceTypeOptions = this.state.price === null ? [] :
             this.props.types.prices.find(x => x.id === this.state.price).types.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
-        );
+                <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+            );
 
         return (
             <>
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
-                    title={<Space><ArrowLeftOutlined onClick={this.onBack}/>Edit revenue stream</Space>}
+                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />Revenue stream</Space>}
                     visible={this.props.visibility}
                     onCancel={this.onCancel}
                     footer={

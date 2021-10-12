@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Divider, Button, Breadcrumb, Row, Col, Typography, Card, Table, Space, Tooltip } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled } from '@ant-design/icons';
-import { leftButtonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle, tableDescriptionStyle } from '../../../styles/customStyles';
+import { buttonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle, tableDescriptionStyle } from '../../../styles/customStyles';
 import { connect } from 'react-redux';
 import KeyResourcesCategoriesModal from "../../components/KeyResourcesCategoriesModal";
 import EditKeyResourceModal from "../../public_plan/components/EditKeyResourceModal";
@@ -45,7 +45,7 @@ const titleButtonStyle = {
     backgroundColor: "transparent",
 }
 
-class KeyResources extends React.Component {
+class PublicKeyResources extends React.Component {
 
     constructor(props) {
         super(props);
@@ -56,7 +56,7 @@ class KeyResources extends React.Component {
     }
 
     onBackClick() {
-        this.props.history.push(`/overview`);
+        this.props.history.push(`/public/overview`);
     }
 
     onCompletedChange(state) {
@@ -102,10 +102,10 @@ class KeyResources extends React.Component {
 
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
                 this.props.history.push(`/`);
             } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                this.props.refreshPlan(localStorage.getItem("public_plan"), () => {
                     this.props.getResourcesList(this.props.businessPlan.id);
                     this.props.getResourcesCategoriesList();
                 });
@@ -114,11 +114,11 @@ class KeyResources extends React.Component {
             this.props.getResourcesList(this.props.businessPlan.id);
             this.props.getResourcesCategoriesList();
         }
-        
+
     }
 
     render() {
-        const data = this.props.resources.key_resources.map(obj=> ({ ...obj, type: obj.category.description }));
+        const data = this.props.resources.key_resources.map(obj => ({ ...obj, type: obj.category.description }));
         const columns = [
             {
                 title: 'Type',
@@ -145,22 +145,22 @@ class KeyResources extends React.Component {
                 width: '10%',
                 render: (obj, record) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditItem.bind(this, record)} >View</Button>
+                        <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditItem.bind(this, record)} >View</Button>
                     </Space>
                 ),
             }
         ];
-
+        console.log("sdf")
         return (
-            
+
             <>
                 <Col span={16} offset={4}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
-                            <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
+                            <Space><Link to='/public-business-plans'>Public Business plans</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
+                            <Space><Link to='/public/overview'>{this.props.businessPlan.name}</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             Key Resources
@@ -206,7 +206,7 @@ class KeyResources extends React.Component {
                                         <Typography style={{ ...tableTitleStyle }}>Key resources</Typography>
                                         <Typography style={{ ...tableDescriptionStyle }}>
                                             Only state those resources that make you unique compared to your competitors in the market.
-                                            </Typography>
+                                        </Typography>
                                     </>}
                                     dataSource={data}
                                     columns={columns}
@@ -215,7 +215,7 @@ class KeyResources extends React.Component {
                             </Card >
                         </Col>
                         <KeyResourcesCategoriesModal visibility={this.state.is_categories_modal_visible} handleClose={this.onCloseNewItemModal} handleOpen={this.onOpenCategoriesModal} />
-                        <EditKeyResourceModal visibility={this.state.is_edit_resource_modal_visible} handleClose={this.onCloseEditItemModal}/>
+                        <EditKeyResourceModal visibility={this.state.is_edit_resource_modal_visible} handleClose={this.onCloseEditItemModal} />
                     </Row>
                 </Col>
             </>
@@ -230,4 +230,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getResourcesList, getResourcesCategoriesList, deleteItem, saveChanges, saveEditable, refreshPlan })(withRouter(KeyResources));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getResourcesList, getResourcesCategoriesList, deleteItem, saveChanges, saveEditable, refreshPlan })(withRouter(PublicKeyResources));
