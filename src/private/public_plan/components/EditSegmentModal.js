@@ -27,40 +27,6 @@ class EditSegmentModal extends Component {
     }
 
     onOK = () => {
-        if (this.state.priceType === null) {
-            this.setState({
-                priceTypeError: 'Select price type'
-            });
-            return;
-        } else {
-            this.setState({
-                priceTypeError: ''
-            });
-        }
-
-        const postObj = {
-            "id": this.props.item.id,
-            "business_plan_id": this.props.businessPlan.id,
-            "segment": this.props.number,
-            "stream_type_id": this.state.revenue,
-            "price_type_id": this.state.priceType
-        };
-
-        const price = this.props.types.prices.find(x => x.id === this.state.price);
-        const reducerObj = {
-            "id": this.props.item.id,
-            "key": this.props.item.id,
-            "price_category_id": this.state.price,
-            "price_category_name": price.title,
-            "price_type_id": this.state.priceType,
-            "price_type_name": price.types.find(x => x.id === this.state.priceType).title,
-            "stream_type_id": this.state.revenue,
-            "stream_type_name": this.props.types.stream_types.find(x => x.id === this.state.revenue).title,
-            "segment": this.props.item.segment
-        }
-
-        this.props.updateRevenue(postObj, reducerObj);
-
         this.props.onClose();
     }
 

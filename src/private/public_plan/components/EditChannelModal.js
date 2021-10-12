@@ -42,67 +42,6 @@ class EditChannelModal extends Component {
     }
 
     onOK = () => {
-
-        if (this.state.selected_subtype.shop.type !== null && this.state.selected_subtype.distribution.length === 0) {
-            this.setState({
-                error: { ...this.state.error, distribution: "Select distribution channel" }
-            });
-            return;
-        }
-
-        if (this.state.selected_products.length === 0) {
-            this.setState({
-                error: { ...this.state.error, product: "Select product" }
-            });
-            return;
-        }
-
-        if (this.state.selected_channel === null) {
-            this.setState({
-                error: { ...this.state.error, channel: "Select channel" }
-            });
-            return;
-        }
-
-        if (this.state.selected_subtype.id === undefined && this.state.selected_channel.subtypes !== null) {
-            this.setState({
-                error: { ...this.state.error, sub_channel: "Select channel" }
-            });
-            return;
-        }
-
-        const postObj = {
-            "id": this.props.item.id,
-            "business_plan_id": this.props.businessPlan.id,
-            "channel_type_id": this.state.selected_channel.id,
-            "product_id": this.state.selected_products,
-            "channel_subtype_id": this.state.selected_subtype.id === undefined ? null : this.state.selected_subtype.id,
-            "subtype_type_id": this.state.selected_subtype.shop.type === null ? null : this.state.selected_subtype.shop.type.id,
-            "location_type_id": this.state.selected_subtype.shop.location === null ? null : this.state.selected_subtype.shop.location.id,
-            "distribution_channels_id": this.state.selected_subtype.distribution
-        };
-
-        const products = this.state.selected_products.map(id => {
-            return this.props.products.products.find(x => x.id === id);
-        });
-        const distributions = this.state.selected_subtype.distribution.map(id => {
-            return this.state.selected_subtype.shop.type.distribution_channels.find(x => x.id === id);
-        });
-
-        const type = this.state.selected_subtype.shop.type === null ? null : {
-            "id": this.state.selected_subtype.shop.type.id,
-            "name": this.state.selected_subtype.shop.type.name,
-            "location_type_id": this.state.selected_subtype.shop.location.id
-        }
-
-        const reducerObj = {
-            "products": products,
-            "channel_type": this.state.selected_channel,
-            "distribution_channels": distributions,
-            "channel_subtype": this.state.selected_subtype.id === undefined ? null : { ...this.state.selected_subtype, "type": type },
-        }
-
-        this.props.updateChannel(postObj, reducerObj);
         this.props.onClose();
     }
 

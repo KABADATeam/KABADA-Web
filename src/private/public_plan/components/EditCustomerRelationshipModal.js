@@ -26,36 +26,6 @@ class EditCustomerRelationshipModal extends Component {
     }
 
     onOK = () => {
-        if (this.state.channels === null) {
-            this.setState({
-                channelsError: 'Select channel'
-            });
-            return;
-        } else {
-            this.setState({
-                channelsError: ''
-            });
-        }
-
-        const postObj = {
-            "item_id": this.props.item.id,
-            "business_plan_id": this.props.businessPlan.id,
-            "channels": this.state.channels,
-            "category_id": this.props.item.category.id,
-            "group": this.props.item.group,
-        };
-
-        const reducerObj = {
-            "id": this.props.item.id,
-            "key": this.props.item.id,
-            "channels": this.state.channels,
-            "category": this.props.item.category,
-            "comment": null,
-            "group": this.props.item.group,
-        };
-
-        this.props.updateCustomerRelationship(postObj, reducerObj);
-
         this.props.onClose();
     }
 

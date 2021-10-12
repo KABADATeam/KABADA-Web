@@ -35,39 +35,6 @@ class EditBusinessSegmentModal extends Component {
     }
 
     onOK = () => {
-
-        const postObj = {
-            "id": this.props.item.id,
-            "business_plan_id": this.props.businessPlan.id,
-            "business_type": this.state.type,
-            "company_size": this.state.companySize,
-            "annual_revenue": this.state.annualRevenue,
-            "budget": this.state.budget,
-            "income": [],
-            "geographic_location": this.state.locationType
-        };
-
-        const selected_types = this.props.categories.customer_segments_types.business_types.filter((item) => this.state.type.some((field) => item.id === field));
-        const selected_company_sizes = this.props.categories.customer_segments_types.company_sizes.filter((item) => this.state.companySize.some((field) => item.id === field));
-        const selected_locations = this.props.categories.customer_segments_types.geographic_locations.filter((item) => this.state.locationType.some((field) => item.id === field));
-
-        const reducerObj = {
-            "id": this.props.item.id,
-            "key": this.props.item.id,
-            "business_type": selected_types,
-            "business_type_titles": selected_types.map(e => e.title).join(", "),
-            "company_size": selected_company_sizes,
-            "company_size_titles": selected_company_sizes.map(e => e.title).join(", "),
-            "annual_revenue": this.state.annualRevenue,
-            "budget": this.state.budget,
-            "income": [],
-            "geographic_location": selected_locations,
-            "location_titles": selected_locations.map(e => e.title).join(", "),
-            "comment": null
-        };
-
-        this.props.updateBusinessSegment(postObj, reducerObj);
-
         this.props.onClose();
     }
 

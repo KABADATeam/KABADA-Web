@@ -35,106 +35,6 @@ class EditConsumerSegmentModal extends Component {
     }
 
     onOK = () => {
-        if (this.state.ageGroup === null) {
-            this.setState({
-                ageGroupError: 'Select age group'
-            });
-            return;
-        } else {
-            this.setState({
-                ageGroupError: ''
-            });
-        }
-
-        if (this.state.genderType === null) {
-            this.setState({
-                genderTypeError: 'Select gender'
-            });
-            return;
-        } else {
-            this.setState({
-                genderTypeError: ''
-            });
-        }
-
-        if (this.state.isChildren === null) {
-            this.setState({
-                isChildrenError: 'Select if consumers are children or not'
-            });
-            return;
-        } else {
-            this.setState({
-                isChildrenError: ''
-            });
-        }
-
-        if (this.state.educationType === null) {
-            this.setState({
-                educationTypeError: 'Select education'
-            });
-            return;
-        } else {
-            this.setState({
-                educationTypeError: ''
-            });
-        }
-
-        if (this.state.incomeType === null) {
-            this.setState({
-                incomeTypeError: 'Select income'
-            });
-            return;
-        } else {
-            this.setState({
-                incomeTypeError: ''
-            });
-        }
-
-        if (this.state.locationType === null) {
-            this.setState({
-                locationTypeError: 'Select geographical location'
-            });
-            return;
-        } else {
-            this.setState({
-                locationTypeError: ''
-            });
-        }
-
-        const postObj = {
-            "id": this.props.item.id,
-            "business_plan_id": this.props.businessPlan.id,
-            "is_children": this.state.isChildren,
-            "age": this.state.ageGroup,
-            "gender": this.state.genderType,
-            "education": this.state.educationType,
-            "income": this.state.incomeType,
-            "geographic_location": this.state.locationType
-        };
-
-        const selected_ages = this.props.categories.customer_segments_types.age_groups.filter((item) => this.state.ageGroup.some((field) => item.id === field));
-        const selected_genders = this.props.categories.customer_segments_types.gender_types.filter((item) => this.state.genderType.some((field) => item.id === field));
-        const selected_educations = this.props.categories.customer_segments_types.education_types.filter((item) => this.state.educationType.some((field) => item.id === field));
-        const selected_incomes = this.props.categories.customer_segments_types.income_types.filter((item) => this.state.incomeType.some((field) => item.id === field));
-        const selected_locations = this.props.categories.customer_segments_types.geographic_locations.filter((item) => this.state.locationType.some((field) => item.id === field));
-
-        const reducerObj = {
-            "id": this.props.item.id,
-            "key": this.props.item.id,
-            "is_children": this.state.isChildren,
-            "age": selected_ages,
-            "age_titles": selected_ages.map(e => e.title).join(", "),
-            "gender": selected_genders,
-            "gender_titles": selected_genders.map(e => e.title).join(", "),
-            "education": selected_educations,
-            "income": selected_incomes,
-            "geographic_location": selected_locations,
-            "location_titles": selected_locations.map(e => e.title).join(", "),
-            "comment": null
-        };
-
-        this.props.updateConsumerSegment(postObj, reducerObj);
-
         this.props.onClose();
     }
 
@@ -238,11 +138,11 @@ class EditConsumerSegmentModal extends Component {
                             </Select>
                         </Form.Item>
 
-                        <Form.Item key="isChildren" name="isChildren" label="Children" 
+                        <Form.Item key="isChildren" name="isChildren" label="Children"
                             validateStatus={this.state.isChildrenError !== '' ? 'error' : 'success'} >
-                            <Radio.Group onChange={this.onIsChildrenChange} value={isChildren}> 
+                            <Radio.Group onChange={this.onIsChildrenChange} value={isChildren}>
                                 <Space direction="vertical" >
-                                    <Radio value={true} disabled={true}>Yes</Radio > 
+                                    <Radio value={true} disabled={true}>Yes</Radio >
                                     <Radio value={false} disabled={true}>No</Radio>
                                 </Space>
                             </Radio.Group>

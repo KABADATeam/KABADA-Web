@@ -178,14 +178,8 @@ class PublicValuePropositions extends React.Component {
                                                 <Image
                                                     width={226}
                                                     src="image.png"
+                                                    preview={false}
                                                 />}
-                                            title={
-                                                <>
-                                                    <Text>Add Key Products</Text><br />
-                                                    <Text style={infoTextStyle}>"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu"</Text>
-                                                </>
-                                            }
-                                            extra={<Button style={{ ...buttonStyle }} size="large" type="primary" onClick={this.addKeyProduct.bind(this)}>Add key product</Button>}
                                         />
                                     </Col>
                                 </Row>
