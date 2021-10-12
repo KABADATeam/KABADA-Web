@@ -320,7 +320,14 @@ class Overview extends React.Component {
                                                             title={<Space><Link to="/sales-forecast">Sales Forecast</Link></Space>}
                                                             description="something"
                                                         />
-
+                                                        <div>...</div>
+                                                    </List.Item>
+                                                    <List.Item key='15' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                        <List.Item.Meta
+                                                            avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                            title={<Space><Link to="/cash-flow">Cash Flow</Link></Space>}
+                                                            description="..."
+                                                        />
                                                         <div>...</div>
                                                     </List.Item>
                                                 </List>
