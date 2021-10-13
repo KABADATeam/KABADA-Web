@@ -4,7 +4,7 @@ import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space,
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { refreshPlan } from "../../../appStore/actions/refreshAction";
-import { getSelectedPlanOverview, getSelectedPlanDetails, getImage } from "../../../appStore/actions/planActions";
+import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
 import { withRouter } from 'react-router-dom';
 
 const { TabPane } = Tabs;
@@ -54,31 +54,38 @@ class PublicOverview extends React.Component {
                 this.props.history.push(`/`);
             } else {
                 this.props.refreshPlan(localStorage.getItem("public_plan"), () => {
-                    console.log("img {0}", this.props.businessPlan.planImage);
-                    this.props.getSelectedPlanDetails(this.props.businessPlan.id).
-                        then(() => {
-                            this.props.getImage(this.props.businessPlan);
-                        });
                     this.props.getSelectedPlanOverview(this.props.businessPlan.id);
                 });
             }
         } else {
-            console.log("img2 {0}", this.props.businessPlan.planImage);
-            this.props.getSelectedPlanDetails(this.props.businessPlan.id).
-                then(() => {
-                    this.props.getImage(this.props.businessPlan);
-                });
             this.props.getSelectedPlanOverview(this.props.businessPlan.id);
         }
     }
 
     render() {
         const overview = this.props.businessPlan.overview;
-        console.log("bp {0}", this.props.businessPlan);
+        console.log(overview);
+
+
+
+
 
         if (this.props.loading === true || this.props.businessPlan.overview === undefined) {
             return (<div></div>)
         } else {
+            let image = {};
+            if (this.props.imageLoading === false) {
+                image = <Card style={{
+                    width: '282px', height: '236px', borderRadius: '8px', backgroundColor: '#FFFFFF',
+                    backgroundImage: this.props.businessPlan.coverImage === null ? `url(../businessPlan.webp)` : `url(${this.props.businessPlan.coverImage})`,
+                    backgroundSize: '282px 152px', backgroundRepeat: "no-repeat"
+                }}>
+                    <h4 style={{ marginTop: '150px' }}>Cover image</h4>
+                </Card>
+            } else {
+                image = <div></div>
+            }
+
             return (
                 <>
                     <Col span={20} offset={2}>
@@ -214,13 +221,7 @@ class PublicOverview extends React.Component {
                                         </div>
                                     </Col>
                                     <Col span={6}>
-                                        <Card style={{
-                                            width: '282px', height: '236px', borderRadius: '8px', backgroundColor: '#FFFFFF',
-                                            backgroundImage: 'linear-gradient(to bottom, rgba(255, 255, 252, 0) 62%, rgba(255, 255, 255, 1) 38%), ' + (this.props.businessPlan.coverImage ? `url(${this.props.businessPlan.coverImage})` : `url(businessPlan.webp)`),
-                                            objectFit: 'cover', backgroundSize: '100% auto', backgroundRepeat: 'no-repeat', backgroundPosition: 'center top',
-                                        }}>
-                                            <h4 style={{ marginTop: '150px' }}>Cover image</h4>
-                                        </Card>
+                                        {image}
                                     </Col>
                                 </Row>
                             </TabPane>
@@ -264,4 +265,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { refreshPlan, getSelectedPlanOverview, getSelectedPlanDetails, getImage })(withRouter(PublicOverview))
+export default connect(mapStateToProps, { refreshPlan, getSelectedPlanOverview })(withRouter(PublicOverview))
