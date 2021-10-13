@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Divider, Button, Breadcrumb, Row, Col, Typography, Card, Table, Space, Tooltip } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled } from '@ant-design/icons';
-import { buttonStyle, leftButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
+import { buttonStyle, tableCardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
 import { connect } from 'react-redux';
 import RelationshipCategoriesModal from '../../components/customer_relationships/RelationshipCategoriesModal';
 import { refreshPlan } from "../../../appStore/actions/refreshAction";
@@ -46,7 +46,7 @@ const titleButtonStyle = {
     backgroundColor: "transparent",
 }
 
-class CustomerRelationships extends React.Component {
+class PublicCustomerRelationships extends React.Component {
 
     constructor(props) {
         super(props);
@@ -58,7 +58,7 @@ class CustomerRelationships extends React.Component {
     }
 
     onBackClick() {
-        this.props.history.push(`/overview`);
+        this.props.history.push(`/public/overview`);
     }
 
     onAddHowToGetNew = () => {
@@ -160,10 +160,10 @@ class CustomerRelationships extends React.Component {
 
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
                 this.props.history.push(`/`);
             } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                this.props.refreshPlan(localStorage.getItem("public_plan"), () => {
                     this.props.getCustomerRelationshipsCategories();
                     this.props.getCustomerRelationships(this.props.businessPlan.id);
                 });
@@ -200,7 +200,7 @@ class CustomerRelationships extends React.Component {
                 width: '10%',
                 render: (value, row) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditHowToGetNew.bind(this, row)} >View</Button>
+                        <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditHowToGetNew.bind(this, row)} >View</Button>
                     </Space>
                 ),
             }
@@ -230,7 +230,7 @@ class CustomerRelationships extends React.Component {
                 width: '10%',
                 render: (value, row) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditHowToKeepExisting.bind(this, row)} >View</Button>
+                        <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditHowToKeepExisting.bind(this, row)} >View</Button>
                     </Space>
                 ),
             }
@@ -260,7 +260,7 @@ class CustomerRelationships extends React.Component {
                 width: '10%',
                 render: (value, row) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditHowToMakeSpend.bind(this, row)} >View</Button>
+                        <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditHowToMakeSpend.bind(this, row)} >View</Button>
                     </Space>
                 ),
             }
@@ -271,10 +271,10 @@ class CustomerRelationships extends React.Component {
                 <Col span={16} offset={4}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
-                            <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
+                            <Space><Link to='/public-business-plans'>Public Business plans</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
+                            <Space><Link to='/public/overview'>{this.props.businessPlan.name}</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             Customer Relationships
@@ -292,7 +292,7 @@ class CustomerRelationships extends React.Component {
                             </Tooltip>
                         </div>
                     </Col>
-                    
+
                 </Row>
 
 
@@ -394,4 +394,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getCustomerRelationshipsCategories, getCustomerRelationships, refreshPlan, saveState, selectRelationshipCategory, deleteCustomerRelationship })(withRouter(CustomerRelationships));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getCustomerRelationshipsCategories, getCustomerRelationships, refreshPlan, saveState, selectRelationshipCategory, deleteCustomerRelationship })(withRouter(PublicCustomerRelationships));

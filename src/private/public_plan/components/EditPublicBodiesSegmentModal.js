@@ -3,19 +3,17 @@ import { connect } from 'react-redux';
 import { Modal, Button, Form, Space, Select } from 'antd';
 import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { updateCustomerRelationship } from "../../../appStore/actions/customerRelationshipsAction";
+import { updateNgoSegment } from "../../../appStore/actions/customerSegmentAction";
 
 const { Option } = Select;
 
-class EditCustomerRelationshipModal extends Component {
+class EditPublicBodiesSegmentModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            channels: this.props.item.channels,
-            channelsError: '',
+            ngoType: this.props.item.ngo_types.map(e => e.id),
         }
     }
-
 
     onCancel = () => {
         this.props.onClose();
@@ -26,20 +24,17 @@ class EditCustomerRelationshipModal extends Component {
     }
 
     onOK = () => {
-        this.props.onClose();
     }
 
-    onChannelsChange(value) {
+    onNgoTypeChange(value) {
         this.setState({
-            channels: value
+            ngoType: value
         });
     }
 
     render() {
-        const category_title = this.props.item.category.title;
-
-        const typeOptions = this.props.item.channels.map((obj) =>
-            <Option key={obj} value={obj}>{obj}</Option>
+        const typeOptions = this.props.categories.customer_segments_types.ngo_types.map((obj) =>
+            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
         );
 
         return (
@@ -47,7 +42,7 @@ class EditCustomerRelationshipModal extends Component {
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
-                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />{category_title}</Space>}
+                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />Public bodies & NGO segments</Space>}
                     visible={this.props.visibility}
                     onCancel={this.onCancel}
                     footer={
@@ -56,13 +51,13 @@ class EditCustomerRelationshipModal extends Component {
                         </div>
                     }
                 >
-                    <Form layout="vertical" id="myForm" name="myForm" onFinish={this.handleOk}
+                    <Form hideRequiredMark layout="vertical" id="editPublicBodiesNgoForm" name="editPublicBodiesNgoForm" onFinish={this.onOK}
                         initialValues={{
-                            channels: this.props.item.channels.map(e => e),
+                            type: this.props.item.ngo_types.map(e => e.id),
                         }}>
-                        <Form.Item key="channels" name="channels" label="Channel"
-                            validateStatus={this.state.channelsError !== '' ? 'error' : 'success'}>
-                            <Select style={{ width: '100%' }} mode="tags" placeholder="Select channel" onChange={this.onChannelsChange.bind(this)} disabled={true}>
+                        <Form.Item key="type" name="type" label="Type"
+                            rules={[{ required: true, message: 'Select type' }]}>
+                            <Select disabled={true} style={{ width: '100%' }} mode="multiple" placeholder="Select type" onChange={this.onNgoTypeChange.bind(this)} >
                                 {typeOptions}
                             </Select>
                         </Form.Item>
@@ -76,9 +71,9 @@ class EditCustomerRelationshipModal extends Component {
 const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
-        categories: state.customerRelationshipsCategories,
+        categories: state.customerSegmentProperties,
     };
 }
 
-export default connect(mapStateToProps, { updateCustomerRelationship })(EditCustomerRelationshipModal);
+export default connect(mapStateToProps, { updateNgoSegment })(EditPublicBodiesSegmentModal);
 

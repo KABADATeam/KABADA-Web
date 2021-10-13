@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Divider, Button, Breadcrumb, Row, Col, Typography, Card, Table, Space, Tooltip } from 'antd';
 import { ArrowLeftOutlined, PlusOutlined, InfoCircleFilled } from '@ant-design/icons';
-import { buttonStyle, leftButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
+import { buttonStyle, tableCardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
 import { connect } from 'react-redux';
 import AddSegmentModal from '../../components/revenue_streams/AddSegmentModal';
 import EditSegmentModal from '../../public_plan/components/EditSegmentModal';
@@ -45,7 +45,7 @@ const titleButtonStyle = {
     backgroundColor: "transparent",
 }
 
-class RevenueStreams extends React.Component {
+class PublicRevenueStreams extends React.Component {
 
     constructor(props) {
         super(props);
@@ -56,7 +56,7 @@ class RevenueStreams extends React.Component {
     }
 
     onBackClick() {
-        this.props.history.push(`/overview`);
+        this.props.history.push(`/public/overview`);
     }
 
     onAddFirstRevenueStream = () => {
@@ -127,10 +127,10 @@ class RevenueStreams extends React.Component {
 
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
                 this.props.history.push(`/`);
             } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                this.props.refreshPlan(localStorage.getItem("public_plan"), () => {
                     this.props.getRevenues(this.props.businessPlan.id);
                     this.props.getStreamTypes();
                     this.props.getPrices();
@@ -170,7 +170,7 @@ class RevenueStreams extends React.Component {
                 width: '10%',
                 render: (obj, record) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditFirstSegment.bind(this, record)} >View</Button>
+                        <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditFirstSegment.bind(this, record)} >View</Button>
                     </Space>
                 ),
             }
@@ -202,7 +202,7 @@ class RevenueStreams extends React.Component {
                 width: '10%',
                 render: (obj, record) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditSecondSegment.bind(this, record)} >View</Button>
+                        <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditSecondSegment.bind(this, record)} >View</Button>
                     </Space>
                 ),
             }
@@ -234,7 +234,7 @@ class RevenueStreams extends React.Component {
                 width: '10%',
                 render: (obj, record) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditOther.bind(this, record)} >View</Button>
+                        <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditOther.bind(this, record)} >View</Button>
                     </Space>
                 ),
             }
@@ -245,10 +245,10 @@ class RevenueStreams extends React.Component {
                 <Col span={16} offset={4}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
-                            <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
+                            <Space><Link to='/public-business-plans'>Public Business plans</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
+                            <Space><Link to='/public/overview'>{this.props.businessPlan.name}</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             Revenue streams
@@ -334,15 +334,15 @@ class RevenueStreams extends React.Component {
                         </Col>
                     </Row>
                 </Col>
-                
+
                 {
                     this.state.segmentNumber !== null ?
                         <AddSegmentModal visibility={true} number={this.state.segmentNumber} onClose={this.onCloseAddSegmentModal} />
                         : null
                 }
-                
+
                 {
-                    this.state.item !== null ? 
+                    this.state.item !== null ?
                         <EditSegmentModal visibility={true} item={this.state.item} onClose={this.onCloseEditSegmentModal} />
                         : null
                 }
@@ -359,4 +359,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPlan })(withRouter(RevenueStreams));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPlan })(withRouter(PublicRevenueStreams));

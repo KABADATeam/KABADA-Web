@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, Breadcrumb, Row, Col, Typography, Space, Result, Image, Table } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled } from '@ant-design/icons';
-import { buttonStyle, leftButtonStyle } from '../../../styles/customStyles';
+import { buttonStyle } from '../../../styles/customStyles';
 import { refreshPlan } from "../../../appStore/actions/refreshAction";
 import { getProducts, deleteProduct, saveState } from "../../../appStore/actions/productActions";
 //import EditProduct from "../../components/new_product/EditProduct";
@@ -40,7 +40,7 @@ const titleButtonStyle = {
 }
 
 
-class ValuePropositions extends React.Component {
+class PublicValuePropositions extends React.Component {
 
     constructor() {
         super();
@@ -50,7 +50,7 @@ class ValuePropositions extends React.Component {
     }
 
     onBackClick() {
-        this.props.history.push(`/overview`);
+        this.props.history.push(`/public/overview`);
     }
 
     onCompleteChange(state) {
@@ -75,13 +75,13 @@ class ValuePropositions extends React.Component {
 
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
                 this.props.history.push(`/`);
             } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                this.props.refreshPlan(localStorage.getItem("public_plan"), () => {
                     this.props.getProducts(this.props.businessPlan.id);
                 });
-                
+
             }
         } else {
             this.props.getProducts(this.props.businessPlan.id);
@@ -121,7 +121,7 @@ class ValuePropositions extends React.Component {
                 width: '20%',
                 render: (obj, record) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditItem.bind(this, record)} >View</Button>
+                        <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditItem.bind(this, record)} >View</Button>
                         {/* <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.deleteItem.bind(this, record)} ><DeleteOutlined /></Button> */}
                     </Space>
                 ),
@@ -133,7 +133,7 @@ class ValuePropositions extends React.Component {
 
         if (this.state.selectedProduct !== null) {
             return (
-                <EditProduct onBack={() => this.setState({ selectedProduct: null })} productId={this.state.selectedProduct} onClose={() => this.setState({ selectedProduct: null })}/>
+                <EditProduct onBack={() => this.setState({ selectedProduct: null })} productId={this.state.selectedProduct} onClose={() => this.setState({ selectedProduct: null })} />
             );
         } else {
             return (
@@ -141,17 +141,17 @@ class ValuePropositions extends React.Component {
                     <Col span={16} offset={4}>
                         <Breadcrumb style={{ marginTop: "40px" }}>
                             <Breadcrumb.Item>
-                                <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
+                                <Space><Link to='/public-business-plans'>Public Business plans</Link></Space>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
+                                <Space><Link to='/public/overview'>{this.props.businessPlan.name}</Link></Space>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
                                 Value propositions
                             </Breadcrumb.Item>
                         </Breadcrumb>
                     </Col>
-    
+
                     <Row align="middle" style={{ marginTop: "9px", marginBottom: "25px" }}>
                         <Col span={10} offset={4}>
                             <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
@@ -167,7 +167,7 @@ class ValuePropositions extends React.Component {
                             </div>}
                         </Col> */}
                     </Row>
-    
+
                     <Col span={16} offset={4}>
                         {keyProductsCount === 0 ?
                             (
@@ -178,14 +178,8 @@ class ValuePropositions extends React.Component {
                                                 <Image
                                                     width={226}
                                                     src="image.png"
+                                                    preview={false}
                                                 />}
-                                            title={
-                                                <>
-                                                    <Text>Add Key Products</Text><br />
-                                                    <Text style={infoTextStyle}>"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu"</Text>
-                                                </>
-                                            }
-                                            extra={<Button style={{ ...buttonStyle }} size="large" type="primary" onClick={this.addKeyProduct.bind(this)}>Add key product</Button>}
                                         />
                                     </Col>
                                 </Row>
@@ -216,4 +210,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, refreshPlan, getProducts, deleteProduct, saveState })(ValuePropositions);
+export default connect(mapStateToProps, { getSelectedPlanOverview, refreshPlan, getProducts, deleteProduct, saveState })(PublicValuePropositions);

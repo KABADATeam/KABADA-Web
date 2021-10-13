@@ -27,44 +27,10 @@ class EditSegmentModal extends Component {
     }
 
     onOK = () => {
-        if (this.state.priceType === null) {
-            this.setState({
-                priceTypeError: 'Select price type'
-            });
-            return;
-        } else {
-            this.setState({
-                priceTypeError: ''
-            });
-        }
-
-        const postObj = {
-            "id": this.props.item.id,
-            "business_plan_id": this.props.businessPlan.id,
-            "segment": this.props.number,
-            "stream_type_id": this.state.revenue,
-            "price_type_id": this.state.priceType
-        };
-
-        const price = this.props.types.prices.find(x => x.id === this.state.price);
-        const reducerObj = {
-            "id": this.props.item.id,
-            "key": this.props.item.id,
-            "price_category_id": this.state.price,
-            "price_category_name": price.title,
-            "price_type_id": this.state.priceType,
-            "price_type_name": price.types.find(x => x.id === this.state.priceType).title,
-            "stream_type_id": this.state.revenue,
-            "stream_type_name": this.props.types.stream_types.find(x => x.id === this.state.revenue).title,
-            "segment": this.props.item.segment
-        }
-
-        this.props.updateRevenue(postObj, reducerObj);
-
         this.props.onClose();
     }
 
-    onNameChange (id) {
+    onNameChange(id) {
         this.setState({
             revenue: id
         });
@@ -94,15 +60,15 @@ class EditSegmentModal extends Component {
 
         const priceTypeOptions = this.state.price === null ? [] :
             this.props.types.prices.find(x => x.id === this.state.price).types.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
-        );
+                <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+            );
 
         return (
             <>
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
-                    title={<Space><ArrowLeftOutlined onClick={this.onBack}/>Edit revenue stream</Space>}
+                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />Revenue stream</Space>}
                     visible={this.props.visibility}
                     onCancel={this.onCancel}
                     footer={

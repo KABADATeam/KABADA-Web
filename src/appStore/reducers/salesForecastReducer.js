@@ -10,7 +10,7 @@ export const salesForecastReducer = (
             const products = state.products;
             products.forEach(element => {
                 if (element.id === action.payload) {
-                    console.log(element.name)
+                    console.log(element.id)
                     element.Expoted = !element.Expoted
                 }
             });

@@ -4,6 +4,7 @@ import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Space, Table
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
+import { getCashFlow } from "../../appStore/actions/cashFlowAction"
 import { tableTitleStyle } from '../../styles/customStyles';
 
 const { Text } = Typography;
@@ -56,14 +57,15 @@ class CashFlow extends React.Component {
                 this.props.history.push(`/`);
             } else {
                 this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                    this.props.getCashFlow(this.props.businessPlan.id);
                 });
             }
         } else {
-
+            this.props.getCashFlow(this.props.businessPlan.id);
         }
     }
     render() {
-        console.log(this.props.businessPlan.id)
+        console.log(this.props.cashFlowData)
         return (
             <>
                 <Col span={16} offset={4}>
@@ -134,7 +136,8 @@ class CashFlow extends React.Component {
 const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
+        cashFlowData: state.cashFlow
     };
 }
 
-export default connect(mapStateToProps, { refreshPlan })(CashFlow);
+export default connect(mapStateToProps, { refreshPlan, getCashFlow })(CashFlow);

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tooltip } from 'antd';
-import { ArrowLeftOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
-import { leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle, tableDescriptionStyle } from '../../../styles/customStyles';
+import { ArrowLeftOutlined, InfoCircleFilled } from '@ant-design/icons';
+import { tableCardStyle, tableCardBodyStyle, tableTitleStyle, tableDescriptionStyle, buttonStyle } from '../../../styles/customStyles';
 import { connect } from 'react-redux';
 import EditConsumerSegmentModal from '../components/EditConsumerSegmentModal';
-import EditBusinessSegmentModal from '../../components/customer_segments/EditBusinessSegmentModal';
-import EditPublicBodiesSegmentModal from '../../components/customer_segments/EditPublicBodiesSegmentModal';
+import EditBusinessSegmentModal from '../components/EditBusinessSegmentModal';
+import EditPublicBodiesSegmentModal from '../components/EditPublicBodiesSegmentModal';
 import { refreshPlan } from "../../../appStore/actions/refreshAction";
 import { getCustomerSegmentProperties, getCustomerSegments, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState } from "../../../appStore/actions/customerSegmentAction";
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
@@ -46,7 +46,7 @@ const titleButtonStyle = {
     backgroundColor: "transparent",
 }
 
-class CustomerSegments extends React.Component {
+class PublicCustomerSegments extends React.Component {
 
     constructor(props) {
         super(props);
@@ -59,7 +59,7 @@ class CustomerSegments extends React.Component {
     }
 
     onBackClick() {
-        this.props.history.push(`/overview`);
+        this.props.history.push(`/public/overview`);
     }
 
     onAddConsumerSegment = () => {
@@ -140,10 +140,10 @@ class CustomerSegments extends React.Component {
 
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
                 this.props.history.push(`/`);
             } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                this.props.refreshPlan(localStorage.getItem("public_plan"), () => {
                     this.props.getCustomerSegmentProperties();
                     this.props.getCustomerSegments(this.props.businessPlan.id);
                 });
@@ -181,8 +181,8 @@ class CustomerSegments extends React.Component {
                 width: '10%',
                 render: (obj, record) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditConsumerSegment.bind(this, record)} >View</Button>
-                    
+                        <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditConsumerSegment.bind(this, record)} >View</Button>
+
                     </Space>
                 ),
             }
@@ -214,8 +214,8 @@ class CustomerSegments extends React.Component {
                 width: '10%',
                 render: (obj, record) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditBusinessSegment.bind(this, record)} >Edit</Button>
-                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteBusinessSegment.bind(this, record)} ><DeleteOutlined /></Button>
+                        <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditBusinessSegment.bind(this, record)} >View</Button>
+
                     </Space>
                 ),
             }
@@ -235,8 +235,7 @@ class CustomerSegments extends React.Component {
                 width: '10%',
                 render: (obj, record) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditPublicBodiesSegment.bind(this, record)} >Edit</Button>
-                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeletePublicBodiesSegment.bind(this, record)} ><DeleteOutlined /></Button>
+                        <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditPublicBodiesSegment.bind(this, record)} >View</Button>
                     </Space>
                 ),
             }
@@ -247,10 +246,10 @@ class CustomerSegments extends React.Component {
                 <Col span={16} offset={4}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
-                            <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
+                            <Space><Link to='/public-business-plans'>Public Business plans</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
+                            <Space><Link to='/public/overview'>{this.props.businessPlan.name}</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             Customer segments
@@ -264,11 +263,11 @@ class CustomerSegments extends React.Component {
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Customer segments</Text>
                             <Tooltip title="Tooltip text">
-                            <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
+                                <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
                             </Tooltip>
                         </div>
                     </Col>
-                   {/*  <Col span={4}>
+                    {/*  <Col span={4}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                             <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.customerSegments.is_customer_segments_completed} onClick={this.onCompletedChange.bind(this)} />
                         </div>
@@ -304,7 +303,7 @@ class CustomerSegments extends React.Component {
                                     dataSource={this.props.customerSegments.consumers}
                                     columns={consumersSegmentsColumns}
                                     pagination={false}
-                                   // footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddConsumerSegment.bind(this)}><PlusOutlined />Add segment</Button></Space>)}
+                                // footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddConsumerSegment.bind(this)}><PlusOutlined />Add segment</Button></Space>)}
                                 />
                             </Card >
                         </Col>
@@ -333,7 +332,7 @@ class CustomerSegments extends React.Component {
                                     dataSource={this.props.customerSegments.business}
                                     columns={businessSegmentsColumns}
                                     pagination={false}
-                                    //footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddBusinessSegment.bind(this)}><PlusOutlined />Add segment</Button>)}
+                                //footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddBusinessSegment.bind(this)}><PlusOutlined />Add segment</Button>)}
                                 />
                             </Card >
                         </Col>
@@ -362,21 +361,21 @@ class CustomerSegments extends React.Component {
                                     dataSource={this.props.customerSegments.public_bodies_ngo}
                                     columns={publicBodiesNgoSegmentsColumns}
                                     pagination={false}
-                                   // footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddPublicBodiesSegment.bind(this)}><PlusOutlined />Add segment</Button>)}
+                                // footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddPublicBodiesSegment.bind(this)}><PlusOutlined />Add segment</Button>)}
                                 />
                             </Card >
                         </Col>
                     </Row>
                 </Col>
 
-                
+
                 {
                     this.state.item !== null && this.state.consumerSegment !== null ?
                         <EditConsumerSegmentModal visibility={true} item={this.state.item} onClose={this.onCloseEditSegmentModal} />
                         : null
                 }
 
-                
+
 
                 {
                     this.state.item !== null && this.state.businessSegment !== null ?
@@ -384,7 +383,7 @@ class CustomerSegments extends React.Component {
                         : null
                 }
 
-                
+
 
                 {
                     this.state.item !== null && this.state.publicBodiesSegment !== null ?
@@ -406,4 +405,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getCustomerSegmentProperties, getCustomerSegments, refreshPlan, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState })(withRouter(CustomerSegments));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getCustomerSegmentProperties, getCustomerSegments, refreshPlan, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState })(withRouter(PublicCustomerSegments));
