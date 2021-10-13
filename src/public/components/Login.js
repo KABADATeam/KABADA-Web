@@ -44,8 +44,9 @@ class Login extends React.Component {
 
 	onFinish = (values) => {
 		this.props.login(values.username, values.password)
-			.then(
-				this.setState({ submited: true })
+			.then(() => {
+				this.setState({ submited: true });
+			}
 			);
 	};
 

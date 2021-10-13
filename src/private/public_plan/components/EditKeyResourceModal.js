@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Form, Space, Select, Radio, Input} from 'antd';
+import { Modal, Button, Form, Space, Select, Radio, Input } from 'antd';
 import '../../../css/customModal.css';
 import { updateResource } from "../../../appStore/actions/resourcesAction";
 
@@ -22,44 +22,22 @@ const inputStyle = {
 class EditKeyResourceModal extends Component {
     state = {
         selectedItemId: null,
-        selections: [ 0, 0 ],
+        selections: [0, 0],
         name: null,
-        is_changed: [ false, false ]
+        is_changed: [false, false]
     }
 
     onCancel = () => {
         this.setState({
             selectedItemId: null,
-            selections: [ 0, 0 ],
+            selections: [0, 0],
             name: null,
-            is_changed: [ false, false ]
+            is_changed: [false, false]
         });
-        this.props.handleClose(); 
+        this.props.handleClose();
     }
 
     onOk = () => {
-        const category = this.props.categories.find(x => x.id === this.props.resource.category.id);
-        let type = category.types.find(x => x.id === (this.state.selectedItemId === null ? this.props.resource.type_id : this.state.selectedItemId));
-        const selections = type.selections.map((item, i) => {
-            const options = item.options.map((x, j) => j === this.state.selections[i] ? { title: x.title, selected: true } : x);
-            return { title: item.title, options: options }
-        });
-
-        const postObject = {
-            "resource_id": this.props.resource.resource_id,
-            "business_plan_id": this.props.businessPlan.id,
-            "resource_type_id": type.id,
-            "name": this.state.name === null ? this.props.resource.name : this.state.name,
-            "selections": selections
-        };
-        
-        this.props.updateResource(postObject, category);
-        this.setState({
-            selectedItemId: null,
-            selections: [ 0, 0 ],
-            name: null,
-            is_changed: [ false, false ]
-        });
         this.props.handleClose();
     }
 
@@ -100,7 +78,7 @@ class EditKeyResourceModal extends Component {
             );
             return uiElements;
         }
-        else{
+        else {
             return <div></div>
         }
     }
@@ -136,7 +114,7 @@ class EditKeyResourceModal extends Component {
     onSelectionChange(id) {
         this.setState({
             selectedItemId: id,
-            selections: [ 0, 0 ]
+            selections: [0, 0]
         });
     }
 
@@ -179,16 +157,16 @@ class EditKeyResourceModal extends Component {
 
                     <Form layout="vertical">
                         <Form.Item key={100} label="Type">
-                            <Select defaultValue={defaultValue} value={this.state.selectedItemId === null ? defaultValue : this.state.selectedItemId} onChange={this.onSelectionChange.bind(this)} style={{width:548}} disabled={true}>
+                            <Select defaultValue={defaultValue} value={this.state.selectedItemId === null ? defaultValue : this.state.selectedItemId} onChange={this.onSelectionChange.bind(this)} style={{ width: 548 }} disabled={true}>
                                 {options}
-                            </Select>                                                           
+                            </Select>
                         </Form.Item>
 
                         <Form.Item key={101} label="Description (optional)">
-                            <Input placeholder="Your description goes here" value={this.state.name === null ? this.props.resource.name : this.state.name} onChange={this.onChange.bind(this)} size="large" style={{...inputStyle, width:548}} disabled={true}/>                                                
-                        </Form.Item>    
-                        {elements}                   
-                    </Form>            
+                            <Input placeholder="Your description goes here" value={this.state.name === null ? this.props.resource.name : this.state.name} onChange={this.onChange.bind(this)} size="large" style={{ ...inputStyle, width: 548 }} disabled={true} />
+                        </Form.Item>
+                        {elements}
+                    </Form>
                 </Modal >
             </>
         )
@@ -203,5 +181,5 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { updateResource } )(EditKeyResourceModal);
+export default connect(mapStateToProps, { updateResource })(EditKeyResourceModal);
 

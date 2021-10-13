@@ -24,7 +24,7 @@ import { customerRelationshipsCategoriesReducer, customerRelationshipsReducer } 
 import { financialProjectionsReducer, countryVatsReducer } from './financialProjectionsReducer';
 import { salesForecastReducer } from './salesForecastReducer';
 import { businessInvestmentReducer } from './businessInvestmentReducer';
-
+import { cashFlowReducer } from './cashFlowReducer';
 
 
 export default combineReducers({
@@ -80,7 +80,8 @@ export default combineReducers({
     financialProjections: financialProjectionsReducer,
     countryVats: countryVatsReducer,
     salesForecast: salesForecastReducer,
-    businessInvestment: businessInvestmentReducer, 
+    businessInvestment: businessInvestmentReducer,
     countryShortCode: countryShortNameReducer,
     overviewTestLink: overviewTestReducer,
+    cashFlow: cashFlowReducer,
 });

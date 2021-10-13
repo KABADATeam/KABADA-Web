@@ -5,10 +5,9 @@ import { Form, Input, Button, Typography, Card, Space, Divider, Row, Alert } fro
 import { FacebookFilled, GoogleCircleFilled, SafetyCertificateFilled } from '@ant-design/icons';
 import FacebookLogin from "react-facebook-login";
 import GoogleLogin from "react-google-login";
-import { register } from '../../appStore/actions/authenticationActions';
+import { register, googleLogin } from '../../appStore/actions/authenticationActions';
 import { Link } from 'react-router-dom';
 import KabadaIcon from './KabadaIcon';
-
 import { cardStyle, buttonStyle, textColor, inputStyle, bottomDisclaimerStyle } from '../../styles/customStyles';
 import { tailLayout } from '../../styles/customLayouts';
 
@@ -25,6 +24,11 @@ class Register extends React.Component {
 	};
 
 	responseGoogle = (response) => {
+		const email = response.profileObj.email;
+		this.props.googleLogin(email, response.tokenId);
+	};
+
+	responseFailGoogle = (response) => {
 		//console.log(response);
 	};
 
@@ -91,14 +95,14 @@ class Register extends React.Component {
 									icon={<GoogleCircleFilled />}
 									block="true"
 								>
-									Continue in with Google
+									Continue with Google
 								</Button>
 							)}
 							cookiePolicy={"single_host_origin"}
 							scope="profile"
 							autoLoad={false}
 							onSuccess={this.responseGoogle.bind(this)}
-							onFailure={this.responseGoogle.bind(this)} />
+							onFailure={this.responseFailGoogle.bind(this)} />
 					</Form.Item>
 
 					<Divider style={textColor}>OR</Divider>
@@ -193,4 +197,4 @@ const mapStateToProps = (state) => {
 	};
 }
 
-export default connect(mapStateToProps, { register })(withRouter(Register));
+export default connect(mapStateToProps, { register, googleLogin })(withRouter(Register));

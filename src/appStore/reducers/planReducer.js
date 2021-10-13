@@ -22,7 +22,7 @@ const getPercentage = (overview) => {
 export const privatePlansReducer = (state = [], action) => {
     switch (action.type) {
         case "FETCHING_PLANS_SUCCESS":
-            return action.payload.map(obj => ({ ...obj, coverImage: null }));
+            return action.payload.map(obj => ({ ...obj, "coverImage": null }));
         case 'SAVING_PLAN_SUCCESS':
             return [...state, action.payload];
         case 'FETCHING_IMAGE_SUCCESS':
@@ -49,6 +49,8 @@ export const selectedplanFetchReducer = (state = { 'id': null }, action) => {
             return { ...state, ...action.payload };
         case "UPDATING_IMAGE_SUCCESS":
             return { ...state, "coverImage": action.payload };
+        case "FETCHING_IMAGE_SUCCESS":
+            return { ...state, ...action.payload };
         case "CLEARING_SELECTED_PLAN_SUCCESS":
             return action.payload;
         case "UPDATING_SELECTED_PLAN_STATUS_SUCCESS":
