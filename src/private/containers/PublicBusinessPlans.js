@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { getAllPublicPlans } from "../../appStore/actions/planActions";
 import { iconColor, pageHeaderStyle, filterStyle } from '../../styles/customStyles';
 import '../../css/publicBusinessPlans.css';
-import { getSelectedPlan } from "../../appStore/actions/planActions";
+import { getSelectedPlan, getSelectedPlanDetails, getSelectedPlanOverview, getPlansOverview } from "../../appStore/actions/planActions";
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -90,6 +90,7 @@ class PublicBusinessPlans extends React.Component {
         this.props.getSelectedPlan(plan);
         localStorage.setItem("public_plan", plan.id);
         this.props.history.push(`/public/overview`);
+
     }
 
     render() {
@@ -269,7 +270,8 @@ const mapStateToProps = (state) => {
         error: state.error,
         message: state.message,
         publicPlans: state.publicPlans,
+        businessPlan: state.selectedBusinessPlan
     };
 }
 
-export default connect(mapStateToProps, { getAllPublicPlans, getSelectedPlan })(PublicBusinessPlans);
+export default connect(mapStateToProps, { getAllPublicPlans, getSelectedPlan, getSelectedPlanDetails, getSelectedPlanOverview, getPlansOverview })(PublicBusinessPlans);
