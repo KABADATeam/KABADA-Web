@@ -5,6 +5,7 @@ import { Form, Select, InputNumber, Popconfirm, Input, Divider, Button, Breadcru
 import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
+import VariableCostPopUp from '../components/fixed_and_variable_costs/VariableCostPopUp';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getFinancialProjectionsCosts, getCountryVat } from '../../appStore/actions/financialProjectionsActions';
 import { getCountryShortCode } from '../../appStore/actions/countriesActions'
@@ -63,8 +64,62 @@ class FixedAndVariableCosts extends React.Component {
       selectedPeriod: [],
       cost_items: [],
       original_cost_items: [],
+      variablePopUp: {
+        category_id: null,
+        category_title: null,
+        values: null,
+        visible: false
+      }
     };
   }
+
+  showModal = (record, data) => {
+    // creating object which will hold visible value,category_id and ...
+    console.log('Record is:'+JSON.stringify(record))
+    console.log('Value is:'+data)
+    const obj = {
+      category_id: null,
+      category_title: null,
+      values: data,
+      visible: true
+    }
+    const items = this.state.cost_items;
+    items.forEach(element=>{
+      if(element.cost_item_id === record.cost_item_id){
+        obj.category_id = element.category_id;
+        obj.category_title = element.category_title;
+      }
+    })
+    
+    this.setState({
+      variablePopUp: obj,
+    })
+  }
+  handleModalCancel = () => {
+    const obj = {
+      category_id: null,
+      category_title: null,
+      values: null,
+      visible: false
+    }
+    this.setState({
+      variablePopUp: obj,
+    })
+  }
+
+  handleOk = (e) => {
+    const obj = {
+      category_id: null,
+      category_title: null,
+      values: null,
+      visible: false
+    }
+    console.log(JSON.stringify(e));
+    this.setState({
+      variablePopUp: obj,
+    })
+  }
+
   onBackClick() {
     this.props.history.push(`/overview`);
   }
@@ -333,11 +388,9 @@ class FixedAndVariableCosts extends React.Component {
         dataIndex: 'price',
         width: '20%',
         render: (text, record, index) => (
-          <InputNumber
-            min={0}
-            size="large"
+          <Input
             defaultValue={text === null ? 0 : text}
-            onChange={e => this.updateCostItemsProperties(e, record, "price")}
+            onClick={(e) => this.showModal(record, text)}
           />
         )
       },
@@ -355,21 +408,7 @@ class FixedAndVariableCosts extends React.Component {
             </Select>
           </Input.Group>
         )
-      },
-      {
-        title: 'First expenses',
-        dataIndex: 'first_expenses',
-        width: '15%',
-        render: (text, record, index) => (
-          <Input.Group compact>
-            <Select defaultValue={text === null ? "1st mo." : text + "st mo."} onChange={e => this.updateCostItemsProperties(e, record, "first_expenses")}>
-              {this.state.selectedPeriod.map((value, index) => (
-                <Option value={value + "st mo."}>{value + "st mo."}</Option>
-              ))}
-            </Select>
-          </Input.Group>
-        )
-      },
+      }
     ];
     return (
       <>
@@ -482,6 +521,12 @@ class FixedAndVariableCosts extends React.Component {
             </TabPane>
           </Tabs>
         </Col>
+
+        {this.state.variablePopUp.visible !== false?
+          <VariableCostPopUp category_title={this.state.variablePopUp.category_title===null?'Yes':this.state.variablePopUp.category_title}
+            visible={this.state.variablePopUp.visible} handleOk={this.handleOk} handleCancel={this.handleModalCancel} />
+          : null
+        }
       </>
     )
   }
