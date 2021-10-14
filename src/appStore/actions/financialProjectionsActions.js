@@ -70,20 +70,12 @@ export const saveFinansialProjectionsCost = (postObject, reducerObject) => {
     }
 }
 
-export const updateFinansialProjectionCost = (postObject) => {
+export const updateFixedAndVarCosts = (postObject) => {
     return async(dispatch, getState)=>{
         try{
             const token = getState().user.access_token;
-            await kabadaAPI.post('api/cost/costsvf/save', obj, {headers: {Authorization: `Bearer ${token}` }});
-            const obj = {
-                "cost_item_id":postObject.cost_item_id,
-                "type_title": postObject.type_title,
-                "type_id": postObject.type_id,
-                "price" : postObject.price,
-                "vat" : postObject.vat,
-                "first_expenses": postObject.first_expenses,
-            }
-            dispatch({type: 'UPDATE_FINANCIAL_PROJECTION_COST_SUCCESS', payload: obj});
+            await kabadaAPI.post('api/cost/costsvf/save', postObject, {headers: {Authorization: `Bearer ${token}` }});
+            dispatch({type: 'UPDATE_FIXED_AND_VAR_COSTS_SUCCESS', payload: {postObject}});
         }
         finally{
             dispatch({type: 'LOADING', payload: false})

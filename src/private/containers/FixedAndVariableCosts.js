@@ -7,7 +7,7 @@ import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCa
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
 import VariableCostPopUp from '../components/fixed_and_variable_costs/VariableCostPopUp';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getFinancialProjectionsCosts, getCountryVat } from '../../appStore/actions/financialProjectionsActions';
+import { getFinancialProjectionsCosts, getCountryVat, updateFixedAndVarCosts } from '../../appStore/actions/financialProjectionsActions';
 import { getCountryShortCode } from '../../appStore/actions/countriesActions'
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { jSXClosingElement } from '@babel/types';
@@ -67,39 +67,44 @@ class FixedAndVariableCosts extends React.Component {
       variablePopUp: {
         category_id: null,
         category_title: null,
+        record: {},
         values: null,
         visible: false
-      }
+      },
+      visibleHeader: 'hidden'
     };
   }
 
-  showModal = (record, data) => {
+
+  showModal = (record, data, index) => {
     // creating object which will hold visible value,category_id and ...
-    console.log('Record is:'+JSON.stringify(record))
-    console.log('Value is:'+data)
+    console.log('Variable cost item index: ' + record.pos)
     const obj = {
       category_id: null,
       category_title: null,
       values: data,
+      record: {},
       visible: true
     }
     const items = this.state.cost_items;
-    items.forEach(element=>{
-      if(element.cost_item_id === record.cost_item_id){
+    items.forEach(element => {
+      if (element.cost_item_id === record.cost_item_id) {
         obj.category_id = element.category_id;
         obj.category_title = element.category_title;
+        obj.record = record
       }
     })
-    
+
     this.setState({
       variablePopUp: obj,
-    })
+    });
   }
   handleModalCancel = () => {
     const obj = {
       category_id: null,
       category_title: null,
       values: null,
+      record: {},
       visible: false
     }
     this.setState({
@@ -107,17 +112,31 @@ class FixedAndVariableCosts extends React.Component {
     })
   }
 
-  handleOk = (e) => {
+  handleOk = (array, record) => {
     const obj = {
       category_id: null,
       category_title: null,
       values: null,
+      record: {},
       visible: false
     }
-    console.log(JSON.stringify(e));
+    //convert array of prices to just string, 1,2,3,4,5 ...
+    let stringPrices = '';
+    array.map((element, index) => {
+      // if its last element in array dont use ','
+      stringPrices = stringPrices + String(element) + ',';
+    });
+    //remove last comma
+    const newStrinPrices = stringPrices.slice(0, -1)
+    console.log('Array of prices:' + newStrinPrices)
+
+    // update state
+    this.updateCostItemsProperties(newStrinPrices, record, 'price');
+    console.log(JSON.stringify(this.state.cost_items))
+    this.forceUpdate();
     this.setState({
       variablePopUp: obj,
-    })
+    });
   }
 
   onBackClick() {
@@ -125,7 +144,39 @@ class FixedAndVariableCosts extends React.Component {
   }
 
   saveChanges = () => {
-    console.log('Saving changes')
+    // loop through cost_items state array. put only required fields to items array
+    const items = []
+    const array = this.state.cost_items;
+    array.map((element, index) => {
+      if (element.type === "Variable") {
+        const obj = {
+          cost_item_id: element.cost_item_id,
+          price: element.price,
+          vat: element.vat,
+          first_expenses: element.first_expenses,
+          monthly_expenses: element.monthly_expenses === null || element.monthly_expenses === undefined?[0,0,0,0,0,0,0,0,0,0,0,0]:element.monthly_expenses,
+        }
+        items.push(obj)
+      } else if(element.type === 'Fixed') {
+        const obj = {
+          cost_item_id: element.cost_item_id,
+          price: element.price,
+          vat: element.vat,
+          first_expenses: element.first_expenses,
+          monthly_expenses: null
+        }
+        items.push(obj);
+      }
+    })
+    // postObject for post request
+    const postObject = {
+      business_plan_id: this.props.businessPlan.id,
+      cost_items: items
+    }
+    this.props.updateFixedAndVarCosts(postObject);
+    this.setState({
+      visibleHeader: 'hidden'
+    });
   }
 
   discardChanges = () => {
@@ -147,19 +198,26 @@ class FixedAndVariableCosts extends React.Component {
   // which i later change based on user input
   setItems = (fixedArray, variableArray) => {
     const array = []
+    var indexas = 0;
     //looping through fixed array and pushing all items to array
     fixedArray.forEach(element => {
       // for each object in types array create new object and add it to array
       element.types.forEach(element1 => {
         const obj = {
+          type: 'Fixed',
+          name: element.type_title,
           category_title: element.category_title,
           category_id: element.category_id,
           cost_item_id: element1.cost_item_id,
           price: element1.price === null ? 0 : element1.price,
           vat: element1.vat,
+          monthly_expenses: element.monthly_expenses,
+          type_title: element1.type_title,
+          pos: indexas,
           first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses
         }
-        array.push(obj)
+        array.push(obj);
+        indexas = indexas + 1;
       });
     });
     //looping through variable array and pushing all items to array. so now array will have
@@ -167,14 +225,20 @@ class FixedAndVariableCosts extends React.Component {
     variableArray.forEach(element => {
       element.types.forEach(element1 => {
         const obj = {
+          type: 'Variable',
+          name: element.type_title,
           category_title: element.category_title,
           category_id: element.category_id,
           cost_item_id: element1.cost_item_id,
           price: element1.price === null ? 0 : element1.price,
           vat: element1.vat,
+          monthly_expenses: element.monthly_expenses === null ? [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] : element.monthly_expenses,
+          type_title: element1.type_title,
+          pos: indexas,
           first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses
         }
-        array.push(obj)
+        array.push(obj);
+        indexas = indexas + 1;
       })
     })
 
@@ -188,18 +252,24 @@ class FixedAndVariableCosts extends React.Component {
   getOriginalCostArray = (fixedArray, variableArray) => {
     const array = []
     //looping through fixed array and pushing all items to array
+    var indexas = 0;
     fixedArray.forEach(element => {
       // for each object in types array create new object and add it to array
       element.types.forEach(element1 => {
         const obj = {
+          type: 'Fixed',
           category_title: element.category_title,
           category_id: element.category_id,
           cost_item_id: element1.cost_item_id,
           price: element1.price === null ? 0 : element1.price,
           vat: element1.vat,
+          monthly_expenses: element.monthly_expenses === null ? [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] : element.monthly_expenses,
+          type_title: element1.type_title,
+          pos: indexas,
           first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses
         }
         array.push(obj)
+        indexas = indexas + 1;
       });
     });
     //looping through variable array and pushing all items to array. so now array will have
@@ -207,14 +277,19 @@ class FixedAndVariableCosts extends React.Component {
     variableArray.forEach(element => {
       element.types.forEach(element1 => {
         const obj = {
+          type: 'Variable',
           category_title: element.category_title,
           category_id: element.category_id,
           cost_item_id: element1.cost_item_id,
           price: element1.price === null ? 0 : element1.price,
           vat: element1.vat,
-          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses
+          monthly_expenses: element.monthly_expenses === null ? [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] : element.monthly_expenses,
+          type_title: element1.type_title,
+          pos: indexas,
+          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses,
         }
-        array.push(obj)
+        array.push(obj);
+        indexas = indexas + 1;
       })
     })
 
@@ -240,10 +315,14 @@ class FixedAndVariableCosts extends React.Component {
         }
       }
     });
+    const visibilityString = this.getUpdatesWindowState();
+    this.setState({
+      visibleHeader: visibilityString
+    });
     this.setState({
       cost_items: array
     });
-    // console.log('Cost_items:'+JSON.stringify(this.state.cost_items))
+  
   }
   // function to check if cost_items array value are equal to original_cost_items
   // if it doesnt equal then return false. and then i would be able to display UnsavedChangesHeader component to
@@ -288,6 +367,19 @@ class FixedAndVariableCosts extends React.Component {
     return 'hidden';
   }
 
+  getPriceValue = (item_id) => {
+    const array = this.state.cost_items;
+    array.map((element, index) => {
+      if (element.cost_item_id === item_id) {
+        if (element.monthly_expenses !== null || element.monthly_expenses !== undefined) {
+          return element.monthly_expenses;
+        } else {
+          return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        }
+      }
+    });
+  }
+
   componentDidMount() {
     if (this.props.businessPlan.id === null) {
       if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
@@ -328,7 +420,6 @@ class FixedAndVariableCosts extends React.Component {
 
   render() {
     //everytime screen rerenders it will call getUpdatesWindowState method which set const isVisibleHeader to 'visible' or 'hidden'
-    const isVisibleHeader = this.getUpdatesWindowState();
     const fixed_costs_columns = [
       {
         title: 'Name',
@@ -385,14 +476,14 @@ class FixedAndVariableCosts extends React.Component {
       },
       {
         title: 'Euro/mo. without VAT',
-        dataIndex: 'price',
+        dataIndex: 'monthly_expenses',
         width: '20%',
-        render: (text, record, index) => (
-          <Input
-            defaultValue={text === null ? 0 : text}
-            onClick={(e) => this.showModal(record, text)}
-          />
-        )
+        render: (text, record, index) => {
+          return (<Input
+            defaultValue={text === null ? '0,0,0,0,0,0,0,0,0,0,0,0' : String(text)}
+            // value={this.state.cost_items[4].price}
+            onClick={(e) => this.showModal(record, e, index)} />)
+        }
       },
       {
         title: 'VAT Rate',
@@ -413,7 +504,7 @@ class FixedAndVariableCosts extends React.Component {
     return (
       <>
         <UnsavedChangesHeader
-          visibility={isVisibleHeader}
+          visibility={this.state.visibleHeader}
           discardChanges={this.discardChanges}
           saveChanges={this.saveChanges}
         />
@@ -522,9 +613,9 @@ class FixedAndVariableCosts extends React.Component {
           </Tabs>
         </Col>
 
-        {this.state.variablePopUp.visible !== false?
-          <VariableCostPopUp category_title={this.state.variablePopUp.category_title===null?'Yes':this.state.variablePopUp.category_title}
-            visible={this.state.variablePopUp.visible} handleOk={this.handleOk} handleCancel={this.handleModalCancel} />
+        {this.state.variablePopUp.visible !== false ?
+          <VariableCostPopUp category_title={this.state.variablePopUp.category_title === null ? 'Yes' : this.state.variablePopUp.category_title}
+            visible={this.state.variablePopUp.visible} handleOk={this.handleOk} handleCancel={this.handleModalCancel} values={this.state.variablePopUp.values} record={this.state.variablePopUp.record} />
           : null
         }
       </>
@@ -544,4 +635,4 @@ const mapStateToProps = (state) => {
 }
 //connect function connect react component to redux store
 //the functions it can use to dispatch actions to the store.
-export default connect(mapStateToProps, { getSelectedPlanOverview, getCountryShortCode, getFinancialProjectionsCosts, getCountryVat, refreshPlan })(withRouter(FixedAndVariableCosts));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getCountryShortCode, getFinancialProjectionsCosts, getCountryVat, updateFixedAndVarCosts, refreshPlan })(withRouter(FixedAndVariableCosts));
