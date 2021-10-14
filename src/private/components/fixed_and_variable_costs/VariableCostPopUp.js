@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { Link, withRouter } from 'react-router-dom';
 import { buttonStyle, tableCardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
-import { Select, InputNumber, Popconfirm, Input, Divider, Modal, Col, Typography, Card, Table } from 'antd';
-import { CaretDownFilled} from '@ant-design/icons';
+import { Select, InputNumber, Popconfirm, Input, Divider, Modal, Col, Typography, Card, Table, Button } from 'antd';
+import { CaretDownFilled } from '@ant-design/icons';
+import { thisExpression } from '@babel/types';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -24,6 +25,35 @@ class VariableCostPopUp extends React.Component {
         }
     }
 
+    onCancel = ()=>{
+        this.props.handleCancel();
+        this.setState({
+            checked: [],
+            data: [],
+            monthsChecked: null
+        });
+    }
+    saveChanges = () => {
+         console.log('Checked length is: '+ this.state.checked.length)
+         const checkNum = this.state.checked.length;
+         const pricesWithoutDisabled = []
+         const original = this.state.data;
+         original.map((element,index)=>{
+             if(index < checkNum){
+                pricesWithoutDisabled.push(element.price);
+             }else if(index > checkNum){
+                 element.price = 0;
+                 pricesWithoutDisabled.push(element.price)
+             }
+         })
+         this.setState({
+            checked: [],
+            data: [],
+            monthsChecked: null
+        });
+         this.props.handleOk(pricesWithoutDisabled,this.props.record);
+    }
+
     onMonthsChanged = (value) => {
         console.log(value)
         this.setState({
@@ -43,21 +73,47 @@ class VariableCostPopUp extends React.Component {
     }
 
     isDisabled = id => {
-        console.log(JSON.stringify(this.state.checked))
-        console.log('YE' + id)
+        // console.log(JSON.stringify(this.state.checked))
+        // console.log('YE' + id)
         return (
             this.state.checked.length > 0 && this.state.checked.indexOf(id) === -1
         );
     };
 
-    componentDidMount() {
+    onDataChange = (record,value) => {
+        const array = this.state.data;
+        array.forEach(element => {
+            if(element.id === record.id){
+                element.price = value;
+            }
+        });
+        this.setState({
+            data: array
+        });
+        console.log('State set to:'+JSON.stringify(this.state.data))
+    }
+
+    loadData = () => {
         const duom = []
+        // if (this.props.values === null || this.props.values === undefined || this.props.values === 0) {
+        //     for (var i = 1; i < 13; i++) {
+        //         duom.push({ id: i, month: i, price: 0, selectedMonths: 12 })
+        //     }
+        // } else {
+        //     for(var i=1;i<duom.length;i++){
+        //         duom.push({id:i,month: this.props.values[i],selectedMonths: 12})
+        //     }
+        // }
         for (var i = 1; i < 13; i++) {
             duom.push({ id: i, month: i, price: 0, selectedMonths: 12 })
         }
         this.setState({
             data: duom
         })
+    }
+    componentDidMount() {
+        this.loadData();
+        
     }
     render() {
 
@@ -74,10 +130,11 @@ class VariableCostPopUp extends React.Component {
                 render: (text, record, index) => {
                     if (index === 0) { }
                     return (<InputNumber
-                        defaultValue={text === null? 0 : text}
+                        defaultValue={text === null ? 0 : text}
                         formatter={value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                         key={record.id}
                         disabled={this.isDisabled(record.id)}
+                        onChange={(e)=>this.onDataChange(record,e)}
                     />)
                 }
             }
@@ -87,12 +144,18 @@ class VariableCostPopUp extends React.Component {
                 <Modal
                     // title={this.props.category_title}
                     visible={this.props.visible}
-                    onOk={this.props.handleOk}
-                    onCancel={this.props.handleCancel}
+                    onCancel={this.onCancel}
+                    saveChanges={this.saveChanges}
                     okButtonProps={{ disabled: false }}
                     cancelButtonProps={{ disabled: false }}
+                    footer={
+                        <div>
+                            <Button key="customCancel" onClick={this.onCancel}>Cancel</Button>
+                            <Button key="customSubmit" form="myForm" onClick={this.saveChanges} htmlType="submit" type={'primary'}>Save</Button>
+                        </div>
+                    }
                 >
-                    <Card  size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                    <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                         <div style={{ display: 'flex' }}>
                             <Col span={12}>
                                 <div style={{ marginTop: 24, marginLeft: 16 }}>
