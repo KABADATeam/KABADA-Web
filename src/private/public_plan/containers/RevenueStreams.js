@@ -6,7 +6,7 @@ import { buttonStyle, tableCardStyle, tableCardBodyStyle } from '../../../styles
 import { connect } from 'react-redux';
 import AddSegmentModal from '../../components/revenue_streams/AddSegmentModal';
 import EditSegmentModal from '../../public_plan/components/EditSegmentModal';
-import { refreshPlan } from "../../../appStore/actions/refreshAction";
+import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getStreamTypes, getPrices, getRevenues, saveState, deleteRevenue } from "../../../appStore/actions/revenueStreamActions";
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
 
@@ -130,7 +130,7 @@ class PublicRevenueStreams extends React.Component {
             if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
                 this.props.history.push(`/`);
             } else {
-                this.props.refreshPlan(localStorage.getItem("public_plan"), () => {
+                this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
                     this.props.getRevenues(this.props.businessPlan.id);
                     this.props.getStreamTypes();
                     this.props.getPrices();
@@ -359,4 +359,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPlan })(withRouter(PublicRevenueStreams));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPublicPlan })(withRouter(PublicRevenueStreams));

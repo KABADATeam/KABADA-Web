@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Avatar } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
-import { refreshPlan } from "../../../appStore/actions/refreshAction";
+import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview, getImage, getSelectedPlanDetails } from "../../../appStore/actions/planActions";
 import { withRouter } from 'react-router-dom';
 
@@ -49,11 +49,23 @@ class PublicOverview extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
+        /*if (this.props.businessPlan.id === null) {
             if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
                 this.props.history.push(`/`);
             } else {
                 this.props.refreshPlan(localStorage.getItem("public_plan"), () => {
+                    this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+                });
+            }
+        } else {
+            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+
+        }*/
+        if (this.props.businessPlan.id === null) {
+            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
+                this.props.history.push(`/`);
+            } else {
+                this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
                     this.props.getSelectedPlanOverview(this.props.businessPlan.id)
                         .then(() => {
                             if (this.props.businessPlan.overview.planImage)
@@ -268,4 +280,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { refreshPlan, getSelectedPlanOverview, getImage, getSelectedPlanDetails })(withRouter(PublicOverview))
+export default connect(mapStateToProps, { refreshPublicPlan, getSelectedPlanOverview, getImage, getSelectedPlanDetails })(withRouter(PublicOverview))

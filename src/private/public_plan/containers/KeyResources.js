@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import KeyResourcesCategoriesModal from "../../components/KeyResourcesCategoriesModal";
 import EditKeyResourceModal from "../../public_plan/components/EditKeyResourceModal";
 import { getResourcesList, getResourcesCategoriesList, deleteItem, saveEditable, saveChanges } from "../../../appStore/actions/resourcesAction";
-import { refreshPlan } from "../../../appStore/actions/refreshAction";
+import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
 
 const { Text } = Typography;
@@ -105,7 +105,7 @@ class PublicKeyResources extends React.Component {
             if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
                 this.props.history.push(`/`);
             } else {
-                this.props.refreshPlan(localStorage.getItem("public_plan"), () => {
+                this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
                     this.props.getResourcesList(this.props.businessPlan.id);
                     this.props.getResourcesCategoriesList();
                 });
@@ -230,4 +230,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getResourcesList, getResourcesCategoriesList, deleteItem, saveChanges, saveEditable, refreshPlan })(withRouter(PublicKeyResources));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getResourcesList, getResourcesCategoriesList, deleteItem, saveChanges, saveEditable, refreshPublicPlan })(withRouter(PublicKeyResources));

@@ -5,9 +5,8 @@ import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined, InfoCircleFilled } fro
 import { buttonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle } from '../../../styles/customStyles';
 import { connect } from 'react-redux';
 import AddChannelModal from '../../components/channels/AddChannelModal';
-//import EditChannelModal from '../../components/channels/EditChannelModal';
 import EditChannelModal from '../../public_plan/components/EditChannelModal';
-import { refreshPlan } from "../../../appStore/actions/refreshAction";
+import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getChannelTypes, getChannels, deleteChannel, saveState } from "../../../appStore/actions/channelActions";
 import { getProducts } from "../../../appStore/actions/productActions";
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
@@ -100,7 +99,7 @@ class PublicChannels extends React.Component {
             if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
                 this.props.history.push(`/`);
             } else {
-                this.props.refreshPlan(localStorage.getItem("public_plan"), () => {
+                this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
                     this.props.getChannelTypes();
                     this.props.getChannels(this.props.businessPlan.id);
                     this.props.getProducts(this.props.businessPlan.id);
@@ -252,4 +251,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getChannelTypes, getProducts, getChannels, deleteChannel, saveState, refreshPlan, getSelectedPlanOverview })(withRouter(PublicChannels));
+export default connect(mapStateToProps, { getChannelTypes, getProducts, getChannels, deleteChannel, saveState, refreshPublicPlan, getSelectedPlanOverview })(withRouter(PublicChannels));

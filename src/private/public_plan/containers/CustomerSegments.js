@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import EditConsumerSegmentModal from '../components/EditConsumerSegmentModal';
 import EditBusinessSegmentModal from '../components/EditBusinessSegmentModal';
 import EditPublicBodiesSegmentModal from '../components/EditPublicBodiesSegmentModal';
-import { refreshPlan } from "../../../appStore/actions/refreshAction";
+import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getCustomerSegmentProperties, getCustomerSegments, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState } from "../../../appStore/actions/customerSegmentAction";
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
 
@@ -143,7 +143,7 @@ class PublicCustomerSegments extends React.Component {
             if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
                 this.props.history.push(`/`);
             } else {
-                this.props.refreshPlan(localStorage.getItem("public_plan"), () => {
+                this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
                     this.props.getCustomerSegmentProperties();
                     this.props.getCustomerSegments(this.props.businessPlan.id);
                 });
@@ -405,4 +405,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getCustomerSegmentProperties, getCustomerSegments, refreshPlan, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState })(withRouter(PublicCustomerSegments));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getCustomerSegmentProperties, getCustomerSegments, refreshPublicPlan, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState })(withRouter(PublicCustomerSegments));
