@@ -92,10 +92,6 @@ class PublicBusinessPlans extends React.Component {
     }
 
     render() {
-
-        console.log(this.props.publicPlans);
-        console.log(this.state.planData);
-
         const menu = (
             <Menu>
                 <Menu.Item key="1">
@@ -149,7 +145,7 @@ class PublicBusinessPlans extends React.Component {
                 sortDirections: ['descend', 'ascend'],
                 render: (text, record) => (
                     <Space size="small">
-                        <Avatar size={22} icon={<UserOutlined />} />
+                        <Avatar size={22} icon={<UserOutlined />} src={record.ownerAvatar ? "data:image/png;base64," + record.ownerAvatar : ""} />
                         <Text>
                             {record.owner}
                         </Text>

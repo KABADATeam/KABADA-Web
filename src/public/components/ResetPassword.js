@@ -16,7 +16,7 @@ class ResetPassword extends Component {
 
     onFinish = (values) => {
         this.props.forgotPassword(values.email, () => {
-            window.location.href = '/password-sent';
+            this.props.history.push("/password-sent");
         });
     };
 
