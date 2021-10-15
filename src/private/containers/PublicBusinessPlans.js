@@ -86,11 +86,9 @@ class PublicBusinessPlans extends React.Component {
     };
 
     onPublicPlanClick = (plan) => {
-        console.log(plan);
-        this.props.getSelectedPlan(plan);
+        this.props.getSelectedPlan(plan)
         localStorage.setItem("public_plan", plan.id);
         this.props.history.push(`/public/overview`);
-
     }
 
     render() {

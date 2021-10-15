@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Button, Breadcrumb, Row, Col, Typography, Space, Result, Image, Table } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { buttonStyle } from '../../../styles/customStyles';
-import { refreshPlan } from "../../../appStore/actions/refreshAction";
+import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getProducts, deleteProduct, saveState } from "../../../appStore/actions/productActions";
 //import EditProduct from "../../components/new_product/EditProduct";
 import EditProduct from "../components/EditProduct";
@@ -78,7 +78,7 @@ class PublicValuePropositions extends React.Component {
             if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
                 this.props.history.push(`/`);
             } else {
-                this.props.refreshPlan(localStorage.getItem("public_plan"), () => {
+                this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
                     this.props.getProducts(this.props.businessPlan.id);
                 });
 
@@ -210,4 +210,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, refreshPlan, getProducts, deleteProduct, saveState })(PublicValuePropositions);
+export default connect(mapStateToProps, { getSelectedPlanOverview, refreshPublicPlan, getProducts, deleteProduct, saveState })(PublicValuePropositions);
