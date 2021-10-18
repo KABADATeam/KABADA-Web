@@ -5,7 +5,7 @@ import { ArrowLeftOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { buttonStyle, tableCardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
 import { connect } from 'react-redux';
 import RelationshipCategoriesModal from '../../components/customer_relationships/RelationshipCategoriesModal';
-import { refreshPlan } from "../../../appStore/actions/refreshAction";
+import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getCustomerRelationshipsCategories, getCustomerRelationships, saveState, selectRelationshipCategory, deleteCustomerRelationship } from "../../../appStore/actions/customerRelationshipsAction";
 import AddCustomerRelationshipModal from '../../components/customer_relationships/AddCustomerRelationshipModal';
 import EditCustomerRelationshipModal from '../../public_plan/components/EditCustomerRelationshipModal';
@@ -163,7 +163,7 @@ class PublicCustomerRelationships extends React.Component {
             if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
                 this.props.history.push(`/`);
             } else {
-                this.props.refreshPlan(localStorage.getItem("public_plan"), () => {
+                this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
                     this.props.getCustomerRelationshipsCategories();
                     this.props.getCustomerRelationships(this.props.businessPlan.id);
                 });
@@ -394,4 +394,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getCustomerRelationshipsCategories, getCustomerRelationships, refreshPlan, saveState, selectRelationshipCategory, deleteCustomerRelationship })(withRouter(PublicCustomerRelationships));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getCustomerRelationshipsCategories, getCustomerRelationships, refreshPublicPlan, saveState, selectRelationshipCategory, deleteCustomerRelationship })(withRouter(PublicCustomerRelationships));

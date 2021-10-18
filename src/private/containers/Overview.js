@@ -384,7 +384,7 @@ class Overview extends React.Component {
                                             <List itemLayout="horizontal" dataSource={membersList} renderItem={item => (
                                                 <List.Item actions={[<Button type="link" onClick={this.onDeleteMember.bind(this, item)}><DeleteOutlined /></Button>]}>
                                                     <List.Item.Meta
-                                                        avatar={<Avatar size="small" icon={<UserOutlined />} />}
+                                                        avatar={<Avatar size="small" icon={<UserOutlined />} src={item.photo ? "data:image/png;base64," + item.photo : ""} />}
                                                         title={item.name + " " + item.surname}
                                                     />
                                                 </List.Item>

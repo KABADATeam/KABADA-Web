@@ -19,12 +19,15 @@ function SalesForecast() {
     const { Option } = Select;
 
     const [readyMonth, setReadyMonth] = useState("12th mo");
+    const [exportPlan, setEportPlan] = useState(true);
     const [tabKey, setTabKey] = useState("");
     const [isVisibleHeader, setIsVisibleHeader] = useState("hidden");
     const [totalinEu, setTotalInEu] = useState("0");
     const [totalOutEu, setTotalOutEu] = useState("0");
     const [inEuData, setInEuData] = useState([]);
+    const [checked, setChecked] = useState([]);
     const [outEuData, setoutEuData] = useState([]);
+
 
 
     const inEuChange = (text, record, inputName) => {
@@ -36,12 +39,13 @@ function SalesForecast() {
                 if (inputName === 'withoutVAT') {
                     element.withoutVAT = text;
                     element.total = element.withoutVAT * element.Qty;
-                    setTotalInEu(element.total);
+                    setTotalInEu(element.total)
+
                 }
                 if (inputName === 'Qty') {
                     element.Qty = text;
                     element.total = element.withoutVAT * element.Qty;
-                    setTotalInEu(element.total);
+                    setTotalInEu(element.total)
                 }
                 if (inputName === 'vat') {
                     element.vat = text;
@@ -54,9 +58,11 @@ function SalesForecast() {
 
         setInEuData(array);
         getUpdatesWindowState();
-        console.log(isVisibleHeader)
+
 
     }
+
+
     const outEuChange = (text, record, inputName) => {
 
         console.log(text, record.id)
@@ -67,11 +73,13 @@ function SalesForecast() {
                     element.withoutVAT = text;
                     element.total = element.withoutVAT * element.Qty;
                     setTotalOutEu(element.total);
+
                 }
                 if (inputName === 'Qty') {
                     element.Qty = text;
                     element.total = element.withoutVAT * element.Qty;
                     setTotalOutEu(element.total);
+
                 }
                 if (inputName === 'vat') {
                     element.vat = text;
@@ -83,8 +91,11 @@ function SalesForecast() {
         })
 
         setoutEuData(array);
+        getUpdatesWindowState();
         console.log(outEuData)
     }
+
+
 
 
     const dataSourceTableInEu = [
@@ -282,11 +293,14 @@ function SalesForecast() {
 
     ];
 
+
     const columns = [
         {
             title: 'Month',
             dataIndex: 'month',
             key: 'month',
+            render: (text, record, index) =>
+                <Text disabled={isDisabled(record.id)} className={isDisabled(record.id) && 'display-none'}>{record.month}</Text>
 
         },
         {
@@ -295,7 +309,7 @@ function SalesForecast() {
             key: 'withoutVAT',
             width: '5%',
             render: (text, record, index) => (
-                <InputNumber defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'withoutVAT')} />
+                <InputNumber disabled={isDisabled(record.id)} className={isDisabled(record.id) && 'display-none'} defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'withoutVAT')} />
             ),
         },
         {
@@ -304,7 +318,7 @@ function SalesForecast() {
             key: 'Qty',
             width: '5%',
             render: (text, record, index) =>
-                <InputNumber defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'Qty')} />,
+                <InputNumber disabled={isDisabled(record.id)} className={isDisabled(record.id) && 'display-none'} defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'Qty')} />,
         },
         {
             title: 'Total',
@@ -312,7 +326,7 @@ function SalesForecast() {
             key: 'total',
             width: '5%',
             render: (text, record, index) =>
-                <Text> {inEuData[index].total} </Text>,
+                <Text className={isDisabled(record.id) && 'display-none'} disabled={isDisabled(record.id)}>{inEuData[index].total}</Text>
         },
         {
             title: 'VAT',
@@ -320,8 +334,8 @@ function SalesForecast() {
             key: 'vat',
             width: '15%',
             render: (text, record) => (
-                <Input.Group compact>
-                    <Select defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'vat')}>
+                <Input.Group compact >
+                    <Select defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'vat')} className={isDisabled(record.id) && 'display-none'} disabled={isDisabled(record.id)}>
                         <Option value="21">21 %</Option>
                         <Option value="30">30 %</Option>
                         <Option value="40">40 %</Option>
@@ -336,7 +350,7 @@ function SalesForecast() {
             width: '10%',
             render: (text, record) => (
                 <Input.Group compact>
-                    <Select defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'paid')}>
+                    <Select defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'paid')} className={isDisabled(record.id) && 'display-none'} disabled={isDisabled(record.id)}>
                         <Option value="Immediate">Immediate</Option>
                         <Option value="Next month">Next month</Option>
                         <Option value="After two months">After two months</Option>
@@ -352,6 +366,8 @@ function SalesForecast() {
             title: 'Month',
             dataIndex: 'month',
             key: 'month',
+            render: (text, record, index) =>
+                <Text disabled={isDisabled(record.id)} className={isDisabled(record.id) && 'display-none'}>{record.month}</Text>
 
         },
         {
@@ -360,7 +376,7 @@ function SalesForecast() {
             key: 'withoutVAT',
             width: '5%',
             render: (text, record, index) => (
-                <InputNumber defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'withoutVAT')} />
+                <InputNumber disabled={isDisabled(record.id)} className={isDisabled(record.id) && 'display-none'} defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'withoutVAT')} />
             ),
         },
         {
@@ -369,7 +385,7 @@ function SalesForecast() {
             key: 'Qty',
             width: '5%',
             render: (text, record, index) =>
-                <InputNumber defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'Qty')} />,
+                <InputNumber disabled={isDisabled(record.id)} className={isDisabled(record.id) && 'display-none'} defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'Qty')} />,
         },
         {
             title: 'Total',
@@ -377,7 +393,7 @@ function SalesForecast() {
             key: 'total',
             width: '5%',
             render: (text, record, index) =>
-                <Text> {record.total} </Text>,
+                <Text disabled={isDisabled(record.id)} className={isDisabled(record.id) && 'display-none'}> {outEuData[index].total} </Text>,
         },
         {
             title: 'When paid',
@@ -386,7 +402,7 @@ function SalesForecast() {
             width: '10%',
             render: (text, record) => (
                 <Input.Group compact>
-                    <Select defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'paid')}>
+                    <Select defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'paid')} disabled={isDisabled(record.id)} className={isDisabled(record.id) && 'display-none'}>
                         <Option value="Immediate">Immediate</Option>
                         <Option value="Next month">Next month</Option>
                         <Option value="After two months">After two months</Option>
@@ -454,11 +470,11 @@ function SalesForecast() {
         {
             key: '1',
             name: 'Yes',
-            value: "yes"
+            value: true
         }, {
             key: '2',
             name: 'No',
-            value: 'no',
+            value: false,
         }
 
     ];
@@ -484,10 +500,12 @@ function SalesForecast() {
             console.log(businessPlan.id);
             setInEuData(dataSourceTableInEu);
             setoutEuData(dataSourceTableOutEu);
-            //getUpdatesWindowState()
+
 
         }
     }, [dispatch, busineessPlanId, businessPlan, history]);
+
+
 
     const onBackClick = () => {
         history.push(`/overview`)
@@ -495,30 +513,42 @@ function SalesForecast() {
     const handelname = (value) => {
         console.log("selected value " + value);
         setReadyMonth(value);
-        console.log(readyMonth)
+        console.log(readyMonth);
 
+        const array = []
+        //loop through array. loop while index is not greater that provided value. add id's to array
+        dataSourceTableInEu.map((obj, index) => {
+            if (index >= value - 1) {
+                array.push(obj.id)
+                console.log(obj.id)
+            }
+        });
+
+        setChecked(array);
     }
+
+
+    const isDisabled = (id) => {
+        return (
+            checked.length > 0 && checked.indexOf(id) === -1
+        );
+    };
+
+
+    let originalExportPlan = false;
+
     const getUpdatesWindowState = () => {
         const original = dataSourceTableInEu;
         const modified = inEuData;
 
-        // if (original === null) {
-        //     setIsVisibleHeader('hidden')
-        // }
 
-        // if (original.description !== modified.description) {
-        //     return 'visible';
-        // }
 
-        // if (original.product_type !== modified.product_type) {
-        //     return 'visible';
-        // }
-
-        // if (original.price_level !== modified.price_level) {
-        //     return 'visible';
-        // }
-
-        if (JSON.stringify(original) !== JSON.stringify(modified)) {
+        if (JSON.stringify(original) !== JSON.stringify(modified) || JSON.stringify(dataSourceTableOutEu) !== JSON.stringify(outEuData)) {
+            setIsVisibleHeader('visible')
+        } else {
+            setIsVisibleHeader('hidden')
+        }
+        if (exportPlan !== originalExportPlan) {
             setIsVisibleHeader('visible')
         } else {
             setIsVisibleHeader('hidden')
@@ -526,8 +556,17 @@ function SalesForecast() {
 
 
     }
-    const changePlan = (id) => {
+    const changePlan = (id, e) => {
         dispatch(changState(id))
+        setEportPlan(e);
+        getUpdatesWindowState();
+    }
+
+    const saveChanges = () => {
+        console.log(exportPlan);
+        console.log(readyMonth);
+        console.log(inEuData);
+        console.log(outEuData);
 
     }
 
@@ -540,8 +579,7 @@ function SalesForecast() {
         <Row align="middle">
             <UnsavedChangesHeader
                 visibility={isVisibleHeader}
-            // discardChanges={this.discardChanges}
-            // saveChanges={this.saveChanges}
+                saveChanges={saveChanges}
             />
             <Col span={20} offset={3}>
                 <Col span={16} offset={0}>
@@ -612,7 +650,7 @@ function SalesForecast() {
                                                 <Col span={9}><p className="card-style-font">Do you have plan to export?</p></Col>
                                                 <Col span={3} offset={12}>
                                                     <Input.Group compact className="card-input-Group-style" >
-                                                        <SalesForecastSelect defaultValue={x.Expoted === true ? "yes" : "No"} dataSource={dataSourceExport} onChange={() => changePlan(x.id)} />
+                                                        <SalesForecastSelect defaultValue={x.Expoted === true ? "yes" : "No"} dataSource={dataSourceExport} onChange={(e) => changePlan(x.id, e)} />
                                                     </Input.Group>
 
                                                 </Col>
@@ -625,14 +663,14 @@ function SalesForecast() {
 
                                 <Row align="middle" className="margin-top-20px">
                                     <Col span={12} offset={8} >
-                                        <SalesForecastTable columns={columns} dataSource={dataSourceTableInEu.slice(readyMonth)} />
+                                        <SalesForecastTable columns={columns} dataSource={dataSourceTableInEu} />
                                     </Col>
 
                                 </Row>
 
                                 <Row align="middle" className={`margin-top-20px ${x.Expoted === false ? `display-none` : ``}`} >
                                     <Col span={12} offset={8} >
-                                        <SalesForecastTable columns={columnsOutEU} dataSource={dataSourceTableOutEu.slice(readyMonth)} />
+                                        <SalesForecastTable columns={columnsOutEU} dataSource={dataSourceTableOutEu} />
                                     </Col>
                                 </Row>
 
