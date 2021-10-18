@@ -27,21 +27,6 @@ export const getFinancialProjectionsCosts = (planId,callback) => {
     }
 }
 
-export const saveFinansialProjectionsCost = (postObject, reducerObject) => {
-    return async(dispatch, getState) => {
-        try{
-            const token = getState().user.access_token;
-            const response = await kabadaAPI.post('api/cost/costsvf/save', postObject, {headers: {Authorization: `Bearer ${token}` }});
-            dispatch({type: 'SAVE_FINANCIAL_PROJECTION_COST_SUCCESS', payload: {...reducerObject, "id": response.data, "key": response.data}});
-        }catch(error){
-            dispatch({type: "LOADING", payload: false})
-        }
-        finally{
-
-        }
-    }
-}
-
 export const updateFixedAndVarCosts = (postObject) => {
     return async(dispatch, getState)=>{
         try{
