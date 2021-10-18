@@ -21,7 +21,8 @@ import { channelTypesReducer, channelsReducer } from './channelsReducer';
 import { customerSegmentReducer, customerSegmentPropertiesReducer } from './customerSegmentReducer';
 import { keyActivitiesReducer, keyActivitiesCategoriesReducer, selectedKeyActivityCategoryReducer } from './keyActivitiesReducer';
 import { customerRelationshipsCategoriesReducer, customerRelationshipsReducer } from './customerRelationshipsReducer';
-import { financialProjectionsReducer, countryVatsReducer } from './financialProjectionsReducer';
+import { financialProjectionsReducer } from './financialProjectionsReducer';
+import {vatsReducer} from './vatsReducer'
 import { salesForecastReducer } from './salesForecastReducer';
 import { businessInvestmentReducer } from './businessInvestmentReducer';
 import { cashFlowReducer } from './cashFlowReducer';
@@ -78,7 +79,7 @@ export default combineReducers({
     customerRelationshipsCategories: customerRelationshipsCategoriesReducer,
     customerRelationships: customerRelationshipsReducer,
     financialProjections: financialProjectionsReducer,
-    countryVats: countryVatsReducer,
+    countryVats: vatsReducer,
     salesForecast: salesForecastReducer,
     businessInvestment: businessInvestmentReducer,
     countryShortCode: countryShortNameReducer,

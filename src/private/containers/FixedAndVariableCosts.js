@@ -7,7 +7,8 @@ import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCa
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
 import VariableCostPopUp from '../components/fixed_and_variable_costs/VariableCostPopUp';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getFinancialProjectionsCosts, getCountryVat, updateFixedAndVarCosts } from '../../appStore/actions/financialProjectionsActions';
+import { getFinancialProjectionsCosts, updateFixedAndVarCosts } from '../../appStore/actions/financialProjectionsActions';
+import {getCountryVat} from '../../appStore/actions/vatsActions'
 import { getCountryShortCode } from '../../appStore/actions/countriesActions'
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { jSXClosingElement } from '@babel/types';

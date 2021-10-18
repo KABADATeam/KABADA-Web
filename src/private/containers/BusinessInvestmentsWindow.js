@@ -9,7 +9,7 @@ import BusinessStartUpInvestments from '../components/businessFinancialInvestmen
 import BusinessFinancing from '../components/businessFinancialInvestments/BusinessFinancing';
 import { getBusinessInvestmentInformation } from "../../appStore/actions/businessInvestmentAction";
 import { getCountryShortCode } from '../../appStore/actions/countriesActions';
-import { getCountryVat } from '../../appStore/actions/financialProjectionsActions';
+import { getCountryVat } from '../../appStore/actions/vatsActions';
 
 const { Text } = Typography;
 const { TabPane } = Tabs

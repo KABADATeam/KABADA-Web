@@ -82,16 +82,5 @@ export const financialProjectionsReducer = (
             return state;
     }
 }
-export const countryVatsReducer = (
-    state = {}, action) => {
-    switch (action.type) {
-        case 'FETCHING_FINANCIAL_PROJECTION_VAT_SUCCESS':
-            console.log('HELL' + action.payload)
-            const country_vats = action.payload;
-            return { ...action.payload };
-        default:
-            return state;
-    }
-}
 
 
