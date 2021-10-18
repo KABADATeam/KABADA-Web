@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Button, Card, Divider, Typography, Space, Row, Col, Alert } from 'antd';
+import { Form, Input, Button, Card, Divider, Typography, Space, Row, Col, Alert, message } from 'antd';
 import { FacebookFilled, GoogleCircleFilled } from '@ant-design/icons';
 import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login";
@@ -43,11 +43,8 @@ class Login extends React.Component {
 	};
 
 	onFinish = (values) => {
-		this.props.login(values.username, values.password)
-			.then(() => {
-				this.setState({ submited: true });
-			}
-			);
+		//this.setState({ submited: true });
+		this.props.login(values.username, values.password);
 	};
 
 	render() {
@@ -138,7 +135,7 @@ class Login extends React.Component {
 
 					</Form.Item>
 					{
-						this.props.message.type === 'error' && this.state.submited === true ?
+						this.props.message.type === 'error' ?
 							(<Alert
 								style={{ padding: '3px 3px', marginBottom: '15px' }}
 								description={this.props.message.message}
