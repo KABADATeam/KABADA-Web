@@ -75,11 +75,9 @@ class FixedAndVariableCosts extends React.Component {
       visibleHeader: 'hidden'
     };
   }
-
-
   showModal = (record, data, index) => {
     // creating object which will hold visible value,category_id and ...
-    console.log('Variable cost item index: ' + record.pos)
+    console.log('Fixed and costs monthly_expenses:'+JSON.stringify(data))
     const obj = {
       category_id: null,
       category_title: null,
@@ -122,18 +120,18 @@ class FixedAndVariableCosts extends React.Component {
       visible: false
     }
     //convert array of prices to just string, 1,2,3,4,5 ...
-    let stringPrices = '';
-    array.map((element, index) => {
-      // if its last element in array dont use ','
-      stringPrices = stringPrices + String(element) + ',';
-    });
-    //remove last comma
-    const newStrinPrices = stringPrices.slice(0, -1)
-    console.log('Array of prices:' + newStrinPrices)
+    // let stringPrices = '';
+    // array.map((element, index) => {
+    //   // if its last element in array dont use ','
+    //   stringPrices = stringPrices + String(element) + ',';
+    // });
+    // //remove last comma
+    // const newStrinPrices = stringPrices.slice(0, -1)
+    // console.log('Array of prices:' + newStrinPrices)
 
-    // update state
-    this.updateCostItemsProperties(newStrinPrices, record, 'price');
-    console.log(JSON.stringify(this.state.cost_items))
+    // // update state
+    // this.updateCostItemsProperties(newStrinPrices, record, 'price');
+    // console.log(JSON.stringify(this.state.cost_items))
     this.forceUpdate();
     this.setState({
       variablePopUp: obj,
@@ -155,7 +153,7 @@ class FixedAndVariableCosts extends React.Component {
           price: element.price,
           vat: element.vat,
           first_expenses: element.first_expenses,
-          monthly_expenses: element.monthly_expenses === null || element.monthly_expenses === undefined?[0,0,0,0,0,0,0,0,0,0,0,0]:element.monthly_expenses,
+          monthly_expenses: element.monthly_expenses,
         }
         items.push(obj)
       } else if(element.type === 'Fixed') {
@@ -164,7 +162,7 @@ class FixedAndVariableCosts extends React.Component {
           price: element.price,
           vat: element.vat,
           first_expenses: element.first_expenses,
-          monthly_expenses: null
+          monthly_expenses: element.monthly_expenses
         }
         items.push(obj);
       }
@@ -212,10 +210,10 @@ class FixedAndVariableCosts extends React.Component {
           cost_item_id: element1.cost_item_id,
           price: element1.price === null ? 0 : element1.price,
           vat: element1.vat,
-          monthly_expenses: element.monthly_expenses,
           type_title: element1.type_title,
           pos: indexas,
-          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses
+          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses,
+          monthly_expenses: element1.monthly_expenses,
         }
         array.push(obj);
         indexas = indexas + 1;
@@ -233,10 +231,10 @@ class FixedAndVariableCosts extends React.Component {
           cost_item_id: element1.cost_item_id,
           price: element1.price === null ? 0 : element1.price,
           vat: element1.vat,
-          monthly_expenses: element.monthly_expenses === null ? [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] : element.monthly_expenses,
           type_title: element1.type_title,
           pos: indexas,
-          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses
+          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses,
+          monthly_expenses: element1.monthly_expenses
         }
         array.push(obj);
         indexas = indexas + 1;
@@ -264,10 +262,10 @@ class FixedAndVariableCosts extends React.Component {
           cost_item_id: element1.cost_item_id,
           price: element1.price === null ? 0 : element1.price,
           vat: element1.vat,
-          monthly_expenses: element.monthly_expenses === null ? [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] : element.monthly_expenses,
           type_title: element1.type_title,
           pos: indexas,
-          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses
+          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses,
+          monthly_expenses: element1.monthly_expenses
         }
         array.push(obj)
         indexas = indexas + 1;
@@ -284,10 +282,10 @@ class FixedAndVariableCosts extends React.Component {
           cost_item_id: element1.cost_item_id,
           price: element1.price === null ? 0 : element1.price,
           vat: element1.vat,
-          monthly_expenses: element.monthly_expenses === null ? [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] : element.monthly_expenses,
           type_title: element1.type_title,
           pos: indexas,
           first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses,
+          monthly_expenses: element1.monthly_expenses
         }
         array.push(obj);
         indexas = indexas + 1;
@@ -483,7 +481,7 @@ class FixedAndVariableCosts extends React.Component {
           return (<Input
             defaultValue={text === null ? '0,0,0,0,0,0,0,0,0,0,0,0' : String(text)}
             // value={this.state.cost_items[4].price}
-            onClick={(e) => this.showModal(record, e, index)} />)
+            onClick={(e) => this.showModal(record, text, index)} />)
         }
       },
       {
@@ -616,7 +614,8 @@ class FixedAndVariableCosts extends React.Component {
 
         {this.state.variablePopUp.visible !== false ?
           <VariableCostPopUp category_title={this.state.variablePopUp.category_title === null ? 'Yes' : this.state.variablePopUp.category_title}
-            visible={this.state.variablePopUp.visible} handleOk={this.handleOk} handleCancel={this.handleModalCancel} values={this.state.variablePopUp.values} record={this.state.variablePopUp.record} />
+            visible={this.state.variablePopUp.visible} handleOk={this.handleOk} handleCancel={this.handleModalCancel} monthly_expenses={this.state.variablePopUp.values} record={this.state.variablePopUp.record}
+            cost_items={this.state.cost_items} businessPlanId={this.props.businessPlan.id}/>
           : null
         }
       </>

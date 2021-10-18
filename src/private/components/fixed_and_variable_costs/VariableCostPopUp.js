@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { connect } from 'react-redux';
+import {updateFixedAndVarCosts} from '../../../appStore/actions/financialProjectionsActions'
 import { Link, withRouter } from 'react-router-dom';
 import { buttonStyle, tableCardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
 import { Select, InputNumber, Popconfirm, Input, Divider, Modal, Col, Typography, Card, Table, Button } from 'antd';
@@ -19,13 +21,13 @@ class VariableCostPopUp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            monthsChecked: null,
+            monthsChecked: 12,
             checked: [],
-            data: []
+            data: [],
         }
     }
 
-    onCancel = ()=>{
+    onCancel = () => {
         this.props.handleCancel();
         this.setState({
             checked: [],
@@ -33,27 +35,79 @@ class VariableCostPopUp extends React.Component {
             monthsChecked: null
         });
     }
-    saveChanges = () => {
-         console.log('Checked length is: '+ this.state.checked.length)
-         const checkNum = this.state.checked.length;
-         const pricesWithoutDisabled = []
-         const original = this.state.data;
-         original.map((element,index)=>{
-             if(index < checkNum){
+    // save to database
+
+    //on save changes dont save disabled data in array
+    save = () => {
+        console.log('Checked length is: ' + this.state.checked.length)
+        const pricesWithoutDisabled = []
+        const original = this.state.data;
+        // loop through data array and check if index of each object is less than
+        // monthsChecked. 
+        original.map((element, index) => {
+            if (index < this.state.monthsChecked) {
                 pricesWithoutDisabled.push(element.price);
-             }else if(index > checkNum){
-                 element.price = 0;
-                 pricesWithoutDisabled.push(element.price)
-             }
-         })
-         this.setState({
+            } else if (index > this.state.monthsChecked) {
+                pricesWithoutDisabled.push(element.price)
+            }
+        });
+        console.log('Prices without disabled: ' + JSON.stringify(pricesWithoutDisabled))
+        // loop through cost_items state array. put only required fields to items array
+        // then then dispatch action to update
+        // loop through cost_items state array. put only required fields to items array
+        const items = []
+        const array = this.props.cost_items;
+        array.map((element, index) => {
+            if (element.type === "Variable") {
+                // update only item with gived id
+                if(element.cost_item_id === this.props.record.cost_item_id){
+                    const obj = {
+                        cost_item_id: element.cost_item_id,
+                        price: element.price,
+                        vat: element.vat,
+                        first_expenses: element.first_expenses,
+                        monthly_expenses: pricesWithoutDisabled,
+                    }
+                    items.push(obj)
+                }else{
+                    // dont update other elements monthly expenses
+                    const obj = {
+                        cost_item_id: element.cost_item_id,
+                        price: element.price,
+                        vat: element.vat,
+                        first_expenses: element.first_expenses,
+                        monthly_expenses: element.monthly_expenses,
+                    }
+                    items.push(obj)
+                }
+                
+            } else if (element.type === 'Fixed') {
+                const obj = {
+                    cost_item_id: element.cost_item_id,
+                    price: element.price,
+                    vat: element.vat,
+                    first_expenses: element.first_expenses,
+                    monthly_expenses: null
+                }
+                items.push(obj);
+            }
+        });
+        // postObject for post request
+        const postObject = {
+            business_plan_id: this.props.businessPlanId,
+            cost_items: items
+        }
+        this.props.updateFixedAndVarCosts(postObject);
+
+        // set states to null again.and call function handleOk from FixedAndVariableCosts component to close this screen
+        this.setState({
             checked: [],
             data: [],
             monthsChecked: null
         });
-         this.props.handleOk(pricesWithoutDisabled,this.props.record);
+        this.props.handleOk(pricesWithoutDisabled, this.props.record);
     }
-
+    //when Selected months is changed
     onMonthsChanged = (value) => {
         console.log(value)
         this.setState({
@@ -73,47 +127,47 @@ class VariableCostPopUp extends React.Component {
     }
 
     isDisabled = id => {
-        // console.log(JSON.stringify(this.state.checked))
-        // console.log('YE' + id)
         return (
             this.state.checked.length > 0 && this.state.checked.indexOf(id) === -1
         );
     };
 
-    onDataChange = (record,value) => {
+    onDataChange = (record, value) => {
         const array = this.state.data;
         array.forEach(element => {
-            if(element.id === record.id){
+            if (element.id === record.id) {
                 element.price = value;
             }
         });
         this.setState({
             data: array
         });
-        console.log('State set to:'+JSON.stringify(this.state.data))
+        console.log('State set to:' + JSON.stringify(this.state.data))
     }
 
     loadData = () => {
         const duom = []
-        // if (this.props.values === null || this.props.values === undefined || this.props.values === 0) {
-        //     for (var i = 1; i < 13; i++) {
-        //         duom.push({ id: i, month: i, price: 0, selectedMonths: 12 })
-        //     }
-        // } else {
-        //     for(var i=1;i<duom.length;i++){
-        //         duom.push({id:i,month: this.props.values[i],selectedMonths: 12})
-        //     }
-        // }
-        for (var i = 1; i < 13; i++) {
-            duom.push({ id: i, month: i, price: 0, selectedMonths: 12 })
+        if (this.props.monthly_expenses === null || this.props.monthly_expenses === undefined) {
+            for (var i = 1; i < 13; i++) {
+                duom.push({ id: i, month: i, price: 0 })
+            }
+            console.log('Monthly expenses are not passed')
+        } else {
+            for (var i = 0; i < this.props.monthly_expenses.length; i++) {
+                console.log('Monthly expenses at index' + i + ' ,and element is:' + this.props.monthly_expenses[i])
+                duom.push({ id: i + 1, month: i + 1, price: this.props.monthly_expenses[i] })
+            }
+            console.log('montly expenses are passed')
         }
+
         this.setState({
             data: duom
-        })
+        });
     }
     componentDidMount() {
         this.loadData();
-        
+        // console.log('Monthly expenses equal to:'+JSON.stringify(this.props.monthly_expenses));
+        console.log('Cost_items array is:'+JSON.stringify(this.props.cost_items))
     }
     render() {
 
@@ -134,7 +188,7 @@ class VariableCostPopUp extends React.Component {
                         formatter={value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                         key={record.id}
                         disabled={this.isDisabled(record.id)}
-                        onChange={(e)=>this.onDataChange(record,e)}
+                        onChange={(e) => this.onDataChange(record, e)}
                     />)
                 }
             }
@@ -145,13 +199,13 @@ class VariableCostPopUp extends React.Component {
                     // title={this.props.category_title}
                     visible={this.props.visible}
                     onCancel={this.onCancel}
-                    saveChanges={this.saveChanges}
+                    saveChanges={this.save}
                     okButtonProps={{ disabled: false }}
                     cancelButtonProps={{ disabled: false }}
                     footer={
                         <div>
                             <Button key="customCancel" onClick={this.onCancel}>Cancel</Button>
-                            <Button key="customSubmit" form="myForm" onClick={this.saveChanges} htmlType="submit" type={'primary'}>Save</Button>
+                            <Button key="customSubmit" form="myForm" onClick={this.save} htmlType="submit" type={'primary'}>Save</Button>
                         </div>
                     }
                 >
@@ -188,4 +242,12 @@ class VariableCostPopUp extends React.Component {
 
 }
 
-export default VariableCostPopUp
+// selecting part of data from store. selecting states basically as with useSelector
+//It is called every time the store state changes.
+const mapStateToProps = (state) => {
+    return {
+      businessPlan: state.selectedBusinessPlan,
+    };
+  
+  }
+export default connect(mapStateToProps,{updateFixedAndVarCosts})(withRouter(VariableCostPopUp));
