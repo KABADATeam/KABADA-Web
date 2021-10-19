@@ -6,6 +6,8 @@ import { Breadcrumb, Col, Space, Row, Button, Typography, Switch, Card, Tabs, In
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getProducts, changState } from '../../appStore/actions/salesForecastActions';
+import { getCountryVat } from '../../appStore/actions/vatsActions';
+import { getCountryShortCode } from '../../appStore/actions/countriesActions'
 import SalesForecastTable from '../components/sales_Forecast/SalesForecastTable';
 import SalesForecastSelect from '../components/sales_Forecast/SalesForecastSelect';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
@@ -21,6 +23,7 @@ function SalesForecast() {
     const [readyMonth, setReadyMonth] = useState("12th mo");
     const [exportPlan, setEportPlan] = useState(true);
     const [tabKey, setTabKey] = useState("");
+    const [vty, setVyt] = useState("");
     const [isVisibleHeader, setIsVisibleHeader] = useState("hidden");
     const [totalinEu, setTotalInEu] = useState("0");
     const [totalOutEu, setTotalOutEu] = useState("0");
@@ -300,7 +303,7 @@ function SalesForecast() {
             dataIndex: 'month',
             key: 'month',
             render: (text, record, index) =>
-                <Text disabled={isDisabled(record.id)} className={isDisabled(record.id) && 'display-none'}>{record.month}</Text>
+                <Text disabled={isDisabled(record.id)} >{record.month}</Text>
 
         },
         {
@@ -309,7 +312,7 @@ function SalesForecast() {
             key: 'withoutVAT',
             width: '5%',
             render: (text, record, index) => (
-                <InputNumber disabled={isDisabled(record.id)} className={isDisabled(record.id) && 'display-none'} defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'withoutVAT')} />
+                <InputNumber disabled={isDisabled(record.id)} defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'withoutVAT')} />
             ),
         },
         {
@@ -318,7 +321,7 @@ function SalesForecast() {
             key: 'Qty',
             width: '5%',
             render: (text, record, index) =>
-                <InputNumber disabled={isDisabled(record.id)} className={isDisabled(record.id) && 'display-none'} defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'Qty')} />,
+                <InputNumber disabled={isDisabled(record.id)} defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'Qty')} />,
         },
         {
             title: 'Total',
@@ -326,23 +329,36 @@ function SalesForecast() {
             key: 'total',
             width: '5%',
             render: (text, record, index) =>
-                <Text className={isDisabled(record.id) && 'display-none'} disabled={isDisabled(record.id)}>{inEuData[index].total}</Text>
+                <Text disabled={isDisabled(record.id)}>{record.total}</Text>
         },
         {
-            title: 'VAT',
+            title: 'VAT Rate',
             dataIndex: 'vat',
-            key: 'vat',
-            width: '15%',
-            render: (text, record) => (
-                <Input.Group compact >
-                    <Select defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'vat')} className={isDisabled(record.id) && 'display-none'} disabled={isDisabled(record.id)}>
-                        <Option value="21">21 %</Option>
-                        <Option value="30">30 %</Option>
-                        <Option value="40">40 %</Option>
-                    </Select>
-                </Input.Group>
+            width: '10%',
+            render: (text, record, index) => (
+                <Select defaultValue={text === null ? 'Null' : text} onChange={e => inEuChange(e, record, "vat")}>
+                    <Option value={countryVats.standardRate}>{countryVats.standardRate + "%"}</Option>
+                    <Option value={countryVats.reducedRates2}>{countryVats.reducedRates2 + "%"}</Option>
+                    <Option value={countryVats.reducedRates1}>{countryVats.reducedRates1 + "%"}</Option>
+                    <Option value={countryVats.superReducedRate}>{countryVats.superReducedRate === null ? "Null" : countryVats.superReducedRate}</Option>
+                </Select>
             )
         },
+        // {
+        //     title: 'VAT',
+        //     dataIndex: 'vat',
+        //     key: 'vat',
+        //     width: '15%',
+        //     render: (text, record) => (
+        //         <Input.Group compact >
+        //             <Select defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'vat')} disabled={isDisabled(record.id)}>
+        //                 <Option value="21">21 %</Option>
+        //                 <Option value="30">30 %</Option>
+        //                 <Option value="40">40 %</Option>
+        //             </Select>
+        //         </Input.Group>
+        //     )
+        // },
         {
             title: 'When paid',
             dataIndex: 'paid',
@@ -350,7 +366,7 @@ function SalesForecast() {
             width: '10%',
             render: (text, record) => (
                 <Input.Group compact>
-                    <Select defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'paid')} className={isDisabled(record.id) && 'display-none'} disabled={isDisabled(record.id)}>
+                    <Select defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'paid')} disabled={isDisabled(record.id)}>
                         <Option value="Immediate">Immediate</Option>
                         <Option value="Next month">Next month</Option>
                         <Option value="After two months">After two months</Option>
@@ -367,7 +383,7 @@ function SalesForecast() {
             dataIndex: 'month',
             key: 'month',
             render: (text, record, index) =>
-                <Text disabled={isDisabled(record.id)} className={isDisabled(record.id) && 'display-none'}>{record.month}</Text>
+                <Text disabled={isDisabled(record.id)} >{record.month}</Text>
 
         },
         {
@@ -376,7 +392,7 @@ function SalesForecast() {
             key: 'withoutVAT',
             width: '5%',
             render: (text, record, index) => (
-                <InputNumber disabled={isDisabled(record.id)} className={isDisabled(record.id) && 'display-none'} defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'withoutVAT')} />
+                <InputNumber disabled={isDisabled(record.id)} defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'withoutVAT')} />
             ),
         },
         {
@@ -385,7 +401,7 @@ function SalesForecast() {
             key: 'Qty',
             width: '5%',
             render: (text, record, index) =>
-                <InputNumber disabled={isDisabled(record.id)} className={isDisabled(record.id) && 'display-none'} defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'Qty')} />,
+                <InputNumber disabled={isDisabled(record.id)} defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'Qty')} />,
         },
         {
             title: 'Total',
@@ -393,7 +409,7 @@ function SalesForecast() {
             key: 'total',
             width: '5%',
             render: (text, record, index) =>
-                <Text disabled={isDisabled(record.id)} className={isDisabled(record.id) && 'display-none'}> {outEuData[index].total} </Text>,
+                <Text disabled={isDisabled(record.id)} > {outEuData[index].total} </Text>,
         },
         {
             title: 'When paid',
@@ -402,7 +418,7 @@ function SalesForecast() {
             width: '10%',
             render: (text, record) => (
                 <Input.Group compact>
-                    <Select defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'paid')} disabled={isDisabled(record.id)} className={isDisabled(record.id) && 'display-none'}>
+                    <Select defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'paid')} disabled={isDisabled(record.id)} >
                         <Option value="Immediate">Immediate</Option>
                         <Option value="Next month">Next month</Option>
                         <Option value="After two months">After two months</Option>
@@ -480,6 +496,8 @@ function SalesForecast() {
     ];
 
     const businessPlan = useSelector((state) => state.selectedBusinessPlan)
+    const country = useSelector((state) => state.countryShortCode)
+    const countryVats = useSelector((state) => state.countryVats)
     const { id: busineessPlanId } = businessPlan;
     const product = useSelector(state => state.salesForecast)
     const dispatch = useDispatch()
@@ -492,18 +510,33 @@ function SalesForecast() {
             } else {
                 dispatch(refreshPlan(localStorage.getItem("plan")), () => {
                     dispatch(getProducts(businessPlan.id));
-
+                    dispatch(getCountryShortCode(businessPlan.id), () => {
+                        dispatch(getCountryVat('LT', () => {
+                            console.log(JSON.stringify(countryVats))
+                            setVyt(countryVats);
+                        }));
+                    })
                 });
             }
         } else {
             dispatch(getProducts(businessPlan.id));
+            dispatch(getCountryShortCode(businessPlan.id), () => {
+                dispatch(getCountryVat('LT', () => {
+                    console.log(JSON.stringify(countryVats))
+                    setVyt(countryVats);
+                }));
+                console.log(JSON.stringify(countryVats))
+
+            })
+
             console.log(businessPlan.id);
+            console.log(JSON.stringify(countryVats))
             setInEuData(dataSourceTableInEu);
             setoutEuData(dataSourceTableOutEu);
 
 
         }
-    }, [dispatch, busineessPlanId, businessPlan, history]);
+    }, [dispatch, busineessPlanId, businessPlan, history, country.countryShortCode, countryVats]);
 
 
 
@@ -560,6 +593,7 @@ function SalesForecast() {
         dispatch(changState(id))
         setEportPlan(e);
         getUpdatesWindowState();
+        console.log(vty)
     }
 
     const saveChanges = () => {
@@ -581,6 +615,7 @@ function SalesForecast() {
                 visibility={isVisibleHeader}
                 saveChanges={saveChanges}
             />
+            <h1>{country.countryShortCode} ff</h1>
             <Col span={20} offset={3}>
                 <Col span={16} offset={0}>
                     <Breadcrumb className="margin-top-links">
