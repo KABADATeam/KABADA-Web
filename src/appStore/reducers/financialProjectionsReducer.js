@@ -17,8 +17,6 @@ export const financialProjectionsReducer = (
             console.log('Action payload: ' + JSON.stringify(items))
             console.log('Original fixed array:' + JSON.stringify(state.fixed));
             console.log('Original variable array:' + JSON.stringify(state.variable));
-
-
             // loop through items array and check if fixed array each object types array  has items with
             // same cost_item_id. if yes then im changing the field values that need to be changed
             items.map((element, index) => {

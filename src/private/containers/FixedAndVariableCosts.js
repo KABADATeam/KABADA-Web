@@ -110,7 +110,7 @@ class FixedAndVariableCosts extends React.Component {
       variablePopUp: obj,
     })
   }
-
+  //passing prices array 
   handleOk = (array, record) => {
     const obj = {
       category_id: null,
@@ -119,6 +119,10 @@ class FixedAndVariableCosts extends React.Component {
       record: {},
       visible: false
     }
+    
+
+
+
     //convert array of prices to just string, 1,2,3,4,5 ...
     // let stringPrices = '';
     // array.map((element, index) => {
@@ -132,7 +136,6 @@ class FixedAndVariableCosts extends React.Component {
     // // update state
     // this.updateCostItemsProperties(newStrinPrices, record, 'price');
     // console.log(JSON.stringify(this.state.cost_items))
-    this.forceUpdate();
     this.setState({
       variablePopUp: obj,
     });
@@ -481,6 +484,7 @@ class FixedAndVariableCosts extends React.Component {
           return (<Input
             defaultValue={text === null ? '0,0,0,0,0,0,0,0,0,0,0,0' : String(text)}
             // value={this.state.cost_items[4].price}
+            value={text}
             onClick={(e) => this.showModal(record, text, index)} />)
         }
       },
@@ -500,6 +504,7 @@ class FixedAndVariableCosts extends React.Component {
         )
       }
     ];
+
     return (
       <>
         <UnsavedChangesHeader

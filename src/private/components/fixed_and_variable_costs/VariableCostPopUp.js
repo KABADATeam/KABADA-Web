@@ -39,7 +39,6 @@ class VariableCostPopUp extends React.Component {
 
     //on save changes dont save disabled data in array
     save = () => {
-        console.log('Checked length is: ' + this.state.checked.length)
         const pricesWithoutDisabled = []
         const original = this.state.data;
         // loop through data array and check if index of each object is less than
@@ -51,7 +50,6 @@ class VariableCostPopUp extends React.Component {
                 pricesWithoutDisabled.push(element.price)
             }
         });
-        console.log('Prices without disabled: ' + JSON.stringify(pricesWithoutDisabled))
         // loop through cost_items state array. put only required fields to items array
         // then then dispatch action to update
         // loop through cost_items state array. put only required fields to items array
@@ -151,13 +149,11 @@ class VariableCostPopUp extends React.Component {
             for (var i = 1; i < 13; i++) {
                 duom.push({ id: i, month: i, price: 0 })
             }
-            console.log('Monthly expenses are not passed')
         } else {
             for (var i = 0; i < this.props.monthly_expenses.length; i++) {
                 console.log('Monthly expenses at index' + i + ' ,and element is:' + this.props.monthly_expenses[i])
                 duom.push({ id: i + 1, month: i + 1, price: this.props.monthly_expenses[i] })
             }
-            console.log('montly expenses are passed')
         }
 
         this.setState({
@@ -167,7 +163,6 @@ class VariableCostPopUp extends React.Component {
     componentDidMount() {
         this.loadData();
         // console.log('Monthly expenses equal to:'+JSON.stringify(this.props.monthly_expenses));
-        console.log('Cost_items array is:'+JSON.stringify(this.props.cost_items))
     }
     render() {
 
