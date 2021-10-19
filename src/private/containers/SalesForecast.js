@@ -6,7 +6,7 @@ import { Breadcrumb, Col, Space, Row, Button, Typography, Switch, Card, Tabs, In
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getProducts, changState } from '../../appStore/actions/salesForecastActions';
-import { getCountryVat } from '../../appStore/actions/vatsActions';
+import { getCountryVat } from '../../appStore/actions/vatsActions'
 import { getCountryShortCode } from '../../appStore/actions/countriesActions'
 import SalesForecastTable from '../components/sales_Forecast/SalesForecastTable';
 import SalesForecastSelect from '../components/sales_Forecast/SalesForecastSelect';
@@ -510,21 +510,21 @@ function SalesForecast() {
             } else {
                 dispatch(refreshPlan(localStorage.getItem("plan")), () => {
                     dispatch(getProducts(businessPlan.id));
-                    dispatch(getCountryShortCode(businessPlan.id), () => {
-                        dispatch(getCountryVat('LT', () => {
-                            console.log(JSON.stringify(countryVats))
-                            setVyt(countryVats);
-                        }));
+                    const obj = { id: businessPlan.id }
+                    dispatch(getCountryShortCode(obj), (data) => {
+                        dispatch(getCountryVat(country.countryShortCode));
+                        console.log(JSON.stringify(countryVats))
+                        setVyt(countryVats);
                     })
                 });
             }
         } else {
             dispatch(getProducts(businessPlan.id));
-            dispatch(getCountryShortCode(businessPlan.id), () => {
-                dispatch(getCountryVat('LT', () => {
-                    console.log(JSON.stringify(countryVats))
-                    setVyt(countryVats);
-                }));
+            const obj = { id: businessPlan.id }
+            dispatch(getCountryShortCode(obj), () => {
+                dispatch(getCountryVat(country.countryShortCode));
+                console.log(JSON.stringify(countryVats))
+                setVyt(countryVats);
                 console.log(JSON.stringify(countryVats))
 
             })
@@ -536,7 +536,7 @@ function SalesForecast() {
 
 
         }
-    }, [dispatch, busineessPlanId, businessPlan, history, country.countryShortCode, countryVats]);
+    }, [dispatch, history, businessPlan.id, country.countryShortCode]);
 
 
 
