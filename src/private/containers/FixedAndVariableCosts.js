@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom';
-import { Form, Select, InputNumber, Popconfirm, Input, Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tooltip, Tabs } from 'antd';
-import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
-import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
+import { Form, Select, InputNumber,Input, Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tooltip, Tabs } from 'antd';
+import { ArrowLeftOutlined,InfoCircleFilled } from '@ant-design/icons';
+import { tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
 import VariableCostPopUp from '../components/fixed_and_variable_costs/VariableCostPopUp';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
@@ -11,7 +11,7 @@ import { getFinancialProjectionsCosts, updateFixedAndVarCosts } from '../../appS
 import {getCountryVat} from '../../appStore/actions/vatsActions'
 import { getCountryShortCode } from '../../appStore/actions/countriesActions'
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
-import { jSXClosingElement } from '@babel/types';
+import '../../css/FixedAndVarStyles.css'
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -119,23 +119,6 @@ class FixedAndVariableCosts extends React.Component {
       record: {},
       visible: false
     }
-    
-
-
-
-    //convert array of prices to just string, 1,2,3,4,5 ...
-    // let stringPrices = '';
-    // array.map((element, index) => {
-    //   // if its last element in array dont use ','
-    //   stringPrices = stringPrices + String(element) + ',';
-    // });
-    // //remove last comma
-    // const newStrinPrices = stringPrices.slice(0, -1)
-    // console.log('Array of prices:' + newStrinPrices)
-
-    // // update state
-    // this.updateCostItemsProperties(newStrinPrices, record, 'price');
-    // console.log(JSON.stringify(this.state.cost_items))
     this.setState({
       variablePopUp: obj,
     });
@@ -307,7 +290,7 @@ class FixedAndVariableCosts extends React.Component {
     array.forEach(element => {
       if (element.cost_item_id === record.cost_item_id) {
         if (inputName === "price") {
-          element.price = value;
+          element.price = Number(value);
         } else if (inputName === "vat") {
           element.vat = value;
         } else if (inputName === "first_expenses") {
@@ -317,13 +300,18 @@ class FixedAndVariableCosts extends React.Component {
         }
       }
     });
+    
+    this.setState({
+      cost_items: array
+    });
+
     const visibilityString = this.getUpdatesWindowState();
     this.setState({
       visibleHeader: visibilityString
     });
-    this.setState({
-      cost_items: array
-    });
+
+    console.log(JSON.stringify(this.state.cost_items))
+    console.log('Original'+JSON.stringify(this.state.original_cost_items))
   
   }
   // function to check if cost_items array value are equal to original_cost_items
@@ -344,6 +332,7 @@ class FixedAndVariableCosts extends React.Component {
     for (var i = 0; i < original.length; ++i) {
       if (original[i].price !== modified[i].price || original[i].vat !== modified[i].vat || original[i].first_expenses !== modified[i].first_expenses) {
         // console.log('Original price:' + original[i].price + ", modified price is: " + modified[i].price)
+        console.log('They are not equal')
         return false;
       }
     }
@@ -369,18 +358,6 @@ class FixedAndVariableCosts extends React.Component {
     return 'hidden';
   }
 
-  getPriceValue = (item_id) => {
-    const array = this.state.cost_items;
-    array.map((element, index) => {
-      if (element.cost_item_id === item_id) {
-        if (element.monthly_expenses !== null || element.monthly_expenses !== undefined) {
-          return element.monthly_expenses;
-        } else {
-          return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        }
-      }
-    });
-  }
 
   componentDidMount() {
     if (this.props.businessPlan.id === null) {
@@ -433,11 +410,13 @@ class FixedAndVariableCosts extends React.Component {
         dataIndex: 'price',
         width: '20%',
         render: (text, record, index) => (
-          <InputNumber
-            min={0}
-            size="large"
+          <Input
+            // min={0}
+            // size="large"
+            type={"number"}
+            className={"numInput"}
             defaultValue={text === null ? 0 : text}
-            onChange={e => this.updateCostItemsProperties(e, record, "price")}
+            onChange={e => this.updateCostItemsProperties(e.target.value, record, "price")}
           />
         )
       },
@@ -483,7 +462,6 @@ class FixedAndVariableCosts extends React.Component {
         render: (text, record, index) => {
           return (<Input
             defaultValue={text === null ? '0,0,0,0,0,0,0,0,0,0,0,0' : String(text)}
-            // value={this.state.cost_items[4].price}
             value={text}
             onClick={(e) => this.showModal(record, text, index)} />)
         }
