@@ -36,13 +36,6 @@ const textStyle = {
 }
 class CashFlow extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-
-        };
-    }
-
     onBackClick() {
         this.props.history.push(`/overview`);
     }
@@ -66,9 +59,79 @@ class CashFlow extends React.Component {
     }
     render() {
         console.log(this.props.cashFlowData)
+
+        const months = this.props.cashFlowData.tableColumns;
+        const data = this.props.cashFlowData.dataForTable;
+
+        console.log("data {0}", months)
+
+        const renderContent = (value, row, index) => {
+            const obj = {
+                children: value,
+                props: {},
+            };
+            if (row.tag === "title" || row.tag === "section") {
+                obj.props.colSpan = 0;
+            }
+            return obj;
+        };
+        const cashFlowColumns = [
+            {
+                title: 'Cash flow',
+                dataIndex: 'title',
+                key: 'title',
+                render: (text, row, index) => {
+                    if (row.tag === "title") {
+                        return {
+                            children: <h1>{text}</h1>,
+                            props: {
+                                colSpan: 4 + months.length,
+                            },
+                        };
+                    }
+                    if (row.tag === "section") {
+                        return {
+                            children: <h3>{text}</h3>,
+                            props: {
+                                colSpan: 4 + months.length,
+                            },
+                        };
+                    }
+                    if (row.tag === "summary") {
+                        return {
+                            children: <h3>{text}</h3>,
+                        };
+                    }
+                    return <p>{text}</p>;
+
+                },
+            },
+            {
+                title: 'Month',
+                dataIndex: 'month',
+                key: 'month',
+                children: months,
+                render: renderContent,
+            },
+            {
+                title: 'Total Year 1 (EUR)',
+                dataIndex: 'totalYear1',
+                key: 'totalYear1',
+                fixed: 'right',
+                render: renderContent,
+            },
+            {
+                title: 'Total Year 2 (EUR)',
+                dataIndex: 'totalYear2',
+                key: 'totalYear2',
+                fixed: 'right',
+                render: renderContent,
+            },
+        ];
+
         return (
             <>
-                <Col span={16} offset={4}>
+                <Col span={23} offset={1}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
                             <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
@@ -83,7 +146,7 @@ class CashFlow extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col span={12} offset={4}>
+                    <Col span={18} offset={1}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Cash flow</Text>
@@ -95,10 +158,10 @@ class CashFlow extends React.Component {
                         </div>
                     </Col>
                 </Row>
-                <Col span={16} offset={4}>
+                <Col span={22} offset={1}>
                     <Divider />
                 </Col>
-                <Col offset={4} span={16}>
+                <Col offset={1} span={22}>
                     <Row style={{ marginBottom: "50px" }}>
                         <Col span={12}>
                             <Title level={4}>Cash flow</Title>
@@ -108,21 +171,10 @@ class CashFlow extends React.Component {
                     <Row style={{ marginBottom: "50px" }}>
                         <Col span={24}>
                             <Table
+                                columns={cashFlowColumns}
+                                dataSource={data}
                                 pagination={false}
-                            />
-                        </Col>
-                    </Row>
-                    <Row style={{ marginBottom: "50px" }}>
-                        <Col span={24}>
-                            <Table
-                                pagination={false}
-                            />
-                        </Col>
-                    </Row>
-                    <Row style={{ marginBottom: "50px" }}>
-                        <Col span={24}>
-                            <Table
-                                pagination={false}
+                                bordered
                             />
                         </Col>
                     </Row>
