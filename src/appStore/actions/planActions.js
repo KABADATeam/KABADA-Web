@@ -47,7 +47,7 @@ export const getImage = (plan) => {
                 const token = getState().user.access_token;
 
                 const response = await kabadaAPI.get("api/files/" + plan.planImage, { headers: { Authorization: `Bearer ${token}` }, responseType: 'arraybuffer' });
-                dispatch({ type: "FETCHING_IMAGE_SUCCESS", payload: { ...plan, coverImage: getURL(response.data) } });
+                dispatch({ type: "FETCHING_IMAGE_SUCCESS", payload: { "id": plan.id, "coverImage": getURL(response.data) } });
             } else {
                 return;
             }
