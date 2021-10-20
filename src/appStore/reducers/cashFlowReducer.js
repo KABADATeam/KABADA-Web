@@ -23,8 +23,8 @@ export const cashFlowReducer = (state = [], action) => {
 
             const renderContent = (value, row, index) => {
                 const obj = {
-                    children: (value !== null || value) ? <p>{value}</p> : <p>-</p>,
-                    props: {},
+                    children: (value !== null || value) ? <p style={{ marginBottom: 0 }}>{value}</p> : <p style={{ marginBottom: 0 }}>-</p>,
+                    props: { style: { color: (value === 0) ? "#820014" : '#262626', background: (value === 0) ? "#FFCCC7" : '' } },
                 };
                 if (row.tag === "title" || row.tag === "section") {
                     obj.props.colSpan = 0;
@@ -33,7 +33,7 @@ export const cashFlowReducer = (state = [], action) => {
             };
             const tableColumns = cash.openingCash.rows[0].monthlyValue.map((v, index) => ({ title: index, dataIndex: index, key: index, render: renderContent }));
 
-            return { ...cash, "dataForTable": dataForTable, "tableColumns": tableColumns };
+            return { ...cash, "dataForTable": dataForTable.map((obj, index) => ({ ...obj, "key": index })), "tableColumns": tableColumns };
         default:
             return state;
     }

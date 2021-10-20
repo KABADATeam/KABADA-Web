@@ -67,8 +67,8 @@ class CashFlow extends React.Component {
 
         const renderContent = (value, row, index) => {
             const obj = {
-                children: value,
-                props: {},
+                children: <p style={{ marginBottom: 0 }}>{value}</p>,
+                props: { style: { background: (parseInt(value) <= 0) ? "#FFCCC7" : '', marginBottom: 0 } },
             };
             if (row.tag === "title" || row.tag === "section") {
                 obj.props.colSpan = 0;
@@ -83,26 +83,39 @@ class CashFlow extends React.Component {
                 render: (text, row, index) => {
                     if (row.tag === "title") {
                         return {
-                            children: <h1>{text}</h1>,
+                            children: <h1 style={{ marginBottom: 0 }}>{text}</h1>,
                             props: {
                                 colSpan: 4 + months.length,
+                                style: { background: "#FAFAFA", marginBottom: 0 }
                             },
                         };
                     }
                     if (row.tag === "section") {
                         return {
-                            children: <h3>{text}</h3>,
+                            children: <h3 style={{ marginBottom: 0 }}>{text}</h3>,
                             props: {
                                 colSpan: 4 + months.length,
+                                style: { background: "#FAFAFA", marginBottom: 0 }
                             },
                         };
                     }
                     if (row.tag === "summary") {
                         return {
-                            children: <h3>{text}</h3>,
+                            children: <h3 style={{ marginBottom: 0 }}>{text}</h3>,
+                            props: {
+                                style: { background: (parseInt(text) <= 0) ? "#FFCCC7" : '', marginBottom: 0 }
+                            },
                         };
                     }
-                    return <p>{text}</p>;
+                    if (text < 0) {
+                        return {
+                            children: <p style={{ marginBottom: 0 }}>{text}</p>,
+                            props: {
+                                style: { background: "#FFCCC7", marginBottom: 0 }
+                            },
+                        };
+                    }
+                    return <p style={{ marginBottom: 0 }}>{text}</p>;
 
                 },
             },
