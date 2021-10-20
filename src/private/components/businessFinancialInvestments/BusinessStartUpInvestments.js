@@ -73,88 +73,34 @@ class BusinessStartUpInvestments extends React.Component {
     state = {
         period: 12,
         vat_payer: true,
-        isDisabledVatSelection: false
+        total_investments: null, 
+        own_assets: null,
+        investments_amount: null,
+        own_money: null, 
+        loan_amount: null,
+        payment_period: null, 
+        interest_rate: null, 
+        grace_period: null, 
+        physical_assets: this.props.data,
+        original_physical_assets: this.props.originalData,
+        isDisabledVatSelection: null, 
+        investment_object: this.props.physical_assets_object
     }
     onPeriodSelectionChange(value) {
         this.setState({
             period: value,
         });
+        console.log(value);
     }
     onVatPayerSelectionChange(value) {
         this.setState({
             vat_payer: value,
         });
+        console.log(value);
     }
     render() {
-        const businessInvestmentsColumns = [
-            {
-                title: 'Asset',
-                dataIndex: 'asset_title',
-                key: 'resource_id',
-                width: '15%',
-            },
-            {
-                title: 'Name',
-                dataIndex: 'resource_title',
-                key: 'resource_id',
-                width: '20%',
-            },
-            {
-                title: 'Statuss',
-                dataIndex: 'resource_status',
-                key: 'resource_id',
-                width: '15%',
-                align: 'right',
-                render: (text, obj, record) => (
-                    text === null ? <div style={{ display: 'flex', justifyContent: 'center' }}><Text>-</Text></div> : <Text>{text}</Text>
-                )
-            },
         
-            {
-                title: this.state.vat_payer === false ? 'Total amount' : 'Total amount with VAT' ,
-                dataIndex: 'amount',
-                key: 'resource_id',
-                width: '30%',
-                align: 'right',
-                render: (text, obj, record) => (
-                    <div style={{ float: 'right' }}>
-                        <InputNumber
-                            size="large"
-                            defaultValue={text}
-                            formatter={value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                        />
-                    </div>
         
-                )
-        
-            },
-            {
-                title: () => (
-                    <Space>
-                        <Text>VAT Rate</Text>
-                        <Tooltip title="Tooltip text">
-                            <InfoCircleFilled style={{ color: '#BFBFBF' }} />
-                        </Tooltip>
-                    </Space>
-                ),
-                dataIndex: 'vat',
-                key: 'vat',
-                align: 'right',
-                width: '20%',
-                render: (text, obj, record) => (
-                    <Space size={0}>
-                        <Select defaultValue={0} suffixIcon={<CaretDownFilled />} disabled={this.state.vat_payer === false ? true : false }>
-                            {this.props.vat.map((v, index) => (
-                                <Option value={v.key}>{v.vatValue + "%"}</Option>
-                            ))}
-                        </Select>
-                    </Space>
-                ),
-            }
-        ];
-        console.log(this.props.data)
-        const ownAndBuyAssets = this.props.investments.physical_assets.filter(obj => obj.resource_status === 'Own' || obj.resource_status === 'Buy' || obj.resource_status === null);
-        const rentAssets = this.props.investments.physical_assets.filter(obj => obj.resource_status === 'Rent');
         return (
             <>
                 <Col span={24} >
@@ -200,78 +146,6 @@ class BusinessStartUpInvestments extends React.Component {
                                                 </Select>
                                             </div>
                                         </Col>
-                                    </div>
-                                </Card >
-                            </div>
-                            <div style={{ marginTop: 24 }}>
-                                <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                    <div style={{ marginTop: 20, marginLeft: 16, marginBottom: 20 }}>
-                                        <Text style={{ ...titleTextStyle }}>Physical and Intellectual assets</Text>
-                                    </div>
-                                    <Table
-                                        dataSource={ownAndBuyAssets}
-                                        columns={businessInvestmentsColumns}
-                                        pagination={false}
-                                    />
-                                    <div style={{ marginTop: 16, marginLeft: 16, marginRight: 16, marginBottom: 16 }}>
-                                        <Row style={{ marginBottom: 8 }}>
-
-                                            <Col span={16}>
-                                                <Text>Investments</Text>
-                                            </Col>
-                                            <Col span={8}>
-                                                <div style={{ float: 'right' }}>
-                                                    <Text>Suma</Text>
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                        <Row style={{ marginBottom: 8 }}>
-                                            <Col span={16}>
-                                                <Text>Own Assets (physical & intellectual)</Text>
-                                            </Col>
-                                            <Col span={8}>
-                                                <div style={{ float: 'right' }}>
-                                                    <Text>Suma</Text>
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                        <Row style={{ marginBottom: 8 }}>
-                                            <Col span={16}>
-                                                <Text>Additional necessary funds for investments in assets</Text>
-                                            </Col>
-                                            <Col span={8}>
-                                                <div style={{ float: 'right' }}>
-                                                    <Text>Suma</Text>
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col span={16}>
-                                                <div style={{ marginTop: 13 }}>
-                                                    <Text>How much can I invest my money? </Text>
-                                                </div>
-                                            </Col>
-                                            <Col span={8}>
-                                                <div style={{ float: 'right' }}>
-                                                    <InputNumber
-                                                        size="large"
-                                                        defaultValue="0"
-                                                        formatter={value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                                    />
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                        <Divider />
-                                        <Row>
-                                            <Col span={16}>
-                                                <Text style={{ fontWeight: 600, fontSize: 14, fontStyle: 'normal' }}>Loan (Long term)</Text>
-                                            </Col>
-                                            <Col span={8}>
-                                                <div style={{ float: 'right' }}>
-                                                    <Text style={{ fontWeight: 600, fontSize: 14, fontStyle: 'normal' }}>Suma</Text>
-                                                </div>
-                                            </Col>
-                                        </Row>
                                     </div>
                                 </Card >
                             </div>

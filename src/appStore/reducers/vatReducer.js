@@ -1,9 +1,9 @@
-export const vatsReducer = (
+export const countryVATReducer = (
     state = {
-        vat: []
+        vat : []
     }, action) => {
     switch (action.type) {
-        case 'FETCHING_VAT_SUCCESS':
+        case 'FETCHING_COUNTRY_VAT_SUCCESS':
             let vatArray = [];
             let objectValues = Object.values(action.payload);
             let objectPropertyName = Object.keys(action.payload);
