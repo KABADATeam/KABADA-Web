@@ -50,7 +50,7 @@ class ResetPassword extends Component {
                         </Form.Item>
                     </Form.Item>
                     <Form.Item >
-                        <Button type="primary" htmlType="submit" size='large' style={buttonStyle} block={true}>
+                        <Button type="primary" htmlType="submit" size='large' style={buttonStyle} block={true} onClick={this.onFinish.bind(this)}>
                             Continue
                         </Button>
                     </Form.Item>
