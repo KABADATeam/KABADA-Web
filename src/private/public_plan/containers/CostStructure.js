@@ -2,15 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space } from 'antd';
 import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
+import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
 import { connect } from 'react-redux';
-import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getCostStructureList, getCategories, deleteFixedCost, deleteVariableCost, selectCostCategory, saveState } from "../../appStore/actions/costStructureAction"
+import { refreshPlan } from "../../../appStore/actions/refreshAction";
+import { getCostStructureList, getCategories, deleteFixedCost, deleteVariableCost, selectCostCategory, saveState } from "../../../appStore/actions/costStructureAction"
 //import FixedCostModal from "../components/cost_structure/FixedCostModal";
-import CostCategoriesModal from "../components/cost_structure/CostCategoriesModal"
-import EditCostModal from "../components/cost_structure/EditCostModal"
-import AddCostModal from "../components/cost_structure/AddCostModal";
-import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import CostCategoriesModal from "../../components/cost_structure/CostCategoriesModal"
+import EditCostModal from "../../public_plan/components/EditCostModal"
+import AddCostModal from "../../components/cost_structure/AddCostModal";
+import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
 
 const { Text } = Typography;
 
@@ -75,7 +75,7 @@ class CostStructure extends React.Component {
             fixedCostNumber: 2
         });
     }
-    openAddCostModal = () => {
+   /* openAddCostModal = () => {
         this.setState({
             addModalVisibility: true,
             costNumber: null
@@ -86,19 +86,19 @@ class CostStructure extends React.Component {
             addModalVisibility: null,
             costNumber: this.state.fixedCostNumber
         })
-    }
+    }*/
     onCloseCostCategoriesModal = () => {
         this.setState({
             costNumber: null,
             
         });
     };
-    onDeleteFixedCost(item) {
+   /* onDeleteFixedCost(item) {
         this.props.deleteFixedCost({ "id": item.id, "number": 1 });
     }
     onDeleteVariableCost(item) {
         this.props.deleteVariableCost({ "id": item.id, "number": 2 });
-    }
+    }*/
     onEditFixedCost(item) {
         this.setState({
             item: { ...item},
@@ -166,8 +166,8 @@ class CostStructure extends React.Component {
                 width: '10%',
                 render: (obj, record) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditFixedCost.bind(this, record)} >Edit</Button>
-                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteFixedCost.bind(this, record)}><DeleteOutlined /></Button>
+                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditFixedCost.bind(this, record)} >View</Button>
+                       {/* <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteFixedCost.bind(this, record)}><DeleteOutlined /></Button>*/}
                     </Space>
                 ),
             }
@@ -198,8 +198,8 @@ class CostStructure extends React.Component {
                 width: '10%',
                 render: (obj, record) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditVarCost.bind(this, record)} >Edit</Button>
-                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteVariableCost.bind(this, record)} ><DeleteOutlined /></Button>
+                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditVarCost.bind(this, record)} >View</Button>
+                       {/* <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteVariableCost.bind(this, record)} ><DeleteOutlined /></Button>*/}
                     </Space>
                 ),
             }
@@ -227,11 +227,11 @@ class CostStructure extends React.Component {
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Cost structure</Text>
                         </div>
                     </Col>
-                    <Col span={4}>
+                  { /* <Col span={4}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                             <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.costs.is_cost_completed} onClick={this.onCompletedChange.bind(this)} />
                         </div>
-                    </Col>
+                    </Col>*/}
                 </Row>
 
 
@@ -254,7 +254,7 @@ class CostStructure extends React.Component {
                                     dataSource={this.props.costs.fixed_costs}
                                     columns={fixedCostsColumns}
                                     pagination={false}
-                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }}  onClick={this.openFixedCostCategories.bind(this)}><PlusOutlined />Add fixed cost</Button></Space>)}
+                                   // footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }}  onClick={this.openFixedCostCategories.bind(this)}><PlusOutlined />Add fixed cost</Button></Space>)}
                                 />
                             </Card >
                         </Col>
@@ -275,7 +275,7 @@ class CostStructure extends React.Component {
                                     dataSource={this.props.costs.variable_costs}
                                     columns={varCostsColumns}
                                     pagination={false}
-                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }}  onClick={this.openVarCostCategories.bind(this)}><PlusOutlined />Add variable cost</Button></Space>)}
+                                   // footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }}  onClick={this.openVarCostCategories.bind(this)}><PlusOutlined />Add variable cost</Button></Space>)}
                                 />
                             </Card >
                         </Col>

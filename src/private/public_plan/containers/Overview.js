@@ -194,7 +194,7 @@ class PublicOverview extends React.Component {
                                                     <List.Item key='9' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
                                                             avatar={overview.cost_structure.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/cost-structure'>Cost structure</Link></Space>}
+                                                            title={<Space><Link to='/public/cost-structure'>Cost structure</Link></Space>}
                                                             description={overview.cost_structure.description === "" || overview.cost_structure.description === null ? "Fixed and variable costs" : overview.cost_structure.description} />
                                                         <div>...</div>
                                                     </List.Item>
