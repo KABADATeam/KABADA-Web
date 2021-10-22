@@ -24,11 +24,13 @@ export const getAssets = (planId) => {
     };
 };
 
-export const updateAsset = (savedObject, reducerObject) => {
+export const updateAssets = (postObject, reducerObject) => {
     return async (dispatch, getState) => {
         try {
-            console.log(reducerObject)
-            dispatch({ type: 'UPDATE_ASSET_LIST_SUCCESS', payload: reducerObject});
+            const token = getState().user.access_token;
+            await kabadaAPI.post('/api/kres/assets/save', postObject, { headers: { Authorization: `Bearer ${token}` } })
+            console.log(postObject);
+            dispatch({ type: 'UPDATE_ASSETS_LIST_SUCCESS', payload: reducerObject});
         } catch (error) {
             dispatch({ type: 'ERROR', payload: errorHandler(error) });
         } finally {
