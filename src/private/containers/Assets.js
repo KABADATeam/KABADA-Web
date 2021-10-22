@@ -5,7 +5,7 @@ import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCa
 import { connect } from 'react-redux';
 import { CaretDownFilled, UserOutlined, InfoCircleFilled, ArrowLeftOutlined } from '@ant-design/icons';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getAssets, updateAsset } from '../../appStore/actions/assetsAction';
+import { getAssets, updateAssets } from '../../appStore/actions/assetsAction';
 import { getCountryShortCode } from '../../appStore/actions/countriesActions';
 import { getCountryVats } from '../../appStore/actions/vatAction';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
@@ -52,9 +52,9 @@ class AssetsWindow extends React.Component {
         super(props);
         this.state = {
             is_assets_completed: false,
-            total_investments: null,
-            own_assets: null,
-            investments_amount: null,
+            total_investments: this.props.assets.total_investments,
+            own_assets: this.props.assets.own_assets,
+            investment_amount: this.props.assets.investment_amount,
             original_assets_items: [],
             assets_items: [],
             visibleHeader: 'hidden',
@@ -68,22 +68,68 @@ class AssetsWindow extends React.Component {
     onBackClick() {
         this.props.history.push(`/overview`);
     }
+    arraysEqual = (array1, array2) => {
+        let a = JSON.parse(JSON.stringify(array1));
+        let b = JSON.parse(JSON.stringify(array2));
+        let original = array1;
+        let modified = array2;
 
-    getUpdatesWindowState(value) {
-        if (value === false) {
-            return 'visible'
-        } else if (value === true) {
-            return 'hidden'
-        } else {
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length !== b.length) return false;
+
+        a = a.sort();
+        b = b.sort();
+        for (var i = 0; i < original.length; ++i) {
+            if (original[i].amount !== modified[i].amount || original[i].vat !== modified[i].vat) {
+                // console.log('Original price:' + original[i].price + ", modified price is: " + modified[i].price)
+                console.log('They are not equal')
+                return false;
+            }
+        }
+        return true;
+    }
+
+    getUpdatesWindowState() {
+        const original = this.state.original_assets_items;
+        const modified = this.state.assets_items
+        if (original === null) {
             return 'hidden'
         }
+        if (modified === null) {
+            return 'hidden'
+        }
+        if (this.arraysEqual(original, modified) === false) {
+            return 'visible'
+        }
+        return 'hidden'
     }
-    
+
     setMyInvestMoney = (event) => {
         console.log(event.target.value)
         this.setState({
             my_invest_money: event.target.value
-        })
+        });
+    }
+
+    setTotalInvestment(value) {
+        console.log(value);
+        this.setState({
+            total_investments: value
+        });
+    }
+    setOwnAssets(value) {
+        console.log(value);
+        this.setState({
+            own_assets: value
+        });
+    }
+    setInvestmentAmount(total_investments, own_assets) {
+        let amount = total_investments - own_assets;
+        console.log(amount);
+        this.setState({
+            investment_amount: amount
+        });
     }
 
     setItems = (assetsArray) => {
@@ -103,7 +149,6 @@ class AssetsWindow extends React.Component {
             array.push(obj);
             index = index + 1;
         })
-        console.log(array);
         this.setState({
             assets_items: array,
         })
@@ -125,7 +170,6 @@ class AssetsWindow extends React.Component {
             array.push(obj);
             index = index + 1;
         })
-        console.log(array);
         this.setState({
             original_assets_items: array,
         })
@@ -145,6 +189,53 @@ class AssetsWindow extends React.Component {
         this.setState({
             assets_items: array
         })
+        const visibilityString = this.getUpdatesWindowState();
+        this.setState({
+            visibleHeader: visibilityString
+        });
+    }
+    saveChanges = () => {
+        const assets_items_for_post = [];
+        const assets_items_for_reducer = [];
+        const assets_items_array = this.state.assets_items;
+
+        assets_items_array.map((item, index) => {
+            const obj = {
+                resource_id: item.resource_id,
+                amount: item.amount,
+                vat: item.vat
+            }
+            assets_items_for_post.push(obj);
+        })
+        assets_items_array.map((item, index) => {
+            const obj = {
+                resource_id: item.resource_id,
+                resource_title: item.resource_title,
+                resource_status: item.resource_status,
+                type_title: item.type_title,
+                amount: item.amount,
+                vat: item.vat
+            }
+            assets_items_for_reducer.push(obj);
+        })
+        const postObject = {
+            business_plan_id: this.props.businessPlan.id,
+            total_investments: this.state.total_investments,
+            own_assets: this.state.own_assets,
+            investment_amount: this.state.investment_amount,
+            physical_assets: assets_items_for_post
+        }
+        const reducerObject = {
+            business_plan_id: this.props.businessPlan.id,
+            total_investments: this.state.total_investments,
+            own_assets: this.state.own_assets,
+            investment_amount: this.state.investment_amount,
+            physical_assets: assets_items_for_reducer
+        }
+        this.setState({
+            visibleHeader: 'hidden'
+        })
+        this.props.updateAssets(postObject, reducerObject);
     }
 
     componentDidMount() {
@@ -156,14 +247,14 @@ class AssetsWindow extends React.Component {
                     this.props.getAssets(this.props.businessPlan.id)
                     this.props.getCountryVats(this.props.countryCode.countryShortCodeV2)
                 });
-                this.setItems(this.props.assets.original_assets);
-                this.getOriginalAssetsItems(this.props.assets.original_assets);
+                this.setItems(this.props.assets.physical_assets);
+                this.getOriginalAssetsItems(this.props.assets.physical_assets);
             }
         } else {
             this.props.getAssets(this.props.businessPlan.id)
             this.props.getCountryVats(this.props.countryCode.countryShortCodeV2)
-            this.setItems(this.props.assets.original_assets);
-            this.getOriginalAssetsItems(this.props.assets.original_assets);
+            this.setItems(this.props.assets.physical_assets);
+            this.getOriginalAssetsItems(this.props.assets.physical_assets);
             //const obj = { id: this.props.businessPlan.id }
             //this.props.getCountryShortCode(obj, (data) => {
             //    this.props.getCountryVats(this.props.countryCode.countryShortCode);
@@ -203,7 +294,7 @@ class AssetsWindow extends React.Component {
             },
 
             {
-                title: this.state.vat_payer === false ? 'Total amount' : 'Total amount with VAT',
+                title: 'Total amount with VAT',
                 dataIndex: 'amount',
                 key: 'amount',
                 width: '30%',
@@ -251,8 +342,8 @@ class AssetsWindow extends React.Component {
             <>
                 <UnsavedChangesHeader
                     visibility={this.state.visibleHeader}
-                //discardChanges={this.discardChanges}
-                //saveChanges={this.saveChanges}
+                    discardChanges={this.discardChanges}
+                    saveChanges={this.saveChanges}
                 />
                 <Col span={16} offset={4}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
@@ -304,21 +395,19 @@ class AssetsWindow extends React.Component {
                                             columns={assetsColumns}
                                             pagination={false}
                                             footer={pageData => {
-                                                let total_amount = 0;
-                                                let own_assets_amount = 0;
+                                                let total_amount = this.state.total_investments;
+                                                let own_assets_amount = this.state.own_assets;
                                                 let my_invest_money = this.state.my_invest_money;
                                                 pageData.forEach(({ amount }) => {
                                                     total_amount += amount;
-
                                                 });
                                                 const ownAssets = pageData.filter((item) => item.resource_status === 'Own')
                                                 ownAssets.forEach(({ amount }) => {
                                                     own_assets_amount += amount
                                                 })
-
                                                 return (
                                                     <>
-                                                        <div style={{ marginTop: 16, marginLeft: 16, marginRight: 16, marginBottom: 16 }}>
+                                                        <div style={{ marginTop: 16, marginBottom: 16 }}>
                                                             <Row style={{ marginBottom: 8 }}>
 
                                                                 <Col span={16}>
@@ -404,7 +493,7 @@ const mapStateToProps = (state) => {
         assets: state.assets
     };
 }
-export default connect(mapStateToProps, { refreshPlan, getAssets, updateAsset, getCountryShortCode, getCountryVats, getCountryVat })(AssetsWindow);
+export default connect(mapStateToProps, { refreshPlan, getAssets, updateAssets, getCountryShortCode, getCountryVats, getCountryVat })(AssetsWindow);
 
 /*
 <Table.Summary.Row>
