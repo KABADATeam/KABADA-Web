@@ -22,10 +22,12 @@ import { customerSegmentReducer, customerSegmentPropertiesReducer } from './cust
 import { keyActivitiesReducer, keyActivitiesCategoriesReducer, selectedKeyActivityCategoryReducer } from './keyActivitiesReducer';
 import { customerRelationshipsCategoriesReducer, customerRelationshipsReducer } from './customerRelationshipsReducer';
 import { financialProjectionsReducer } from './financialProjectionsReducer';
-import {vatsReducer} from './vatsReducer'
 import { salesForecastReducer } from './salesForecastReducer';
+import { vatsReducer } from './vatsReducer';
 import { businessInvestmentReducer } from './businessInvestmentReducer';
 import { cashFlowReducer } from './cashFlowReducer';
+import { assetsReducer } from './assetsReducer';
+import { countryVATReducer } from './vatReducer'
 
 
 export default combineReducers({
@@ -85,4 +87,6 @@ export default combineReducers({
     countryShortCode: countryShortNameReducer,
     overviewTestLink: overviewTestReducer,
     cashFlow: cashFlowReducer,
+    assets: assetsReducer, 
+    vat: countryVATReducer
 });

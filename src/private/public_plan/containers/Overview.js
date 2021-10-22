@@ -187,14 +187,14 @@ class PublicOverview extends React.Component {
                                                     <List.Item key='8' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
                                                             avatar={overview.key_partners.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/key-partners'>Key partners</Link></Space>}
+                                                            title={<Space><Link to='/public/key-partners'>Key partners</Link></Space>}
                                                             description={overview.key_partners.description === "" || overview.key_partners.description === null ? "Key partners list" : overview.key_partners.description} />
                                                         <div>...</div>
                                                     </List.Item>
                                                     <List.Item key='9' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
                                                             avatar={overview.cost_structure.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/cost-structure'>Cost structure</Link></Space>}
+                                                            title={<Space><Link to='/public/cost-structure'>Cost structure</Link></Space>}
                                                             description={overview.cost_structure.description === "" || overview.cost_structure.description === null ? "Fixed and variable costs" : overview.cost_structure.description} />
                                                         <div>...</div>
                                                     </List.Item>

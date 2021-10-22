@@ -9,7 +9,7 @@ import BusinessStartUpInvestments from '../components/businessFinancialInvestmen
 import BusinessFinancing from '../components/businessFinancialInvestments/BusinessFinancing';
 import { getBusinessInvestmentInformation } from "../../appStore/actions/businessInvestmentAction";
 import { getCountryShortCode } from '../../appStore/actions/countriesActions';
-import { getCountryVat } from '../../appStore/actions/vatsActions';
+import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
 
 const { Text } = Typography;
 const { TabPane } = Tabs
@@ -52,11 +52,28 @@ class BusinessInvestmentsWindow extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            vats: {},
+            physical_intellectual_assets: [],
+            original_physical_intellectual_assets: [],
+            visibleHeader: 'hidden',
+            physical_assets_investments: null
         }
     }
 
     onBackClick() {
         this.props.history.push(`/overview`);
+    }
+    //get physical and intellectual assets
+    
+
+    getUpdatesWindowState(value) {
+        if (value === false) {
+            return 'visible'
+        } else if (value === true) {
+            return 'hidden'
+        } else {
+            return 'hidden'
+        }
     }
 
     componentDidMount() {
@@ -66,13 +83,16 @@ class BusinessInvestmentsWindow extends React.Component {
             } else {
                 this.props.refreshPlan(localStorage.getItem("plan"), () => {
                     this.props.getBusinessInvestmentInformation(this.props.businessPlan.id);
+                    this.setAssetsItems(this.props.investments);
+                    this.getOriginalAssetsItems(this.props.investments);
+                    this.setPhysicalAssetsInvestmentsObject(this.props.investments);
                     const obj = { id: this.props.businessPlan.id }
                     this.props.getCountryShortCode(obj, (data) => {
                         this.props.getCountryVat(this.props.country.countryShortCode);
                         this.setState({
                             vats: this.props.countryVats
                         });
-                    })
+                    });
                 });
             }
         } else {
@@ -80,28 +100,26 @@ class BusinessInvestmentsWindow extends React.Component {
             const obj = { id: this.props.businessPlan.id }
             this.props.getCountryShortCode(obj, (data) => {
                 this.props.getCountryVat(this.props.countryCode.countryShortCode);
-            })
+                this.setAssetsItems(this.props.investments);
+                this.getOriginalAssetsItems(this.props.investments);
+                this.setPhysicalAssetsInvestmentsObject(this.props.investments);
+                this.setState({
+                    vats: this.props.countryVats
+                });
+            });
+
         }
     }
 
 
     render() {
-        let vatArray = [];
-        let objectValues = Object.values(this.props.countryVats);
-        let objectPropertyName = Object.keys(this.props.countryVats);
-        let length = objectPropertyName.length
-        for (let i = 0; i < length; i++) {
-            if (objectValues[i] !== null) {
-                vatArray.push({
-                    key: i,
-                    vatTitle: objectPropertyName[i],
-                    vatValue: objectValues[i]
-                }) 
-            }
-        }
-        console.log(this.props.investments)
         return (
             <>
+                <UnsavedChangesHeader
+                    visibility={this.state.visibleHeader}
+                //discardChanges={this.discardChanges}
+                //saveChanges={this.saveChanges}
+                />
                 <Col span={16} offset={4}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
@@ -132,10 +150,10 @@ class BusinessInvestmentsWindow extends React.Component {
                 <Col span={16} offset={4}>
                     <Tabs defaultActiveKey="1"  >
                         <TabPane tab="Business start-up investments" key="1">
-                            <BusinessStartUpInvestments data={this.props.investments}  vat={vatArray} />
+                            <BusinessStartUpInvestments data={this.state.physical_intellectual_assets} originalData={this.state.original_physical_intellectual_assets} physical_assets_object={this.state.physical_assets_investments} customHearderVisibility={this.getUpdatesWindowState} />
                         </TabPane>
                         <TabPane tab="Business Financing" key="2">
-                            <BusinessFinancing data={this.props.investments} />
+                            <BusinessFinancing />
                         </TabPane>
                     </Tabs>
                 </Col>
@@ -153,4 +171,4 @@ const mapStateToProps = (state) => {
         countryVats: state.countryVats,
     };
 }
-export default connect(mapStateToProps, { refreshPlan, getBusinessInvestmentInformation, getCountryShortCode, getCountryVat })(BusinessInvestmentsWindow);
+export default connect(mapStateToProps, { refreshPlan, getBusinessInvestmentInformation, getCountryShortCode })(BusinessInvestmentsWindow);

@@ -7,7 +7,7 @@ import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { discardChanges, saveChanges } from "../../appStore/actions/swotAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { updateStatus, getMembers, deleteMember, getSelectedPlanOverview, getSelectedPlanDetails, getImage, overviewTest, removePlan } from "../../appStore/actions/planActions";
-import { getCountryShortCode } from "../../appStore/actions/countriesActions"
+import { getCountryShortCode, getCountryShortCodeV2 } from "../../appStore/actions/countriesActions"
 import { withRouter } from 'react-router-dom';
 import InviteMemberModal from '../components/overview/InviteMemberModal';
 import EditBusinessPlanModal from '../components/overview/EditBusinessPlanModal';
@@ -129,7 +129,7 @@ class Overview extends React.Component {
                     this.props.getSelectedPlanDetails(this.props.businessPlan.id);
                     this.props.getSelectedPlanOverview(this.props.businessPlan.id);
                     const obj = { id: this.props.businessPlan.id }
-                    this.props.getCountryShortCode(this.props.getCountryShortCode(obj))
+                    this.props.getCountryShortCodeV2(obj);
                     this.props.overviewTest(this.props.businessPlan.id);
                 });
             }
@@ -138,7 +138,7 @@ class Overview extends React.Component {
             this.props.getSelectedPlanDetails(this.props.businessPlan.id);
             this.props.getSelectedPlanOverview(this.props.businessPlan.id);
             const obj = { id: this.props.businessPlan.id }
-            this.props.getCountryShortCode(this.props.getCountryShortCode(obj))
+            this.props.getCountryShortCodeV2(obj);
             this.props.overviewTest(this.props.businessPlan.id);
 
         }
@@ -300,6 +300,13 @@ class Overview extends React.Component {
                                             </Card>
                                             <Card style={{ marginTop: '10px' }}>
                                                 <List>
+                                                    <List.Item key='16' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                        <List.Item.Meta
+                                                            avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                            title={<Space><Link to='/assets'>Assets</Link></Space>}
+                                                            description="Description goes here" />
+                                                        <div>...</div>
+                                                    </List.Item>
                                                     <List.Item key='11' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
                                                             avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
@@ -446,4 +453,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getImage, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, getCountryShortCode, overviewTest, removePlan })(withRouter(Overview))
+export default connect(mapStateToProps, { getImage, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, getCountryShortCode, getCountryShortCodeV2, overviewTest, removePlan })(withRouter(Overview))
