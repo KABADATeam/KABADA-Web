@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Breadcrumb, Col, Space, Row, Button, Typography, Switch, Card, Tabs, Input, Select, InputNumber } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getProducts, changState } from '../../appStore/actions/salesForecastActions';
+import { getProducts, changState, getProductByID, updateSalesForecast } from '../../appStore/actions/salesForecastActions';
 import { getCountryVat } from '../../appStore/actions/vatsActions'
 import { getCountryShortCode } from '../../appStore/actions/countriesActions'
 import SalesForecastTable from '../components/sales_Forecast/SalesForecastTable';
@@ -23,7 +23,7 @@ function SalesForecast() {
     const [readyMonth, setReadyMonth] = useState("12th mo");
     const [exportPlan, setEportPlan] = useState(true);
     const [tabKey, setTabKey] = useState("");
-    const [vty, setVyt] = useState("");
+    const [vty, setVyt] = useState({});
     const [isVisibleHeader, setIsVisibleHeader] = useState("hidden");
     const [totalinEu, setTotalInEu] = useState("0");
     const [totalOutEu, setTotalOutEu] = useState("0");
@@ -39,15 +39,15 @@ function SalesForecast() {
         const array = inEuData;
         array.forEach(element => {
             if (element.id === record.id) {
-                if (inputName === 'withoutVAT') {
-                    element.withoutVAT = text;
-                    element.total = element.withoutVAT * element.Qty;
+                if (inputName === 'price') {
+                    element.price = text;
+                    element.total = element.price * element.qty;
                     setTotalInEu(element.total)
 
                 }
-                if (inputName === 'Qty') {
-                    element.Qty = text;
-                    element.total = element.withoutVAT * element.Qty;
+                if (inputName === 'qty') {
+                    element.qty = text;
+                    element.total = element.price * element.qty;
                     setTotalInEu(element.total)
                 }
                 if (inputName === 'vat') {
@@ -72,15 +72,15 @@ function SalesForecast() {
         const array = outEuData;
         array.forEach(element => {
             if (element.id === record.id) {
-                if (inputName === 'withoutVAT') {
-                    element.withoutVAT = text;
-                    element.total = element.withoutVAT * element.Qty;
+                if (inputName === 'price') {
+                    element.price = text;
+                    element.total = element.price * element.qty;
                     setTotalOutEu(element.total);
 
                 }
-                if (inputName === 'Qty') {
-                    element.Qty = text;
-                    element.total = element.withoutVAT * element.Qty;
+                if (inputName === 'qty') {
+                    element.qty = text;
+                    element.total = element.price * element.qty;
                     setTotalOutEu(element.total);
 
                 }
@@ -105,101 +105,101 @@ function SalesForecast() {
         {
             id: 1,
             month: 1,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
-            vat: 21 + '%',
+            vat: 21,
             paid: 'Immediate',
         }, {
 
             id: 2,
             month: 2,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
-            vat: 21 + '%',
+            vat: 21,
             paid: 'Immediate',
         }, {
             id: 3,
             month: 3,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
-            vat: 21 + '%',
+            vat: 21,
             paid: 'Immediate',
         }, {
 
             id: 4,
             month: 4,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
-            vat: 21 + '%',
+            vat: 21,
             paid: 'Immediate',
         }, {
             id: 5,
             month: 5,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
-            vat: 21 + '%',
+            vat: 21,
             paid: 'Immediate',
         }, {
             id: 6,
             month: 6,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
-            vat: 21 + '%',
+            vat: 21,
             paid: 'Immediate',
         }, {
 
             id: 7,
             month: 7,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
-            vat: 21 + '%',
+            vat: 21,
             paid: 'Immediate',
         }, {
             id: 8,
             month: 8,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
-            vat: 21 + '%',
+            vat: 21,
             paid: 'Immediate',
         }, {
             id: 9,
             month: 9,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
-            vat: 21 + '%',
+            vat: 21,
             paid: 'Immediate',
         }, {
             id: 10,
             month: 10,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
-            vat: 21 + '%',
+            vat: 21,
             paid: 'Immediate',
         }, {
             id: 11,
             month: 11,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
-            vat: 21 + '%',
+            vat: 21,
             paid: 'Immediate',
         }, {
             id: 12,
             month: 12,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
-            vat: 21 + '%',
+            vat: 21,
             paid: 'Immediate',
         },
 
@@ -208,88 +208,88 @@ function SalesForecast() {
         {
             id: 1,
             month: 1,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
             paid: 'Immediate',
         }, {
 
             id: 2,
             month: 2,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
             paid: 'Immediate',
         }, {
             id: 3,
             month: 3,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
             paid: 'Immediate',
         }, {
 
             id: 4,
             month: 4,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
             paid: 'Immediate',
         }, {
             id: 5,
             month: 5,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
             paid: 'Immediate',
         }, {
             id: 6,
             month: 6,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
             paid: 'Immediate',
         }, {
 
             id: 7,
             month: 7,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
             paid: 'Immediate',
         }, {
             id: 8,
             month: 8,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
             paid: 'Immediate',
         }, {
             id: 9,
             month: 9,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
             paid: 'Immediate',
         }, {
             id: 10,
             month: 10,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
             paid: 'Immediate',
         }, {
             id: 11,
             month: 11,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
             paid: 'Immediate',
         }, {
             id: 12,
             month: 12,
-            withoutVAT: 0,
-            Qty: 0,
+            price: 0,
+            qty: 0,
             total: 0,
             paid: 'Immediate',
         },
@@ -308,20 +308,20 @@ function SalesForecast() {
         },
         {
             title: 'Euro/pc without VAT',
-            dataIndex: 'withoutVAT',
-            key: 'withoutVAT',
+            dataIndex: 'price',
+            key: 'price',
             width: '5%',
             render: (text, record, index) => (
-                <InputNumber disabled={isDisabled(record.id)} defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'withoutVAT')} />
+                <InputNumber disabled={isDisabled(record.id)} defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'price')} />
             ),
         },
         {
-            title: 'Qty',
-            dataIndex: 'Qty',
-            key: 'Qty',
+            title: 'qty',
+            dataIndex: 'qty',
+            key: 'qty',
             width: '5%',
             render: (text, record, index) =>
-                <InputNumber disabled={isDisabled(record.id)} defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'Qty')} />,
+                <InputNumber disabled={isDisabled(record.id)} defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'qty')} />,
         },
         {
             title: 'Total',
@@ -329,7 +329,7 @@ function SalesForecast() {
             key: 'total',
             width: '5%',
             render: (text, record, index) =>
-                <Text disabled={isDisabled(record.id)}>{record.total}</Text>
+                <Text disabled={isDisabled(record.id)} onChange={(e) => inEuChange(e, record, 'total')} >{inEuData[index].total}</Text>
         },
         {
             title: 'VAT Rate',
@@ -344,21 +344,6 @@ function SalesForecast() {
                 </Select>
             )
         },
-        // {
-        //     title: 'VAT',
-        //     dataIndex: 'vat',
-        //     key: 'vat',
-        //     width: '15%',
-        //     render: (text, record) => (
-        //         <Input.Group compact >
-        //             <Select defaultValue={text === null ? 0 : text} onChange={(e) => inEuChange(e, record, 'vat')} disabled={isDisabled(record.id)}>
-        //                 <Option value="21">21 %</Option>
-        //                 <Option value="30">30 %</Option>
-        //                 <Option value="40">40 %</Option>
-        //             </Select>
-        //         </Input.Group>
-        //     )
-        // },
         {
             title: 'When paid',
             dataIndex: 'paid',
@@ -388,20 +373,20 @@ function SalesForecast() {
         },
         {
             title: 'Euro/pc without VAT',
-            dataIndex: 'withoutVAT',
-            key: 'withoutVAT',
+            dataIndex: 'price',
+            key: 'price',
             width: '5%',
             render: (text, record, index) => (
-                <InputNumber disabled={isDisabled(record.id)} defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'withoutVAT')} />
+                <InputNumber disabled={isDisabled(record.id)} defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'price')} />
             ),
         },
         {
-            title: 'Qty',
-            dataIndex: 'Qty',
-            key: 'Qty',
+            title: 'qty',
+            dataIndex: 'qty',
+            key: 'qty',
             width: '5%',
             render: (text, record, index) =>
-                <InputNumber disabled={isDisabled(record.id)} defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'Qty')} />,
+                <InputNumber disabled={isDisabled(record.id)} defaultValue={text === null ? 0 : text} onChange={(e) => outEuChange(e, record, 'qty')} />,
         },
         {
             title: 'Total',
@@ -498,42 +483,45 @@ function SalesForecast() {
     const businessPlan = useSelector((state) => state.selectedBusinessPlan)
     const country = useSelector((state) => state.countryShortCode)
     const countryVats = useSelector((state) => state.countryVats)
-    const { id: busineessPlanId } = businessPlan;
-    const product = useSelector(state => state.salesForecast)
+    //const { id: busineessPlanId } = businessPlan;
+    const salesForecast = useSelector(state => state.salesForecast)
+    //const { productsTitles } = products;
+    //const produktai = useSelector(state => state.salesForecast)
+    //const { produktai } = products;
+    //const { when_ready } = products.produktai;
     const dispatch = useDispatch()
     const history = useHistory();
 
     useEffect(() => {
-        if (busineessPlanId === null) {
+        if (businessPlan.id === null) {
             if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
                 history.push(`/`);
             } else {
                 dispatch(refreshPlan(localStorage.getItem("plan")), () => {
                     dispatch(getProducts(businessPlan.id));
                     const obj = { id: businessPlan.id }
-                    dispatch(getCountryShortCode(obj), (data) => {
+                    dispatch(getCountryShortCode(obj, (data) => {
                         dispatch(getCountryVat(country.countryShortCode));
-                        console.log(JSON.stringify(countryVats))
                         setVyt(countryVats);
-                    })
+                    }))
+                    dispatch(getProductByID(businessPlan.id));
+
                 });
             }
         } else {
             dispatch(getProducts(businessPlan.id));
             const obj = { id: businessPlan.id }
-            dispatch(getCountryShortCode(obj), () => {
+            dispatch(getCountryShortCode(obj, (data) => {
                 dispatch(getCountryVat(country.countryShortCode));
-                console.log(JSON.stringify(countryVats))
                 setVyt(countryVats);
-                console.log(JSON.stringify(countryVats))
-
-            })
+            }))
+            dispatch(getProductByID(businessPlan.id));
 
             console.log(businessPlan.id);
-            console.log(JSON.stringify(countryVats))
             setInEuData(dataSourceTableInEu);
             setoutEuData(dataSourceTableOutEu);
-
+            console.log(salesForecast)
+            // console.log(JSON.stringify(produktai) + 'frontend')
 
         }
     }, [dispatch, history, businessPlan.id, country.countryShortCode]);
@@ -597,6 +585,20 @@ function SalesForecast() {
     }
 
     const saveChanges = () => {
+        const obj = {
+            "products": [
+                {
+                    "product_id": tabKey,
+                    "when_ready": readyMonth,
+                    "export": exportPlan,
+                    "sales_forecast_eu": inEuData,
+                    "sales_forecast_non_eu": outEuData
+                }
+            ]
+        }
+        console.log(JSON.stringify(obj));
+        dispatch(updateSalesForecast(obj))
+        setIsVisibleHeader('hidden')
         console.log(exportPlan);
         console.log(readyMonth);
         console.log(inEuData);
@@ -615,7 +617,6 @@ function SalesForecast() {
                 visibility={isVisibleHeader}
                 saveChanges={saveChanges}
             />
-            <h1>{country.countryShortCode} ff</h1>
             <Col span={20} offset={3}>
                 <Col span={16} offset={0}>
                     <Breadcrumb className="margin-top-links">
@@ -647,69 +648,78 @@ function SalesForecast() {
                 </Row>
 
                 <Tabs defaultActiveKey={tabKey} onChange={getKey} >
-                    {product.products.map((x) =>
+                    {salesForecast.productsTitles.map((x) =>
+
                         <>
                             <TabPane tab={x.name} key={x.id} >
-                                <Row className="margin-top-links about-Title-section-Style" align="middle">
-                                    <Col span={6} >
-                                        <div style={{ marginRight: '40px', position: "absolute" }}>
-                                            <Typography.Title className="about-Title-heading-Style">{x.name}</Typography.Title>
-                                            <Typography.Text className="text-Style">
-                                                Product description Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
-                                                Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                                                You can add products at Value proposition
-                                            </Typography.Text>
-                                        </div>
-                                    </Col>
-                                    <Col span={12} offset={2} className="margin-top-5px" >
-                                        <Card className="card-style-height-border-radius"  >
-                                            <Row>
-
-                                                <Col span={9}><p className="card-style-font">When Ready?</p></Col>
-                                                <Col span={3} offset={12}>
-
-                                                    <Input.Group compact className="card-input-Group-style">
-                                                        <SalesForecastSelect defaultValue={readyMonth} onChange={handelname} dataSource={dataSourceMonth} />
-
-                                                    </Input.Group>
+                                {salesForecast.products.map((element, index) => {
+                                    return (
+                                        <>
+                                            <Row className="margin-top-links about-Title-section-Style" align="middle">
+                                                <Col span={6} >
+                                                    <div style={{ marginRight: '40px', position: "absolute" }}>
+                                                        <Typography.Title className="about-Title-heading-Style">{x.name}</Typography.Title>
+                                                        <Typography.Text className="text-Style">
+                                                            Product description Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+                                                            Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+                                                            You can add products at Value proposition
+                                                        </Typography.Text>
+                                                    </div>
                                                 </Col>
-                                            </Row>
-                                        </Card>
 
-                                    </Col>
-                                </Row>
-                                <Row align="middle" className="margin-top-20px">
-                                    <Col span={12} offset={8} >
-                                        <Card className="card-style-height-border-radius" >
-                                            <Row>
-                                                <Col span={9}><p className="card-style-font">Do you have plan to export?</p></Col>
-                                                <Col span={3} offset={12}>
-                                                    <Input.Group compact className="card-input-Group-style" >
-                                                        <SalesForecastSelect defaultValue={x.Expoted === true ? "yes" : "No"} dataSource={dataSourceExport} onChange={(e) => changePlan(x.id, e)} />
-                                                    </Input.Group>
+                                                < Col span={12} offset={2} className="margin-top-5px" >
+                                                    <Card className="card-style-height-border-radius"  >
+                                                        <Row>
+
+                                                            <Col span={9}><p className="card-style-font">When Ready?</p></Col>
+                                                            <Col span={3} offset={12}>
+
+                                                                <Input.Group compact className="card-input-Group-style">
+                                                                    <SalesForecastSelect defaultValue={element.when_ready === 0 ? readyMonth : element.when_ready + "th mo."} onChange={handelname} dataSource={dataSourceMonth} />
+
+                                                                </Input.Group>
+                                                            </Col>
+                                                        </Row>
+                                                    </Card>
 
                                                 </Col>
+
                                             </Row>
-                                        </Card>
-                                    </Col>
-                                </Row>
+                                            <Row align="middle" className="margin-top-20px">
+                                                <Col span={12} offset={8} >
+                                                    <Card className="card-style-height-border-radius" >
+                                                        <Row>
+
+                                                            <Col span={9}><p className="card-style-font">Do you have plan to export? </p></Col>
+                                                            <Col span={3} offset={12}>
+                                                                <Input.Group compact className="card-input-Group-style" >
+                                                                    <SalesForecastSelect defaultValue={element.export === true ? "yes" : "No"} dataSource={dataSourceExport} onChange={(e) => changePlan(x.id, e)} />
+                                                                </Input.Group>
+
+                                                            </Col>
+                                                        </Row>
+                                                    </Card>
+                                                </Col>
+                                            </Row>
 
 
 
-                                <Row align="middle" className="margin-top-20px">
-                                    <Col span={12} offset={8} >
-                                        <SalesForecastTable columns={columns} dataSource={dataSourceTableInEu} />
-                                    </Col>
+                                            <Row align="middle" className="margin-top-20px">
+                                                <Col span={12} offset={8} >
+                                                    <SalesForecastTable columns={columns} dataSource={element.sales_forecast_eu === null ? dataSourceTableInEu : element.sales_forecast_eu} />
+                                                </Col>
 
-                                </Row>
+                                            </Row>
 
-                                <Row align="middle" className={`margin-top-20px ${x.Expoted === false ? `display-none` : ``}`} >
-                                    <Col span={12} offset={8} >
-                                        <SalesForecastTable columns={columnsOutEU} dataSource={dataSourceTableOutEu} />
-                                    </Col>
-                                </Row>
+                                            <Row align="middle" className={`margin-top-20px ${element.export === false ? `display-none` : ``}`} >
+                                                <Col span={12} offset={8} >
+                                                    <SalesForecastTable columns={columnsOutEU} dataSource={element.sales_forecast_non_eu === null ? dataSourceTableOutEu : element.sales_forecast_non_eu} />
+                                                </Col>
+                                            </Row>
+                                        </>
 
-
+                                    )
+                                })}
                             </TabPane>
                         </>
 
