@@ -180,7 +180,7 @@ class PublicOverview extends React.Component {
                                                     <List.Item key='7' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
                                                             avatar={overview.key_activities.is_completed === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/key-activities'>Key activities</Link></Space>}
+                                                            title={<Space><Link to='/public/key-activities'>Key activities</Link></Space>}
                                                             description={overview.key_activities.description === "" || overview.key_activities.description === null ? "Key activities list" : overview.key_activities.description} />
                                                         <div>...</div>
                                                     </List.Item>
