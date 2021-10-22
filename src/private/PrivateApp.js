@@ -27,6 +27,7 @@ import PublicCustomerRelationships from './public_plan/containers/CustomerRelati
 import PublicRevenueStreams from './public_plan/containers/RevenueStreams';
 import PublicKeyPartners from './public_plan/containers/KeyPartners';
 import PublicCostStructure from './public_plan/containers/CostStructure'
+import PublicKeyActivities from './public_plan/containers/KeyActivities';
 import FixedAndVariableCosts from './containers/FixedAndVariableCosts';
 import SalesForecast from './containers/SalesForecast';
 import CashFlow from './containers/CashFlow';
@@ -66,6 +67,7 @@ class PrivateApp extends React.Component {
                     <Route exact path="/public/value-propositions" render={(props) => <MainWindow {...props}> <PublicValuePropositions {...props} /> </MainWindow>} />
                     <Route exact path="/public/channels" render={(props) => <MainWindow {...props}> <PublicChannels {...props} /> </MainWindow>} />
                     <Route exact path="/public/key-resources" render={(props) => <MainWindow {...props}> <PublicKeyResources {...props} /> </MainWindow>} />
+                    <Route exact path="/public/key-activities" render={(props) => <MainWindow {...props}> <PublicKeyActivities {...props} /> </MainWindow>} />
                     <Route exact path="/public/revenue-streams" render={(props) => <MainWindow {...props}> <PublicRevenueStreams {...props} /> </MainWindow>} />
                     <Route exact path="/public/customer-relationships" render={(props) => <MainWindow {...props}> <PublicCustomerRelationships {...props} /> </MainWindow>} />
                     <Route exact path="/public/cost-structure" render={(props) => <MainWindow {...props}> <PublicCostStructure {...props} /> </MainWindow>} />

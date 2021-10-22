@@ -449,6 +449,62 @@ class FixedAndVariableCosts extends React.Component {
       },
     ];
 
+    const fixed_salaries_costs_columns = [
+      {
+        title: 'Name',
+        dataIndex: 'type_title',
+        width: '55%',
+      },
+      {
+        title: 'Euro/mo. without VAT',
+        dataIndex: 'price',
+        width: '20%',
+        render: (text, record, index) => (
+          <Input
+            // min={0}
+            // size="large"
+            type={"number"}
+            className={"numInput"}
+            defaultValue={text === null ? 0 : text}
+            onChange={e => this.updateCostItemsProperties(e.target.value, record, "price")}
+          />
+        )
+      },
+      {
+        title: 'First expenses',
+        dataIndex: 'first_expenses',
+        width: '15%',
+        render: (text, record, index) => (
+          <Input.Group compact>
+            <Select defaultValue={text === null ? "1st mo." : text + "st mo."} onChange={e => this.updateCostItemsProperties(e, record, "first_expenses")}>
+              {this.state.selectedPeriod.map((value, index) => (
+                <Option value={value + "st mo."}>{value + "st mo."}</Option>
+              ))}
+            </Select>
+          </Input.Group>
+        )
+      },
+    ];
+
+    const variable_salaries_costs_columns = [
+      {
+        title: 'Name',
+        dataIndex: 'type_title',
+        width: '65%',
+      },
+      {
+        title: 'Euro/mo. without VAT',
+        dataIndex: 'monthly_expenses',
+        width: '35%',
+        render: (text, record, index) => {
+          return (<Input
+            defaultValue={text === null ? '0,0,0,0,0,0,0,0,0,0,0,0' : String(text)}
+            value={text}
+            onClick={(e) => this.showModal(record, text, index)} />)
+        }
+      },
+    ];
+
     const variable_costs_columns = [
       {
         title: 'Name',
@@ -542,7 +598,17 @@ class FixedAndVariableCosts extends React.Component {
                         </Col>
                         {/* returns second column with table */}
                         {/* <FixedCostTable data={obj.types} countryVats={this.props.countryVats} category_title={obj.category_title} category_id={obj.category_id} /> */}
-                        <Col span={17}>
+                        {obj.category_title === "Salaries"?<Col span={17}>
+                          <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                            <Table
+                              rowKey="id"
+                              columns={fixed_salaries_costs_columns}
+                              dataSource={obj.types}
+                              pagination={false}
+                              title={() => obj.category_title}
+                            />
+                          </Card>
+                        </Col>:<Col span={17}>
                           <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                             <Table
                               rowKey="id"
@@ -552,7 +618,8 @@ class FixedAndVariableCosts extends React.Component {
                               title={() => obj.category_title}
                             />
                           </Card>
-                        </Col>
+                        </Col>}
+                        
 
                       </Row>
                     </Col>
@@ -575,7 +642,17 @@ class FixedAndVariableCosts extends React.Component {
                             </div> : <div></div>}
                         </Col>
                         {/* returns second column with table */}
-                        <Col span={17}>
+                        {obj.category_title === "Salaries"?<Col span={17}>
+                          <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                            <Table
+                              rowKey="id"
+                              columns={variable_salaries_costs_columns}
+                              dataSource={obj.types}
+                              pagination={false}
+                              title={() => obj.category_title}
+                            />
+                          </Card>
+                        </Col>:<Col span={17}>
                           <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                             <Table
                               rowKey="id"
@@ -585,7 +662,7 @@ class FixedAndVariableCosts extends React.Component {
                               title={() => obj.category_title}
                             />
                           </Card>
-                        </Col>
+                        </Col>}
 
                       </Row>
                     </Col>
