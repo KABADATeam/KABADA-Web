@@ -5,9 +5,9 @@ import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined, RightSquareFilled } fr
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
 import { connect } from 'react-redux';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import BusinessStartUpInvestments from '../components/businessFinancialInvestments/BusinessStartUpInvestments';
+import WorkingCapital from '../components/businessFinancialInvestments/WorkingCapital';
 import BusinessFinancing from '../components/businessFinancialInvestments/BusinessFinancing';
-import { getBusinessInvestmentInformation } from "../../appStore/actions/businessInvestmentAction";
+import { getBusinessStartUpInvestmentInformation } from "../../appStore/actions/businessInvestmentAction";
 import { getCountryShortCode } from '../../appStore/actions/countriesActions';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
 
@@ -52,11 +52,7 @@ class BusinessInvestmentsWindow extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            vats: {},
-            physical_intellectual_assets: [],
-            original_physical_intellectual_assets: [],
-            visibleHeader: 'hidden',
-            physical_assets_investments: null
+            
         }
     }
 
@@ -82,10 +78,7 @@ class BusinessInvestmentsWindow extends React.Component {
                 this.props.history.push(`/`);
             } else {
                 this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getBusinessInvestmentInformation(this.props.businessPlan.id);
-                    this.setAssetsItems(this.props.investments);
-                    this.getOriginalAssetsItems(this.props.investments);
-                    this.setPhysicalAssetsInvestmentsObject(this.props.investments);
+                    this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id)
                     const obj = { id: this.props.businessPlan.id }
                     this.props.getCountryShortCode(obj, (data) => {
                         this.props.getCountryVat(this.props.country.countryShortCode);
@@ -96,17 +89,7 @@ class BusinessInvestmentsWindow extends React.Component {
                 });
             }
         } else {
-            this.props.getBusinessInvestmentInformation(this.props.businessPlan.id);
-            const obj = { id: this.props.businessPlan.id }
-            this.props.getCountryShortCode(obj, (data) => {
-                this.props.getCountryVat(this.props.countryCode.countryShortCode);
-                this.setAssetsItems(this.props.investments);
-                this.getOriginalAssetsItems(this.props.investments);
-                this.setPhysicalAssetsInvestmentsObject(this.props.investments);
-                this.setState({
-                    vats: this.props.countryVats
-                });
-            });
+            this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id)
 
         }
     }
@@ -149,8 +132,8 @@ class BusinessInvestmentsWindow extends React.Component {
                 </Row>
                 <Col span={16} offset={4}>
                     <Tabs defaultActiveKey="1"  >
-                        <TabPane tab="Business start-up investments" key="1">
-                            <BusinessStartUpInvestments data={this.state.physical_intellectual_assets} originalData={this.state.original_physical_intellectual_assets} physical_assets_object={this.state.physical_assets_investments} customHearderVisibility={this.getUpdatesWindowState} />
+                        <TabPane tab="Working capital" key="1">
+                            <WorkingCapital data={this.props.investments}/>
                         </TabPane>
                         <TabPane tab="Business Financing" key="2">
                             <BusinessFinancing />
@@ -166,9 +149,10 @@ class BusinessInvestmentsWindow extends React.Component {
 const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
-        investments: state.businessInvestment,
         countryCode: state.countryShortCode,
         countryVats: state.countryVats,
+        investments: state.businessInvestments
+
     };
 }
-export default connect(mapStateToProps, { refreshPlan, getBusinessInvestmentInformation, getCountryShortCode })(BusinessInvestmentsWindow);
+export default connect(mapStateToProps, { refreshPlan, getBusinessStartUpInvestmentInformation, getCountryShortCode })(BusinessInvestmentsWindow);

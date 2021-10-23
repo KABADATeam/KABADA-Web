@@ -1,7 +1,7 @@
 import kabadaAPI from './kabadaAPI';
 import { errorHandler } from './errorHandler';
 
-export const getBusinessInvestmentInformation = (planId) => {
+export const getBusinessStartUpInvestmentInformation = (planId) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
         try {
