@@ -1,9 +1,9 @@
 export const assetsReducer = (
     state = {
         is_assets_completed: false,
-        total_investments: null,
-        own_assets: null,
-        investments_amount: null,
+        total_investments: 0,
+        own_assets: 0,
+        investment_amount: 0,
         physical_assets: [],
     }, action) => {
     switch (action.type) {
@@ -12,14 +12,14 @@ export const assetsReducer = (
             const is_completed = action.payload.is_assets_completed;
             const total_investments = action.payload.total_investments;
             const own_assets = action.payload.own_assets;
-            const investments_amount = action.payload.investments_amount;
+            const investment_amount = action.payload.investment_amount;
             return {
                 ...state,
                 'physical_assets': physical_assets,
                 is_assets_completed: is_completed,
                 total_investments: total_investments,
                 own_assets: own_assets,
-                investments_amount: investments_amount
+                investment_amount: investment_amount
             };
         case 'UPDATE_ASSETS_LIST_SUCCESS':
             console.log(action.payload);
@@ -28,15 +28,18 @@ export const assetsReducer = (
             const _is_completed = action.payload.is_assets_completed;
             const _total_investments = action.payload.total_investments;
             const _own_assets = action.payload.own_assets;
-            const _investments_amount = action.payload.investments_amount;
+            const _investment_amount = action.payload.investment_amount;
             return {
                 ...state,
                 'physical_assets': _physical_assets,
                 is_assets_completed: _is_completed,
                 total_investments: _total_investments,
                 own_assets: _own_assets,
-                investments_amount: _investments_amount
+                investment_amount: _investment_amount
             };
+        case "SAVE_STATE_SUCCESS":
+            console.log(action.payload)
+            return { ...state, "is_assets_completed": action.payload }
         default:
             return state
     }

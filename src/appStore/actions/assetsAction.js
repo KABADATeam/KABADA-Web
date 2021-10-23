@@ -37,3 +37,17 @@ export const updateAssets = (postObject, reducerObject) => {
         }
     }
 };
+export const saveState = (planId, is_completed, callback) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true });
+        try {
+            const token = getState().user.access_token;
+            await kabadaAPI.post('api/plans/changeAssetsCompleted', { "business_plan_id": planId, "is_assets_completed": is_completed }, { headers: { Authorization: `Bearer ${token}` } });
+            console.log(is_completed);
+            dispatch({ type: 'SAVE_STATE_SUCCESS', payload: is_completed });
+            callback();
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
+        }
+    }
+};
