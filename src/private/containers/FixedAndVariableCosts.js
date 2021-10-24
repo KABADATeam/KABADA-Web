@@ -1,14 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom';
-import { Form, Select, InputNumber,Input, Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tooltip, Tabs } from 'antd';
-import { ArrowLeftOutlined,InfoCircleFilled } from '@ant-design/icons';
+import { Form, Select, InputNumber, Input, Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tooltip, Tabs } from 'antd';
+import { ArrowLeftOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
 import VariableCostPopUp from '../components/fixed_and_variable_costs/VariableCostPopUp';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getFinancialProjectionsCosts, updateFixedAndVarCosts } from '../../appStore/actions/financialProjectionsActions';
-import {getCountryVat} from '../../appStore/actions/vatsActions'
+import { getCountryVat } from '../../appStore/actions/vatsActions'
 import { getCountryShortCode } from '../../appStore/actions/countriesActions'
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import '../../css/FixedAndVarStyles.css'
@@ -77,7 +77,7 @@ class FixedAndVariableCosts extends React.Component {
   }
   showModal = (record, data, index) => {
     // creating object which will hold visible value,category_id and ...
-    console.log('Fixed and costs monthly_expenses:'+JSON.stringify(data))
+    console.log('Fixed and costs monthly_expenses:' + JSON.stringify(data))
     const obj = {
       category_id: null,
       category_title: null,
@@ -142,7 +142,7 @@ class FixedAndVariableCosts extends React.Component {
           monthly_expenses: element.monthly_expenses,
         }
         items.push(obj)
-      } else if(element.type === 'Fixed') {
+      } else if (element.type === 'Fixed') {
         const obj = {
           cost_item_id: element.cost_item_id,
           price: element.price,
@@ -181,7 +181,7 @@ class FixedAndVariableCosts extends React.Component {
   // function to get cost_items array. which is basically array
   // which consist of all fixed and variable costs. they are connected to cost_items array(state)
   // which i later change based on user input
-  setItems = (fixedArray, variableArray) => {
+  setItems = (fixedArray, variableArray, number) => {
     const array = []
     var indexas = 0;
     //looping through fixed array and pushing all items to array
@@ -226,61 +226,17 @@ class FixedAndVariableCosts extends React.Component {
         indexas = indexas + 1;
       })
     })
-
-    this.setState({
-      cost_items: array,
-    });
-  }
-  // function to get original_cost_items array. which is basically array
-  // which consist of all fixed and variable costs. they are connected to original_cost_items array(state).
-  // this array doesnt change. i later compare cost_items and original_cost_items to display UnsavedChangesHeader
-  getOriginalCostArray = (fixedArray, variableArray) => {
-    const array = []
-    //looping through fixed array and pushing all items to array
-    var indexas = 0;
-    fixedArray.forEach(element => {
-      // for each object in types array create new object and add it to array
-      element.types.forEach(element1 => {
-        const obj = {
-          type: 'Fixed',
-          category_title: element.category_title,
-          category_id: element.category_id,
-          cost_item_id: element1.cost_item_id,
-          price: element1.price === null ? 0 : element1.price,
-          vat: element1.vat,
-          type_title: element1.type_title,
-          pos: indexas,
-          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses,
-          monthly_expenses: element1.monthly_expenses
-        }
-        array.push(obj)
-        indexas = indexas + 1;
+    if (number === 1) {
+      this.setState({
+        cost_items: array,
       });
-    });
-    //looping through variable array and pushing all items to array. so now array will have
-    //both fixed and variable costs
-    variableArray.forEach(element => {
-      element.types.forEach(element1 => {
-        const obj = {
-          type: 'Variable',
-          category_title: element.category_title,
-          category_id: element.category_id,
-          cost_item_id: element1.cost_item_id,
-          price: element1.price === null ? 0 : element1.price,
-          vat: element1.vat,
-          type_title: element1.type_title,
-          pos: indexas,
-          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses,
-          monthly_expenses: element1.monthly_expenses
-        }
-        array.push(obj);
-        indexas = indexas + 1;
-      })
-    })
+    }
+    if (number === 2) {
+      this.setState({
+        original_cost_items: array,
+      });
+    }
 
-    this.setState({
-      original_cost_items: array
-    })
   }
   //to update state (cost_items) which holds both variable and fixed costs
   updateCostItemsProperties = (value, record, inputName) => {
@@ -300,7 +256,7 @@ class FixedAndVariableCosts extends React.Component {
         }
       }
     });
-    
+
     this.setState({
       cost_items: array
     });
@@ -311,8 +267,8 @@ class FixedAndVariableCosts extends React.Component {
     });
 
     console.log(JSON.stringify(this.state.cost_items))
-    console.log('Original'+JSON.stringify(this.state.original_cost_items))
-  
+    console.log('Original' + JSON.stringify(this.state.original_cost_items))
+
   }
   // function to check if cost_items array value are equal to original_cost_items
   // if it doesnt equal then return false. and then i would be able to display UnsavedChangesHeader component to
@@ -373,8 +329,9 @@ class FixedAndVariableCosts extends React.Component {
                 vats: this.props.countryVats
               });
             });
-            this.getOriginalCostArray(this.props.financialProjections.fixed, this.props.financialProjections.variable);
-            this.setItems(this.props.financialProjections.fixed, this.props.financialProjections.variable);
+            // this.getOriginalCostArray(this.props.financialProjections.fixed, this.props.financialProjections.variable);
+            this.setItems(this.props.financialProjections.fixed, this.props.financialProjections.variable, 1);
+            this.setItems(this.props.financialProjections.fixed, this.props.financialProjections.variable, 2);
             this.monthsSet();
           });
 
@@ -389,8 +346,9 @@ class FixedAndVariableCosts extends React.Component {
             vats: this.props.countryVats
           });
         });
-        this.getOriginalCostArray(this.props.financialProjections.fixed, this.props.financialProjections.variable);
-        this.setItems(this.props.financialProjections.fixed, this.props.financialProjections.variable);
+        // this.getOriginalCostArray(this.props.financialProjections.fixed, this.props.financialProjections.variable);
+        this.setItems(this.props.financialProjections.fixed, this.props.financialProjections.variable, 1);
+        this.setItems(this.props.financialProjections.fixed, this.props.financialProjections.variable, 2);
         this.monthsSet();
       });
     }
@@ -598,7 +556,7 @@ class FixedAndVariableCosts extends React.Component {
                         </Col>
                         {/* returns second column with table */}
                         {/* <FixedCostTable data={obj.types} countryVats={this.props.countryVats} category_title={obj.category_title} category_id={obj.category_id} /> */}
-                        {obj.category_title === "Salaries"?<Col span={17}>
+                        {obj.category_title === "Salaries" ? <Col span={17}>
                           <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                             <Table
                               rowKey="id"
@@ -608,7 +566,7 @@ class FixedAndVariableCosts extends React.Component {
                               title={() => obj.category_title}
                             />
                           </Card>
-                        </Col>:<Col span={17}>
+                        </Col> : <Col span={17}>
                           <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                             <Table
                               rowKey="id"
@@ -619,7 +577,7 @@ class FixedAndVariableCosts extends React.Component {
                             />
                           </Card>
                         </Col>}
-                        
+
 
                       </Row>
                     </Col>
@@ -642,7 +600,7 @@ class FixedAndVariableCosts extends React.Component {
                             </div> : <div></div>}
                         </Col>
                         {/* returns second column with table */}
-                        {obj.category_title === "Salaries"?<Col span={17}>
+                        {obj.category_title === "Salaries" ? <Col span={17}>
                           <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                             <Table
                               rowKey="id"
@@ -652,7 +610,7 @@ class FixedAndVariableCosts extends React.Component {
                               title={() => obj.category_title}
                             />
                           </Card>
-                        </Col>:<Col span={17}>
+                        </Col> : <Col span={17}>
                           <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                             <Table
                               rowKey="id"
@@ -675,7 +633,7 @@ class FixedAndVariableCosts extends React.Component {
         {this.state.variablePopUp.visible !== false ?
           <VariableCostPopUp category_title={this.state.variablePopUp.category_title === null ? 'Yes' : this.state.variablePopUp.category_title}
             visible={this.state.variablePopUp.visible} handleOk={this.handleOk} handleCancel={this.handleModalCancel} monthly_expenses={this.state.variablePopUp.values} record={this.state.variablePopUp.record}
-            businessPlanId={this.props.businessPlan.id}/>
+            businessPlanId={this.props.businessPlan.id} />
           : null
         }
       </>
