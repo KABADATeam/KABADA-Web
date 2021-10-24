@@ -148,6 +148,7 @@ class Overview extends React.Component {
         const isVisibleHeader = this.getUpdatesWindowState();
         const membersList = this.props.businessPlan.members === null ? [] : this.props.businessPlan.members;
         const overview = this.props.businessPlan.overview;
+        console.log(overview);
         const viewMenu = (
             <Menu>
                 <Menu.Item key="1">View</Menu.Item>

@@ -5,11 +5,12 @@ import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCa
 import { connect } from 'react-redux';
 import { CaretDownFilled, UserOutlined, InfoCircleFilled, ArrowLeftOutlined } from '@ant-design/icons';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getAssets, updateAssets } from '../../appStore/actions/assetsAction';
+import { getAssets, updateAssets, saveState } from '../../appStore/actions/assetsAction';
 import { getCountryShortCode } from '../../appStore/actions/countriesActions';
 import { getCountryVats } from '../../appStore/actions/vatAction';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { getCountryVat } from '../../appStore/actions/vatsActions';
+import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 
 const { Option } = Select;
 
@@ -58,10 +59,6 @@ class AssetsWindow extends React.Component {
             original_assets_items: [],
             assets_items: [],
             visibleHeader: 'hidden',
-            amountList: [],
-            own_amounts: [],
-            buy_amounts: [],
-            my_invest_money: 0
         }
     }
 
@@ -105,33 +102,6 @@ class AssetsWindow extends React.Component {
         return 'hidden'
     }
 
-    setMyInvestMoney = (event) => {
-        console.log(event.target.value)
-        this.setState({
-            my_invest_money: event.target.value
-        });
-    }
-
-    setTotalInvestment(value) {
-        console.log(value);
-        this.setState({
-            total_investments: value
-        });
-    }
-    setOwnAssets(value) {
-        console.log(value);
-        this.setState({
-            own_assets: value
-        });
-    }
-    setInvestmentAmount(total_investments, own_assets) {
-        let amount = total_investments - own_assets;
-        console.log(amount);
-        this.setState({
-            investment_amount: amount
-        });
-    }
-
     setItems = (assetsArray) => {
         const array = [];
         var index = 0;
@@ -142,7 +112,7 @@ class AssetsWindow extends React.Component {
                 resource_title: item.resource_title,
                 resource_status: item.resource_status,
                 type_title: item.type_title,
-                amount: item.amount === null ? 0 : item.price,
+                amount: item.amount === null ? 0 : item.amount,
                 vat: item.vat === null ? defaultVATValue.vatValue : item.vat,
                 index: index
             }
@@ -152,6 +122,7 @@ class AssetsWindow extends React.Component {
         this.setState({
             assets_items: array,
         })
+        console.log(array);
     }
     getOriginalAssetsItems = (assetsArray) => {
         const array = [];
@@ -198,7 +169,33 @@ class AssetsWindow extends React.Component {
         const assets_items_for_post = [];
         const assets_items_for_reducer = [];
         const assets_items_array = this.state.assets_items;
+        const total_investments_values_list = [];
+        const own_assets_values_list = [];
+        const total_value = (previuosValue, currentValue) => previuosValue + currentValue
 
+        //compute total investments amount
+        assets_items_array.map((item) => {
+            const obj = {
+                amount: item.amount
+            }
+            const value = parseInt(Object.values(obj));
+            total_investments_values_list.push(value);
+        })
+        let total_investments_value = total_investments_values_list.reduce(total_value);
+        // compute own assets amount
+        const own_assets_array = assets_items_array.filter((item) => item.resource_status === 'Own');
+        console.log(own_assets_array);
+        own_assets_array.map((item) => {
+            const obj = {
+                amount: item.amount
+            }
+            const value = parseInt(Object.values(obj));
+            own_assets_values_list.push(value);
+        })
+        let own_assets_value = own_assets_values_list.reduce(total_value);
+        //compute investments_amount 
+        let investments_amount_value = total_investments_value - own_assets_value;
+        //create assets items objects, they will be using on postObject 
         assets_items_array.map((item, index) => {
             const obj = {
                 resource_id: item.resource_id,
@@ -207,6 +204,7 @@ class AssetsWindow extends React.Component {
             }
             assets_items_for_post.push(obj);
         })
+        // create assets items object, they will be using on reducerObject
         assets_items_array.map((item, index) => {
             const obj = {
                 resource_id: item.resource_id,
@@ -220,22 +218,28 @@ class AssetsWindow extends React.Component {
         })
         const postObject = {
             business_plan_id: this.props.businessPlan.id,
-            total_investments: this.state.total_investments,
-            own_assets: this.state.own_assets,
-            investment_amount: this.state.investment_amount,
+            total_investments: this.state.total_investments === null ? 0 : total_investments_value,
+            own_assets: this.state.own_assets === null ? 0 : own_assets_value,
+            investment_amount: this.state.investment_amount === null ? 0 : investments_amount_value,
             physical_assets: assets_items_for_post
         }
         const reducerObject = {
             business_plan_id: this.props.businessPlan.id,
-            total_investments: this.state.total_investments,
-            own_assets: this.state.own_assets,
-            investment_amount: this.state.investment_amount,
+            total_investments: this.state.total_investments === null ? 0 : total_investments_value,
+            own_assets: this.state.own_assets === null ? 0 : own_assets_value,
+            investment_amount: this.state.investment_amount === null ? 0 : investments_amount_value,
             physical_assets: assets_items_for_reducer
         }
         this.setState({
             visibleHeader: 'hidden'
         })
+        console.log(postObject);
         this.props.updateAssets(postObject, reducerObject);
+    }
+    onCompletedChange(state) {
+        this.props.saveState(this.props.businessPlan.id, state, () => {
+            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+        });
     }
 
     componentDidMount() {
@@ -259,10 +263,8 @@ class AssetsWindow extends React.Component {
             //this.props.getCountryShortCode(obj, (data) => {
             //    this.props.getCountryVats(this.props.countryCode.countryShortCode);
             //});
-
         }
     }
-
 
     render() {
         const defaultVATValue = this.props.vat.vat.find((element) => element.key === 0);
@@ -327,9 +329,8 @@ class AssetsWindow extends React.Component {
                 width: '20%',
                 render: (text, obj, record) => (
                     <Space size={0}>
-                        <Select defaultValue={defaultVATValue.vatValue}
+                        <Select defaultValue={text === null ? defaultVATValue.vatValue : text}
                             suffixIcon={<CaretDownFilled />}
-                            disabled={this.state.vat_payer === false ? true : false}
                             onChange={e => this.updateAssetsItemsProperties(e, obj, 'vat')}
                         >
                             {vatOptions}
@@ -368,7 +369,7 @@ class AssetsWindow extends React.Component {
                     </Col>
                     <Col span={4}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch />
+                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.assets.is_assets_completed} onClick={this.onCompletedChange.bind(this)}/>
                         </div>
                     </Col>
                 </Row>
@@ -395,9 +396,8 @@ class AssetsWindow extends React.Component {
                                             columns={assetsColumns}
                                             pagination={false}
                                             footer={pageData => {
-                                                let total_amount = this.state.total_investments;
-                                                let own_assets_amount = this.state.own_assets;
-                                                let my_invest_money = this.state.my_invest_money;
+                                                let total_amount = 0;
+                                                let own_assets_amount = 0;
                                                 pageData.forEach(({ amount }) => {
                                                     total_amount += amount;
                                                 });
@@ -439,40 +439,11 @@ class AssetsWindow extends React.Component {
                                                                     </div>
                                                                 </Col>
                                                             </Row>
-                                                            <Row>
-                                                                <Col span={16}>
-                                                                    <div style={{ marginTop: 13 }}>
-                                                                        <Text>How much can I invest my money? </Text>
-                                                                    </div>
-                                                                </Col>
-                                                                <Col span={8}>
-                                                                    <div style={{ float: 'right' }}>
-                                                                        <Input style={{ width: 103 }}
-                                                                            prefix="€"
-                                                                            size="large"
-                                                                            onChange={event => this.setMyInvestMoney(event)}
-                                                                            defaultValue={my_invest_money}
-                                                                        />
-                                                                    </div>
-                                                                </Col>
-                                                            </Row>
-                                                            <Divider />
-                                                            <Row>
-                                                                <Col span={16}>
-                                                                    <Text style={{ fontWeight: 600, fontSize: 14, fontStyle: 'normal' }}>Loan (Long term)</Text>
-                                                                </Col>
-                                                                <Col span={8}>
-                                                                    <div style={{ float: 'right' }}>
-                                                                        <Text style={{ fontWeight: 600, fontSize: 14, fontStyle: 'normal' }}>{total_amount - own_assets_amount - my_invest_money}</Text>
-                                                                    </div>
-                                                                </Col>
-                                                            </Row>
                                                         </div>
                                                     </>
                                                 )
                                             }}
                                         />
-
                                     </Card >
                                 </div>
                             </Col>
@@ -493,31 +464,4 @@ const mapStateToProps = (state) => {
         assets: state.assets
     };
 }
-export default connect(mapStateToProps, { refreshPlan, getAssets, updateAssets, getCountryShortCode, getCountryVats, getCountryVat })(AssetsWindow);
-
-/*
-<Table.Summary.Row>
-                                                            <Table.Summary.Cell>Investments</Table.Summary.Cell>
-                                                            <Table.Summary.Cell colSpan={4}>
-                                                                <div style={{ float: 'right' }}>
-                                                                    <Text>{total_amount}</Text>
-                                                                </div>
-                                                            </Table.Summary.Cell>
-                                                        </Table.Summary.Row>
-                                                        <Table.Summary.Row>
-                                                            <Table.Summary.Cell>Own assets</Table.Summary.Cell>
-                                                            <Table.Summary.Cell colSpan={4}>
-                                                                <div style={{ float: 'right' }}>
-                                                                    <Text>{own_amount}</Text>
-                                                                </div>
-                                                            </Table.Summary.Cell>
-                                                        </Table.Summary.Row>
-                                                        <Table.Summary.Row>
-                                                            <Table.Summary.Cell colSpan={4}>Additional necessary funds for investments in assets</Table.Summary.Cell>
-                                                            <Table.Summary.Cell colSpan={1}>
-                                                                <div style={{ float: 'right' }}>
-                                                                    <Text>{total_amount - own_amount}</Text>
-                                                                </div>
-
-                                                            </Table.Summary.Cell>
-                                                        </Table.Summary.Row>*/
+export default connect(mapStateToProps, { refreshPlan, getAssets, updateAssets, getCountryShortCode, getCountryVats, getCountryVat, saveState, getSelectedPlanOverview })(AssetsWindow);

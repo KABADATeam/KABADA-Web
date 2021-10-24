@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Modal, Button, Input, Upload, Select, Space, Typography, Tooltip } from 'antd';
+import { Form, Modal, Button, Input, Upload, Select, TreeSelect, Space, Typography, Tooltip } from 'antd';
 import { QuestionCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { buttonStyle, inputStyle } from '../../styles/customStyles';
 import '../../css/customModal.css';
@@ -119,9 +119,13 @@ class NewBusinessPlanModal extends Component {
         const activities = this.props.activities.map((item) => ({
             key: item.id,
             value: item.id,
-            text: item.code + '. ' + item.title
+            title: item.code + '. ' + item.title,
+            children: item.childActivities.map((citem) => ({
+                key: citem.id,
+                value: citem.id,
+                title: citem.code + '. ' + citem.title,
+            }))
         }));
-
 
         const countries = this.props.countries.map(({ id, title }) => ({ key: id, value: id, text: title }));
         const languages = this.props.planLanguages.map(({ id, title }) => ({ key: id, value: id, text: title }));
@@ -227,25 +231,21 @@ class NewBusinessPlanModal extends Component {
                         </Form.Item>
                         <Form.Item key="activity" name="activity" label="NACE Rev. 2 Division, Group, Class"
                             rules={[{ required: true, message: 'Select Division, Group or Class' }]}>
-                            <Select
+                            <TreeSelect
                                 showSearch
-                                allowClear
                                 style={{ width: 655 }}
+                                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                                treeData={activities}
+                                treeDefaultExpandAll={false}
+                                allowClear
+                                treeLine={true}
                                 placeholder="Select NACE Rev. 2 Division, Group, Class"
-                                optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                }
+                                treeNodeFilterProp='title'
                                 onChange={this.handleActivityChange}
                                 onClear={this.handleActivityClear}
                                 disabled={!enabledSelectActivity}
                             >
-                                {
-                                    activities.map((item) => (
-                                        <Option key={item.key} value={item.value}>{item.text}</Option>
-                                    ))
-                                }
-                            </Select>
+                            </TreeSelect>
                         </Form.Item>
 
 
