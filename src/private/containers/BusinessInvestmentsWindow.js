@@ -136,7 +136,7 @@ class BusinessInvestmentsWindow extends React.Component {
                             <WorkingCapital data={this.props.investments}/>
                         </TabPane>
                         <TabPane tab="Business Financing" key="2">
-                            <BusinessFinancing />
+                            <BusinessFinancing data={this.props.investments}/>
                         </TabPane>
                     </Tabs>
                 </Col>
