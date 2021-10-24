@@ -23,7 +23,7 @@ export const getProducts = (planId) => {
     };
 };
 
-export const getProductByID = (id) => {
+export const getProductByID = (id, callback) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
         try {
@@ -33,7 +33,7 @@ export const getProductByID = (id) => {
             // console.log(JSON.stringify(response.data) + "wowowowowowowowowowowo");
 
             dispatch({ type: "FETCHING_SALES_FORECASR_SUCCESS", payload: response.data });
-
+            callback();
         } catch (error) {
             if (error.response === undefined) {
                 dispatch({
