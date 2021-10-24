@@ -38,14 +38,21 @@ export const salesForecastReducer = (
             return { ...state, "products": produktai };
 
         case "UPDATE_SALES_FORECAST_SUCCESS":
-            const test = state.products;
-            const productsaction = action.payload;
-            // console.log(JSON.stringify(test) + ' cia as ');
-            // console.log(JSON.stringify(productsaction) + ' action cia as ');
-            // products.map((element, index) => {
-
-            // })
-            return { ...state };
+            const prodoct = state.products;
+            const productsaction = action.payload.products;
+            console.log('labas' + JSON.stringify(prodoct))
+            console.log('labas action' + JSON.stringify(productsaction))
+            prodoct.map((element, index) => {
+                productsaction.map((element2, index2) => {
+                    if (element.product_id === element2.product_id) {
+                        element.when_ready = element2.when_ready;
+                        element.export = element2.export;
+                        element.sales_forecast_eu = element2.sales_forecast_eu;
+                        element.sales_forecast_non_eu = element2.sales_forecast_non_eu;
+                    }
+                })
+            })
+            return { ...state, 'products': state.products };
         default:
             return state;
     }

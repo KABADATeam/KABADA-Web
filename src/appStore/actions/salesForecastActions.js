@@ -60,7 +60,7 @@ export const updateSalesForecast = (postObject) => {
         try {
             const token = getState().user.access_token;
             await kabadaAPI.post('api/products/salesforecasts/update', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            dispatch({ type: 'UPDATE_SALES_FORECAST_SUCCESS', payload: { postObject } });
+            dispatch({ type: 'UPDATE_SALES_FORECAST_SUCCESS', payload: postObject });
         }
         finally {
             dispatch({ type: 'LOADING', payload: false })
