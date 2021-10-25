@@ -140,13 +140,13 @@ class BusinessStartUpInvestments extends React.Component {
                 item.grace_period = value;
                 this.props.changeGracePeriod(value);
             } else if (inputName === 'interest_rate_short') {
-                item.interest_rate = Number(value);
+                item.interest_rate_short = Number(value);
                 this.props.changeInterestRateShort(Number(value));
             } else if (inputName === 'payment_period_short') {
-                item.payment_period = value;  
+                item.payment_period_short = value;  
                 this.props.changePaymentPeriodShort(value);
             } else if (inputName === 'grace_period_short') {
-                item.grace_period = value;
+                item.grace_period_short = value;
                 this.props.changeGracePeriodShort(value);
             }
         })

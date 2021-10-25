@@ -7,7 +7,7 @@ export const getBusinessStartUpInvestmentInformation = (planId) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/kres/investment/' + planId, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response.data);
+            console.log(response);
             dispatch({ type: "FETCHING_INVESTMENT_SUCCESS", payload: response.data });
         } catch (error) {
             if (error.response === undefined) {
