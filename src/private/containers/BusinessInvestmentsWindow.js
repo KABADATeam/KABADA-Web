@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import WorkingCapital from '../components/businessFinancialInvestments/WorkingCapital';
 import BusinessFinancing from '../components/businessFinancialInvestments/BusinessFinancing';
-import { getBusinessStartUpInvestmentInformation } from "../../appStore/actions/businessInvestmentAction";
+import { getBusinessStartUpInvestmentInformation, changeVisibility, updateBusinessStartUpInvestmentInformation } from "../../appStore/actions/businessInvestmentAction";
 import { getCountryShortCode } from '../../appStore/actions/countriesActions';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
 
@@ -52,24 +52,78 @@ class BusinessInvestmentsWindow extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            
+            visibleHeader: this.props.investments.visibility
         }
     }
 
     onBackClick() {
         this.props.history.push(`/overview`);
     }
-    //get physical and intellectual assets
-    
 
-    getUpdatesWindowState(value) {
-        if (value === false) {
-            return 'visible'
-        } else if (value === true) {
-            return 'hidden'
-        } else {
+    arraysEqual = (array1, array2) => {
+        let a = JSON.parse(JSON.stringify(array1));
+        let b = JSON.parse(JSON.stringify(array2));
+        let original = array1;
+        let modified = array2;
+
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length !== b.length) return false;
+
+        a = a.sort();
+        b = b.sort();
+        for (var i = 0; i < original.length; ++i) {
+            if (original[i].grace_period !== modified[i].grace_period ||
+                original[i].grace_period_short !== modified[i].grace_period_short ||
+                original[i].interest_rate !== modified[i].interest_rate ||
+                original[i].interest_rate_short !== modified[i].interest_rate_short ||
+                original[i].payment_period !== modified[i].payment_period ||
+                original[i].payment_period_short !== modified[i].payment_period_short
+            ) {
+                // console.log('Original price:' + original[i].price + ", modified price is: " + modified[i].price)
+                console.log('They are not equal')
+                return false;
+            }
+        }
+        return true;
+    }
+
+    getUpdatesWindowState = (original, modified) => {
+        if (original === null) {
             return 'hidden'
         }
+        if (modified === null) {
+            return 'hidden'
+        }
+        if (this.arraysEqual(original, modified) === false) {
+            return 'visible'
+        }
+        return 'hidden'
+    }
+    saveChanges = () => {
+        const postObject = {
+            business_plan_id: this.props.businessPlan.id,
+            period: this.props.investments.period === null ? 12: this.props.investments.period,
+            vat_payer: this.props.investments.vat_payer === null ? true: this.props.investments.vat_payer,
+            own_money: this.props.investments.own_money,
+            loan_amount: this.props.investments.loan_amount,
+            working_capital_amount: this.props.investments.working_capital_amount,
+            own_money_short: this.props.investments.own_money_short,
+            loan_amount_short: this.props.investments.loan_amount_short,
+            loan_amount: this.props.investments.loan_amount,
+            payment_period: this.props.investments.payment_period,
+            interest_rate: this.props.investments.interest_rate,
+            grace_period: this.props.investments.grace_period,
+            payment_period_short: this.props.investments.payment_period_short,
+            interest_rate_short: this.props.investments.interest_rate_short,
+            grace_period_short: this.props.investments.grace_period_short,
+        }
+        this.props.updateBusinessStartUpInvestmentInformation(postObject);
+        this.props.changeVisibility('hidden');
+    }
+    discardChanges = () => {
+        this.props.changeVisibility('hidden');
+        this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id)
     }
 
     componentDidMount() {
@@ -89,7 +143,7 @@ class BusinessInvestmentsWindow extends React.Component {
                 });
             }
         } else {
-            this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id)
+            this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);
 
         }
     }
@@ -99,9 +153,9 @@ class BusinessInvestmentsWindow extends React.Component {
         return (
             <>
                 <UnsavedChangesHeader
-                    visibility={this.state.visibleHeader}
-                //discardChanges={this.discardChanges}
-                //saveChanges={this.saveChanges}
+                    visibility={this.props.startUp.visibility}
+                    discardChanges={this.discardChanges}
+                    saveChanges={this.saveChanges}
                 />
                 <Col span={16} offset={4}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
@@ -133,10 +187,10 @@ class BusinessInvestmentsWindow extends React.Component {
                 <Col span={16} offset={4}>
                     <Tabs defaultActiveKey="1"  >
                         <TabPane tab="Working capital" key="1">
-                            <WorkingCapital data={this.props.investments}/>
+                            <WorkingCapital data={this.props.investments} updateWindowState={this.getUpdatesWindowState.bind(this)} />
                         </TabPane>
                         <TabPane tab="Business Financing" key="2">
-                            <BusinessFinancing data={this.props.investments}/>
+                            <BusinessFinancing data={this.props.investments} />
                         </TabPane>
                     </Tabs>
                 </Col>
@@ -151,8 +205,8 @@ const mapStateToProps = (state) => {
         businessPlan: state.selectedBusinessPlan,
         countryCode: state.countryShortCode,
         countryVats: state.countryVats,
-        investments: state.businessInvestments
-
+        investments: state.businessInvestments,
+        startUp: state.businessStartUp
     };
 }
-export default connect(mapStateToProps, { refreshPlan, getBusinessStartUpInvestmentInformation, getCountryShortCode })(BusinessInvestmentsWindow);
+export default connect(mapStateToProps, { refreshPlan, getBusinessStartUpInvestmentInformation, getCountryShortCode, changeVisibility, updateBusinessStartUpInvestmentInformation })(BusinessInvestmentsWindow);
