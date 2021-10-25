@@ -186,7 +186,7 @@ class WorkingCapital extends React.Component {
         this.setOriginalObject(this.props.data);
     }
     render() {
-        const default_vat_prayer_value = this.state.vat_payer === null ? true : this.state.vat_payer;
+        const default_vat_prayer_value = this.props.data.vat_payer === null ? true : this.props.data.vat_payer;
         const getLoanAmount = this.props.data.total_investments - this.props.data.own_assets - this.props.data.own_money;
         const dataWorkingCapitalV1 = [{
             title: 'Startup',
@@ -385,7 +385,7 @@ class WorkingCapital extends React.Component {
                                         </Col>
                                         <Col span={12}>
                                             <div style={{ float: "right", marginTop: 16, marginRight: 16 }}>
-                                                <Select defaultValue={12 + " mo."} suffixIcon={<CaretDownFilled />} size='default' onSelect={this.onPeriodSelectionChange.bind(this)}>
+                                                <Select defaultValue={this.props.data.period === null ? 12: this.props.data.period} suffixIcon={<CaretDownFilled />} size='default' onSelect={this.onPeriodSelectionChange.bind(this)}>
                                                     <Option value={12}>12 mo.</Option>
                                                     <Option value={24}>24 mo.</Option>
                                                 </Select>
