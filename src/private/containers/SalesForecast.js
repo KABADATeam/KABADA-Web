@@ -237,33 +237,37 @@ class SalesForecast extends React.Component {
         const array = this.state.update;
         array.forEach(element => {
             if (element.product_id === this.state.tabKey) {
-                element.sales_forecast_eu.forEach((element2) => {
-                    if (element2.month === record.month) {
-                        if (inputName === 'price') {
-                            element2.price = text;
-                            element2.total = element2.price * element2.qty;
-                            this.setState({
-                                totalinEu: element2.total
-                            })
+                if (element.sales_forecast_eu === null) {
+                    element.sales_forecast_eu = this.dataSourceTableInEu
+                } else {
+                    element.sales_forecast_eu.forEach((element2) => {
+                        if (element2.month === record.month) {
+                            if (inputName === 'price') {
+                                element2.price = text;
+                                element2.total = element2.price * element2.qty;
+                                this.setState({
+                                    totalinEu: element2.total
+                                })
+                            }
+                            if (inputName === 'qty') {
+                                element2.qty = text;
+                                element2.total = element2.price * element2.qty;
+                                this.setState({
+                                    totalinEu: element2.total
+                                })
+                            }
+                            if (inputName === 'total') {
+                                element2.total = text;
+                            }
+                            if (inputName === 'vat') {
+                                element2.vat = text;
+                            }
+                            if (inputName === 'paid') {
+                                element2.paid = text;
+                            }
                         }
-                        if (inputName === 'qty') {
-                            element2.qty = text;
-                            element2.total = element2.price * element2.qty;
-                            this.setState({
-                                totalinEu: element2.total
-                            })
-                        }
-                        if (inputName === 'total') {
-                            element2.total = text;
-                        }
-                        if (inputName === 'vat') {
-                            element2.vat = text;
-                        }
-                        if (inputName === 'paid') {
-                            element2.paid = text;
-                        }
-                    }
-                })
+                    })
+                }
             }
 
         })
@@ -325,23 +329,25 @@ class SalesForecast extends React.Component {
         // const array = this.props.salesForecast.products.map(x => x.sales_forecast_eu);
         const array = this.props.salesForecast.products;
         array.map((element, index) => {
-            if (element.sales_forecast_eu === null) {
-                element.sales_forecast_eu = this.dataSourceTableInEu;
-            } else {
-                element.sales_forecast_eu.map((element1, index1) => {
+            if (element.product_id === this.state.tabKey) {
+                if (element.sales_forecast_eu === null) {
+                    element.sales_forecast_eu = this.dataSourceTableInEu;
+                } else {
+                    element.sales_forecast_eu.map((element1, index1) => {
 
-                    element1.total = element1.qty * element1.price;
-                    return element1;
-                })
-            }
+                        element1.total = element1.qty * element1.price;
+                        return element1;
+                    })
+                }
 
-            if (element.sales_forecast_non_eu === null) {
-                element.sales_forecast_non_eu = this.dataSourceTableOutEu;
-            } else {
-                element.sales_forecast_non_eu.map((element2, index2) => {
-                    element2.total = element2.qty * element2.price;
-                    return element2;
-                });
+                if (element.sales_forecast_non_eu === null) {
+                    element.sales_forecast_non_eu = this.dataSourceTableOutEu;
+                } else {
+                    element.sales_forecast_non_eu.map((element2, index2) => {
+                        element2.total = element2.qty * element2.price;
+                        return element2;
+                    });
+                }
             }
         });
 
@@ -379,10 +385,13 @@ class SalesForecast extends React.Component {
                             inEuData: this.dataSourceTableInEu,
                             outEuData: this.dataSourceTableOutEu,
                         })
-                        this.onMonthChange(this.state.readyMonth)
-                        //his.getKey(this.state.update.map(x => x.product_id[0]))
                         this.getKey(this.state.update[0].product_id)
                         console.log(this.state.update[0].product_id);
+                        this.state.update.map((x) => {
+                            if (x.product_id === this.state.tabKey) {
+                                this.onMonthChange(x.when_ready)
+                            }
+                        })
                     });
 
 
@@ -407,8 +416,14 @@ class SalesForecast extends React.Component {
                     outEuData: this.dataSourceTableOutEu,
 
                 })
-                this.onMonthChange(this.state.readyMonth)
-                this.getKey(this.state.update.map(x => x.product_id))
+                this.getKey(this.state.update[0].product_id)
+                console.log(this.state.update[0].product_id);
+                this.state.update.map((x) => {
+                    if (x.product_id === this.state.tabKey) {
+                        this.onMonthChange(x.when_ready)
+                    }
+                })
+
             });
 
 
@@ -419,36 +434,50 @@ class SalesForecast extends React.Component {
     onBackClick = () => {
         this.props.history.push(`/overview`)
     }
+
+    onDiscardChanges = () => {
+        //this.props.history.push(`/overview`)
+        this.props.getProductByID(this.props.businessPlan.id, () => {
+            this.setTotal();
+            console.log(JSON.stringify(this.state.update) + "ffdfdfdf")
+            // this.setState({
+            //     inEuData: this.dataSourceTableInEu,
+            //     outEuData: this.dataSourceTableOutEu,
+            // })
+        });
+
+        this.props.history.push(`/sales-forecast`)
+    }
+
     onMonthChange = (value) => {
 
         this.state.update.map(x => {
-            //value = x.when_ready
-            console.log(x.when_ready);
             if (x.product_id === this.state.tabKey) {
                 x.when_ready = value;
+
+                console.log(value + '=/==*=***=*=*=*=*=*=*==**=*=*=*');
+                console.log("selected value " + x.when_ready);
+
             }
-
-            // this.setState({
-            //     readyMonth: value
-            // })
-        })
-        console.log("selected value " + value);
-
-        const array = []
-        //loop through array. loop while index is not greater that provided value. add id's to array
-        this.state.update.map((obj, index) => {
-            obj.sales_forecast_eu.map((x, index1) => {
-                if (index1 >= value - 1) {
-                    array.push(x.month)
-                    console.log(x.month);
+            const array = []
+            //loop through array. loop while index is not greater that provided value. add id's to array
+            this.state.update.map((obj, index) => {
+                if (obj.sales_forecast_eu === null) {
+                    return; //something 
+                } else {
+                    obj.sales_forecast_eu.map((x, index1) => {
+                        if (index1 >= value - 1) {
+                            array.push(x.month)
+                            console.log(x.month);
+                        }
+                    })
                 }
+            });
 
+            this.setState({
+                checked: array
             })
 
-        });
-
-        this.setState({
-            checked: array
         })
 
     }
@@ -501,13 +530,14 @@ class SalesForecast extends React.Component {
         this.state.update.map((x) => {
             if (x.product_id === this.state.tabKey) {
                 x.export = e;
+                this.getUpdatesWindowState(x.when_ready);
             }
 
         })
         // this.setState({
         //     exportPlan: e
         // });
-        this.getUpdatesWindowState();
+
         //console.log(vty)
     }
 
@@ -537,6 +567,11 @@ class SalesForecast extends React.Component {
         console.log(key);
         this.setState({
             tabKey: key
+        })
+        this.state.update.map(x => {
+            if (x.product_id === this.state.tabKey) {
+                this.onMonthChange(x.when_ready);
+            }
         })
 
     }
@@ -769,7 +804,9 @@ class SalesForecast extends React.Component {
                 key: 'total',
                 width: '5%',
                 render: (text, record, index) =>
-                    <Text disabled={this.isDisabled(record.month)} onChange={(e) => this.inEuChange(e, record, 'total')} >{text}</Text>
+                    <Text disabled={this.isDisabled(record.month)} onChange={(e) => this.inEuChange(e, record, 'total')} >
+                        {this.state.update.map(x => x.sales_forecast_eu) === null ? this.state.inEuData[index].total : text}
+                    </Text>
             },
             {
                 title: 'VAT Rate',
@@ -924,6 +961,7 @@ class SalesForecast extends React.Component {
                 <UnsavedChangesHeader
                     visibility={this.state.isVisibleHeader}
                     saveChanges={this.saveChanges}
+                    discardChanges={this.onDiscardChanges}
                 />
                 <Col span={20} offset={3}>
                     <Col span={16} offset={0}>
