@@ -30,7 +30,7 @@ class SalesForecast extends React.Component {
             inEuData: [],
             outEuData: [],
             checked: [],
-            update: [],
+            update: []
         }
     }
 
@@ -334,6 +334,7 @@ class SalesForecast extends React.Component {
     setTotal = () => {
         // const array = this.props.salesForecast.products.map(x => x.sales_forecast_eu);
         const array = this.props.salesForecast.products;
+
         array.map((element, index) => {
 
             if (element.sales_forecast_eu === null) {
@@ -363,12 +364,42 @@ class SalesForecast extends React.Component {
         });
 
         this.setState({
-            update: array
-        })
+            update: array,
 
+        })
 
         console.log("jgajhfgjhasgfhjasg" + JSON.stringify(this.state.update));
 
+    }
+
+    createData = () => {
+        const array = this.props.salesForecast.products;
+        array.map((element, index) => {
+
+            if (element.sales_forecast_eu === null) {
+
+                element.sales_forecast_eu = this.dataSourceTableInEu;
+
+
+            } else if (element.sales_forecast_non_eu === null) {
+
+                element.sales_forecast_non_eu = this.dataSourceTableOutEu;
+
+            }
+
+
+        });
+        this.setState({
+            update: array,
+
+        })
+
+        const obj = {
+            "products": this.state.update
+        }
+        console.log(JSON.stringify(this.state.update) + "this is what we have");
+        // console.log(product_id + "this is what we have");
+        this.props.updateSalesForecast(obj);
     }
 
 
@@ -391,6 +422,7 @@ class SalesForecast extends React.Component {
 
                     this.props.getProductByID(this.props.businessPlan.id, () => {
                         this.setTotal();
+                        this.createData();
                         console.log(JSON.stringify(this.props.salesForecast.products) + "ffdfdfdf")
                         this.setState({
                             inEuData: this.dataSourceTableInEu,
@@ -418,9 +450,12 @@ class SalesForecast extends React.Component {
                     vty: this.props.countryVats
                 });
             });
+            console.log(this.props.businessPlan.id)
 
             this.props.getProductByID(this.props.businessPlan.id, () => {
                 this.setTotal();
+                this.makedata();
+
                 console.log(JSON.stringify(this.state.update) + "ffdfdfdf")
                 this.setState({
                     inEuData: this.dataSourceTableInEu,
@@ -447,17 +482,13 @@ class SalesForecast extends React.Component {
     }
 
     onDiscardChanges = () => {
-        //this.props.history.push(`/overview`)
+
         this.props.getProductByID(this.props.businessPlan.id, () => {
             this.setTotal();
-            console.log(JSON.stringify(this.state.update) + "ffdfdfdf")
-            // this.setState({
-            //     inEuData: this.dataSourceTableInEu,
-            //     outEuData: this.dataSourceTableOutEu,
-            // })
         });
-
-        this.props.history.push(`/sales-forecast`)
+        this.setState({
+            isVisibleHeader: 'hidden'
+        })
     }
 
     onMonthChange = (value) => {
@@ -798,7 +829,7 @@ class SalesForecast extends React.Component {
                 key: 'price',
                 width: '5%',
                 render: (text, record, index) => (
-                    <InputNumber disabled={this.isDisabled(record.month)} defaultValue={text === null ? 0 : text} onChange={(e) => this.inEuChange(e, record, 'price')} />
+                    <InputNumber disabled={this.isDisabled(record.month)} defaultValue={text === null ? 0 : text} value={text} onChange={(e) => this.inEuChange(e, record, 'price')} />
                 ),
             },
             {
@@ -807,7 +838,7 @@ class SalesForecast extends React.Component {
                 key: 'qty',
                 width: '5%',
                 render: (text, record, index) =>
-                    <InputNumber disabled={this.isDisabled(record.month)} defaultValue={text === null ? 0 : text} onChange={(e) => this.inEuChange(e, record, 'qty')} />,
+                    <InputNumber disabled={this.isDisabled(record.month)} defaultValue={text === null ? 0 : text} value={text} onChange={(e) => this.inEuChange(e, record, 'qty')} />,
             },
             {
                 title: 'Total',
@@ -815,7 +846,7 @@ class SalesForecast extends React.Component {
                 key: 'total',
                 width: '5%',
                 render: (text, record, index) =>
-                    <Text disabled={this.isDisabled(record.month)} onChange={(e) => this.inEuChange(e, record, 'total')} >
+                    <Text disabled={this.isDisabled(record.month)} value={text} onChange={(e) => this.inEuChange(e, record, 'total')} >
                         {this.state.update.map(x => x.sales_forecast_eu) === null ? this.state.inEuData[index].total : text}
                     </Text>
             },
@@ -824,7 +855,7 @@ class SalesForecast extends React.Component {
                 dataIndex: 'vat',
                 width: '10%',
                 render: (text, record, index) => (
-                    <Select defaultValue={text === null ? 'Null' : text} onChange={e => this.inEuChange(e, record, "vat")} disabled={this.isDisabled(record.month)}>
+                    <Select defaultValue={text === null ? 'Null' : text} value={text} onChange={e => this.inEuChange(e, record, "vat")} disabled={this.isDisabled(record.month)}>
                         <Option value={this.props.countryVats.standardRate}>{this.props.countryVats.standardRate + "%"}</Option>
                         <Option value={this.props.countryVats.reducedRates2}>{this.props.countryVats.reducedRates2 + "%"}</Option>
                         <Option value={this.props.countryVats.reducedRates1}>{this.props.countryVats.reducedRates1 + "%"}</Option>
@@ -839,7 +870,7 @@ class SalesForecast extends React.Component {
                 width: '10%',
                 render: (text, record) => (
                     <Input.Group compact>
-                        <Select defaultValue={text === null ? 0 : text} onChange={(e) => this.inEuChange(e, record, 'paid')} disabled={this.isDisabled(record.month)}>
+                        <Select defaultValue={text === null ? 0 : text} value={text} onChange={(e) => this.inEuChange(e, record, 'paid')} disabled={this.isDisabled(record.month)}>
                             <Option value="Immediate">Immediate</Option>
                             <Option value="Next month">Next month</Option>
                             <Option value="After two months">After two months</Option>
@@ -1071,7 +1102,7 @@ class SalesForecast extends React.Component {
 
                                                         <Row align="middle" className="margin-top-20px">
                                                             <Col span={12} offset={8} >
-                                                                <Table columns={columns} dataSource={element.sales_forecast_eu === null || element === [] ? dataSourceTableInEu : element.sales_forecast_eu} pagination={false} />
+                                                                <Table columns={columns} dataSource={element.sales_forecast_eu === null ? dataSourceTableInEu : element.sales_forecast_eu} pagination={false} />
                                                             </Col>
 
                                                         </Row>
