@@ -239,6 +239,7 @@ class SalesForecast extends React.Component {
             if (element.product_id === this.state.tabKey) {
                 if (element.sales_forecast_eu === null) {
                     element.sales_forecast_eu = this.dataSourceTableInEu
+
                 } else {
                     element.sales_forecast_eu.forEach((element2) => {
                         if (element2.month === record.month) {
@@ -286,33 +287,38 @@ class SalesForecast extends React.Component {
         const array = this.state.update;
         array.forEach(element => {
             if (element.product_id === this.state.tabKey) {
-                element.sales_forecast_non_eu.forEach((element2) => {
-                    if (element2.month === record.month) {
-                        if (inputName === 'price') {
-                            element2.price = text;
-                            element2.total = element2.price * element2.qty;
-                            this.setState({
-                                totalinEu: element2.total
-                            })
+                if (element.sales_forecast_eu === null) {
+                    element.sales_forecast_eu = this.dataSourceTableInEu
+
+                } else {
+                    element.sales_forecast_non_eu.forEach((element2) => {
+                        if (element2.month === record.month) {
+                            if (inputName === 'price') {
+                                element2.price = text;
+                                element2.total = element2.price * element2.qty;
+                                this.setState({
+                                    totalOutEu: element2.total
+                                })
+                            }
+                            if (inputName === 'qty') {
+                                element2.qty = text;
+                                element2.total = element2.price * element2.qty;
+                                this.setState({
+                                    totalOutEu: element2.total
+                                })
+                            }
+                            if (inputName === 'total') {
+                                element2.total = text;
+                            }
+                            if (inputName === 'vat') {
+                                element2.vat = text;
+                            }
+                            if (inputName === 'paid') {
+                                element2.paid = text;
+                            }
                         }
-                        if (inputName === 'qty') {
-                            element2.qty = text;
-                            element2.total = element2.price * element2.qty;
-                            this.setState({
-                                totalinEu: element2.total
-                            })
-                        }
-                        if (inputName === 'total') {
-                            element2.total = text;
-                        }
-                        if (inputName === 'vat') {
-                            element2.vat = text;
-                        }
-                        if (inputName === 'paid') {
-                            element2.paid = text;
-                        }
-                    }
-                })
+                    })
+                }
             }
 
         })
@@ -329,26 +335,31 @@ class SalesForecast extends React.Component {
         // const array = this.props.salesForecast.products.map(x => x.sales_forecast_eu);
         const array = this.props.salesForecast.products;
         array.map((element, index) => {
-            if (element.product_id === this.state.tabKey) {
-                if (element.sales_forecast_eu === null) {
+
+            if (element.sales_forecast_eu === null) {
+                if (element.product_id === this.state.tabKey) {
                     element.sales_forecast_eu = this.dataSourceTableInEu;
-                } else {
-                    element.sales_forecast_eu.map((element1, index1) => {
-
-                        element1.total = element1.qty * element1.price;
-                        return element1;
-                    })
                 }
 
-                if (element.sales_forecast_non_eu === null) {
-                    element.sales_forecast_non_eu = this.dataSourceTableOutEu;
-                } else {
-                    element.sales_forecast_non_eu.map((element2, index2) => {
-                        element2.total = element2.qty * element2.price;
-                        return element2;
-                    });
-                }
+            } else {
+                element.sales_forecast_eu.map((element1, index1) => {
+
+                    element1.total = element1.qty * element1.price;
+                    return element1;
+                })
             }
+            if (element.sales_forecast_non_eu === null) {
+                if (element.product_id === this.state.tabKey) {
+                    element.sales_forecast_non_eu = this.dataSourceTableOutEu;
+                }
+            } else {
+                element.sales_forecast_non_eu.map((element2, index2) => {
+
+                    element2.total = element2.qty * element2.price;
+                    return element2;
+                });
+            }
+
         });
 
         this.setState({
@@ -871,7 +882,9 @@ class SalesForecast extends React.Component {
                 key: 'total',
                 width: '5%',
                 render: (text, record, index) =>
-                    <Text disabled={this.isDisabled(record.month)} > {text} </Text>,
+                    <Text disabled={this.isDisabled(record.month)} >
+                        {this.state.update.map(x => x.sales_forecast_non_eu) === null ? this.state.outEuData[index].total : text}
+                    </Text>,
             },
             {
                 title: 'When paid',
