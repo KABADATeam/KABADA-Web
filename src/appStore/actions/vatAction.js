@@ -7,6 +7,7 @@ export const getCountryVats = (countryCode, callback) => {
         try{
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/cost/vat/'+countryCode, {headers: {Authorization: `Bearer ${token}` }});
+            console.log(response.data);
             dispatch({ type: "FETCHING_COUNTRY_VAT_SUCCESS", payload: response.data });
             callback();
         }catch(error){

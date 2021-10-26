@@ -9,7 +9,7 @@ import { getAssets, updateAssets, saveState } from '../../appStore/actions/asset
 import { getCountryShortCode } from '../../appStore/actions/countriesActions';
 import { getCountryVats } from '../../appStore/actions/vatAction';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
-import { getCountryVat } from '../../appStore/actions/vatsActions';
+//import { getCountryVats } from '../../appStore/actions/vatAction';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 
 const { Option } = Select;
@@ -248,17 +248,31 @@ class AssetsWindow extends React.Component {
                 this.props.history.push(`/`);
             } else {
                 this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getAssets(this.props.businessPlan.id)
-                    this.props.getCountryVats(this.props.countryCode.countryShortCodeV2)
+                    this.props.getAssets(this.props.businessPlan.id, () => {
+                        const obj = { id: this.props.businessPlan.id }
+                        this.props.getCountryShortCode(obj, (data) => {
+                            console.log(this.props.countryCode.countryShortCode)
+                            this.props.getCountryVats(this.props.countryCode.countryShortCode);
+                        });
+                        this.setItems(this.props.assets.physical_assets);
+                        this.getOriginalAssetsItems(this.props.assets.physical_assets);
+                    })
+
+                });
+
+            }
+        } else {
+            this.props.getAssets(this.props.businessPlan.id, () => {
+                const obj = { id: this.props.businessPlan.id }
+                this.props.getCountryShortCode(obj, (data) => {
+                    console.log(this.props.countryCode.countryShortCode)
+                    this.props.getCountryVats(this.props.countryCode.countryShortCode);
                 });
                 this.setItems(this.props.assets.physical_assets);
                 this.getOriginalAssetsItems(this.props.assets.physical_assets);
-            }
-        } else {
-            this.props.getAssets(this.props.businessPlan.id)
-            this.props.getCountryVats(this.props.countryCode.countryShortCodeV2)
-            this.setItems(this.props.assets.physical_assets);
-            this.getOriginalAssetsItems(this.props.assets.physical_assets);
+            })
+            //this.setItems(this.props.assets.physical_assets);
+            //this.getOriginalAssetsItems(this.props.assets.physical_assets);
             //const obj = { id: this.props.businessPlan.id }
             //this.props.getCountryShortCode(obj, (data) => {
             //    this.props.getCountryVats(this.props.countryCode.countryShortCode);
@@ -369,7 +383,7 @@ class AssetsWindow extends React.Component {
                     </Col>
                     <Col span={4}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.assets.is_assets_completed} onClick={this.onCompletedChange.bind(this)}/>
+                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.assets.is_assets_completed} onClick={this.onCompletedChange.bind(this)} />
                         </div>
                     </Col>
                 </Row>
@@ -464,4 +478,4 @@ const mapStateToProps = (state) => {
         assets: state.assets
     };
 }
-export default connect(mapStateToProps, { refreshPlan, getAssets, updateAssets, getCountryShortCode, getCountryVats, getCountryVat, saveState, getSelectedPlanOverview })(AssetsWindow);
+export default connect(mapStateToProps, { refreshPlan, getAssets, updateAssets, getCountryShortCode, getCountryVats, saveState, getSelectedPlanOverview })(AssetsWindow);
