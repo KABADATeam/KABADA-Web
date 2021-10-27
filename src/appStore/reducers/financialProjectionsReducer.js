@@ -2,7 +2,8 @@ export const financialProjectionsReducer = (
     state = {
         is_fixed_variable_completed: false,
         fixed: [],
-        variable: []
+        variable: [],
+        financialObject: null
     }, action) => {
     switch (action.type) {
         case 'FETCHING_FINANCIAL_PROJECTION_SUCCESS':

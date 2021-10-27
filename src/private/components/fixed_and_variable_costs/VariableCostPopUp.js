@@ -40,15 +40,14 @@ class VariableCostPopUp extends React.Component {
 
     //on save changes dont save disabled data in array
     save = () => {
-        const pricesWithoutDisabled = []
+        const pricesWithoutDisabled = [];
         const original = this.state.data;
-        // loop through data array and check if index of each object is less than
-        // monthsChecked. 
-        original.map((element, index) => {
+        // loop through data array and check if index of each object is less than monthsChecked
+        original.forEach((element, index) => {
             if (index < this.state.monthsChecked) {
                 pricesWithoutDisabled.push(element.price);
-            } else if (index > this.state.monthsChecked) {
-                pricesWithoutDisabled.push(element.price)
+            } else if (index >= this.state.monthsChecked) {
+                pricesWithoutDisabled.push(0)
             }
         });
         // loop through cost_items state array. put only required fields to items array

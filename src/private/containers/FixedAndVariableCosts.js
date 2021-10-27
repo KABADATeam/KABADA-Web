@@ -65,6 +65,7 @@ class FixedAndVariableCosts extends React.Component {
       selectedPeriod: [],
       cost_items: [],
       original_cost_items: [],
+      update: null,
       variablePopUp: {
         category_id: null,
         category_title: null,
@@ -128,7 +129,7 @@ class FixedAndVariableCosts extends React.Component {
     this.props.history.push(`/overview`);
   }
 
-  saveChanges = () => {
+  saveChanges = (givenArray) => {
     // loop through cost_items state array. put only required fields to items array
     const items = []
     const array = this.state.cost_items;
@@ -163,9 +164,23 @@ class FixedAndVariableCosts extends React.Component {
       visibleHeader: 'hidden'
     });
   }
-
+  // setting cost_items to original_cost_items that are not modified.
+  // setting that UnsavedChangesHeader to be 'hidden'
   discardChanges = () => {
-    console.log('Discarding changes')
+    this.props.getFinancialProjectionsCosts(this.props.businessPlan.id, () => {
+      this.setItems(this.props.financialProjections.fixed, this.props.financialProjections.variable, 1);
+      this.setItems(this.props.financialProjections.fixed, this.props.financialProjections.variable, 2);
+    });
+    window.location.reload(false)
+    // const original = this.state.original_cost_items;
+    // this.setState({
+    //   cost_items: original
+    // });
+    // const visibilityString = this.getUpdatesWindowState();
+    // this.setState({
+    //   visibleHeader: visibilityString
+    // });
+
   }
 
   //setting array of months available
@@ -236,6 +251,7 @@ class FixedAndVariableCosts extends React.Component {
         original_cost_items: array,
       });
     }
+
 
   }
   //to update state (cost_items) which holds both variable and fixed costs
@@ -322,6 +338,11 @@ class FixedAndVariableCosts extends React.Component {
       } else {
         this.props.refreshPlan(localStorage.getItem("plan"), () => {
           this.props.getFinancialProjectionsCosts(this.props.businessPlan.id, () => {
+            this.setState({
+              update: this.props.financialProjections
+            });
+            console.log('Financial projections:' + JSON.stringify(this.props.financialProjections.fixed))
+            console.log('Updateeee projections:' + JSON.stringify(this.state.update.fixed))
             const obj = { id: this.props.businessPlan.id }
             this.props.getCountryShortCode(obj, (data) => {
               this.props.getCountryVat(this.props.country.countryShortCode);
@@ -339,6 +360,11 @@ class FixedAndVariableCosts extends React.Component {
       }
     } else {
       this.props.getFinancialProjectionsCosts(this.props.businessPlan.id, () => {
+        this.setState({
+          update: this.props.financialProjections
+        });
+        console.log('Financial projections:' + JSON.stringify(this.props.financialProjections.fixed))
+        console.log('Updateeee projections:' + JSON.stringify(this.state.update.fixed))
         const obj = { id: this.props.businessPlan.id }
         this.props.getCountryShortCode(obj, (data) => {
           this.props.getCountryVat(this.props.country.countryShortCode);
@@ -356,6 +382,13 @@ class FixedAndVariableCosts extends React.Component {
 
 
   render() {
+
+    // var fixed = [];
+    // var variable = [];
+    // fixed = this.state.update.fixed;
+    // variable = this.state.update.variable;
+    // console.log('Fixed is eequal to:'+JSON.stringify())
+
     //everytime screen rerenders it will call getUpdatesWindowState method which set const isVisibleHeader to 'visible' or 'hidden'
     const fixed_costs_columns = [
       {
