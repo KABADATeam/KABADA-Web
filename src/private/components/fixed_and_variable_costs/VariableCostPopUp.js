@@ -36,12 +36,17 @@ class VariableCostPopUp extends React.Component {
             monthsChecked: null,
         });
     }
-    // save to database
 
     //on save changes dont save disabled data in array
     save = () => {
         const pricesWithoutDisabled = [];
         const original = this.state.data;
+        // clone fixed and variable states that are passed to this component
+        const modifiedFixedArray = JSON.parse(JSON.stringify(this.props.fixed));
+        const modifiedVariableArray = JSON.parse(JSON.stringify(this.props.variable));
+        const originalFixedArray = JSON.parse(JSON.stringify(this.props.originalFixed));
+        const originalVariableArray = JSON.parse(JSON.stringify(this.props.originalVariable));
+        const items = [];
         // loop through data array and check if index of each object is less than monthsChecked
         original.forEach((element, index) => {
             if (index < this.state.monthsChecked) {
@@ -50,60 +55,71 @@ class VariableCostPopUp extends React.Component {
                 pricesWithoutDisabled.push(0)
             }
         });
-        // loop through cost_items state array. put only required fields to items array
-        // then then dispatch action to update
-        // loop through cost_items state array. put only required fields to items array
-        const items = []
-        const array = this.state.cost_items;
-        array.map((element, index) => {
-            if (element.type === "Variable") {
-                // update only item with gived id
-                if (element.cost_item_id === this.props.record.cost_item_id) {
-                    const obj = {
-                        cost_item_id: element.cost_item_id,
-                        price: element.price,
-                        vat: element.vat,
-                        first_expenses: element.first_expenses,
-                        monthly_expenses: pricesWithoutDisabled,
-                    }
-                    items.push(obj)
-                } else {
-                    // dont update other elements monthly expenses
-                    const obj = {
-                        cost_item_id: element.cost_item_id,
-                        price: element.price,
-                        vat: element.vat,
-                        first_expenses: element.first_expenses,
-                        monthly_expenses: element.monthly_expenses,
-                    }
-                    items.push(obj)
-                }
 
-            } else if (element.type === 'Fixed') {
-                const obj = {
-                    cost_item_id: element.cost_item_id,
-                    price: element.price,
-                    vat: element.vat,
-                    first_expenses: element.first_expenses,
-                    monthly_expenses: null
+        //check what elements where changed
+        // looping through original array and checking if any of attributes where changed in modified array 
+        originalFixedArray.map((obj, index) => {
+            obj.types.map((element, index1) => {
+                if (originalFixedArray[index].types[index1].price !== modifiedFixedArray[index].types[index1].price ||
+                    originalFixedArray[index].types[index1].vat !== modifiedFixedArray[index].types[index1].vat ||
+                    originalFixedArray[index].types[index1].first_expenses !== modifiedFixedArray[index].types[index1].first_expenses ||
+                    originalFixedArray[index].types[index1].monthly_expenses !== modifiedFixedArray[index].types[index1].monthly_expenses
+                ) {
+                    const modifiedObj = {
+                        cost_item_id: modifiedFixedArray[index].types[index1].cost_item_id,
+                        price: modifiedFixedArray[index].types[index1].price,
+                        vat: modifiedFixedArray[index].types[index1].vat,
+                        first_expenses: modifiedFixedArray[index].types[index1].first_expenses,
+                        monthly_expenses: modifiedFixedArray[index].types[index1].monthly_expenses
+                    }
+                    items.push(modifiedObj);
                 }
-                items.push(obj);
-            }
+            });
         });
-        // postObject for post request
+
+        // looping through originalVariableArray and checking if attributes values where changed in modified array 
+        originalVariableArray.map((obj, index) => {
+            obj.types.map((element, index1) => {
+                // first for element with this cost_item_id. all other elements will be checked in other way
+                if(element.cost_item_id === this.props.record.cost_item_id){
+                    const modifiedObj = {
+                        cost_item_id: modifiedVariableArray[index].types[index1].cost_item_id,
+                        price: modifiedVariableArray[index].types[index1].price,
+                        vat: modifiedVariableArray[index].types[index1].vat,
+                        first_expenses: modifiedVariableArray[index].types[index1].first_expenses,
+                        monthly_expenses: pricesWithoutDisabled
+                    }
+                    items.push(modifiedObj);
+                }else{
+                    // in variable state only vat could be changed
+                    if (originalVariableArray[index].types[index1].vat !== modifiedVariableArray[index].types[index1].vat) {
+                        const modifiedObj = {
+                            cost_item_id: modifiedVariableArray[index].types[index1].cost_item_id,
+                            price: modifiedVariableArray[index].types[index1].price,
+                            vat: modifiedVariableArray[index].types[index1].vat,
+                            first_expenses: modifiedVariableArray[index].types[index1].first_expenses,
+                            monthly_expenses: modifiedVariableArray[index].types[index1].monthly_expenses
+                        }
+                        items.push(modifiedObj);
+                    }
+                }
+            });
+        });
+        // postObject for update
         const postObject = {
-            "business_plan_id": this.props.businessPlanId,
-            "cost_items": items
+            business_plan_id: this.props.businessPlan.id,
+            cost_items: items
         }
+
+        // dispatching action to update fixedAndVar costs
         this.props.updateFixedAndVarCosts(postObject);
 
-        // set states to null again.and call function handleOk from FixedAndVariableCosts component to close this screen
         this.setState({
             checked: [],
             data: [],
             monthsChecked: null
         });
-        this.props.handleOk(pricesWithoutDisabled, this.props.record);
+        this.props.handleOk();
     }
     //when Selected months is changed
     onMonthsChanged = (value) => {
@@ -155,70 +171,17 @@ class VariableCostPopUp extends React.Component {
                 duom.push({ id: i + 1, month: i + 1, price: this.props.monthly_expenses[i] })
             }
         }
-
         this.setState({
             data: duom
         });
     }
 
-    setItems = (fixedArray, variableArray) => {
-        const array = []
-        var indexas = 0;
-        //looping through fixed array and pushing all items to array
-        fixedArray.forEach(element => {
-          // for each object in types array create new object and add it to array
-          element.types.forEach(element1 => {
-            const obj = {
-              type: 'Fixed',
-              name: element.type_title,
-              category_title: element.category_title,
-              category_id: element.category_id,
-              cost_item_id: element1.cost_item_id,
-              price: element1.price === null ? 0 : element1.price,
-              vat: element1.vat,
-              type_title: element1.type_title,
-              pos: indexas,
-              first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses,
-              monthly_expenses: element1.monthly_expenses,
-            }
-            array.push(obj);
-            indexas = indexas + 1;
-          });
-        });
-        //looping through variable array and pushing all items to array. so now array will have
-        //both fixed and variable costs
-        variableArray.forEach(element => {
-          element.types.forEach(element1 => {
-            const obj = {
-              type: 'Variable',
-              name: element.type_title,
-              category_title: element.category_title,
-              category_id: element.category_id,
-              cost_item_id: element1.cost_item_id,
-              price: element1.price === null ? 0 : element1.price,
-              vat: element1.vat,
-              type_title: element1.type_title,
-              pos: indexas,
-              first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses,
-              monthly_expenses: element1.monthly_expenses
-            }
-            array.push(obj);
-            indexas = indexas + 1;
-          })
-        })
-    
-        this.setState({
-          cost_items: array,
-        });
-        console.log('CostItems array: '+JSON.stringify(this.state.cost_items))
-      }
-
     componentDidMount() {
-        this.props.getFinancialProjectionsCosts(this.props.businessPlan.id, () => {
-            console.log('VariableCostPopUp:  ' + JSON.stringify(this.props.cost_items));
-            this.setItems(this.props.financialProjections.fixed,this.props.financialProjections.variable)
-            this.loadData();
-        });
+        // this.props.getFinancialProjectionsCosts(this.props.businessPlan.id, () => {
+        //     console.log('VariableCostPopUp:  ' + JSON.stringify(this.props.variable));
+            
+        // });
+        this.loadData();
         // console.log('Monthly expenses equal to:'+JSON.stringify(this.props.monthly_expenses));
     }
     render() {
