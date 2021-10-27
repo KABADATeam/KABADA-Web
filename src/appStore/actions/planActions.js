@@ -45,7 +45,6 @@ export const getImage = (plan) => {
         try {
             if (plan.planImage !== null) {
                 const token = getState().user.access_token;
-
                 const response = await kabadaAPI.get("api/files/" + plan.planImage, { headers: { Authorization: `Bearer ${token}` }, responseType: 'arraybuffer' });
                 dispatch({ type: "FETCHING_IMAGE_SUCCESS", payload: { "id": plan.id, "coverImage": getURL(response.data) } });
             } else {
@@ -205,6 +204,7 @@ export const getSelectedPlanDetails = (planId) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.post("api/plans/fetch", { "Id": planId }, { headers: { Authorization: `Bearer ${token}` } });
+            console.log(response.data);
             dispatch({ type: "FETCHING_SELECTED_PLAN_DETAILS_SUCCESS", payload: response.data });
         } finally {
             dispatch({ type: "LOADING", payload: false });
@@ -223,20 +223,6 @@ export const updateImage = (plan) => {
             } else {
                 return;
             }
-        } finally {
-            dispatch({ type: "LOADING", payload: false });
-        }
-    }
-}
-
-export const overviewTest = (planId) => {
-    return async (dispatch, getState) => {
-        dispatch({ type: "LOADING", payload: true });
-        try {
-            const token = getState().user.access_token;
-            const response = await kabadaAPI.get('api/Technical/test/' + planId, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response);
-            dispatch({ type: "FETCHING_OVERVIEW_TEST", payload: response.data });
         } finally {
             dispatch({ type: "LOADING", payload: false });
         }
