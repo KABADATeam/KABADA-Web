@@ -233,7 +233,7 @@ class SalesForecast extends React.Component {
 
     inEuChange = (text, record, inputName) => {
 
-        console.log(text, record.id)
+        console.log(text, record.month)
         const array = this.state.update;
         array.forEach(element => {
             if (element.product_id === this.state.tabKey) {
@@ -379,12 +379,12 @@ class SalesForecast extends React.Component {
             if (element.sales_forecast_eu === null) {
 
                 element.sales_forecast_eu = this.dataSourceTableInEu;
-
-
-            } else if (element.sales_forecast_non_eu === null) {
+                console.log('DAAAAAAAAAAADDDADDAAAAAAAAA111111111111111111');
+            }
+            if (element.sales_forecast_non_eu === null) {
 
                 element.sales_forecast_non_eu = this.dataSourceTableOutEu;
-
+                console.log('DAAAAAAAAAAADDDADDAAAAAAAAA');
             }
 
 
@@ -454,7 +454,14 @@ class SalesForecast extends React.Component {
 
             this.props.getProductByID(this.props.businessPlan.id, () => {
                 this.setTotal();
-                this.makedata();
+                const array = this.props.salesForecast.products;
+                array.map((element, index) => {
+                    if (element.sales_forecast_eu === null && element.sales_forecast_non_eu === null) {
+                        this.createData();
+                    }
+                });
+                this.getKey(this.state.update[0].product_id)
+
 
                 console.log(JSON.stringify(this.state.update) + "ffdfdfdf")
                 this.setState({
@@ -497,23 +504,27 @@ class SalesForecast extends React.Component {
             if (x.product_id === this.state.tabKey) {
                 x.when_ready = value;
 
-                console.log(value + '=/==*=***=*=*=*=*=*=*==**=*=*=*');
+                console.log(value + '=/==*=***=*=*=*=');
                 console.log("selected value " + x.when_ready);
+
+
+                this.setState({
+                    readyMonth: x.when_ready
+                })
+
 
             }
             const array = []
             //loop through array. loop while index is not greater that provided value. add id's to array
             this.state.update.map((obj, index) => {
-                if (obj.sales_forecast_eu === null) {
-                    return; //something 
-                } else {
-                    obj.sales_forecast_eu.map((x, index1) => {
-                        if (index1 >= value - 1) {
-                            array.push(x.month)
-                            console.log(x.month);
-                        }
-                    })
-                }
+
+                obj.sales_forecast_eu.map((x, index1) => {
+                    if (index1 >= value - 1) {
+                        array.push(x.month)
+                        console.log(x.month);
+                    }
+                })
+
             });
 
             this.setState({
@@ -827,10 +838,18 @@ class SalesForecast extends React.Component {
                 title: 'Euro/pc without VAT',
                 dataIndex: 'price',
                 key: 'price',
-                width: '5%',
-                render: (text, record, index) => (
-                    <InputNumber disabled={this.isDisabled(record.month)} defaultValue={text === null ? 0 : text} value={text} onChange={(e) => this.inEuChange(e, record, 'price')} />
-                ),
+                width: '15%',
+                render: (text, record, index) => {
+                    return (
+                        <InputNumber
+                            className={"numInput"}
+                            disabled={this.isDisabled(record.month)}
+                            defaultValue={text === null ? 0 : text}
+                            value={text}
+                            onChange={(e) => this.inEuChange(e, record, 'price')} />
+
+                    )
+                },
             },
             {
                 title: 'qty',
@@ -846,8 +865,8 @@ class SalesForecast extends React.Component {
                 key: 'total',
                 width: '5%',
                 render: (text, record, index) =>
-                    <Text disabled={this.isDisabled(record.month)} value={text} onChange={(e) => this.inEuChange(e, record, 'total')} >
-                        {this.state.update.map(x => x.sales_forecast_eu) === null ? this.state.inEuData[index].total : text}
+                    <Text disabled={this.isDisabled(record.month)} value={'€' + text} onChange={(e) => this.inEuChange(e, record, 'total')} >
+                        {this.state.update.map(x => x.sales_forecast_eu) === null ? this.state.inEuData[index].total : '€' + text}
                     </Text>
             },
             {
@@ -1102,14 +1121,14 @@ class SalesForecast extends React.Component {
 
                                                         <Row align="middle" className="margin-top-20px">
                                                             <Col span={12} offset={8} >
-                                                                <Table columns={columns} dataSource={element.sales_forecast_eu === null ? dataSourceTableInEu : element.sales_forecast_eu} pagination={false} />
+                                                                <SalesForecastTable title='Sales forecast in EU' columns={columns} dataSource={element.sales_forecast_eu === null ? dataSourceTableInEu : element.sales_forecast_eu} />
                                                             </Col>
 
                                                         </Row>
 
                                                         <Row align="middle" className={`margin-top-20px ${element.export === false ? `display-none` : ``}`} >
                                                             <Col span={12} offset={8} >
-                                                                <Table columns={columnsOutEU} dataSource={element.sales_forecast_non_eu === null ? dataSourceTableOutEu : element.sales_forecast_non_eu} pagination={false} />
+                                                                <SalesForecastTable title='Sales forecast outside EU' columns={columnsOutEU} dataSource={element.sales_forecast_non_eu === null ? dataSourceTableOutEu : element.sales_forecast_non_eu} />
                                                             </Col>
                                                         </Row>
                                                     </>

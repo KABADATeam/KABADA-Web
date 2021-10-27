@@ -1,7 +1,7 @@
 import kabadaAPI from './kabadaAPI';
 import { errorHandler } from './errorHandler';
 
-export const getAssets = (planId) => {
+export const getAssets = (planId, callback) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
         try {
@@ -9,6 +9,7 @@ export const getAssets = (planId) => {
             const response = await kabadaAPI.get('api/kres/assets/' + planId, { headers: { Authorization: `Bearer ${token}` } });
             console.log(response.data);
             dispatch({ type: "FETCHING_ASSETS_SUCCESS", payload: response.data });
+            callback();
         } catch (error) {
             if (error.response === undefined) {
                 dispatch({

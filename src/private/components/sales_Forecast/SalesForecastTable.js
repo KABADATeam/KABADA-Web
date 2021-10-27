@@ -1,13 +1,13 @@
 import React from 'react'
 import { Table } from 'antd';
 
-function SalesForecastTable({ columns, dataSource }) {
+function SalesForecastTable({ columns, dataSource, title }) {
 
     return (
         <div>
 
 
-            <Table title={() => 'Sales forecast in EU'} columns={columns} dataSource={dataSource} pagination={false} />
+            <Table title={() => title} columns={columns} dataSource={dataSource} pagination={false} />
 
 
         </div>

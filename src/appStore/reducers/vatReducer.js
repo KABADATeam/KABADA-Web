@@ -17,6 +17,7 @@ export const countryVATReducer = (
                     })
                 }
             }
+            console.log(vatArray);
             return { ...state, vat: vatArray };
         default:
             return state;
