@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom';
 import { Form, Select, InputNumber, Input, Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tooltip, Tabs } from 'antd';
@@ -13,675 +13,669 @@ import { getCountryShortCode } from '../../appStore/actions/countriesActions'
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import '../../css/FixedAndVarStyles.css'
 
+
 const { Option } = Select;
 const { Text } = Typography;
 const { TabPane } = Tabs;
 
 const aboutTitleTextStyle = {
-  fontStyle: 'normal',
-  fontWeight: '600',
-  fontSize: '20px',
-  marginBottom: '16px',
+    fontStyle: 'normal',
+    fontWeight: '600',
+    fontSize: '20px',
+    marginBottom: '16px',
 }
 
 const textStyle = {
-  fontSize: '14px',
-  color: '#8C8C8C',
-  fontStyle: 'normal',
-  fontWeight: 'normal',
-  lineHeight: '22px',
-  marginRight: '40px',
+    fontSize: '14px',
+    color: '#8C8C8C',
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    lineHeight: '22px',
+    marginRight: '40px',
 }
 
 
 const titleTextStyle = {
-  fontStyle: "normal",
-  fontWeight: "600",
-  fontSize: '20px',
-  lineHeight: "38px"
+    fontStyle: "normal",
+    fontWeight: "600",
+    fontSize: '20px',
+    lineHeight: "38px"
 }
 
 const titleButtonStyle = {
-  width: "40px",
-  height: "40px",
-  border: "1px solid #BFBFBF",
-  boxSizing: "border-box",
-  filter: "drop-shadow(0px 1px 0px rgba(0, 0, 0, 0.05))",
-  borderRadius: "4px",
-  backgroundColor: "transparent",
+    width: "40px",
+    height: "40px",
+    border: "1px solid #BFBFBF",
+    boxSizing: "border-box",
+    filter: "drop-shadow(0px 1px 0px rgba(0, 0, 0, 0.05))",
+    borderRadius: "4px",
+    backgroundColor: "transparent",
 }
-
-
-
 
 class FixedAndVariableCosts extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      fixed_costs: [],
-      variable_costs: [],
-      price: {},
-      vats: {},
-      selectedPeriod: [],
-      cost_items: [],
-      original_cost_items: [],
-      update: null,
-      variablePopUp: {
-        category_id: null,
-        category_title: null,
-        record: {},
-        values: null,
-        visible: false
-      },
-      visibleHeader: 'hidden'
-    };
-  }
-  showModal = (record, data, index) => {
-    // creating object which will hold visible value,category_id and ...
-    console.log('Fixed and costs monthly_expenses:' + JSON.stringify(data))
-    const obj = {
-      category_id: null,
-      category_title: null,
-      values: data,
-      record: {},
-      visible: true
+    constructor(props) {
+        super(props)
+        this.state = {
+            vats: {},
+            selectedPeriod: [],
+            fixed_var_costs: {},
+            fixed: [],
+            variable: [],
+            variablePopUp: {
+                category_id: null,
+                category_title: null,
+                record: {},
+                values: null,
+                visible: false,
+            },
+            visibleHeader: 'hidden'
+        }
     }
-    const items = this.state.cost_items;
-    items.forEach(element => {
-      if (element.cost_item_id === record.cost_item_id) {
-        obj.category_id = element.category_id;
-        obj.category_title = element.category_title;
-        obj.record = record
-      }
-    })
 
-    this.setState({
-      variablePopUp: obj,
-    });
-  }
-  handleModalCancel = () => {
-    const obj = {
-      category_id: null,
-      category_title: null,
-      values: null,
-      record: {},
-      visible: false
+    onBackClick = () => {
+        this.props.history.push('/overview')
     }
-    this.setState({
-      variablePopUp: obj,
-    })
-  }
-  //passing prices array 
-  handleOk = (array, record) => {
-    const obj = {
-      category_id: null,
-      category_title: null,
-      values: null,
-      record: {},
-      visible: false
-    }
-    this.setState({
-      variablePopUp: obj,
-    });
-  }
 
-  onBackClick() {
-    this.props.history.push(`/overview`);
-  }
-
-  saveChanges = (givenArray) => {
-    // loop through cost_items state array. put only required fields to items array
-    const items = []
-    const array = this.state.cost_items;
-    array.map((element, index) => {
-      if (element.type === "Variable") {
+    showModal = (recordas, data, index) => {
+        // creating object which will hold visible value,category_id and ...
+        console.log('Fixed and costs monthly_expenses:' + JSON.stringify(data))
+        console.log('Record is equal to:' + JSON.stringify(recordas))
         const obj = {
-          cost_item_id: element.cost_item_id,
-          price: element.price,
-          vat: element.vat,
-          first_expenses: element.first_expenses,
-          monthly_expenses: element.monthly_expenses,
+            category_id: null,
+            category_title: null,
+            values: data,
+            record: recordas,
+            visible: true,
         }
-        items.push(obj)
-      } else if (element.type === 'Fixed') {
-        const obj = {
-          cost_item_id: element.cost_item_id,
-          price: element.price,
-          vat: element.vat,
-          first_expenses: element.first_expenses,
-          monthly_expenses: element.monthly_expenses
-        }
-        items.push(obj);
-      }
-    })
-    // postObject for post request
-    const postObject = {
-      business_plan_id: this.props.businessPlan.id,
-      cost_items: items
-    }
-    this.props.updateFixedAndVarCosts(postObject);
-    this.setState({
-      visibleHeader: 'hidden'
-    });
-  }
-  // setting cost_items to original_cost_items that are not modified.
-  // setting that UnsavedChangesHeader to be 'hidden'
-  discardChanges = () => {
-    this.props.getFinancialProjectionsCosts(this.props.businessPlan.id, () => {
-      this.setItems(this.props.financialProjections.fixed, this.props.financialProjections.variable, 1);
-      this.setItems(this.props.financialProjections.fixed, this.props.financialProjections.variable, 2);
-    });
-    window.location.reload(false)
-    // const original = this.state.original_cost_items;
-    // this.setState({
-    //   cost_items: original
-    // });
-    // const visibilityString = this.getUpdatesWindowState();
-    // this.setState({
-    //   visibleHeader: visibilityString
-    // });
-
-  }
-
-  //setting array of months available
-  monthsSet = () => {
-    const months = []
-    for (var a = 1; a < 13; a++) {
-      months.push(a);
-    }
-    this.setState({
-      selectedPeriod: months,
-    })
-  }
-  // function to get cost_items array. which is basically array
-  // which consist of all fixed and variable costs. they are connected to cost_items array(state)
-  // which i later change based on user input
-  setItems = (fixedArray, variableArray, number) => {
-    const array = []
-    var indexas = 0;
-    //looping through fixed array and pushing all items to array
-    fixedArray.forEach(element => {
-      // for each object in types array create new object and add it to array
-      element.types.forEach(element1 => {
-        const obj = {
-          type: 'Fixed',
-          name: element.type_title,
-          category_title: element.category_title,
-          category_id: element.category_id,
-          cost_item_id: element1.cost_item_id,
-          price: element1.price === null ? 0 : element1.price,
-          vat: element1.vat,
-          type_title: element1.type_title,
-          pos: indexas,
-          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses,
-          monthly_expenses: element1.monthly_expenses,
-        }
-        array.push(obj);
-        indexas = indexas + 1;
-      });
-    });
-    //looping through variable array and pushing all items to array. so now array will have
-    //both fixed and variable costs
-    variableArray.forEach(element => {
-      element.types.forEach(element1 => {
-        const obj = {
-          type: 'Variable',
-          name: element.type_title,
-          category_title: element.category_title,
-          category_id: element.category_id,
-          cost_item_id: element1.cost_item_id,
-          price: element1.price === null ? 0 : element1.price,
-          vat: element1.vat,
-          type_title: element1.type_title,
-          pos: indexas,
-          first_expenses: element1.first_expenses === null ? 1 : element1.first_expenses,
-          monthly_expenses: element1.monthly_expenses
-        }
-        array.push(obj);
-        indexas = indexas + 1;
-      })
-    })
-    if (number === 1) {
-      this.setState({
-        cost_items: array,
-      });
-    }
-    if (number === 2) {
-      this.setState({
-        original_cost_items: array,
-      });
-    }
-
-
-  }
-  //to update state (cost_items) which holds both variable and fixed costs
-  updateCostItemsProperties = (value, record, inputName) => {
-    const array = this.state.cost_items;
-    // loop though each object in cost_items array. check for item with given id
-    //update price,firstexpenses, or vat rate fields. depending on given input name
-    array.forEach(element => {
-      if (element.cost_item_id === record.cost_item_id) {
-        if (inputName === "price") {
-          element.price = Number(value);
-        } else if (inputName === "vat") {
-          element.vat = value;
-        } else if (inputName === "first_expenses") {
-          // get first character of string ('1st mo.). convert '1' to number
-          const st = value.charAt(0);
-          element.first_expenses = Number(st)
-        }
-      }
-    });
-
-    this.setState({
-      cost_items: array
-    });
-
-    const visibilityString = this.getUpdatesWindowState();
-    this.setState({
-      visibleHeader: visibilityString
-    });
-
-    console.log(JSON.stringify(this.state.cost_items))
-    console.log('Original' + JSON.stringify(this.state.original_cost_items))
-
-  }
-  // function to check if cost_items array value are equal to original_cost_items
-  // if it doesnt equal then return false. and then i would be able to display UnsavedChangesHeader component to
-  // save or discard changes
-  arraysEqual = (array1, array2) => {
-    let a = JSON.parse(JSON.stringify(array1));
-    let b = JSON.parse(JSON.stringify(array2));
-    let original = array1;
-    let modified = array2;
-
-    if (a === b) return true;
-    if (a == null || b == null) return false;
-    if (a.length !== b.length) return false;
-
-    a = a.sort();
-    b = b.sort();
-    for (var i = 0; i < original.length; ++i) {
-      if (original[i].price !== modified[i].price || original[i].vat !== modified[i].vat || original[i].first_expenses !== modified[i].first_expenses) {
-        // console.log('Original price:' + original[i].price + ", modified price is: " + modified[i].price)
-        console.log('They are not equal')
-        return false;
-      }
-    }
-    return true;
-  }
-
-  // method to check if UnsavedChangesHeader should be visible or not.
-  // with help of arrayEqual method i can compare if cost_items is equal or not to 
-  // original array.
-  getUpdatesWindowState() {
-    const original = this.state.original_cost_items;
-    const modified = this.state.cost_items;
-
-    if (original === null) {
-      return 'hidden';
-    }
-    if (modified === null) {
-      return 'hidden';
-    }
-    if (this.arraysEqual(original, modified) === false) {
-      return 'visible';
-    }
-    return 'hidden';
-  }
-
-
-  componentDidMount() {
-    if (this.props.businessPlan.id === null) {
-      if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
-        this.props.history.push(`/`);
-      } else {
-        this.props.refreshPlan(localStorage.getItem("plan"), () => {
-          this.props.getFinancialProjectionsCosts(this.props.businessPlan.id, () => {
-            this.setState({
-              update: this.props.financialProjections
+        // clone variable state array. i do not work with it directly.
+        // check if element with that id exist and then set values of obj
+        const variableArray = JSON.parse(JSON.stringify(this.state.variable));
+        variableArray.map((obj, index) => {
+            obj.types.map((element, index1) => {
+                if (element.cost_item_id === recordas.cost_item_id) {
+                    obj.category_id = obj.category_id;
+                    obj.category_title = obj.category_title;
+                    obj.record = recordas
+                }
             });
-            console.log('Financial projections:' + JSON.stringify(this.props.financialProjections.fixed))
-            console.log('Updateeee projections:' + JSON.stringify(this.state.update.fixed))
-            const obj = { id: this.props.businessPlan.id }
-            this.props.getCountryShortCode(obj, (data) => {
-              this.props.getCountryVat(this.props.country.countryShortCode);
-              this.setState({
-                vats: this.props.countryVats
-              });
-            });
-            // this.getOriginalCostArray(this.props.financialProjections.fixed, this.props.financialProjections.variable);
-            this.setItems(this.props.financialProjections.fixed, this.props.financialProjections.variable, 1);
-            this.setItems(this.props.financialProjections.fixed, this.props.financialProjections.variable, 2);
-            this.monthsSet();
-          });
-
         });
-      }
-    } else {
-      this.props.getFinancialProjectionsCosts(this.props.businessPlan.id, () => {
         this.setState({
-          update: this.props.financialProjections
+            variablePopUp: obj,
         });
-        console.log('Financial projections:' + JSON.stringify(this.props.financialProjections.fixed))
-        console.log('Updateeee projections:' + JSON.stringify(this.state.update.fixed))
-        const obj = { id: this.props.businessPlan.id }
-        this.props.getCountryShortCode(obj, (data) => {
-          this.props.getCountryVat(this.props.country.countryShortCode);
-          this.setState({
-            vats: this.props.countryVats
-          });
-        });
-        // this.getOriginalCostArray(this.props.financialProjections.fixed, this.props.financialProjections.variable);
-        this.setItems(this.props.financialProjections.fixed, this.props.financialProjections.variable, 1);
-        this.setItems(this.props.financialProjections.fixed, this.props.financialProjections.variable, 2);
-        this.monthsSet();
-      });
     }
-  }
 
-
-  render() {
-
-    // var fixed = [];
-    // var variable = [];
-    // fixed = this.state.update.fixed;
-    // variable = this.state.update.variable;
-    // console.log('Fixed is eequal to:'+JSON.stringify())
-
-    //everytime screen rerenders it will call getUpdatesWindowState method which set const isVisibleHeader to 'visible' or 'hidden'
-    const fixed_costs_columns = [
-      {
-        title: 'Name',
-        dataIndex: 'type_title',
-        width: '55%',
-      },
-      {
-        title: 'Euro/mo. without VAT',
-        dataIndex: 'price',
-        width: '20%',
-        render: (text, record, index) => (
-          <Input
-            // min={0}
-            // size="large"
-            type={"number"}
-            className={"numInput"}
-            defaultValue={text === null ? 0 : text}
-            onChange={e => this.updateCostItemsProperties(e.target.value, record, "price")}
-          />
-        )
-      },
-      {
-        title: 'VAT Rate',
-        dataIndex: 'vat',
-        width: '10%',
-        render: (text, record, index) => (
-          <Select defaultValue={text === null ? 'Null' : text} onChange={e => this.updateCostItemsProperties(e, record, "vat")}>
-            <Option value={this.props.countryVats.standardRate}>{this.props.countryVats.standardRate + "%"}</Option>
-            <Option value={this.props.countryVats.reducedRates2}>{this.props.countryVats.reducedRates2 + "%"}</Option>
-            <Option value={this.props.countryVats.reducedRates1}>{this.props.countryVats.reducedRates1 + "%"}</Option>
-            <Option value={this.props.countryVats.superReducedRate}>{this.props.countryVats.superReducedRate === null ? "Null" : this.props.countryVats.superReducedRate}</Option>
-          </Select>
-        )
-      },
-      {
-        title: 'First expenses',
-        dataIndex: 'first_expenses',
-        width: '15%',
-        render: (text, record, index) => (
-          <Input.Group compact>
-            <Select defaultValue={text === null ? "1st mo." : text + "st mo."} onChange={e => this.updateCostItemsProperties(e, record, "first_expenses")}>
-              {this.state.selectedPeriod.map((value, index) => (
-                <Option value={value + "st mo."}>{value + "st mo."}</Option>
-              ))}
-            </Select>
-          </Input.Group>
-        )
-      },
-    ];
-
-    const fixed_salaries_costs_columns = [
-      {
-        title: 'Name',
-        dataIndex: 'type_title',
-        width: '55%',
-      },
-      {
-        title: 'Euro/mo. without VAT',
-        dataIndex: 'price',
-        width: '20%',
-        render: (text, record, index) => (
-          <Input
-            // min={0}
-            // size="large"
-            type={"number"}
-            className={"numInput"}
-            defaultValue={text === null ? 0 : text}
-            onChange={e => this.updateCostItemsProperties(e.target.value, record, "price")}
-          />
-        )
-      },
-      {
-        title: 'First expenses',
-        dataIndex: 'first_expenses',
-        width: '15%',
-        render: (text, record, index) => (
-          <Input.Group compact>
-            <Select defaultValue={text === null ? "1st mo." : text + "st mo."} onChange={e => this.updateCostItemsProperties(e, record, "first_expenses")}>
-              {this.state.selectedPeriod.map((value, index) => (
-                <Option value={value + "st mo."}>{value + "st mo."}</Option>
-              ))}
-            </Select>
-          </Input.Group>
-        )
-      },
-    ];
-
-    const variable_salaries_costs_columns = [
-      {
-        title: 'Name',
-        dataIndex: 'type_title',
-        width: '65%',
-      },
-      {
-        title: 'Euro/mo. without VAT',
-        dataIndex: 'monthly_expenses',
-        width: '35%',
-        render: (text, record, index) => {
-          return (<Input
-            defaultValue={text === null ? '0,0,0,0,0,0,0,0,0,0,0,0' : String(text)}
-            value={text}
-            onClick={(e) => this.showModal(record, text, index)} />)
+    handleModalCancel = () => {
+        const obj = {
+            category_id: null,
+            category_title: null,
+            values: null,
+            record: {},
+            visible: false
         }
-      },
-    ];
-
-    const variable_costs_columns = [
-      {
-        title: 'Name',
-        dataIndex: 'type_title',
-        width: '55%',
-      },
-      {
-        title: 'Euro/mo. without VAT',
-        dataIndex: 'monthly_expenses',
-        width: '20%',
-        render: (text, record, index) => {
-          return (<Input
-            defaultValue={text === null ? '0,0,0,0,0,0,0,0,0,0,0,0' : String(text)}
-            value={text}
-            onClick={(e) => this.showModal(record, text, index)} />)
+        this.setState({
+            variablePopUp: obj,
+        })
+    }
+    //passing prices array 
+    handleOk = () => {
+        const obj = {
+            category_id: null,
+            category_title: null,
+            values: null,
+            record: {},
+            visible: false
         }
-      },
-      {
-        title: 'VAT Rate',
-        dataIndex: 'vat',
-        width: '10%',
-        render: (text, record, index) => (
-          <Input.Group compact>
-            <Select defaultValue={text === null ? 'Null' : text} onChange={e => this.updateCostItemsProperties(e, record, "vat")}>
-              <Option value={this.props.countryVats.standardRate}>{this.props.countryVats.standardRate + "%"}</Option>
-              <Option value={this.props.countryVats.reducedRates2}>{this.props.countryVats.reducedRates2 + "%"}</Option>
-              <Option value={this.props.countryVats.reducedRates1}>{this.props.countryVats.reducedRates1 + "%"}</Option>
-              <Option value={this.props.countryVats.superReducedRate}>{this.props.countryVats.superReducedRate === null ? "Null" : this.props.countryVats.superReducedRate}</Option>
-            </Select>
-          </Input.Group>
-        )
-      }
-    ];
-
-    return (
-      <>
-        <UnsavedChangesHeader
-          visibility={this.state.visibleHeader}
-          discardChanges={this.discardChanges}
-          saveChanges={this.saveChanges}
-        />
-        <Col span={16} offset={4}>
-          <Breadcrumb style={{ marginTop: "40px" }}>
-            <Breadcrumb.Item style={{ marginTop: "40px" }}>
-              <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item style={{ marginTop: "40px" }}>
-              <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>
-              <Space>Financial projections</Space>
-            </Breadcrumb.Item>
-          </Breadcrumb>
-        </Col>
-        <Row align="middle" styke={{ marginTop: "9px" }}>
-          <Col span={12} offset={4}>
-            <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
-              <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
-              <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Fixed and Variables Costs</Text>
-              <Tooltip title="Tooltip text">
-                <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
-              </Tooltip>
-            </div>
-          </Col>
-          <Col span={4}>
-            <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-              <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={false} />
-            </div>
-          </Col>
-        </Row>
-
-        <Col span={16} offset={4}>
-          <Divider />
-        </Col>
-        <Col offset={4} span={16}>
-          <Tabs defaultActiveKey="1">
-            <TabPane tab="Fixed Costs" key="1">
-              {this.props.financialProjections.fixed.map((obj, index) => {
-                return (
-                  <div style={{ marginBottom: 24 }}>
-                    <Col span={24}>
-                      <Row>
-                        <Col span={7}>
-                          {index === 0 ?
-                            <div style={{ marginRight: '40px' }}>
-                              <Typography.Title style={{ ...aboutTitleTextStyle }}>Fixed Costs</Typography.Title>
-                              <Typography.Text style={{ ...textStyle }}>
-                                Please indicate the amount of fixed and variable costs (all shown cost are based on pre-filled information in canvas)A60
-                              </Typography.Text>
-                            </div> : <div></div>}
-                        </Col>
-                        {/* returns second column with table */}
-                        {/* <FixedCostTable data={obj.types} countryVats={this.props.countryVats} category_title={obj.category_title} category_id={obj.category_id} /> */}
-                        {obj.category_title === "Salaries" ? <Col span={17}>
-                          <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                            <Table
-                              rowKey="id"
-                              columns={fixed_salaries_costs_columns}
-                              dataSource={obj.types}
-                              pagination={false}
-                              title={() => obj.category_title}
-                            />
-                          </Card>
-                        </Col> : <Col span={17}>
-                          <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                            <Table
-                              rowKey="id"
-                              columns={fixed_costs_columns}
-                              dataSource={obj.types}
-                              pagination={false}
-                              title={() => obj.category_title}
-                            />
-                          </Card>
-                        </Col>}
+        this.setState({
+            variablePopUp: obj,
+            visibleHeader: 'hidden'
+        });
+    }
 
 
-                      </Row>
+    discardChanges = () => {
+        console.log('Dicard changes');
+        // cloning fixed and variable states from redux state
+        const fixedArray = JSON.parse(JSON.stringify(this.props.financialProjections.fixed));
+        const variableArray = JSON.parse(JSON.stringify(this.props.financialProjections.variable));
+        //setting our fixed and variable states to original from redux that were not changed
+        this.setState({
+            fixed: fixedArray,
+            variable: variableArray,
+            visibleHeader: 'hidden'
+        });
+    }
+
+    saveChanges = () => {
+        console.log('Saving changes')
+        const items = [];
+
+        // cloning fixed and variable from financialProjections. i dont work directly with states
+        const originalFixedArray = JSON.parse(JSON.stringify(this.props.financialProjections.fixed));
+        const originalVariableArray = JSON.parse(JSON.stringify(this.props.financialProjections.variable));
+        // cloning fixed and variable states. cant work directly with them
+        const modifiedFixedArray = JSON.parse(JSON.stringify(this.state.fixed));
+        const modifiedVariableArray = JSON.parse(JSON.stringify(this.state.variable));
+
+
+        // looping through original array and checking if any of attributes where changed in modified array 
+        originalFixedArray.map((obj, index) => {
+            obj.types.map((element, index1) => {
+                if (originalFixedArray[index].types[index1].price !== modifiedFixedArray[index].types[index1].price ||
+                    originalFixedArray[index].types[index1].vat !== modifiedFixedArray[index].types[index1].vat ||
+                    originalFixedArray[index].types[index1].first_expenses !== modifiedFixedArray[index].types[index1].first_expenses ||
+                    originalFixedArray[index].types[index1].monthly_expenses !== modifiedFixedArray[index].types[index1].monthly_expenses
+                ) {
+                    const modifiedObj = {
+                        cost_item_id: modifiedFixedArray[index].types[index1].cost_item_id,
+                        price: modifiedFixedArray[index].types[index1].price,
+                        vat: modifiedFixedArray[index].types[index1].vat,
+                        first_expenses: modifiedFixedArray[index].types[index1].first_expenses,
+                        monthly_expenses: modifiedFixedArray[index].types[index1].monthly_expenses
+                    }
+                    items.push(modifiedObj);
+                }
+            });
+        });
+
+        // looping through originalVariableArray and checking if attributes values where changed in modified array 
+        originalVariableArray.map((obj, index) => {
+            obj.types.map((element, index1) => {
+                if (originalVariableArray[index].types[index1].price !== modifiedVariableArray[index].types[index1].price ||
+                    originalVariableArray[index].types[index1].vat !== modifiedVariableArray[index].types[index1].vat ||
+                    originalVariableArray[index].types[index1].first_expenses !== modifiedVariableArray[index].types[index1].first_expenses ||
+                    originalVariableArray[index].types[index1].monthly_expenses !== modifiedVariableArray[index].types[index1].monthly_expenses
+                ) {
+                    const modifiedObj = {
+                        cost_item_id: modifiedVariableArray[index].types[index1].cost_item_id,
+                        price: modifiedVariableArray[index].types[index1].price,
+                        vat: modifiedVariableArray[index].types[index1].vat,
+                        first_expenses: modifiedVariableArray[index].types[index1].first_expenses,
+                        monthly_expenses: modifiedVariableArray[index].types[index1].monthly_expenses
+                    }
+                    items.push(modifiedObj);
+                }
+            });
+        });
+        // postObject for update
+        const postObject = {
+            business_plan_id: this.props.businessPlan.id,
+            cost_items: items
+        }
+
+        // dispatching action to update fixedAndVar costs
+        this.props.updateFixedAndVarCosts(postObject);
+        this.setState({
+            visibleHeader: 'hidden'
+        });
+    }
+
+    monthsSet = () => {
+        const months = [];
+        for (var a = 1; a < 13; a++) {
+            months.push(a);
+            this.setState({
+                selectedPeriod: months
+            });
+        }
+    }
+
+    arraysEqual = (array1, array2) => {
+        let a = JSON.parse(JSON.stringify(array1));
+        let b = JSON.parse(JSON.stringify(array2));
+
+        let original = array1;
+        let modified = array2;
+
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length !== b.length) return false;
+
+        a = a.sort();
+        b = b.sort();
+
+        original.map((obj, index) => {
+            obj.types.map((element, index1) => {
+                if (original[index].types[index1].price !== modified[index].types[index1].price ||
+                    original[index].types[index1].vat !== modified[index].types[index1].vat ||
+                    original[index].types[index1].first_expenses !== modified[index].types[index1].first_expenses
+                ) {
+                    console.log('They are not equal!!!')
+                    return false;
+                }
+            });
+        });
+
+        return true;
+    }
+
+    getUpdateWindowState = () => {
+        // clone of fixed state. i should not interact with it directly
+        const originalFixed = JSON.parse(JSON.stringify(this.props.financialProjections.fixed));
+        const modifiedFixed = JSON.parse(JSON.stringify(this.state.fixed));
+        const originalVariable = JSON.parse(JSON.stringify(this.props.financialProjections.variable))
+        const modifiedVariable = JSON.parse(JSON.stringify(this.state.variable));
+
+        if (originalFixed !== modifiedFixed || originalVariable !== modifiedVariable) {
+            this.setState({
+                visibleHeader: 'visible'
+            });
+        } else {
+            this.setState({
+                visibleHeader: 'hidden'
+            });
+        }
+    }
+
+    onFixedChange = (value, record, inputName) => {
+        // clone of fixed state
+        const originalArray = [...this.props.financialProjections.fixed]
+        const arrayOfFixed = JSON.parse(JSON.stringify(this.state.fixed))
+        arrayOfFixed.map((obj, index) => {
+            obj.types.map((element, index2) => {
+                if (element.cost_item_id === record.cost_item_id) {
+                    if (inputName === "price") {
+                        console.log('Want to change PRICE from:' + element.price + ", to:" + value)
+                        element.price = value;
+                    }
+                    if (inputName === "vat") {
+                        console.log('Want to change VAT from:' + element.vat + ", to:" + value);
+                        element.vat = value;
+                    }
+                    if (inputName === "first_expenses") {
+                        console.log('Want to change First_Expenses from:' + element.first_expenses + ', to: ' + value);
+                        // const st = value.charAt(0);
+                        const expensesSliced = value.slice(0, -6)
+                        element.first_expenses = Number(expensesSliced)
+                    }
+                }
+            });
+        });
+        this.setState({
+            fixed: arrayOfFixed
+        });
+
+        this.getUpdateWindowState();
+
+        console.log('Array of fixed is:' + JSON.stringify(originalArray));
+        console.log('Modified fixed array is:' + JSON.stringify(this.state.fixed))
+
+    }
+
+    onVariableChange = (value, record, inputName) => {
+        // clone variable state, dont change directly
+        const originalArray = [...this.props.financialProjections.variable];
+        const arrayOfVariable = JSON.parse(JSON.stringify(this.state.variable));
+        arrayOfVariable.map((obj, index) => {
+            obj.types.map((element, index1) => {
+                if (element.cost_item_id === record.cost_item_id) {
+                    if (inputName === "vat") {
+                        element.vat = value;
+                    }
+                }
+            });
+        });
+        this.setState({
+            variable: arrayOfVariable
+        });
+
+        this.getUpdateWindowState();
+        console.log('Array of variable is:' + JSON.stringify(originalArray));
+        console.log('Modified variable array is:' + JSON.stringify(this.state.variable));
+    }
+
+
+    setFixedAndVarCosts = () => {
+        // cloning financialProjections fixed and variable costs
+        // const fixedArray = [...this.props.financialProjections.fixed]
+        const fixedClone = JSON.parse(JSON.stringify(this.props.financialProjections.fixed))
+        const variableClone = JSON.parse(JSON.stringify(this.props.financialProjections.variable));
+        // const variableArray = [...this.props.financialProjections.variable]
+        this.setState({
+            fixed: fixedClone
+        });
+        // [{"category_title":"Rent of office","category_id":"df741ccc-d2ef-4797-8c96-8b5be0344f88","types":[{"cost_item_id":"c857933a-317e-4e28-98c7-4aad3d9a8276","type_title":"Other","type_id":"e221190c-00bc-404f-a540-708d0e673454","price":"600","vat":5,"first_expenses":4,"monthly_expenses":null}],"key":"df741ccc-d2ef-4797-8c96-8b5be0344f88"},{"category_title":"Rent of buildings","category_id":"da2dac96-650b-4d54-a984-9c6bae0653c7","types":[{"cost_item_id":"0b57a5b8-cbaa-4dd2-8992-81bf9c6d7e4d","type_title":"Manufacturing buildings","type_id":"2d9ebc0f-7a82-4891-8dc6-1fa64b5fa22d","price":800,"vat":21,"first_expenses":2,"monthly_expenses":null}],"key":"da2dac96-650b-4d54-a984-9c6bae0653c7"},{"category_title":"Utilities","category_id":"25532174-0c07-4293-99c2-10c954ad6367","types":[{"cost_item_id":"590d5af6-fa73-4fcf-913b-55186c8077b1","type_title":"Electricity","type_id":"e6aaacaf-9550-4937-bf13-0d1ff0b69874","price":1000,"vat":21,"first_expenses":3,"monthly_expenses":null}],"key":"25532174-0c07-4293-99c2-10c954ad6367"},{"category_title":"Salaries","category_id":"f5d95c3b-4894-41b1-98b8-b1eb44ef436a","types":[{"cost_item_id":"713bd669-9901-4b55-b57a-10d4c42f1049","type_title":"Management","type_id":"c804bad3-0387-44fb-9817-93085d14ccf9","price":800,"vat":5,"first_expenses":2,"monthly_expenses":null}],"key":"f5d95c3b-4894-41b1-98b8-b1eb44ef436a"}]
+        this.setState({
+            variable: variableClone
+        });
+    }
+
+    componentDidMount() {
+        if (this.props.businessPlan.id === null) {
+            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                this.props.history.push(`/`);
+            } else {
+                this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                    this.props.getFinancialProjectionsCosts(this.props.businessPlan.id, () => {
+                        // cloning what is in financialProjections fixed and variable state
+                        this.setFixedAndVarCosts();
+                        const obj = { id: this.props.businessPlan.id }
+                        this.props.getCountryShortCode(obj, (data) => {
+                            this.props.getCountryVat(this.props.country.countryShortCode);
+                            this.setState({
+                                vats: this.props.countryVats
+                            });
+                        });
+
+                        this.monthsSet();
+                    });
+
+                });
+            }
+        } else {
+            this.props.getFinancialProjectionsCosts(this.props.businessPlan.id, () => {
+                // cloning what is in financialProjections fixed and variable state
+                this.setFixedAndVarCosts();
+                const obj = { id: this.props.businessPlan.id }
+                this.props.getCountryShortCode(obj, (data) => {
+                    this.props.getCountryVat(this.props.country.countryShortCode);
+                    this.setState({
+                        vats: this.props.countryVats
+                    });
+                });
+
+                this.monthsSet();
+            });
+        }
+    }
+
+
+
+    render() {
+        console.log('Variable changed:'+JSON.stringify(this.props.financialProjections.variable))
+        const fixed_costs_columns = [
+            {
+                title: 'Name',
+                dataIndex: 'type_title',
+                width: '55%',
+            },
+            {
+                title: 'Euro/mo. without VAT',
+                dataIndex: 'price',
+                width: '20%',
+                render: (text, record, index) => (
+                    <Input
+                        // min={0}
+                        // size="large"
+                        type={"number"}
+                        className={"numInput"}
+                        defaultValue={text === null ? 0 : text}
+                        value={text}
+                        onChange={e => this.onFixedChange(e.target.value, record, "price")}
+                    />
+                )
+            },
+            {
+                title: 'VAT Rate',
+                dataIndex: 'vat',
+                width: '10%',
+                render: (text, record, index) => (
+                    <Select defaultValue={text === null ? 'Null' : text} value={text} onChange={e => this.onFixedChange(e, record, "vat")}>
+                        <Option value={this.props.countryVats.standardRate}>{this.props.countryVats.standardRate + "%"}</Option>
+                        <Option value={this.props.countryVats.reducedRates2}>{this.props.countryVats.reducedRates2 + "%"}</Option>
+                        <Option value={this.props.countryVats.reducedRates1}>{this.props.countryVats.reducedRates1 + "%"}</Option>
+                        <Option value={this.props.countryVats.superReducedRate}>{this.props.countryVats.superReducedRate === null ? "Null" : this.props.countryVats.superReducedRate}</Option>
+                    </Select>
+                )
+            },
+            {
+                title: 'First expenses',
+                dataIndex: 'first_expenses',
+                width: '15%',
+                render: (text, record, index) => (
+                    <Input.Group compact>
+                        <Select defaultValue={text === null ? "1st mo." : text + "st mo."} value={text + "st mo."} onChange={e => this.onFixedChange(e, record, "first_expenses")}>
+                            {this.state.selectedPeriod.map((value, index) => (
+                                <Option value={value + "st mo."}>{value + "st mo."}</Option>
+                            ))}
+                        </Select>
+                    </Input.Group>
+                )
+            },
+        ];
+
+        const fixed_salaries_costs_columns = [
+            {
+                title: 'Name',
+                dataIndex: 'type_title',
+                width: '55%',
+            },
+            {
+                title: 'Euro/mo. without VAT',
+                dataIndex: 'price',
+                width: '20%',
+                render: (text, record, index) => (
+                    <Input
+                        // min={0}
+                        // size="large"
+                        type={"number"}
+                        className={"numInput"}
+                        defaultValue={text === null ? 0 : text}
+                        value={text}
+                        onChange={e => this.onFixedChange(e.target.value, record, "price")}
+                    />
+                )
+            },
+            {
+                title: 'First expenses',
+                dataIndex: 'first_expenses',
+                width: '15%',
+                render: (text, record, index) => (
+                    <Input.Group compact>
+                        <Select defaultValue={text === null ? "1st mo." : text + "st mo."} value={text + "st mo."} onChange={e => this.onFixedChange(e, record, "first_expenses")}>
+                            {this.state.selectedPeriod.map((value, index) => (
+                                <Option value={value + "st mo."}>{value + "st mo."}</Option>
+                            ))}
+                        </Select>
+                    </Input.Group>
+                )
+            },
+        ];
+
+        const variable_salaries_costs_columns = [
+            {
+                title: 'Name',
+                dataIndex: 'type_title',
+                width: '65%',
+            },
+            {
+                title: 'Euro/mo. without VAT',
+                dataIndex: 'monthly_expenses',
+                width: '35%',
+                render: (text, record, index) => {
+                    return (<Input
+                        defaultValue={text === null ? '0,0,0,0,0,0,0,0,0,0,0,0' : String(text)}
+                        value={text}
+                        onClick={(e) => this.showModal(record, text, index)} />)
+                }
+            },
+        ];
+
+        const variable_costs_columns = [
+            {
+                title: 'Name',
+                dataIndex: 'type_title',
+                width: '55%',
+            },
+            {
+                title: 'Euro/mo. without VAT',
+                dataIndex: 'monthly_expenses',
+                width: '20%',
+                render: (text, record, index) => {
+                    return (<Input
+                        defaultValue={text === null ? '0,0,0,0,0,0,0,0,0,0,0,0' : String(text)}
+                        value={String(text)}
+                        onClick={(e) => this.showModal(record, text, index)} />)
+                }
+            },
+            {
+                title: 'VAT Rate',
+                dataIndex: 'vat',
+                width: '10%',
+                render: (text, record, index) => (
+                    <Input.Group compact>
+                        <Select defaultValue={text === null ? 'Null' : text} onChange={e => this.onVariableChange(e, record, "vat")}>
+                            <Option value={this.props.countryVats.standardRate}>{this.props.countryVats.standardRate + "%"}</Option>
+                            <Option value={this.props.countryVats.reducedRates2}>{this.props.countryVats.reducedRates2 + "%"}</Option>
+                            <Option value={this.props.countryVats.reducedRates1}>{this.props.countryVats.reducedRates1 + "%"}</Option>
+                            <Option value={this.props.countryVats.superReducedRate}>{this.props.countryVats.superReducedRate === null ? "Null" : this.props.countryVats.superReducedRate}</Option>
+                        </Select>
+                    </Input.Group>
+                )
+            }
+        ];
+        return (
+            <>
+                <UnsavedChangesHeader
+                    visibility={this.state.visibleHeader}
+                    discardChanges={this.discardChanges}
+                    saveChanges={this.saveChanges}
+                />
+                <Col span={16} offset={4}>
+                    <Breadcrumb style={{ marginTop: "40px" }}>
+                        <Breadcrumb.Item style={{ marginTop: "40px" }}>
+                            <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item style={{ marginTop: "40px" }}>
+                            <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item>
+                            <Space>Financial projections</Space>
+                        </Breadcrumb.Item>
+                    </Breadcrumb>
+                </Col>
+                <Row align="middle" styke={{ marginTop: "9px" }}>
+                    <Col span={12} offset={4}>
+                        <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
+                            <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
+                            <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Fixed and Variables Costs</Text>
+                            <Tooltip title="Tooltip text">
+                                <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
+                            </Tooltip>
+                        </div>
                     </Col>
-                  </div>)
-              })}
-            </TabPane>
-            <TabPane tab="Variable Costs" key="2">
-              {this.props.financialProjections.variable.map((obj, index) => {
-                return (
-                  <div style={{ marginBottom: 24 }}>
-                    <Col span={24}>
-                      <Row>
-                        <Col span={7}>
-                          {index === 0 ?
-                            <div style={{ marginRight: '40px' }}>
-                              <Typography.Title style={{ ...aboutTitleTextStyle }}>Variable Costs</Typography.Title>
-                              <Typography.Text style={{ ...textStyle }}>
-                                Please indicate the amount of fixed and variable costs (all shown cost are based on pre-filled information in canvas)A60
-                              </Typography.Text>
-                            </div> : <div></div>}
-                        </Col>
-                        {/* returns second column with table */}
-                        {obj.category_title === "Salaries" ? <Col span={17}>
-                          <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                            <Table
-                              rowKey="id"
-                              columns={variable_salaries_costs_columns}
-                              dataSource={obj.types}
-                              pagination={false}
-                              title={() => obj.category_title}
-                            />
-                          </Card>
-                        </Col> : <Col span={17}>
-                          <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                            <Table
-                              rowKey="id"
-                              columns={variable_costs_columns}
-                              dataSource={obj.types}
-                              pagination={false}
-                              title={() => obj.category_title}
-                            />
-                          </Card>
-                        </Col>}
-
-                      </Row>
+                    <Col span={4}>
+                        <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
+                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={false} />
+                        </div>
                     </Col>
-                  </div>)
-              })}
-            </TabPane>
-          </Tabs>
-        </Col>
+                </Row>
 
-        {this.state.variablePopUp.visible !== false ?
-          <VariableCostPopUp category_title={this.state.variablePopUp.category_title === null ? 'Yes' : this.state.variablePopUp.category_title}
-            visible={this.state.variablePopUp.visible} handleOk={this.handleOk} handleCancel={this.handleModalCancel} monthly_expenses={this.state.variablePopUp.values} record={this.state.variablePopUp.record}
-            businessPlanId={this.props.businessPlan.id} />
-          : null
-        }
-      </>
-    )
-  }
+                <Col span={16} offset={4}>
+                    <Divider />
+                </Col>
+                <Col offset={4} span={16}>
+                    <Tabs defaultActiveKey="1">
+                        <TabPane tab="Fixed Costs" key="1">
+                            {this.state.fixed.map((obj, index) => {
+                                return (
+                                    <div style={{ marginBottom: 24 }}>
+                                        <Col span={24}>
+                                            <Row>
+                                                <Col span={7}>
+                                                    {index === 0 ?
+                                                        <div style={{ marginRight: '40px' }}>
+                                                            <Typography.Title style={{ ...aboutTitleTextStyle }}>Fixed Costs</Typography.Title>
+                                                            <Typography.Text style={{ ...textStyle }}>
+                                                                Please indicate the amount of fixed and variable costs (all shown cost are based on pre-filled information in canvas)A60
+                                                            </Typography.Text>
+                                                        </div> : <div></div>}
+                                                </Col>
+                                                {/* returns second column with table */}
+                                                {/* <FixedCostTable data={obj.types} countryVats={this.props.countryVats} category_title={obj.category_title} category_id={obj.category_id} /> */}
+                                                {obj.category_title === "Salaries" ? <Col span={17}>
+                                                    <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                                                        <Table
+                                                            rowKey="id"
+                                                            columns={fixed_salaries_costs_columns}
+                                                            dataSource={obj.types}
+                                                            pagination={false}
+                                                            title={() => obj.category_title}
+                                                        />
+                                                    </Card>
+                                                </Col> : <Col span={17}>
+                                                    <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                                                        <Table
+                                                            rowKey="id"
+                                                            columns={fixed_costs_columns}
+                                                            dataSource={obj.types}
+                                                            pagination={false}
+                                                            title={() => obj.category_title}
+                                                        />
+                                                    </Card>
+                                                </Col>}
+
+
+                                            </Row>
+                                        </Col>
+                                    </div>)
+                            })}
+                        </TabPane>
+                        <TabPane tab="Variable Costs" key="2">
+                            {this.props.financialProjections.variable.map((obj, index) => {
+                                return (
+                                    <div style={{ marginBottom: 24 }}>
+                                        <Col span={24}>
+                                            <Row>
+                                                <Col span={7}>
+                                                    {index === 0 ?
+                                                        <div style={{ marginRight: '40px' }}>
+                                                            <Typography.Title style={{ ...aboutTitleTextStyle }}>Variable Costs</Typography.Title>
+                                                            <Typography.Text style={{ ...textStyle }}>
+                                                                Please indicate the amount of fixed and variable costs (all shown cost are based on pre-filled information in canvas)A60
+                                                            </Typography.Text>
+                                                        </div> : <div></div>}
+                                                </Col>
+                                                {/* returns second column with table */}
+                                                {obj.category_title === "Salaries" ? <Col span={17}>
+                                                    <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                                                        <Table
+                                                            rowKey="id"
+                                                            columns={variable_salaries_costs_columns}
+                                                            dataSource={obj.types}
+                                                            pagination={false}
+                                                            title={() => obj.category_title}
+                                                        />
+                                                    </Card>
+                                                </Col> : <Col span={17}>
+                                                    <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                                                        <Table
+                                                            rowKey="id"
+                                                            columns={variable_costs_columns}
+                                                            dataSource={obj.types}
+                                                            pagination={false}
+                                                            title={() => obj.category_title}
+                                                        />
+                                                    </Card>
+                                                </Col>}
+
+                                            </Row>
+                                        </Col>
+                                    </div>)
+                            })}
+                        </TabPane>
+                    </Tabs>
+                </Col>
+
+                {this.state.variablePopUp.visible !== false ?
+                    <VariableCostPopUp category_title={this.state.variablePopUp.category_title === null ? 'Yes' : this.state.variablePopUp.category_title}
+                        visible={this.state.variablePopUp.visible} handleOk={this.handleOk} handleCancel={this.handleModalCancel} monthly_expenses={this.state.variablePopUp.values} record={this.state.variablePopUp.record}
+                        businessPlanId={this.props.businessPlan.id} variable={this.state.variable} fixed={this.state.fixed} originalFixed={this.props.financialProjections.fixed} originalVariable={this.props.financialProjections.variable} />
+                    : null
+                }
+            </>
+        )
+    }
 }
+
 // selecting part of data from store. selecting states basically as with useSelector
 //It is called every time the store state changes.
 const mapStateToProps = (state) => {
-  return {
-    businessPlan: state.selectedBusinessPlan,
-    financialProjections: state.financialProjections,
-    country: state.countryShortCode,
-    countryVats: state.countryVats,
-  };
+    return {
+        businessPlan: state.selectedBusinessPlan,
+        financialProjections: state.financialProjections,
+        country: state.countryShortCode,
+        countryVats: state.countryVats,
+    };
 
 }
 //connect function connect react component to redux store

@@ -3,13 +3,13 @@ export const financialProjectionsReducer = (
         is_fixed_variable_completed: false,
         fixed: [],
         variable: [],
-        financialObject: null
+        financialObject: {}
     }, action) => {
     switch (action.type) {
         case 'FETCHING_FINANCIAL_PROJECTION_SUCCESS':
             const fixed = action.payload.fixed.map(obj => ({ ...obj, "key": obj.category_id }));
             const variable = action.payload.variable.map(obj => ({ ...obj, "key": obj.category_id }));
-            return { ...action.payload, "fixed": fixed, "variable": variable};
+            return { ...action.payload, "fixed": fixed, "variable": variable, "financialObject":action.payload};
         case "UPDATE_FIXED_AND_VAR_COSTS_SUCCESS":
             const items = action.payload.postObject.cost_items;
             const fixedArray = state.fixed;
