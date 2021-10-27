@@ -41,7 +41,9 @@ class CashFlow extends React.Component {
     }
 
     onCompletedChange(state) {
-        //this.props.saveState(this.props.businessPlan.id, state);
+        /*this.props.saveState(this.props.businessPlan.id, state, () => {
+            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+        });*/
     }
 
     componentDidMount() {
@@ -68,25 +70,36 @@ class CashFlow extends React.Component {
         const renderContent = (value, row, index) => {
             const obj = {
                 children: <p style={{ marginBottom: 0 }}>{value}</p>,
-                props: { style: { background: (parseInt(value) <= 0) ? "#FFCCC7" : '', marginBottom: 0 } },
-            };
+                props: {
+                    style: { fontWeight: 600, fontSize: '14px', background: (parseInt(value) <= 0) ? "#FFCCC7" : '', marginBottom: 0 },
+                }
+            }
             if (row.tag === "title" || row.tag === "section") {
                 obj.props.colSpan = 0;
+
+            }
+            if (row.tag === "summary") {
+                obj.props.style = { background: '#FAFAFA', marginBottom: 0, fontWeight: 600, fontSize: '14px' }
             }
             return obj;
         };
+
+
+
         const cashFlowColumns = [
             {
                 title: 'Cash flow',
                 dataIndex: 'title',
                 key: 'title',
+                fixed: 'left',
+                width: 600,
                 render: (text, row, index) => {
                     if (row.tag === "title") {
                         return {
                             children: <h1 style={{ marginBottom: 0 }}>{text}</h1>,
                             props: {
-                                colSpan: 4 + months.length,
-                                style: { background: "#FAFAFA", marginBottom: 0 }
+                                colSpan: 1,
+                                style: { marginBottom: 0 },
                             },
                         };
                     }
@@ -94,8 +107,8 @@ class CashFlow extends React.Component {
                         return {
                             children: <h3 style={{ marginBottom: 0 }}>{text}</h3>,
                             props: {
-                                colSpan: 4 + months.length,
-                                style: { background: "#FAFAFA", marginBottom: 0 }
+                                colSpan: 1,
+                                style: { marginBottom: 0 },
                             },
                         };
                     }
@@ -103,7 +116,7 @@ class CashFlow extends React.Component {
                         return {
                             children: <h3 style={{ marginBottom: 0 }}>{text}</h3>,
                             props: {
-                                style: { background: (parseInt(text) <= 0) ? "#FFCCC7" : '', marginBottom: 0 }
+                                style: { background: (parseInt(text) <= 0) ? "#FFCCC7" : '#FAFAFA', marginBottom: 0 }
                             },
                         };
                     }
@@ -115,7 +128,7 @@ class CashFlow extends React.Component {
                             },
                         };
                     }
-                    return <p style={{ marginBottom: 0 }}>{text}</p>;
+                    return <p style={{ marginBottom: 0, paddingLeft: 10 }}>{text}</p>;
 
                 },
             },
@@ -123,6 +136,8 @@ class CashFlow extends React.Component {
                 title: 'Month',
                 dataIndex: 'month',
                 key: 'month',
+                fixed: 'left',
+                align: 'left',
                 children: months,
                 render: renderContent,
             },
@@ -131,6 +146,7 @@ class CashFlow extends React.Component {
                 dataIndex: 'totalYear1',
                 key: 'totalYear1',
                 fixed: 'right',
+                width: 100,
                 render: renderContent,
             },
             {
@@ -138,6 +154,7 @@ class CashFlow extends React.Component {
                 dataIndex: 'totalYear2',
                 key: 'totalYear2',
                 fixed: 'right',
+                width: 100,
                 render: renderContent,
             },
         ];
@@ -167,7 +184,7 @@ class CashFlow extends React.Component {
                     </Col>
                     <Col span={4}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={false} onClick={this.onCompletedChange.bind(this)} />
+                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={true} onClick={this.onCompletedChange.bind(this)} />
                         </div>
                     </Col>
                 </Row>
@@ -188,6 +205,9 @@ class CashFlow extends React.Component {
                                 dataSource={data}
                                 pagination={false}
                                 bordered
+                                scroll={{ x: 'calc(700px + 50%)' }}
+                                sticky
+                                showHeader
                             />
                         </Col>
                     </Row>
