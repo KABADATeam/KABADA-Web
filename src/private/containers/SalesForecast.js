@@ -21,7 +21,7 @@ class SalesForecast extends React.Component {
         super(props);
         this.state = {
             readyMonth: 1,
-            exportPlan: true,
+            exportPlan: false,
             totalinEu: 0,
             totalOutEu: 0,
             isVisibleHeader: 'hidden',
@@ -333,6 +333,8 @@ class SalesForecast extends React.Component {
 
     setTotal = () => {
         // const array = this.props.salesForecast.products.map(x => x.sales_forecast_eu);
+        // clone salesForecast products. not change directly
+        //const array = JSON.parse(JSON.stringify(this.props.salesForecast.products));
         const array = this.props.salesForecast.products;
 
         array.map((element, index) => {
@@ -368,7 +370,7 @@ class SalesForecast extends React.Component {
 
         })
 
-        console.log("jgajhfgjhasgfhjasg" + JSON.stringify(this.state.update));
+        //console.log("jgajhfgjhasgfhjasg" + JSON.stringify(this.state.update));
 
     }
 
@@ -397,7 +399,7 @@ class SalesForecast extends React.Component {
         const obj = {
             "products": this.state.update
         }
-        console.log(JSON.stringify(this.state.update) + "this is what we have");
+        //console.log(JSON.stringify(this.state.update) + "this is what we have");
         // console.log(product_id + "this is what we have");
         this.props.updateSalesForecast(obj);
     }
@@ -423,7 +425,7 @@ class SalesForecast extends React.Component {
                     this.props.getProductByID(this.props.businessPlan.id, () => {
                         this.setTotal();
                         this.createData();
-                        console.log(JSON.stringify(this.props.salesForecast.products) + "ffdfdfdf")
+                        //console.log(JSON.stringify(this.props.salesForecast.products) + "ffdfdfdf")
                         this.setState({
                             inEuData: this.dataSourceTableInEu,
                             outEuData: this.dataSourceTableOutEu,
@@ -460,17 +462,17 @@ class SalesForecast extends React.Component {
                         this.createData();
                     }
                 });
-                this.getKey(this.state.update[0].product_id)
+                //this.getKey(this.state.update[0].product_id)
 
 
-                console.log(JSON.stringify(this.state.update) + "ffdfdfdf")
+                //console.log(JSON.stringify(this.state.update) + "ffdfdfdf")
                 this.setState({
                     inEuData: this.dataSourceTableInEu,
                     outEuData: this.dataSourceTableOutEu,
 
                 })
                 this.getKey(this.state.update[0].product_id)
-                console.log(this.state.update[0].product_id);
+                //console.log(this.state.update[0].product_id);
                 this.state.update.map((x) => {
                     if (x.product_id === this.state.tabKey) {
                         this.onMonthChange(x.when_ready)
@@ -509,7 +511,7 @@ class SalesForecast extends React.Component {
 
 
                 this.setState({
-                    readyMonth: x.when_ready
+                    readyMonth: value
                 })
 
 
@@ -521,7 +523,7 @@ class SalesForecast extends React.Component {
                 obj.sales_forecast_eu.map((x, index1) => {
                     if (index1 >= value - 1) {
                         array.push(x.month)
-                        console.log(x.month);
+                        //console.log(x.month);
                     }
                 })
 
@@ -532,6 +534,7 @@ class SalesForecast extends React.Component {
             })
 
         })
+        //this.getUpdatesWindowState();
 
     }
 
@@ -547,12 +550,14 @@ class SalesForecast extends React.Component {
 
 
     getUpdatesWindowState = () => {
-        const original = this.state.dataSourceTableInEu;
-        const modified = this.state.inEuData;
+        const array = this.props.salesForecast.products;
+
+        const original = array.map((x) => x.sales_forecast_eu)
+
+        const modified = this.state.update.map((y) => y.sales_forecast_eu)
 
 
-
-        if (JSON.stringify(original) !== JSON.stringify(modified) || JSON.stringify(this.state.dataSourceTableOutEu) !== JSON.stringify(this.state.outEuData)) {
+        if (JSON.stringify(original) !== JSON.stringify(modified)) {
 
             this.setState({
                 isVisibleHeader: 'visible'
@@ -563,7 +568,7 @@ class SalesForecast extends React.Component {
             })
 
         }
-        if (this.state.exportPlan !== this.originalExportPlan) {
+        if (this.state.exportPlan !== this.props.salesForecast.products.export) {
             this.setState({
                 isVisibleHeader: 'visible'
             })
@@ -574,7 +579,10 @@ class SalesForecast extends React.Component {
             })
 
         }
-
+        // console.log(this.state.exportPlan);
+        // console.log(this.state.update.map(x => x.export));
+        // console.log('Original array: ' + JSON.stringify(original))
+        // console.log('modifed array:' + JSON.stringify(modified))
 
     }
 
@@ -583,15 +591,11 @@ class SalesForecast extends React.Component {
         this.state.update.map((x) => {
             if (x.product_id === this.state.tabKey) {
                 x.export = e;
-                this.getUpdatesWindowState(x.when_ready);
+                this.getUpdatesWindowState();
             }
 
         })
-        // this.setState({
-        //     exportPlan: e
-        // });
 
-        //console.log(vty)
     }
 
     saveChanges = () => {
@@ -606,28 +610,32 @@ class SalesForecast extends React.Component {
         this.setState({
             isVisibleHeader: 'hidden'
         })
-        //setIsVisibleHeader('hidden')
-        // console.log(this.state.exportPlan);
-        // console.log(this.state.readyMonth);
-        // console.log(inEuData);
-        // console.log(outEuData);
-        //console.log(JSON.stringify(obj));
-        //history.push(`/sales-forecast`);
-
     }
 
-    getKey = (key) => {
-        console.log(key);
+    getKey = (e) => {
+
         this.setState({
-            tabKey: key
-        })
-        this.state.update.map(x => {
-            if (x.product_id === this.state.tabKey) {
-                this.onMonthChange(x.when_ready);
-            }
+            tabKey: e
+        }, () => {
+            const update = this.state.update;
+            update.map((x) => {
+                if (x.product_id === this.state.tabKey) {
+
+                    this.setState({
+                        readyMonth: x.when_ready
+                    }, () => {
+
+                        this.onMonthChange(this.state.readyMonth)
+                    });
+                }
+            })
+
         })
 
     }
+
+
+
     render() {
         const dataSourceTableInEu = [
             {
@@ -1056,11 +1064,11 @@ class SalesForecast extends React.Component {
                         </Col>
                     </Row>
 
-                    <Tabs defaultActiveKey={this.state.tabKey} onChange={this.getKey} >
+                    <Tabs defaultActiveKey={this.state.tabKey} onChange={e => this.getKey(e)} >
                         {this.props.salesForecast.productsTitles.map((x) => {
                             return (
                                 <>
-                                    <TabPane tab={x.name} key={x.id} >
+                                    <TabPane tab={x.name} key={x.id}  >
 
                                         {this.state.update.map((element, index) => {
                                             if (element.product_id === x.id) {

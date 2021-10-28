@@ -40,8 +40,8 @@ export const salesForecastReducer = (
         case "UPDATE_SALES_FORECAST_SUCCESS":
             const prodoct = state.products;
             const productsaction = action.payload.products;
-            console.log('labas' + JSON.stringify(prodoct))
-            console.log('labas action' + JSON.stringify(productsaction))
+            //console.log('labas' + JSON.stringify(prodoct))
+            //console.log('labas action' + JSON.stringify(productsaction))
             prodoct.map((element, index) => {
                 productsaction.map((element2, index2) => {
                     if (element.product_id === element2.product_id) {
