@@ -68,4 +68,19 @@ export const updateSalesForecast = (postObject) => {
     }
 }
 
+export const saveState = (planId, is_completed, callback) => {
+    return async (dispatch, getState) => {
+        console.log("actionssss" + planId, is_completed)
+        dispatch({ type: "LOADING", payload: true });
+        try {
+            const token = getState().user.access_token;
+            await kabadaAPI.post('api/plans/changeSalesForecastCompleted', { "business_plan_id": planId, "is_sales_forecast_completed": is_completed }, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: 'SAVE_STATE_SUCCESS', payload: is_completed });
+            callback();
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
+
+        }
+    }
+};
 

@@ -1,6 +1,6 @@
 export const salesForecastReducer = (
     state = {
-        is_proposition_completed: false,
+        is_sales_forecast_completed: false,
         productsTitles: [],
         products: [],
         product_id: 5,
@@ -53,6 +53,8 @@ export const salesForecastReducer = (
                 })
             })
             return { ...state, 'products': state.products };
+        case "SAVE_STATE_SUCCESS":
+            return { ...state, "is_sales_forecast_completed": action.payload };
         default:
             return state;
     }
