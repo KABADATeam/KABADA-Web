@@ -144,9 +144,9 @@ class FixedAndVariableCosts extends React.Component {
             visibleHeader: 'hidden'
         });
     }
-
     saveChanges = () => {
-        console.log('Saving changes')
+        console.log('Saving changes');
+        console.log('Modified variable array"'+JSON.stringify(this.state.variable));
         const items = [];
 
         // cloning fixed and variable from financialProjections. i dont work directly with states
@@ -301,7 +301,7 @@ class FixedAndVariableCosts extends React.Component {
 
     }
 
-    onVariableChange = (value, record, inputName) => {
+    onVariableChange = (value, record, inputName,updateFrom) => {
         // clone variable state, dont change directly
         const originalArray = [...this.props.financialProjections.variable];
         const arrayOfVariable = JSON.parse(JSON.stringify(this.state.variable));
@@ -311,16 +311,30 @@ class FixedAndVariableCosts extends React.Component {
                     if (inputName === "vat") {
                         element.vat = value;
                     }
+                    if(inputName === "monthly_expenses"){
+                        element.monthly_expenses = value;
+                    }
                 }
             });
         });
-        this.setState({
-            variable: arrayOfVariable
-        });
-
-        this.getUpdateWindowState();
         console.log('Array of variable is:' + JSON.stringify(originalArray));
-        console.log('Modified variable array is:' + JSON.stringify(this.state.variable));
+        if(updateFrom === 0){
+            this.setState({
+                variable: arrayOfVariable
+            });
+            console.log('Modified variable array is:' + JSON.stringify(this.state.variable));
+            this.getUpdateWindowState();
+        }if(updateFrom === 1){
+            this.setState({variable: arrayOfVariable},()=>{
+                console.log('Modified variable array is:' + JSON.stringify(this.state.variable));
+                this.saveChanges();
+            });
+        }
+        
+
+        
+        
+        // console.log('Modified variable array is:' + JSON.stringify(this.state.variable));
     }
 
 
@@ -381,7 +395,6 @@ class FixedAndVariableCosts extends React.Component {
 
 
     render() {
-        console.log('Variable changed:'+JSON.stringify(this.props.financialProjections.variable))
         const fixed_costs_columns = [
             {
                 title: 'Name',
@@ -513,7 +526,7 @@ class FixedAndVariableCosts extends React.Component {
                 width: '10%',
                 render: (text, record, index) => (
                     <Input.Group compact>
-                        <Select defaultValue={text === null ? 'Null' : text} onChange={e => this.onVariableChange(e, record, "vat")}>
+                        <Select defaultValue={text === null ? 'Null' : text} value={text} onChange={e => this.onVariableChange(e, record, "vat",0)}>
                             <Option value={this.props.countryVats.standardRate}>{this.props.countryVats.standardRate + "%"}</Option>
                             <Option value={this.props.countryVats.reducedRates2}>{this.props.countryVats.reducedRates2 + "%"}</Option>
                             <Option value={this.props.countryVats.reducedRates1}>{this.props.countryVats.reducedRates1 + "%"}</Option>
@@ -611,7 +624,7 @@ class FixedAndVariableCosts extends React.Component {
                             })}
                         </TabPane>
                         <TabPane tab="Variable Costs" key="2">
-                            {this.props.financialProjections.variable.map((obj, index) => {
+                            {this.state.variable.map((obj, index) => {
                                 return (
                                     <div style={{ marginBottom: 24 }}>
                                         <Col span={24}>
@@ -659,7 +672,7 @@ class FixedAndVariableCosts extends React.Component {
                 {this.state.variablePopUp.visible !== false ?
                     <VariableCostPopUp category_title={this.state.variablePopUp.category_title === null ? 'Yes' : this.state.variablePopUp.category_title}
                         visible={this.state.variablePopUp.visible} handleOk={this.handleOk} handleCancel={this.handleModalCancel} monthly_expenses={this.state.variablePopUp.values} record={this.state.variablePopUp.record}
-                        businessPlanId={this.props.businessPlan.id} variable={this.state.variable} fixed={this.state.fixed} originalFixed={this.props.financialProjections.fixed} originalVariable={this.props.financialProjections.variable} />
+                        businessPlanId={this.props.businessPlan.id} onVariableChange={this.onVariableChange} saveChanges={this.saveChanges} />
                     : null
                 }
             </>
