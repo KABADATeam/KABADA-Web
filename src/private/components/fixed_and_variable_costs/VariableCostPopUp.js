@@ -41,7 +41,7 @@ class VariableCostPopUp extends React.Component {
     save = () => {
         const pricesWithoutDisabled = [];
         const original = this.state.data;
-        
+
         original.forEach((element, index) => {
             if (index < this.state.monthsChecked) {
                 pricesWithoutDisabled.push(element.price);
@@ -59,7 +59,6 @@ class VariableCostPopUp extends React.Component {
     }
     //when Selected months is changed
     onMonthsChanged = (value) => {
-        console.log(value)
         this.setState({
             monthsChecked: value
         });
@@ -68,7 +67,6 @@ class VariableCostPopUp extends React.Component {
         this.state.data.map((obj, index) => {
             if (index <= value - 1) {
                 array.push(obj.id)
-                console.log(obj.id)
             }
         });
         this.setState({
@@ -113,10 +111,6 @@ class VariableCostPopUp extends React.Component {
     }
 
     componentDidMount() {
-        // this.props.getFinancialProjectionsCosts(this.props.businessPlan.id, () => {
-        //     console.log('VariableCostPopUp:  ' + JSON.stringify(this.props.variable));
-            
-        // });
         this.loadData();
         // console.log('Monthly expenses equal to:'+JSON.stringify(this.props.monthly_expenses));
     }

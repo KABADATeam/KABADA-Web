@@ -7,7 +7,7 @@ import { tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
 import VariableCostPopUp from '../components/fixed_and_variable_costs/VariableCostPopUp';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getFinancialProjectionsCosts, updateFixedAndVarCosts } from '../../appStore/actions/financialProjectionsActions';
+import { getFinancialProjectionsCosts, updateFixedAndVarCosts, saveState} from '../../appStore/actions/financialProjectionsActions';
 import { getCountryVat } from '../../appStore/actions/vatsActions'
 import { getCountryShortCode } from '../../appStore/actions/countriesActions'
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
@@ -68,7 +68,7 @@ class FixedAndVariableCosts extends React.Component {
                 values: null,
                 visible: false,
             },
-            visibleHeader: 'hidden'
+            visibleHeader: 'hidden',
         }
     }
 
@@ -128,6 +128,12 @@ class FixedAndVariableCosts extends React.Component {
         this.setState({
             variablePopUp: obj,
             visibleHeader: 'hidden'
+        });
+    }
+
+    onCompletedChange(state) {
+        this.props.saveState(this.props.businessPlan.id, state, () => {
+            this.props.getFinancialProjectionsCosts(this.props.businessPlan.id);
         });
     }
 
@@ -568,7 +574,7 @@ class FixedAndVariableCosts extends React.Component {
                     </Col>
                     <Col span={4}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={false} />
+                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.financialProjections.is_fixed_variable_completed} onClick={this.onCompletedChange.bind(this)} />
                         </div>
                     </Col>
                 </Row>
@@ -693,4 +699,4 @@ const mapStateToProps = (state) => {
 }
 //connect function connect react component to redux store
 //the functions it can use to dispatch actions to the store.
-export default connect(mapStateToProps, { getSelectedPlanOverview, getCountryShortCode, getFinancialProjectionsCosts, getCountryVat, updateFixedAndVarCosts, refreshPlan })(withRouter(FixedAndVariableCosts));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getCountryShortCode, getFinancialProjectionsCosts, getCountryVat, updateFixedAndVarCosts, saveState, refreshPlan })(withRouter(FixedAndVariableCosts));
