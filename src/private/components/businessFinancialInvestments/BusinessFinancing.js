@@ -48,7 +48,6 @@ const loanAmountText = {
 
 class BusinessStartUpInvestments extends React.Component {
     state = {
-        period: 12,
         loan_amount: this.props.data.loan_amount,
         payment_period: this.props.data.payment_period,
         interest_rate: this.props.data.interest_rate,
@@ -71,7 +70,7 @@ class BusinessStartUpInvestments extends React.Component {
             payment_period: data.payment_period === null ? 0: data.payment_period,
             interest_rate: data.interest_rate === null ? 0: data.interest_rate,
             grace_period: data.grace_period === null ? 0 : data.grace_period,
-            payment_period_short: data.payment_period_short === null ? 0: data.payment_period_short,
+            payment_period_short: data.payment_period_short === null ? 12: data.payment_period_short,
             interest_rate_short: data.interest_rate_short === null ? 0: data.interest_rate_short,
             grace_period_short: data.grace_period_short === null ? 0 : data.grace_period_short,
         }
@@ -86,7 +85,7 @@ class BusinessStartUpInvestments extends React.Component {
             payment_period: data.payment_period === null ? 0: data.payment_period,
             interest_rate: data.interest_rate === null ? 0: data.interest_rate,
             grace_period: data.grace_period === null ? 0 : data.grace_period,
-            payment_period_short: data.payment_period_short === null ? 0: data.payment_period_short,
+            payment_period_short: data.payment_period_short === null ? 6: data.payment_period_short,
             interest_rate_short: data.interest_rate_short === null ? 0: data.interest_rate_short,
             grace_period_short: data.grace_period_short === null ? 0 : data.grace_period_short,
         }
@@ -157,7 +156,7 @@ class BusinessStartUpInvestments extends React.Component {
     }
     render() {
         const gracePeriodSelectionArray = []
-        for (let i = 0; i < (this.state.period - 5); i++) {
+        for (let i = 0; i < (this.props.data.period - 5); i++) {
             gracePeriodSelectionArray[i] = {
                 value: i,
                 label: i + ' mo.'
@@ -166,7 +165,6 @@ class BusinessStartUpInvestments extends React.Component {
         const gracePeriodOptions = gracePeriodSelectionArray.map((v, index) => (
             <Option value={v.value} key={v.value}>{v.label}</Option>
         ))
-        const gracePeriodDefaultValue = this.state.grace_period === null ? 0 : this.state.grace_period
         const loanLongDataSource = [
             {
                 loan_amount: this.props.data.loan_amount,
@@ -243,7 +241,7 @@ class BusinessStartUpInvestments extends React.Component {
                 key: 'grace_period',
                 width: '20%',
                 render: (text, obj, record) => (
-                    <Select defaultValue={gracePeriodDefaultValue}
+                    <Select defaultValue={this.state.grace_period === null ? 0 : this.state.grace_period}
                         suffixIcon={<CaretDownFilled />}
                         onChange={e => this.updateProperties(e, 'grace_period')}
                     >
@@ -317,7 +315,7 @@ class BusinessStartUpInvestments extends React.Component {
                 key: 'grace_period',
                 width: '20%',
                 render: (text, obj, record) => (
-                    <Select defaultValue={gracePeriodDefaultValue}
+                    <Select defaultValue={this.state.grace_period_short === null ? 0 : this.state.grace_period_short}
                         suffixIcon={<CaretDownFilled />}
                         onChange={e => this.updateProperties(e, 'grace_period_short')}
                     >

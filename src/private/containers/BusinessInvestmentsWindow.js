@@ -7,9 +7,10 @@ import { connect } from 'react-redux';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import WorkingCapital from '../components/businessFinancialInvestments/WorkingCapital';
 import BusinessFinancing from '../components/businessFinancialInvestments/BusinessFinancing';
-import { getBusinessStartUpInvestmentInformation, changeVisibility, updateBusinessStartUpInvestmentInformation } from "../../appStore/actions/businessInvestmentAction";
+import { getBusinessStartUpInvestmentInformation, changeVisibility, updateBusinessStartUpInvestmentInformation, getNecessaryCapitalInformation, saveState, recalculateInvestment } from "../../appStore/actions/businessInvestmentAction";
 import { getCountryShortCode } from '../../appStore/actions/countriesActions';
-import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
+import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 
 const { Text } = Typography;
 const { TabPane } = Tabs
@@ -103,27 +104,45 @@ class BusinessInvestmentsWindow extends React.Component {
     saveChanges = () => {
         const postObject = {
             business_plan_id: this.props.businessPlan.id,
-            period: this.props.investments.period === null ? 12: this.props.investments.period,
-            vat_payer: this.props.investments.vat_payer === null ? true: this.props.investments.vat_payer,
+            period: this.props.investments.period === null ? 12 : this.props.investments.period,
+            vat_payer: this.props.investments.vat_payer === null ? true : this.props.investments.vat_payer,
             own_money: this.props.investments.own_money,
             loan_amount: this.props.investments.loan_amount,
             working_capital_amount: this.props.investments.working_capital_amount,
             own_money_short: this.props.investments.own_money_short,
             loan_amount_short: this.props.investments.loan_amount_short,
-            loan_amount: this.props.investments.loan_amount,
             payment_period: this.props.investments.payment_period,
             interest_rate: this.props.investments.interest_rate,
             grace_period: this.props.investments.grace_period,
             payment_period_short: this.props.investments.payment_period_short,
             interest_rate_short: this.props.investments.interest_rate_short,
             grace_period_short: this.props.investments.grace_period_short,
+            total_investments: this.props.investments.total_investments,
+            own_assets: this.props.investments.own_assets,
+            investment_amount: this.props.investments.investment_amount,
         }
+        console.log(postObject);
         this.props.updateBusinessStartUpInvestmentInformation(postObject);
+        this.props.changeVisibility('hidden');
+    }
+    recalChanges = () => {
+        const postObject = {
+            business_plan_id: this.props.businessPlan.id,
+            working_capitals: this.props.investments.working_capital,
+        }
+        console.log(postObject)
+        this.props.recalculateInvestment(postObject);
         this.props.changeVisibility('hidden');
     }
     discardChanges = () => {
         this.props.changeVisibility('hidden');
         this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id)
+    }
+    onCompletedChange(state) {
+        console.log('test')
+        this.props.saveState(this.props.businessPlan.id, state, () => {
+            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+        });
     }
 
     componentDidMount() {
@@ -132,28 +151,23 @@ class BusinessInvestmentsWindow extends React.Component {
                 this.props.history.push(`/`);
             } else {
                 this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id)
-                    const obj = { id: this.props.businessPlan.id }
-                    this.props.getCountryShortCode(obj, (data) => {
-                        this.props.getCountryVat(this.props.country.countryShortCode);
-                        this.setState({
-                            vats: this.props.countryVats
-                        });
-                    });
+                    this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);   
+                    this.props.getNecessaryCapitalInformation(this.props.businessPlan.id);
                 });
             }
         } else {
             this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);
-
+            this.props.getNecessaryCapitalInformation(this.props.businessPlan.id);
         }
     }
 
 
     render() {
+        console.log(this.props.totalNecessary);
         return (
             <>
                 <UnsavedChangesHeader
-                    visibility={this.props.startUp.visibility}
+                    visibility={this.props.investments.visibility}
                     discardChanges={this.discardChanges}
                     saveChanges={this.saveChanges}
                 />
@@ -180,14 +194,14 @@ class BusinessInvestmentsWindow extends React.Component {
                     </Col>
                     <Col span={4}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch />
+                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.investments.is_business_investments_completed} onClick={this.onCompletedChange.bind(this)} />
                         </div>
                     </Col>
                 </Row>
                 <Col span={16} offset={4}>
                     <Tabs defaultActiveKey="1"  >
                         <TabPane tab="Working capital" key="1">
-                            <WorkingCapital data={this.props.investments} updateWindowState={this.getUpdatesWindowState.bind(this)} />
+                            <WorkingCapital data={this.props.investments} totalNecessary={this.props.totalNecessary} updateWindowState={this.getUpdatesWindowState.bind(this)} />
                         </TabPane>
                         <TabPane tab="Business Financing" key="2">
                             <BusinessFinancing data={this.props.investments} />
@@ -206,7 +220,7 @@ const mapStateToProps = (state) => {
         countryCode: state.countryShortCode,
         countryVats: state.countryVats,
         investments: state.businessInvestments,
-        startUp: state.businessStartUp
+        totalNecessary: state.necessaryCapital
     };
 }
-export default connect(mapStateToProps, { refreshPlan, getBusinessStartUpInvestmentInformation, getCountryShortCode, changeVisibility, updateBusinessStartUpInvestmentInformation })(BusinessInvestmentsWindow);
+export default connect(mapStateToProps, { refreshPlan, getBusinessStartUpInvestmentInformation, getCountryShortCode, changeVisibility, updateBusinessStartUpInvestmentInformation, getNecessaryCapitalInformation, saveState, getSelectedPlanOverview, recalculateInvestment })(BusinessInvestmentsWindow);

@@ -1,7 +1,7 @@
 export const businessStartUpInvestmentReducer = (
     state = {
         is_business_investments_completed: false,
-        period: null,
+        period: 12,
         vat_payer: true,
         total_investments: 0,
         own_assets: 0,
@@ -17,10 +17,12 @@ export const businessStartUpInvestmentReducer = (
         payment_period_short: 0,
         interest_rate_short: 0,
         grace_period_short: 0,
-        working_capital: [],
+        working_capital: null,
+        visibility: 'hidden'
     }, action) => {
     switch (action.type) {
         case 'FETCHING_INVESTMENT_SUCCESS':
+            console.log(action.payload)
             return {
                 ...state,
                 is_business_investments_completed: action.payload.is_business_investments_completed,
@@ -43,12 +45,10 @@ export const businessStartUpInvestmentReducer = (
                 working_capital: action.payload.working_capital
             }
         case 'UPDATE_INVESTMENT_SUCCESS':
-            console.log(action.payload)
             return {
                 ...state
             }
         case 'CHANGE_VISIBILITY_SUCCESS':
-            console.log(action)
             return {
                 ...state,
                 visibility: action.visibility
@@ -65,12 +65,17 @@ export const businessStartUpInvestmentReducer = (
                 ...state,
                 vat_payer: action.vat_payer
             }
-        case 'CHANGE_LOAN_AMOUNT_SUCCESS':
-            console.log(action)
+        case 'CHANGE_OWN_MONEY_SUCCESS':
+            console.log(action);
             return {
                 ...state,
                 own_money: action.own_money,
-                loan_amount: action.loan_amount
+            }
+        case 'CHANGE_LOAN_AMOUNT_SUCCESS':
+            console.log(action.loan_amount);
+            return {
+                ...state,
+                loan_amount: action.loan_amount,
             }
         case 'CHANGE_WORKING_CAPITAL_SUCCESS':
             console.log(action)
@@ -121,48 +126,40 @@ export const businessStartUpInvestmentReducer = (
                 ...state,
                 grace_period_short: action.grace_period_short
             }
-        default:
-            return state
-    }
-}
-//This reducer use for save information in diferrent Tabs, and take data to save into server
-export const businessStartUpReducer = (
-    state = {
-        period: null,
-        vat_payer: true,
-        total_investments: 0,
-        own_assets: 0,
-        investment_amount: 0,
-        own_money: 0,
-        loan_amount: 0,
-        payment_period: 0,
-        interest_rate: 0,
-        grace_period: 0,
-        working_capital_amount: 0,
-        own_money_short: 0,
-        loan_amount_short: 0,
-        payment_period_short: 0,
-        interest_rate_short: 0,
-        grace_period_short: 0,
-        working_capital: [],
-        visibility: 'hidden'
-    }, action) => {
-    switch (action.type) {
-        case 'CHANGE_VISIBILITY_SUCCESS':
+        case 'CHANGE_WORKING_CAPITAL_ARRAY_SUCCESS':
+            console.log(action.working_capital);
             return {
                 ...state,
-                visibility: action.visibility
+                working_capital: action.working_capital
             }
-        case 'CHANGE_PERIOD_SUCCESS':
+        case "SAVE_STATE_SUCCESS":
+            return { ...state, "is_business_investments_completed": action.payload }
+        case "RECALCULATE_INVESTMENT_SUCCESS":
+            const working_capital = action.payload.postObject.working_capital;
+            console.log(working_capital);
             return {
                 ...state,
-                period: action.period
             }
         default:
             return state
     }
 }
 
+
+export const necessaryCapitalReducer = (
+    state = {
+        necessaryCapital: null
+    }, action) => {
+    switch (action.type) {
+        case 'FETCHING_NECESSARY_CAPITAL_SUCCESS':
+            return {
+                ...state,
+                necessaryCapital: action.payload
+            }
+        default:
+            return state
+    }
+}
 
 
 
