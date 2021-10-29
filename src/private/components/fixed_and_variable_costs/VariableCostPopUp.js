@@ -135,17 +135,6 @@ class VariableCostPopUp extends React.Component {
                 }
             }
         }
-        // const duom = []
-        // if (this.props.monthly_expenses === null || this.props.monthly_expenses === undefined) {
-        //     for (var i = 1; i < 13; i++) {
-        //         duom.push({ id: i, month: i, price: 0 })
-        //     }
-        // } else {
-        //     for (var i = 0; i < this.props.monthly_expenses.length; i++) {
-        //         console.log('Monthly expenses at index' + i + ' ,and element is:' + this.props.monthly_expenses[i])
-        //         duom.push({ id: i + 1, month: i + 1, price: this.props.monthly_expenses[i] })
-        //     }
-        // }
         this.setState({
             data: duom
         });
@@ -157,7 +146,6 @@ class VariableCostPopUp extends React.Component {
             this.setState({monthsChecked: this.props.financialProjections.period});
             this.loadData(this.props.financialProjections.period);
         });
-        // console.log('Monthly expenses equal to:'+JSON.stringify(this.props.monthly_expenses));
     }
     render() {
         const columns = [
@@ -234,7 +222,6 @@ class VariableCostPopUp extends React.Component {
 
 // selecting part of data from store. selecting states basically as with useSelector
 //It is called every time the store state changes.
-//         businessInvestments: state.businessInvestments
 const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
