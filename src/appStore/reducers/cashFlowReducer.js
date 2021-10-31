@@ -21,6 +21,9 @@ export const cashFlowReducer = (state = [], action) => {
             dataForTable.concat(dataForTable_balances);
             console.log(dataForTable);
 
+            let res = []
+            const monthsCount = keyExists(action.payload, 'monthlyValue', res);
+            console.log(monthsCount)
             const renderContent = (value, row, index) => {
                 const obj = {
                     children: <p style={{ marginBottom: 0 }}>{(typeof value === 'number') ? value : '-'}</p>,
@@ -36,8 +39,11 @@ export const cashFlowReducer = (state = [], action) => {
                 }
                 return obj;
             };
-            const tableColumns = cash.openingCash.rows[0].monthlyValue.map((v, index) => ({ title: index ? index : '0', dataIndex: index, key: index, align: 'center', width: 90, render: renderContent }));
 
+            let tableColumns = []
+            for (let index = 0; index < monthsCount; index++) {
+                tableColumns.push({ title: index.toString(), dataIndex: index, key: index, align: 'center', width: 90, render: renderContent })
+            }
             return { ...cash, "dataForTable": dataForTable.map((obj, index) => ({ ...obj, "key": index })), "tableColumns": tableColumns };
         default:
             return state;
@@ -58,3 +64,25 @@ const tableDataFormation = (data, dataForTable) => {
     }
     return dataForTable;
 }
+
+const keyExists = (obj, key, res) => {
+    if (!obj || (typeof obj !== "object" && !Array.isArray(obj))) {
+        return false;
+    }
+    else if (obj.hasOwnProperty(key)) {
+        res.push(obj[key])
+    }
+    else if (Array.isArray(obj)) {
+        for (let i = 0; i < obj.length; i++) {
+            const result = keyExists(obj[i], key, res);
+        }
+    }
+    else {
+        for (const k in obj) {
+            const result = keyExists(obj[k], key, res);
+        }
+    }
+
+    return Math.max.apply(Math, res.map(function (el) { return el.length }));;
+};
+
