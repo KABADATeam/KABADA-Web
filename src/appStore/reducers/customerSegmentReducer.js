@@ -34,7 +34,7 @@ export const customerSegmentReducer = (
                 location_titles: v.geographic_location.map(e => e.title).join(", ")
             })) : [];
             const business_w_titles = business_w_k ? business_w_k.map(v => ({
-                ...v, business_type_titles: v.business_type.map(e => e.title).join(", "), company_size_titles: v.company_size.map(e => e.title).join(", ")
+                ...v, business_type_titles: v.business_type.map(e => e.title).join(", "), company_size_titles: v.company_size.map(e => e.title).join(", "), location_titles: v.geographic_location.map(e => e.title).join(", ")
             })) : [];
             const ngo_w_titles = public_bodies_ngo_w_k ? public_bodies_ngo_w_k.map(v => ({
                 ...v, ngo_types_titles: v.ngo_types.map(e => e.title).join(", ")

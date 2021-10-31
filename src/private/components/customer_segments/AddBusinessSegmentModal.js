@@ -20,8 +20,8 @@ class AddBusinessSegmentModal extends Component {
         type: null,
         companySize: null,
         locationType: null,
-        annualRevenue: null,
-        budget: null,
+        //annualRevenue: null,
+        //budget: null,
     }
 
     onCancel = () => {
@@ -39,9 +39,9 @@ class AddBusinessSegmentModal extends Component {
             "business_plan_id": this.props.businessPlan.id,
             "business_type": this.state.type,
             "company_size": this.state.companySize,
-            "annual_revenue": this.state.annualRevenue,
-            "budget": this.state.budget,
-            "income": [],
+            //"annual_revenue": this.state.annualRevenue,
+            //"budget": this.state.budget,
+            //"income": [],
             "geographic_location": this.state.locationType
         };
 
@@ -54,9 +54,9 @@ class AddBusinessSegmentModal extends Component {
             "business_type_titles": selected_types.map(e => e.title).join(", "),
             "company_size": selected_company_sizes,
             "company_size_titles": selected_company_sizes.map(e => e.title).join(", "),
-            "annual_revenue": this.state.annualRevenue,
-            "budget": this.state.budget,
-            "income": [],
+            //"annual_revenue": this.state.annualRevenue,
+            //"budget": this.state.budget,
+            //"income": [],
             "geographic_location": selected_locations,
             "location_titles": selected_locations.map(e => e.title).join(", "),
             "comment": null
@@ -84,6 +84,7 @@ class AddBusinessSegmentModal extends Component {
             locationType: value
         })
     }
+    /*
     onBudgetChange(value) {
         this.setState({
             budget: value
@@ -94,7 +95,7 @@ class AddBusinessSegmentModal extends Component {
         this.setState({
             annualRevenue: value
         })
-    }
+    }*/
 
     render() {
 
@@ -140,7 +141,7 @@ class AddBusinessSegmentModal extends Component {
                             </Select>
                         </Form.Item>
 
-                        <Form.Item key="annualRevenue" name="annualRevenue" label="Annual revenue"
+                        {/* <Form.Item key="annualRevenue" name="annualRevenue" label="Annual revenue"
                             rules={[{ required: true, message: 'Enter annual revenue in Euros' }]}>
                             <InputNumber size="large" style={inputStyle} onChange={this.onAnnualRevenueChange.bind(this)} placeholder="Enter annual revenue in Euros" />
                         </Form.Item>
@@ -149,6 +150,7 @@ class AddBusinessSegmentModal extends Component {
                             rules={[{ required: true, message: 'Enter budget in Euros' }]}>
                             <InputNumber size="large" style={inputStyle} placeholder="Enter budget in Euros" onChange={this.onBudgetChange.bind(this)} />
                         </Form.Item>
+                        */}
 
                         <Form.Item key="geographicLocation" name="geographicLocation" label="Geographic Location"
                             rules={[{ required: true, message: 'Choose geographic location' }]}>

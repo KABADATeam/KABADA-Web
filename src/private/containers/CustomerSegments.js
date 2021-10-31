@@ -205,9 +205,9 @@ class CustomerSegments extends React.Component {
                 width: '20%',
             },
             {
-                title: 'Revenue',
-                dataIndex: 'annual_revenue',
-                key: 'annual_revenue',
+                title: 'Geographic Location',
+                dataIndex: 'location_titles',
+                key: 'location_titles',
                 width: '45%',
             },
             {

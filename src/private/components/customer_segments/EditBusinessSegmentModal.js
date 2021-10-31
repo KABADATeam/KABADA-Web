@@ -20,8 +20,8 @@ class EditBusinessSegmentModal extends Component {
         this.state = {
             type: this.props.item.business_type.map(e => e.id),
             companySize: this.props.item.company_size.map(e => e.id),
-            annualRevenue: this.props.item.annual_revenue,
-            budget: this.props.item.budget,
+            //annualRevenue: this.props.item.annual_revenue,
+            //budget: this.props.item.budget,
             locationType: this.props.item.geographic_location.map(e => e.id),
         }
     }
@@ -41,9 +41,9 @@ class EditBusinessSegmentModal extends Component {
             "business_plan_id": this.props.businessPlan.id,
             "business_type": this.state.type,
             "company_size": this.state.companySize,
-            "annual_revenue": this.state.annualRevenue,
-            "budget": this.state.budget,
-            "income": [],
+            //"annual_revenue": this.state.annualRevenue,
+            //"budget": this.state.budget,
+            //"income": [],
             "geographic_location": this.state.locationType
         };
 
@@ -58,9 +58,9 @@ class EditBusinessSegmentModal extends Component {
             "business_type_titles": selected_types.map(e => e.title).join(", "),
             "company_size": selected_company_sizes,
             "company_size_titles": selected_company_sizes.map(e => e.title).join(", "),
-            "annual_revenue": this.state.annualRevenue,
-            "budget": this.state.budget,
-            "income": [],
+            //"annual_revenue": this.state.annualRevenue,
+            //"budget": this.state.budget,
+            //"income": [],
             "geographic_location": selected_locations,
             "location_titles": selected_locations.map(e => e.title).join(", "),
             "comment": null
@@ -88,7 +88,7 @@ class EditBusinessSegmentModal extends Component {
             locationType: value
         })
     }
-    onBudgetChange(value) {
+    /*onBudgetChange(value) {
         this.setState({
             budget: value
         })
@@ -98,7 +98,7 @@ class EditBusinessSegmentModal extends Component {
         this.setState({
             annualRevenue: value
         })
-    }
+    }*/
 
 
     render() {
@@ -114,7 +114,6 @@ class EditBusinessSegmentModal extends Component {
         const locationOptions = this.props.categories.customer_segments_types.geographic_locations.map((obj) =>
             <Option key={obj.id} value={obj.id}>{obj.title}</Option>
         );
-        console.log(this.state)
 
         return (
             <>
@@ -135,8 +134,8 @@ class EditBusinessSegmentModal extends Component {
                         initialValues={{
                             type: this.props.item.business_type.map(e => e.id),
                             size: this.props.item.company_size.map(e => e.id),
-                            annualRevenue: this.props.item.annual_revenue,
-                            budget: this.props.item.budget,
+                            //annualRevenue: this.props.item.annual_revenue,
+                            //budget: this.props.item.budget,
                             geographicLocation: this.props.item.geographic_location.map(e => e.id),
                         }}>
                         <Form.Item key="type" name="type" label="Type"
@@ -153,7 +152,7 @@ class EditBusinessSegmentModal extends Component {
                             </Select>
                         </Form.Item>
 
-                        <Form.Item key="annualRevenue" name="annualRevenue" label={<label>Annual revenue</label>}
+                        {/*<Form.Item key="annualRevenue" name="annualRevenue" label={<label>Annual revenue</label>}
                             rules={[{ required: true, message: 'Enter annual revenue in Euros' }]}>
                             <InputNumber size="large" style={inputStyle} onChange={this.onAnnualRevenueChange.bind(this)} placeholder="Enter annual revenue in Euros" />
                         </Form.Item>
@@ -162,7 +161,7 @@ class EditBusinessSegmentModal extends Component {
                             rules={[{ required: true, message: 'Enter budget in Euros' }]}>
                             <InputNumber size="large" style={inputStyle} placeholder="Enter budget in Euros" onChange={this.onBudgetChange.bind(this)}
                             />
-                        </Form.Item>
+                        </Form.Item>*/}
 
                         <Form.Item key="geographicLocation" name="geographicLocation" label="Geographic Location"
                             rules={[{ required: true, message: 'Choose geographic location' }]}>
