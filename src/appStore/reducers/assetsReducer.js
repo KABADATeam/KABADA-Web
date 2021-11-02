@@ -8,14 +8,16 @@ export const assetsReducer = (
     }, action) => {
     switch (action.type) {
         case 'FETCHING_ASSETS_SUCCESS':
-            const physical_assets = action.payload.physical_assets.map(obj => ({ ...obj, "key": obj.resource_id }))
+            //const physical_assets = action.payload.physical_assets.map(obj => ({ ...obj, "key": obj.resource_id }))
+            const physical_assets1 = action.payload.physical_assets.filter((obj) => obj.type_title === 'Buildings' || obj.type_title === 'Transport' || obj.type_title === 'Other' || obj.type_title === 'Equipment')
+            console.log(physical_assets1);
             const is_completed = action.payload.is_assets_completed;
             const total_investments = action.payload.total_investments;
             const own_assets = action.payload.own_assets;
             const investment_amount = action.payload.investment_amount;
             return {
                 ...state,
-                'physical_assets': physical_assets,
+                'physical_assets': physical_assets1,
                 is_assets_completed: is_completed,
                 total_investments: total_investments,
                 own_assets: own_assets,
@@ -24,7 +26,7 @@ export const assetsReducer = (
         case 'UPDATE_ASSETS_LIST_SUCCESS':
             console.log(action.payload);
             const _physical_assets = action.payload.physical_assets.map(obj => ({ ...obj, "key": obj.resource_id }))
-            console.log(physical_assets);
+            console.log(_physical_assets);
             const _is_completed = action.payload.is_assets_completed;
             const _total_investments = action.payload.total_investments;
             const _own_assets = action.payload.own_assets;

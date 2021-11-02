@@ -11,6 +11,7 @@ import { getCountryVats } from '../../appStore/actions/vatAction';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 //import { getCountryVats } from '../../appStore/actions/vatAction';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import { conditionalExpression } from '@babel/types';
 
 const { Option } = Select;
 
@@ -171,7 +172,6 @@ class AssetsWindow extends React.Component {
         const assets_items_array = this.state.assets_items;
         const total_investments_values_list = [];
         const own_assets_values_list = [];
-        const total_value = (previuosValue, currentValue) => previuosValue + currentValue
 
         //compute total investments amount
         assets_items_array.map((item) => {
@@ -179,9 +179,15 @@ class AssetsWindow extends React.Component {
                 amount: item.amount
             }
             const value = parseInt(Object.values(obj));
+            console.log(value);
             total_investments_values_list.push(value);
         })
-        let total_investments_value = total_investments_values_list.reduce(total_value);
+        const total_investments_value = total_investments_values_list.reduce(function(total_investments_value, value) {
+            const updated_total_investments_value = total_investments_value + value;
+            return updated_total_investments_value;
+        })
+
+
         // compute own assets amount
         const own_assets_array = assets_items_array.filter((item) => item.resource_status === 'Own');
         console.log(own_assets_array);
@@ -192,7 +198,10 @@ class AssetsWindow extends React.Component {
             const value = parseInt(Object.values(obj));
             own_assets_values_list.push(value);
         })
-        let own_assets_value = own_assets_values_list.reduce(total_value);
+        const own_assets_value = own_assets_values_list.reduce(function(own_assets_value, value) {
+            const updated_own_assets_value = own_assets_value + value;
+            return updated_own_assets_value
+        });
         //compute investments_amount 
         let investments_amount_value = total_investments_value - own_assets_value;
         //create assets items objects, they will be using on postObject 
