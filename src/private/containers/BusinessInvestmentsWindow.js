@@ -122,10 +122,19 @@ class BusinessInvestmentsWindow extends React.Component {
             investment_amount: this.props.investments.investment_amount,
             working_capitals: this.props.investments.working_capital,
         }
+        const recalculatePostObject = {
+            business_plan_id: this.props.businessPlan.id,
+            working_capitals: this.props.investments.working_capital,
+        }
         console.log(postObject);
-        this.props.updateBusinessStartUpInvestmentInformation(postObject);
-        this.props.recalculateInvestment(postObject);
-        this.props.changeVisibility('hidden');
+        if (this.props.investments.grace_period_short > 0) {
+            this.props.recalculateInvestment(postObject);
+            this.props.updateBusinessStartUpInvestmentInformation(postObject);
+            this.props.changeVisibility('hidden');
+        } else {
+            this.props.updateBusinessStartUpInvestmentInformation(postObject);
+            this.props.changeVisibility('hidden');
+        }
     }
     recalChanges = () => {
         const postObject = {
@@ -153,7 +162,7 @@ class BusinessInvestmentsWindow extends React.Component {
                 this.props.history.push(`/`);
             } else {
                 this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);   
+                    this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);
                     this.props.getNecessaryCapitalInformation(this.props.businessPlan.id);
                 });
             }

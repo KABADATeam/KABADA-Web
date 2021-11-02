@@ -106,6 +106,7 @@ class WorkingCapital extends React.Component {
             working_capital_amount: data.working_capital_amount === null ? 0 : data.working_capital_amount,
             own_money_short: data.own_money_short === null ? 0 : data.own_money_short,
             loan_amount_short: data.loan_amount_short === null ? 0 : data.loan_amount_short,
+            working_capital: data.working_capital === null ? null : data.working_capital
         }
         array.push(obj);
         this.setState({
@@ -122,6 +123,7 @@ class WorkingCapital extends React.Component {
             working_capital_amount: this.state.working_capital_amount,
             own_money_short: this.state.own_money_short,
             loan_amount_short: this.state.loan_amount_short,
+            working_capital: this.state.working_capital_updated
         }
         array.push(obj);
         this.setState({
@@ -176,21 +178,31 @@ class WorkingCapital extends React.Component {
         console.log(array)
         array.forEach((item, index) => {
             if (index === record) {
-                if (inputName === 'own_amount') {
+                console.log(record);
+                if (inputName === 'own_amount' && record !== 0) {
                     console.log(value);
                     item.own_amount = Number(value);
                 } else if (inputName === 'loan_amount') {
                     console.log('Update', + value);
                     item.loan_amount = Number(value);
+                } else if (inputName === 'own_amount' && record === 0) {
+                    const loan_amount_short = this.props.data.working_capital_amount - Number(value);
+                    this.setState({
+                        own_money_short: Number(value),
+                        loan_amount_short: loan_amount_short
+                    })
+                    this.props.changeOwnMoneyShort(Number(value), loan_amount_short);
                 }
             }
         })
         console.log(array);
-        this.compareWorkingCapitalArrays(this.state.working_capital_original, array)
+
+        //this.compareWorkingCapitalArrays(this.state.working_capital_original, array)
         this.setState({
             working_capital_updated: array
         })
-        //this.props.changeWorkingCapital(array);
+        this.props.changeWorkingCapital(array);
+        this.arraysEqual(this.state.original_object)
     }
     compareWorkingCapitalArrays = (array1, array2) => {
         let a = JSON.parse(JSON.stringify(array1));
@@ -225,7 +237,8 @@ class WorkingCapital extends React.Component {
             loan_amount: this.state.loan_amount,
             working_capital_amount: this.state.working_capital_amount,
             own_money_short: this.state.own_money_short,
-            loan_amount_short: this.state.loan_amount_short
+            loan_amount_short: this.state.loan_amount_short,
+            working_capital: this.state.working_capital_updated
         }
         array2.push(obj);
         let b = JSON.parse(JSON.stringify(array2));
@@ -249,7 +262,8 @@ class WorkingCapital extends React.Component {
                 original[i].loan_amount !== modified[i].loan_amount ||
                 original[i].working_capital_amount !== modified[i].working_capital_amount ||
                 original[i].own_money_short !== modified[i].own_money_short ||
-                original[i].loan_amount_short !== modified[i].loan_amount_short
+                original[i].loan_amount_short !== modified[i].loan_amount_short ||
+                original[i].working_capital !== modified[i].working_capital
             ) {
                 // console.log('Original price:' + original[i].price + ", modified price is: " + modified[i].price)
                 console.log('They are not equal')
@@ -300,7 +314,6 @@ class WorkingCapital extends React.Component {
                 loan_amount: data.loan_amount_short
             }
             newMonthsArray.push(objUnique)
-            
             for (var i = 1; i < data.grace_period_short + 1; i++) {
                 const monthRow = {
                     month: i,
@@ -596,89 +609,45 @@ class WorkingCapital extends React.Component {
                                     </div>
                                 </Card >
                             </div>
-                            
-                                
-                                    <div style={{ marginTop: 24 }}>
-                                        <Row>
-                                            <Col span={24}>
-                                                <Table
-                                                    title={() => (
+                            <div style={{ marginTop: 24 }}>
+                                <Row>
+                                    <Col span={24}>
+                                        <Table
+                                            title={() => (
+                                                <div>
+                                                    <Row style={{ marginBottom: 16 }}>
                                                         <div>
-                                                            <Row style={{ marginBottom: 16 }}>
-                                                                <div>
-                                                                    <Text>Working capital</Text>
-                                                                    <Tooltip title="Tooltip text">
-                                                                        <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF', marginLeft: '5.25px' }} />
-                                                                    </Tooltip>
-                                                                </div>
-                                                            </Row>
-                                                            <Row style={{ marginBottom: 8 }}>
-                                                                <Col span={16} style={{ marginTop: 5 }}>
-                                                                    <Text style={{ fontWeight: 400, fontSize: 14 }}>My initial guess, how big Working Capital I need</Text>
-                                                                </Col>
-                                                                <Col span={8}>
-                                                                    <div style={{ float: 'right' }}>
-                                                                        <Input style={{ width: 103 }}
-                                                                            prefix="€"
-                                                                            size="large"
-                                                                            defaultValue={this.props.data.working_capital_amount}
-                                                                            onChange={e => this.onWorkingCapitalAmount(e)}
-                                                                        />
-                                                                    </div>
-                                                                </Col>
-                                                            </Row>
+                                                            <Text>Working capital</Text>
+                                                            <Tooltip title="Tooltip text">
+                                                                <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF', marginLeft: '5.25px' }} />
+                                                            </Tooltip>
                                                         </div>
-                                                    )}
-                                                    dataSource={dataWorkingCapitalV1}
-                                                    columns={workingCapitalColumnsV1}
-                                                    pagination={false}
-                                                />
-                                            </Col>
-                                        </Row>
+                                                    </Row>
+                                                    <Row style={{ marginBottom: 8 }}>
+                                                        <Col span={16} style={{ marginTop: 5 }}>
+                                                            <Text style={{ fontWeight: 400, fontSize: 14 }}>My initial guess, how big Working Capital I need</Text>
+                                                        </Col>
+                                                        <Col span={8}>
+                                                            <div style={{ float: 'right' }}>
+                                                                <Input style={{ width: 103 }}
+                                                                    prefix="€"
+                                                                    size="large"
+                                                                    defaultValue={this.props.data.working_capital_amount}
+                                                                    onChange={e => this.onWorkingCapitalAmount(e)}
+                                                                />
+                                                            </div>
+                                                        </Col>
+                                                    </Row>
+                                                </div>
+                                            )}
+                                            dataSource={this.state.working_capital_for_table}
+                                            columns={workingCapitalColumnsV2}
+                                            pagination={false}
+                                        />
+                                    </Col>
+                                </Row>
 
-                                    </div>
-                                    
-                                    <div style={{ marginTop: 24 }}>
-                                        <Row>
-                                            <Col span={24}>
-                                                <Table
-                                                    title={() => (
-                                                        <div>
-                                                            <Row style={{ marginBottom: 16 }}>
-                                                                <div>
-                                                                    <Text>Working capital</Text>
-                                                                    <Tooltip title="Tooltip text">
-                                                                        <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF', marginLeft: '5.25px' }} />
-                                                                    </Tooltip>
-                                                                </div>
-                                                            </Row>
-                                                            <Row style={{ marginBottom: 8 }}>
-                                                                <Col span={16} style={{ marginTop: 5 }}>
-                                                                    <Text style={{ fontWeight: 400, fontSize: 14 }}>My initial guess, how big Working Capital I need</Text>
-                                                                </Col>
-                                                                <Col span={8}>
-                                                                    <div style={{ float: 'right' }}>
-                                                                        <Input style={{ width: 103 }}
-                                                                            prefix="€"
-                                                                            size="large"
-                                                                            defaultValue={this.props.data.working_capital_amount}
-
-                                                                        />
-                                                                    </div>
-                                                                </Col>
-                                                            </Row>
-                                                        </div>
-                                                    )}
-                                                    dataSource={this.state.working_capital_for_table}
-                                                    columns={workingCapitalColumnsV2}
-                                                    pagination={false}
-                                                />
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                        </Row>
-                                    </div>
-                            
+                            </div>
                         </Col>
                     </Row>
                 </Col>
@@ -696,3 +665,174 @@ const mapStateToProps = (state) => {
 }
 
 export default connect(mapStateToProps, { changeVisibility, changePeriod, changeVatPrayer, changeOwnMoney, changeLoanAmount, changeWorkingCapitalAmount, changeOwnMoneyShort, changeWorkingCapital })(WorkingCapital);
+
+
+
+
+/*<Row style={{ marginTop: 24 }}>
+                                    <Col span={24}>
+                                        <Table
+                                            title={() => (
+                                                <div>
+                                                    <Row style={{ marginBottom: 16 }}>
+                                                        <div>
+                                                            <Text>Working capital</Text>
+                                                            <Tooltip title="Tooltip text">
+                                                                <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF', marginLeft: '5.25px' }} />
+                                                            </Tooltip>
+                                                        </div>
+                                                    </Row>
+                                                    <Row style={{ marginBottom: 8 }}>
+                                                        <Col span={16} style={{ marginTop: 5 }}>
+                                                            <Text style={{ fontWeight: 400, fontSize: 14 }}>My initial guess, how big Working Capital I need</Text>
+                                                        </Col>
+                                                        <Col span={8}>
+                                                            <div style={{ float: 'right' }}>
+                                                                <Input style={{ width: 103 }}
+                                                                    prefix="€"
+                                                                    size="large"
+                                                                    defaultValue={this.props.data.working_capital_amount}
+
+                                                                />
+                                                            </div>
+                                                        </Col>
+                                                    </Row>
+                                                </div>
+                                            )}
+                                            dataSource={dataWorkingCapitalV1}
+                                            columns={workingCapitalColumnsV1}
+                                            pagination={false}
+                                            summary={ () =>
+                                                (
+                                                    <>
+                                                        <Table.Summary.Row>
+                                                            <Table.Summary.Cell colSpan={4}>
+                                                            <Table columns={columns} dataSource={this.state.working_capital_for_table} pagination={false} showHeader={false} />
+                                                            </Table.Summary.Cell>
+                                                        </Table.Summary.Row>
+                                                    </>
+                                                )
+                                            }
+                                        />
+                                    </Col>
+                                </Row>
+
+const columns = [
+                {
+                    title: 'Month',
+                    dataIndex: 'month',
+                    key: 'month',
+                    width: '32.5%',
+                    render: (text, obj, record) => (
+                        record === 0 ? <Text>Startup</Text> : <Text>{text} month</Text>
+                    )
+                },
+                {
+                    title: () => (
+                        <Space>
+                            <Text>My money</Text>
+                            <Tooltip title="Tooltip text">
+                                <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF' }} />
+                            </Tooltip>
+                        </Space>
+                    ),
+                    dataIndex: 'own_amount',
+                    key: 'own_amount',
+                    width: '20%',
+                    align: 'center',
+                    render: (text, obj, record) => (
+                        <div style={{ float: 'right' }}>
+                            <Input style={{ width: 103 }}
+                                prefix="€"
+                                size="large"
+                                defaultValue={text === null ? '' : text}
+                                onChange={e => this.updateWorkingItemsProperties(e.target.value, 'own_amount', record)}
+                            />
+                        </div>
+
+                    )
+                },
+                {
+                    title: () => (
+                        <Space>
+                            <Text>Loan Amount</Text>
+                            <Tooltip title="Tooltip text">
+                                <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF' }} />
+                            </Tooltip>
+                        </Space>
+                    ),
+                    dataIndex: 'loan_amount',
+                    key: 'loan_amount',
+                    width: '22.5%',
+                    align: 'right',
+                    render: (text, obj, record) => (
+                        record === 0 ? <Text>{text}</Text> :
+                            <div style={{ float: 'right' }}>
+                                <Input style={{ width: 103 }}
+                                    prefix="€"
+                                    size="large"
+                                    defaultValue={text === null ? '' : text}
+                                    onChange={e => this.updateWorkingItemsProperties(e.target.value, 'loan_amount', record)}
+                                />
+                            </div>
+                    )
+                },
+
+                {
+                    title: () => (
+                        <Space>
+                            <Text>Total Necessary</Text>
+                            <Tooltip title="Tooltip text">
+                                <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF' }} />
+                            </Tooltip>
+                        </Space>
+                    ),
+                    dataIndex: 'total_necessary',
+                    key: 'total_necessary',
+                    width: '25%',
+                    align: 'right',
+                    render: (text, obj, record) => (
+                        text === null ? <Text style={{ color: '#CF1322' }}>-</Text> : <Text style={{ color: '#CF1322' }}>{text}</Text>
+                    )
+                },
+            ];
+
+<div style={{ marginTop: 24 }}>
+                                <Row>
+                                    <Col span={24}>
+                                        <Table
+                                            title={() => (
+                                                <div>
+                                                    <Row style={{ marginBottom: 16 }}>
+                                                        <div>
+                                                            <Text>Working capital</Text>
+                                                            <Tooltip title="Tooltip text">
+                                                                <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF', marginLeft: '5.25px' }} />
+                                                            </Tooltip>
+                                                        </div>
+                                                    </Row>
+                                                    <Row style={{ marginBottom: 8 }}>
+                                                        <Col span={16} style={{ marginTop: 5 }}>
+                                                            <Text style={{ fontWeight: 400, fontSize: 14 }}>My initial guess, how big Working Capital I need</Text>
+                                                        </Col>
+                                                        <Col span={8}>
+                                                            <div style={{ float: 'right' }}>
+                                                                <Input style={{ width: 103 }}
+                                                                    prefix="€"
+                                                                    size="large"
+                                                                    defaultValue={this.props.data.working_capital_amount}
+                                                                    onChange={e => this.onWorkingCapitalAmount(e)}
+                                                                />
+                                                            </div>
+                                                        </Col>
+                                                    </Row>
+                                                </div>
+                                            )}
+                                            dataSource={dataWorkingCapitalV1}
+                                            columns={workingCapitalColumnsV1}
+                                            pagination={false}
+                                        />
+                                    </Col>
+                                </Row>
+                            </div>
+*/

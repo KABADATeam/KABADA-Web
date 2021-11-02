@@ -152,6 +152,13 @@ export const necessaryCapitalReducer = (
     }, action) => {
     switch (action.type) {
         case 'FETCHING_NECESSARY_CAPITAL_SUCCESS':
+            console.log(action.payload);
+            return {
+                ...state,
+                necessaryCapital: action.payload
+            }
+            case "RECALCULATE_INVESTMENT_SUCCESS":
+                console.log(action.payload);
             return {
                 ...state,
                 necessaryCapital: action.payload
