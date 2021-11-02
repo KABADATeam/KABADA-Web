@@ -120,9 +120,11 @@ class BusinessInvestmentsWindow extends React.Component {
             total_investments: this.props.investments.total_investments,
             own_assets: this.props.investments.own_assets,
             investment_amount: this.props.investments.investment_amount,
+            working_capitals: this.props.investments.working_capital,
         }
         console.log(postObject);
         this.props.updateBusinessStartUpInvestmentInformation(postObject);
+        this.props.recalculateInvestment(postObject);
         this.props.changeVisibility('hidden');
     }
     recalChanges = () => {
@@ -135,8 +137,8 @@ class BusinessInvestmentsWindow extends React.Component {
         this.props.changeVisibility('hidden');
     }
     discardChanges = () => {
-        this.props.changeVisibility('hidden');
         this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id)
+        this.props.changeVisibility('hidden');
     }
     onCompletedChange(state) {
         console.log('test')
@@ -163,7 +165,6 @@ class BusinessInvestmentsWindow extends React.Component {
 
 
     render() {
-        console.log(this.props.totalNecessary);
         return (
             <>
                 <UnsavedChangesHeader

@@ -7,7 +7,6 @@ export const getBusinessStartUpInvestmentInformation = (planId) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/kres/investment/' + planId, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response);
             dispatch({ type: "FETCHING_INVESTMENT_SUCCESS", payload: response.data });
         } catch (error) {
             if (error.response === undefined) {
@@ -53,7 +52,7 @@ export const recalculateInvestment = (postObject) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.post('/api/plans/investmentSaveRecalc', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response);
+            console.log(response.data);
             dispatch({ type: "RECALCULATE_INVESTMENT_SUCCESS", payload: postObject });
         } catch (error) {
             if (error.response === undefined) {
@@ -132,7 +131,6 @@ export const getNecessaryCapitalInformation = (planId) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('/api/plans/necessaryCapital/' + planId, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response.data);
             dispatch({ type: "FETCHING_NECESSARY_CAPITAL_SUCCESS", payload: response.data });
         } catch (error) {
             if (error.response === undefined) {

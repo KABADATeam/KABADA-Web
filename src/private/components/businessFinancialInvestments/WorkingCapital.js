@@ -134,8 +134,8 @@ class WorkingCapital extends React.Component {
         if (data.working_capital === null) {
             for (var i = 0; i < grace_period; i++) {
                 const monthRow = {
-                    own_amount: null,
-                    loan_amount: null,
+                    own_amount: 0,
+                    loan_amount: 0,
                 }
                 array.push(monthRow);
             }
@@ -146,6 +146,7 @@ class WorkingCapital extends React.Component {
             this.setState({
                 working_capital_original: data.working_capital
             })
+            console.log(data.working_capital)
         }
     }
     setWorkingCapitalUpdatedArray = (data) => {
@@ -154,8 +155,8 @@ class WorkingCapital extends React.Component {
         if (data.working_capital === null) {
             for (var i = 0; i < grace_period; i++) {
                 const monthRow = {
-                    own_amount: null,
-                    loan_amount: null,
+                    own_amount: 0,
+                    loan_amount: 0,
                 }
                 array.push(monthRow);
             }
@@ -166,14 +167,14 @@ class WorkingCapital extends React.Component {
             this.setState({
                 working_capital_updated: data.working_capital
             })
+            console.log(data.working_capital)
         }
     }
     updateWorkingItemsProperties = (value, inputName, record) => {
         const array = this.state.working_capital_updated;
+        console.log(this.state.working_capital_original);
         console.log(array)
-        console.log('record' + record);
         array.forEach((item, index) => {
-            console.log(index)
             if (index === record) {
                 if (inputName === 'own_amount') {
                     console.log(value);
@@ -189,7 +190,7 @@ class WorkingCapital extends React.Component {
         this.setState({
             working_capital_updated: array
         })
-        this.props.changeWorkingCapital(array);
+        //this.props.changeWorkingCapital(array);
     }
     compareWorkingCapitalArrays = (array1, array2) => {
         let a = JSON.parse(JSON.stringify(array1));
@@ -257,34 +258,33 @@ class WorkingCapital extends React.Component {
             }
         }
     }
-    setWorkingCapital = (grace_period, working_capital) => {
+    setWorkingCapital = (data) => {
         const newMonthsArray = []
-
-        if (grace_period === null) {
+        if (data.grace_period_short === null) {
             const objUnique = {
                 month: 'Startup',
-                own_amount: this.props.data.own_money_short,
-                loan_amount: this.props.data.loan_amount_short,
+                own_amount: data.own_money_short,
+                loan_amount: data.loan_amount_short,
                 total_necessary: null,
             }
             newMonthsArray.push(objUnique);
-        } else if (grace_period === 0) {
+        } else if (data.grace_period_short === 0) {
             const objUnique = {
                 month: 'Startup',
-                own_amount: this.props.data.own_money_short,
-                loan_amount: this.props.data.loan_amount_short,
+                own_amount: data.own_money_short,
+                loan_amount: data.loan_amount_short,
                 total_necessary: null,
             }
             newMonthsArray.push(objUnique);
-        } else if (grace_period > 0 || working_capital === null) {
+        } else if (data.grace_period_short > 0 && data.working_capital === null) {
             const objUnique = {
                 month: 'Startup',
-                own_amount: this.props.data.own_money_short,
-                loan_amount: this.props.data.loan_amount_short,
+                own_amount: data.own_money_short,
+                loan_amount: data.loan_amount_short,
                 total_necessary: null,
             }
             newMonthsArray.push(objUnique)
-            for (var i = 1; i < grace_period + 1; i++) {
+            for (var i = 1; i < data.grace_period_short + 1; i++) {
                 const monthRow = {
                     month: i,
                     own_amount: null,
@@ -293,25 +293,24 @@ class WorkingCapital extends React.Component {
                 }
                 newMonthsArray.push(monthRow)
             }
-        } else if (grace_period > 0 || working_capital !== null) {
+        } else if (data.grace_period_short > 0 && data.working_capital !== null) {
             const objUnique = {
                 month: 'Startup',
-                own_amount: this.props.data.own_money_short,
-                loan_amount: this.props.data.loan_amount_short
+                own_amount: data.own_money_short,
+                loan_amount: data.loan_amount_short
             }
             newMonthsArray.push(objUnique)
-            for (var i = 1; i < grace_period + 1; i++) {
+            
+            for (var i = 1; i < data.grace_period_short + 1; i++) {
                 const monthRow = {
                     month: i,
-                    own_amount: null,
-                    loan_amount: null,
+                    own_amount: data.working_capital[i].own_amount,
+                    loan_amount: data.working_capital[i].loan_amount,
                     total_necessary: this.props.totalNecessary.necessaryCapital[i]
                 }
-                console.log(monthRow);
                 newMonthsArray.push(monthRow)
             }
         }
-
         this.setState({
             working_capital_for_table: newMonthsArray
         })
@@ -321,7 +320,7 @@ class WorkingCapital extends React.Component {
         this.setUpdatedObject();
         this.setWorkingCapitalOriginalArray(this.props.data);
         this.setWorkingCapitalUpdatedArray(this.props.data);
-        this.setWorkingCapital(this.props.data.grace_period_short, this.props.data.working_capital);
+        this.setWorkingCapital(this.props.data);
     }
     render() {
         const default_vat_prayer_value = this.props.data.vat_payer === null ? true : this.props.data.vat_payer;
@@ -675,6 +674,8 @@ class WorkingCapital extends React.Component {
                                                     pagination={false}
                                                 />
                                             </Col>
+                                        </Row>
+                                        <Row>
                                         </Row>
                                     </div>
                             
