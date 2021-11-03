@@ -26,6 +26,7 @@ export const customerSegmentReducer = (
             const newNgoSegment = [...state.public_bodies_ngo, { ...action.payload }];
             return { ...state, "public_bodies_ngo": newNgoSegment };
         case "FETCHING_CUSTOMER_SEGMENTS_SUCCESS":
+            const is_completed = action.payload.is_customer_segments_completed;
             const consumers_w_k = action.payload.consumers ? action.payload.consumers.map(obj => ({ ...obj, "key": obj.id })) : [];
             const business_w_k = action.payload.business ? action.payload.business.map(obj => ({ ...obj, "key": obj.id })) : [];
             const public_bodies_ngo_w_k = action.payload.public_bodies_ngo ? action.payload.public_bodies_ngo.map(obj => ({ ...obj, "key": obj.id })) : [];
@@ -39,7 +40,7 @@ export const customerSegmentReducer = (
             const ngo_w_titles = public_bodies_ngo_w_k ? public_bodies_ngo_w_k.map(v => ({
                 ...v, ngo_types_titles: v.ngo_types.map(e => e.title).join(", ")
             })) : [];
-            return { ...state, "consumers": consumers_w_titles, "business": business_w_titles, "public_bodies_ngo": ngo_w_titles };
+            return { ...state,"is_customer_segments_completed":is_completed, "consumers": consumers_w_titles, "business": business_w_titles, "public_bodies_ngo": ngo_w_titles };
         case "UPDATE_CONSUMER_SEGMENT_SUCCESS":
             const updatedConsumerSegment = state.consumers.map(x => x.id === action.payload.id ? action.payload : x);
             return { ...state, "consumers": updatedConsumerSegment };
