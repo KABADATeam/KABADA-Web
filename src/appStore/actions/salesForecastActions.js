@@ -33,6 +33,7 @@ export const getProductByID = (id, callback) => {
             // console.log(JSON.stringify(response.data) + "wowowowowowowowowowowo");
 
             dispatch({ type: "FETCHING_SALES_FORECASR_SUCCESS", payload: response.data });
+            console.log(JSON.stringify(response.data));
             callback();
         } catch (error) {
             if (error.response === undefined) {

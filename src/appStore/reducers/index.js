@@ -4,7 +4,7 @@ import authenticationReducer from './authenticationReducer';
 import loadingReducer, { imageLoadingReducer } from './loadingReducer';
 import messageReducer from './messageReducer';
 import { privatePlansReducer, selectedplanFetchReducer, updatePlanReducer, allPublicPlansFetchReducer } from './planReducer';
-import { industriesReducer, activitiesReducer, industrySelectedReducer, activitySelectedReducer } from './naceReducer';
+import { industriesReducer, activitiesReducer, industrySelectedReducer, activitySelectedReducer, naceReducer } from './naceReducer';
 import { countrySelectedReducer, countriesReducer, countryShortNameReducer } from './countryReducer';
 import { eurostatDataReducer } from '../reducers/eurostat/eurostatReducer';
 import { eurostatAllDataReducer } from '../reducers/eurostat/eurostatAllReducer';
@@ -87,6 +87,7 @@ export default combineReducers({
     necessaryCapital: necessaryCapitalReducer,
     countryShortCode: countryShortNameReducer,
     cashFlow: cashFlowReducer,
-    assets: assetsReducer, 
-    vat: countryVATReducer
+    assets: assetsReducer,
+    vat: countryVATReducer,
+    nace: naceReducer
 });

@@ -12,7 +12,7 @@ export const salesForecastReducer = (
     switch (action.type) {
         case "FETCHING_PRODUCTS_SUCCESS":
             console.log(action.payload);
-            return { ...state, "productsTitles": action.payload.products.map(obj => ({ ...obj, key: obj.id, Expoted: true })), "is_proposition_completed": action.payload.is_proposition_completed };
+            return { ...state, "productsTitles": action.payload.products.map(obj => ({ ...obj, key: obj.id, Expoted: true })) };
         case "SETING_PRODUCTS_SUCCESS":
             const productsTitles = state.products;
             productsTitles.forEach(element => {
@@ -26,16 +26,9 @@ export const salesForecastReducer = (
         case 'FETCHING_SALES_FORECASR_SUCCESS':
             //console.log('Reducer gauna:' + JSON.stringify(action.payload));
             const produktai = action.payload.products;
-            // const is_sales_forecast_completed = action.payload.is_sales_forecast_completed;
-            //console.log('gaunu kazka' + JSON.stringify(produktai));
-            // const product_id = action.payload.product_id;
-            // const when_ready = action.payload.when_ready;
-            // const product_export = action.payload.export;
-            // const sales_forecast_eu = action.payload.sales_forecast_eu.map(obj => ({ ...obj, "key": obj.category_id }));
-            // const sales_forecast_non_eu = action.payload.sales_forecast_non_eu.map(obj => ({ ...obj, "key": obj.category_id }));
-            // console.log("mmmmmmmmmmmmmmmmm" + JSON.stringify(sales_forecast_eu))
-            // return { ...action.payload, "prodct_Id": product_id, "when_ready": when_ready, "product_export": product_export, "sales_forecast_eu": sales_forecast_eu, "sales_forecast_non_eu": sales_forecast_non_eu };
-            return { ...state, "products": produktai };
+            console.log(JSON.stringify(action.payload) + " just one")
+            const is_sales_forecast_completed = action.payload.is_sales_forecast_completed;
+            return { ...state, "products": produktai, "is_sales_forecast_completed": is_sales_forecast_completed };
 
         case "UPDATE_SALES_FORECAST_SUCCESS":
             const prodoct = state.products;
@@ -54,7 +47,9 @@ export const salesForecastReducer = (
             })
             return { ...state, 'products': state.products };
         case "SAVE_STATE_SUCCESS":
-            return { ...state, "is_sales_forecast_completed": action.payload };
+            console.log(action.payload + "Master")
+            return { ...state, "is_sales_completed": action.payload };
+
         default:
             return state;
     }
