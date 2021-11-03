@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Modal, Button, Form, Space, Select } from 'antd';
 import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { updateRevenue } from "../../../appStore/actions/revenueStreamActions";
+import { updateRevenue, getStreamTypes, getRevenues } from "../../../appStore/actions/revenueStreamActions";
 
 const { Option } = Select;
 
@@ -11,9 +11,9 @@ class EditSegmentModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            revenue: this.props.item.stream_type_id,
-            price: this.props.item.price_category_id,
-            priceType: this.props.item.price_type_id,
+            revenue: { id: this.props.item.stream_type_id, title: this.props.item.stream_type_name },
+            price: {id: this.props.item.price_category_id, title: this.props.item.price_category_name},
+            priceType: { id: this.props.item.price_type_id, title: this.props.item.price_type_name },
             priceTypeError: ''
         }
     }
@@ -27,7 +27,9 @@ class EditSegmentModal extends Component {
     }
 
     onOK = () => {
-        if (this.state.priceType === null) {
+        const price = this.props.types.prices.find(x => x.id === this.state.price.id);
+        console.log('Price type id:' + this.state.priceType.id)
+        if (this.state.priceType.id === null) {
             this.setState({
                 priceTypeError: 'Select price type'
             });
@@ -40,47 +42,72 @@ class EditSegmentModal extends Component {
 
         const postObj = {
             "id": this.props.item.id,
-            "business_plan_id": this.props.businessPlan.id,
+            "business_plan_id": this.props.businessPlanId,
             "segment": this.props.number,
-            "stream_type_id": this.state.revenue,
-            "price_type_id": this.state.priceType
+            "stream_type_id": this.state.revenue.id,
+            "price_type_id": this.state.priceType.id
         };
 
-        const price = this.props.types.prices.find(x => x.id === this.state.price);
+        console.log('Price type id:'+this.state.priceType.id)
+        console.log('Revenue id:'+this.state.revenue.id)
         const reducerObj = {
             "id": this.props.item.id,
             "key": this.props.item.id,
-            "price_category_id": this.state.price,
+            "price_category_id": this.state.price.id,
             "price_category_name": price.title,
-            "price_type_id": this.state.priceType,
-            "price_type_name": price.types.find(x => x.id === this.state.priceType).title,
-            "stream_type_id": this.state.revenue,
-            "stream_type_name": this.props.types.stream_types.find(x => x.id === this.state.revenue).title,
+            "price_type_id": this.state.priceType.id,
+            "price_type_name": price.types.find(x => x.id === this.state.priceType.id).title,
+            "stream_type_id": this.state.revenue.id,
+            "stream_type_name": this.props.types.stream_types.find(x => x.id === this.state.revenue.id).title,
             "segment": this.props.item.segment
         }
 
-        this.props.updateRevenue(postObj, reducerObj);
+        console.log('POST obj:'+ JSON.stringify(postObj))
+        console.log('Reducer obj:'+ JSON.stringify(reducerObj))
 
+        this.props.updateRevenue(postObj, reducerObj);
         this.props.onClose();
     }
 
-    onNameChange (id) {
+    onNameChange(typeId) {
+        const obj = {
+            'id': typeId,
+            'title': this.props.item.stream_type_name
+        }
         this.setState({
-            revenue: id
+            revenue: obj
         });
     }
 
     onPriceChange(id) {
+        const obj = {
+            id: id,
+            title: this.props.item.price_title
+        }
+        console.log('Price id:'+id)
         this.setState({
-            price: id,
-            priceType: null
+            price: obj
         });
     }
 
-    onPriceTypeChange(id) {
+    onPriceTypeChange(typeId) {
+        const obj = {
+            id: typeId,
+            title: this.props.item.price_type_name
+        }
         this.setState({
-            priceType: id
+            priceType: obj
         });
+    }
+
+    componentDidMount() {
+        this.props.getRevenues(this.props.businessPlanId);
+        this.props.getStreamTypes();
+        this.setState({
+            revenue: { id: this.props.item.stream_type_id, title: this.props.item.stream_type_name },
+            price: {id: this.props.item.price_category_id, title: this.props.item.price_category_name},
+            priceType: { id: this.props.item.price_type_id, title: this.props.item.price_type_name },
+        },()=> console.log('Revenue:'+JSON.stringify(this.state.revenue)))
     }
 
     render() {
@@ -92,17 +119,17 @@ class EditSegmentModal extends Component {
             <Option key={obj.id} value={obj.id}>{obj.title}</Option>
         );
 
-        const priceTypeOptions = this.state.price === null ? [] :
-            this.props.types.prices.find(x => x.id === this.state.price).types.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
-        );
+        const priceTypeOptions = this.state.price.id === null ? [] :
+            this.props.types.prices.find(x => x.id === this.state.price.id).types.map((obj) =>
+                <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+            );
 
         return (
             <>
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
-                    title={<Space><ArrowLeftOutlined onClick={this.onBack}/>Edit revenue stream</Space>}
+                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />Edit revenue stream</Space>}
                     visible={this.props.visibility}
                     onCancel={this.onCancel}
                     footer={
@@ -114,20 +141,20 @@ class EditSegmentModal extends Component {
                 >
                     <Form layout="vertical" id="myForm" name="myForm" onFinish={this.handleOk}>
                         <Form.Item key="name" label="Revenue Stream Name">
-                            <Select style={{ width: '100%' }} placeholder="Select revenue stream" value={this.state.revenue} onChange={this.onNameChange.bind(this)} >
+                            <Select style={{ width: '100%' }} placeholder="Select revenue stream" defaultValue={this.state.revenue.title} onChange={this.onNameChange.bind(this)} >
                                 {streamOptions}
                             </Select>
                         </Form.Item>
 
                         <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingRight: "10px" }} key="price" label="Prices">
-                            <Select style={{ width: '100%' }} placeholder="Select price" value={this.state.price} onChange={this.onPriceChange.bind(this)} >
+                            <Select style={{ width: '100%' }} placeholder="Select price" defaultValue={this.state.price.title} onChange={this.onPriceChange.bind(this)} >
                                 {priceOptions}
                             </Select>
                         </Form.Item>
 
                         <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingLeft: "10px" }} key="type" label="Types of pricing"
                             validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
-                            <Select style={{ width: '100%' }} placeholder="Choose type" value={this.state.priceType} onChange={this.onPriceTypeChange.bind(this)} >
+                            <Select style={{ width: '100%' }} placeholder="Choose type" defaultValue={this.state.priceType.title} onChange={this.onPriceTypeChange.bind(this)} >
                                 {priceTypeOptions}
                             </Select>
                         </Form.Item>
@@ -141,10 +168,10 @@ class EditSegmentModal extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        businessPlan: state.selectedBusinessPlan,
+        revenues: state.revenues,
         types: state.revenueTypes
     };
 }
 
-export default connect(mapStateToProps, { updateRevenue })(EditSegmentModal);
+export default connect(mapStateToProps, { updateRevenue, getStreamTypes, getRevenues })(EditSegmentModal);
 

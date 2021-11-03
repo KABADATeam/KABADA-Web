@@ -7,6 +7,7 @@ export const getRevenues = (planId) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/revenue/' + planId, { headers: { Authorization: `Bearer ${token}` } });
+            console.log('Revenues:'+JSON.stringify(response.data))
             dispatch({ type: "FETCHING_REVENUE_STREAMS_SUCCESS", payload: response.data });
         } finally {
             dispatch({ type: "LOADING", payload: false });
@@ -19,6 +20,7 @@ export const getStreamTypes = () => {
         dispatch({ type: "LOADING", payload: true });
         try {
             const response = await kabadaAPI.get('api/revenue/streamTypes');
+            console.log('GOT stream types :'+JSON.stringify(response.data))
             dispatch({ type: "FETCHING_REVENUE_TYPES_SUCCESS", payload: response.data });
         } finally {
             dispatch({ type: "LOADING", payload: false });

@@ -354,7 +354,7 @@ class RevenueStreams extends React.Component {
                 
                 {
                     this.state.item !== null ? 
-                        <EditSegmentModal visibility={true} item={this.state.item} onClose={this.onCloseEditSegmentModal} />
+                        <EditSegmentModal visibility={true} item={this.state.item} businessPlanId={this.props.businessPlan.id} onClose={this.onCloseEditSegmentModal} />
                         : null
                 }
             </>

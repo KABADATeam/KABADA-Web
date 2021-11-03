@@ -77,19 +77,21 @@ class AddSegmentModal extends Component {
             "stream_type_name": this.props.types.stream_types.find(x => x.id === this.state.revenue).title,
             "segment": this.props.number
         }
-
+        console.log('POST OBJECT ON CREATE IS: '+JSON.stringify(postObj))
         this.props.saveRevenue(postObj, reducerObj);
 
         this.props.onClose();
     }
 
     onNameChange (id) {
+        console.log('Revenue stream name id:'+id)
         this.setState({
             revenue: id
         });
     }
 
     onPriceChange(id) {
+        console.log('Price id:'+id)
         this.setState({
             price: id,
             priceType: null
@@ -97,6 +99,7 @@ class AddSegmentModal extends Component {
     }
 
     onPriceTypeChange(id) {
+        console.log('Price type id:'+id)
         this.setState({
             priceType: id
         });
