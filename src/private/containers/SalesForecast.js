@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Breadcrumb, Col, Space, Row, Button, Typography, Switch, Card, Tabs, Input, Select, InputNumber, Table } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getProducts, changState, getProductByID, updateSalesForecast } from '../../appStore/actions/salesForecastActions';
+import { getProducts, changState, getProductByID, updateSalesForecast, saveState } from '../../appStore/actions/salesForecastActions';
 import { getCountryVat } from '../../appStore/actions/vatsActions'
 import { getCountryShortCode } from '../../appStore/actions/countriesActions'
 import SalesForecastTable from '../components/sales_Forecast/SalesForecastTable';
@@ -26,6 +26,7 @@ class SalesForecast extends React.Component {
             totalOutEu: 0,
             isVisibleHeader: 'hidden',
             tabKey: "",
+            completed: false,
             vty: {},
             inEuData: [],
             outEuData: [],
@@ -455,6 +456,7 @@ class SalesForecast extends React.Component {
             console.log(this.props.businessPlan.id)
 
             this.props.getProductByID(this.props.businessPlan.id, () => {
+
                 this.setTotal();
                 const array = this.props.salesForecast.products;
                 array.map((element, index) => {
@@ -465,7 +467,7 @@ class SalesForecast extends React.Component {
                 //this.getKey(this.state.update[0].product_id)
 
 
-                //console.log(JSON.stringify(this.state.update) + "ffdfdfdf")
+
                 this.setState({
                     inEuData: this.dataSourceTableInEu,
                     outEuData: this.dataSourceTableOutEu,
@@ -632,6 +634,13 @@ class SalesForecast extends React.Component {
 
         })
 
+    }
+
+    onCompletedChange(state) {
+        this.props.saveState(this.props.businessPlan.id, state, () => {
+            this.props.getProductByID(this.props.businessPlan.id);
+        });
+        console.log(state);
     }
 
 
@@ -1058,7 +1067,7 @@ class SalesForecast extends React.Component {
                         </Col>
                         <Col span={4} offset={6}>
                             <div className="button-style-heading-section">
-                                <Text className="mark-as-completed-style">Mark as completed: </Text><Switch className="margin-left-8px" />
+                                <Text className="mark-as-completed-style">Mark as completed: </Text><Switch className="margin-left-8px" checked={this.props.salesForecast.is_sales_forecast_completed} onClick={this.onCompletedChange.bind(this)} />
                             </div>
 
                         </Col>
@@ -1173,4 +1182,4 @@ const mapStateToProps = (state) => {
 
 }
 
-export default connect(mapStateToProps, { getCountryShortCode, getCountryVat, refreshPlan, changState, getProducts, getProductByID, updateSalesForecast })(withRouter(SalesForecast))
+export default connect(mapStateToProps, { getCountryShortCode, getCountryVat, refreshPlan, changState, getProducts, getProductByID, updateSalesForecast, saveState })(withRouter(SalesForecast))
