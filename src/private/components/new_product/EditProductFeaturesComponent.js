@@ -37,7 +37,7 @@ class EditProductFeaturesComponent extends Component {
     
       isDisabled(id){
         return (
-          this.state.checked.length > 4 && this.state.checked.indexOf(id) === -1
+          this.state.checked.length > 8 && this.state.checked.indexOf(id) === -1
         );
       }; 
     
@@ -58,7 +58,7 @@ class EditProductFeaturesComponent extends Component {
                 <Card style={{ ...cardStyle, padding: 20 }} bodyStyle={{ ...tableCardBodyStyle, padding: 0 }}>
                     <Space direction="vertical">
                         <Text style={infoTextStyle}>Product features</Text>
-                        <Text style={descriptionTextStyle}>Up to 5 of mixed characteristics</Text>
+                        <Text style={descriptionTextStyle}>Up to 9 of mixed characteristics</Text>
                         {console.log(this.state)}
                         <Checkbox.Group onChange={this.onChange} value={this.props.product.product_features}>
                             <Space direction="vertical">
