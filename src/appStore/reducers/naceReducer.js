@@ -16,6 +16,38 @@ export const activitiesReducer = (state = [], action) => {
     }
 }
 
+export const naceReducer = (state = [], action) => {
+    switch (action.type) {
+        case 'FETCHING_NACE_SUCCESS':
+            const allNace = action.payload.map(
+                item => ({
+                    ...item, title: item.code + " " + item.title, key: item.id, value: item.id, children: (item.activities || []).map(cact1 =>
+                    ({
+                        ...cact1, title: cact1.code + " " + cact1.title, key: cact1.id, value: cact1.id, children: (cact1.activities || []).map(cact2 =>
+                        ({
+                            ...cact2, title: cact2.code + " " + cact2.title, key: cact2.id, value: cact2.id, children: (cact2.activities || []).map(cact3 =>
+                            ({
+                                ...cact3, title: cact3.code + " " + cact3.title, key: cact3.id, value: cact3.id,
+                            }))
+                        }))
+                    }))
+                })
+            );
+            return allNace;
+        default:
+            return state;
+    }
+}
+
+export const naceSelectedReducer = (state = null, action) => {
+    switch (action.type) {
+        case 'NACE_SELECT_SUCCESS':
+            return action.payload;
+        default:
+            return state;
+    }
+}
+
 export const industrySelectedReducer = (state = null, action) => {
     switch (action.type) {
         case 'INDUSTRY_SELECT_SUCCESS':

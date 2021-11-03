@@ -5,7 +5,7 @@ import { buttonStyle, inputStyle } from '../../../styles/customStyles';
 import '../../../css/customModal.css';
 import { connect } from 'react-redux';
 import { getCountries } from '../../../appStore/actions/countriesActions';
-import { getIndustries, getActivities } from '../../../appStore/actions/naceActions';
+import { getIndustries, getActivities, getNace } from '../../../appStore/actions/naceActions';
 import { updatePlanData, updateImage } from '../../../appStore/actions/planActions';
 import { uploadFile, deleteFile } from '../../../appStore/actions/userFileAction';
 import { getPlanLanguages } from '../../../appStore/actions/planLanguageAction';
@@ -18,18 +18,18 @@ class EditBusinessPlanModal extends Component {
         super(props);
         this.state = {
             fileList: [],
-            enabledSelectActivity: false
+            //enabledSelectActivity: false
         };
     }
     formRef = React.createRef();
 
     componentDidMount() {
         this.props.getCountries();
-        this.props.getIndustries();
-        this.props.getActivities(this.props.updatingPlan.industryId);
+        //this.props.getIndustries();
+        this.props.getNace();
+        //this.props.getActivities(this.props.updatingPlan.industryId);
         this.props.getPlanLanguages();
         this.setState({
-            enabledSelectActivity: true,
             fileList: [],
         });
     }
@@ -50,7 +50,7 @@ class EditBusinessPlanModal extends Component {
             "id": this.props.updatingPlan.id,
             'name': values.name,
             'activityId': values.activity,
-            'industryId': values.industry,
+            //'industryId': values.industry,
             'countryId': values.country,
             'languageId': values.language,
         }
@@ -107,7 +107,7 @@ class EditBusinessPlanModal extends Component {
         return e && e.fileList;
     };
 
-    handleIndustryChange = (value) => {
+    /*handleIndustryChange = (value) => {
         this.formRef.current.setFieldsValue({
             activity: undefined
         })
@@ -131,16 +131,18 @@ class EditBusinessPlanModal extends Component {
         this.setState({
             enabledSelectActivity: false,
         });
-    };
+    };*/
 
     render() {
-        const { fileList, enabledSelectActivity } = this.state;
+        const { fileList } = this.state;
+        console.log(this.props.updatingPlan)
+        const naceClass = this.props.nace;
         const oldName = this.props.updatingPlan.name;
         const oldActivity = this.props.updatingPlan.activityId;
         const oldIndustry = this.props.updatingPlan.industryId;
         const oldCountry = this.props.updatingPlan.countryId;
         const oldLanguage = this.props.updatingPlan.languageId;
-        const industries = this.props.industries.map((item) => ({
+        /*const industries = this.props.industries.map((item) => ({
             key: item.id,
             value: item.id,
             text: item.code + '. ' + item.title
@@ -156,7 +158,7 @@ class EditBusinessPlanModal extends Component {
                 title: citem.code + '. ' + citem.title,
             }))
         }));
-
+*/
 
         const oldFileList = this.props.updatingPlan.coverImage ? [{
             uid: '-1',
@@ -223,7 +225,7 @@ class EditBusinessPlanModal extends Component {
                         hideRequiredMark
                         initialValues={{
                             name: oldName,
-                            industry: oldIndustry,
+                            //industry: oldIndustry,
                             activity: oldActivity,
                             country: oldCountry,
                             language: oldLanguage !== null ? oldLanguage : languages[0].value
@@ -252,6 +254,7 @@ class EditBusinessPlanModal extends Component {
                                 <Button style={buttonStyle} icon={<UploadOutlined />}>Browse</Button>
                             </Upload>
                         </Form.Item>
+                        {/*
                         <Form.Item key="industry" name="industry" label={<Space><Text>NACE Rev. 2 Section</Text><Tooltip title={aboutNACE}><QuestionCircleOutlined style={{ color: "#8C8C8C" }} /></Tooltip></Space>}
                             rules={[
                                 {
@@ -278,13 +281,14 @@ class EditBusinessPlanModal extends Component {
                                     <Option key={item.key} value={item.value}>{item.text}</Option>
                                 ))}
                             </Select>
-                        </Form.Item>
-                        <Form.Item key="activity" name="activity" label="NACE Rev. 2 Division, Group, Class"
+                            </Form.Item>
+                                */}
+                        <Form.Item key="activity" name="activity" label="Select NACE Rev. 2 "
                             rules={[
                                 {
                                     validator: async (_, NACEcode) => {
                                         if (!NACEcode || NACEcode.length < 1) {
-                                            return Promise.reject(new Error('Select Division, Group or Class'));
+                                            return Promise.reject(new Error('Select NACE Rev. 2 '));
                                         }
                                     },
                                 },
@@ -293,15 +297,11 @@ class EditBusinessPlanModal extends Component {
                                 showSearch
                                 style={{ width: 655 }}
                                 dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                                treeData={activities}
-                                treeDefaultExpandAll={false}
+                                treeData={naceClass}
                                 allowClear
                                 treeLine={true}
                                 treeNodeFilterProp='title'
-                                placeholder="Select NACE Rev. 2 Division, Group, Class"
-                                onChange={this.handleActivityChange}
-                                onClear={this.handleActivityClear}
-                                disabled={!enabledSelectActivity}
+                                placeholder="Select NACE Rev. 2"
                             >
                             </TreeSelect>
                         </Form.Item>
@@ -363,7 +363,8 @@ const mapStateToProps = (state) => {
         industries: state.industries,
         uploadedFile: state.uploadedFile,
         planLanguages: state.planLanguages,
-        personalPlans: state.personalBusinessPlans
+        personalPlans: state.personalBusinessPlans,
+        nace: state.nace
     };
 }
 export default connect(mapStateToProps, {
@@ -374,6 +375,7 @@ export default connect(mapStateToProps, {
     uploadFile,
     getPlanLanguages,
     updateImage,
-    deleteFile
+    deleteFile,
+    getNace
 })(EditBusinessPlanModal);
 
