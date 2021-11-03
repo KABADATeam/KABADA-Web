@@ -54,9 +54,9 @@ class AssetsWindow extends React.Component {
         super(props);
         this.state = {
             is_assets_completed: false,
-            total_investments: this.props.assets.total_investments,
-            own_assets: this.props.assets.own_assets,
-            investment_amount: this.props.assets.investment_amount,
+            total_investments: null,
+            own_assets: null,
+            investment_amount: null,
             original_assets_items: [],
             assets_items: [],
             visibleHeader: 'hidden',
@@ -146,51 +146,22 @@ class AssetsWindow extends React.Component {
             original_assets_items: array,
         })
     }
-    updateAssetsItemsProperties = (value, obj, inputName) => {
-        const array = this.state.assets_items;
-        array.forEach(item => {
-            if (item.resource_id === obj.resource_id) {
-                if (inputName === 'amount') {
-                    item.amount = Number(value);
-                } else if (inputName === 'vat') {
-                    console.log('Update', + value);
-                    item.vat = value
-                }
-            }
-        })
-        this.setState({
-            assets_items: array
-        })
-        const visibilityString = this.getUpdatesWindowState();
-        this.setState({
-            visibleHeader: visibilityString
-        });
-    }
-    saveChanges = () => {
-        const assets_items_for_post = [];
-        const assets_items_for_reducer = [];
-        const assets_items_array = this.state.assets_items;
+    computeAmounts = () => {
         const total_investments_values_list = [];
         const own_assets_values_list = [];
-
-        //compute total investments amount
+        const assets_items_array = this.state.assets_items;
         assets_items_array.map((item) => {
             const obj = {
                 amount: item.amount
             }
             const value = parseInt(Object.values(obj));
-            console.log(value);
             total_investments_values_list.push(value);
         })
         const total_investments_value = total_investments_values_list.reduce(function(total_investments_value, value) {
             const updated_total_investments_value = total_investments_value + value;
             return updated_total_investments_value;
         })
-
-
-        // compute own assets amount
         const own_assets_array = assets_items_array.filter((item) => item.resource_status === 'Own');
-        console.log(own_assets_array);
         own_assets_array.map((item) => {
             const obj = {
                 amount: item.amount
@@ -204,7 +175,37 @@ class AssetsWindow extends React.Component {
         });
         //compute investments_amount 
         let investments_amount_value = total_investments_value - own_assets_value;
-        //create assets items objects, they will be using on postObject 
+        this.setState({
+            total_investments: total_investments_value,
+            own_assets: own_assets_value,
+            investment_amount: investments_amount_value,
+        })
+    }
+    updateAssetsItemsProperties = (value, obj, inputName) => {
+        const array = this.state.assets_items;
+        array.forEach(item => {
+            if (item.resource_id === obj.resource_id) {
+                if (inputName === 'amount') {
+                    item.amount = Number(value);
+                } else if (inputName === 'vat') {
+                    console.log('Update', + value);
+                    item.vat = value
+                }
+            }
+            this.computeAmounts();
+        })
+        this.setState({
+            assets_items: array
+        })
+        const visibilityString = this.getUpdatesWindowState();
+        this.setState({
+            visibleHeader: visibilityString
+        });
+    }
+    saveChanges = () => {
+        const assets_items_for_post = [];
+        const assets_items_for_reducer = [];
+        const assets_items_array = this.state.assets_items;
         assets_items_array.map((item, index) => {
             const obj = {
                 resource_id: item.resource_id,
@@ -227,17 +228,17 @@ class AssetsWindow extends React.Component {
         })
         const postObject = {
             business_plan_id: this.props.businessPlan.id,
-            total_investments: this.state.total_investments === null ? 0 : total_investments_value,
-            own_assets: this.state.own_assets === null ? 0 : own_assets_value,
-            investment_amount: this.state.investment_amount === null ? 0 : investments_amount_value,
+            total_investments: this.state.total_investments === null ? 0 : this.state.total_investments,
+            own_assets: this.state.own_assets === null ? 0 : this.state.own_assets,
+            investment_amount: this.state.investment_amount === null ? 0 : this.state.investment_amount,
             physical_assets: assets_items_for_post
         }
         const reducerObject = {
             business_plan_id: this.props.businessPlan.id,
-            total_investments: this.state.total_investments === null ? 0 : total_investments_value,
-            own_assets: this.state.own_assets === null ? 0 : own_assets_value,
-            investment_amount: this.state.investment_amount === null ? 0 : investments_amount_value,
-            physical_assets: assets_items_for_reducer
+            total_investments: this.state.total_investments === null ? 0 : this.state.total_investments,
+            own_assets: this.state.own_assets === null ? 0 : this.state.own_assets,
+            investment_amount: this.state.investment_amount === null ? 0 : this.state.investment_amount,
+            physical_assets: assets_items_for_post
         }
         this.setState({
             visibleHeader: 'hidden'
