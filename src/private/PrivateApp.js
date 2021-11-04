@@ -32,6 +32,7 @@ import FixedAndVariableCosts from './containers/FixedAndVariableCosts';
 import SalesForecast from './containers/SalesForecast';
 import CashFlow from './containers/CashFlow';
 import Assets from './containers/Assets';
+import PersonalCharacteristics from './containers/PersonalCharacteristics'
 
 class PrivateApp extends React.Component {
     constructor(props) {
@@ -76,6 +77,7 @@ class PrivateApp extends React.Component {
                     <Route exact path="/sales-forecast" render={(props) => <MainWindow {...props}> <SalesForecast {...props} /> </MainWindow>} />
                     <Route exact path="/cash-flow" render={(props) => <MainWindow {...props}> <CashFlow {...props} /> </MainWindow>} />
                     <Route exact path="/assets" render={(props) => <MainWindow {...props}> <Assets {...props} /> </MainWindow>} />
+                    <Route exact path="/personal-characteristics" render={(props) => <MainWindow {...props}> <PersonalCharacteristics {...props} /> </MainWindow>} />
                 </Switch>
             </Router>
 

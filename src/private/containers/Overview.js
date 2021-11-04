@@ -345,6 +345,17 @@ class Overview extends React.Component {
                                                 </List>
                                             </Card>
                                             <Card style={{ marginTop: '10px' }}>
+                                                <List>
+                                                    <List.Item key='12' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                        <List.Item.Meta
+                                                            avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                            title={<Space><Link to='/personal-characteristics'>Personal characteristics</Link></Space>}
+                                                            description={overview.financial_projections === "" || overview.financial_projections === null ? "4 of 4 questions answeered" : overview.financial_projections.description} />
+                                                        <div>...</div>
+                                                    </List.Item>
+                                                </List>
+                                            </Card>
+                                            <Card style={{ marginTop: '10px' }}>
                                                 <List >
                                                     <List.Item key='14' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
