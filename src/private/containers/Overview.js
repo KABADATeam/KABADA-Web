@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar, Dropdown, Menu, message, Popconfirm } from 'antd';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar, Dropdown, Menu, message, Popconfirm, Collapse } from 'antd';
+import { ArrowLeftOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { discardChanges, saveChanges } from "../../appStore/actions/swotAction";
@@ -11,11 +11,13 @@ import { withRouter } from 'react-router-dom';
 import InviteMemberModal from '../components/overview/InviteMemberModal';
 import EditBusinessPlanModal from '../components/overview/EditBusinessPlanModal';
 import { UserOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
+import IndustryRisksTable from '../components/Industry_Risks/IndustryRisksTable'
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
 const { Option } = Select;
 const { Meta } = Card;
+const { Panel } = Collapse;
 
 const aboutTitleTextStyle = {
     fontStyle: 'normal',
@@ -161,6 +163,76 @@ class Overview extends React.Component {
                 </Menu.Item>
             </Menu>
         );
+        const text = (
+            <p style={{ paddingLeft: 24 }}>
+                A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found
+                as a welcome guest in many households across the world.
+            </p>
+        );
+        const columns = [
+            {
+                title: 'Risk',
+                dataIndex: 'risk',
+                key: 'risk',
+                width: '35%',
+                render: (text, record, index) =>
+                    <Text><PlusSquareOutlined style={{ fontSize: '20px' }} /> {record.risk}</Text>
+
+            },
+            {
+                title: 'Likelihood',
+                dataIndex: 'likelihood',
+                key: 'likelihood',
+                width: '15%',
+            },
+            {
+                title: 'Severity',
+                dataIndex: 'severity',
+                key: 'severity',
+                width: '5%',
+
+            },
+            {
+                title: 'Total',
+                dataIndex: 'total',
+                key: 'total',
+                width: '5%',
+
+            }
+
+        ];
+        const dataSource = [
+            {
+                id: 1,
+                risk: 'Political and legal',
+                likelihood: 'High',
+                severity: 'Medium',
+                total: 0,
+            }, {
+
+                id: 2,
+                risk: 'Economic',
+                likelihood: 'High',
+                severity: 'Medium',
+                total: 0,
+            }, {
+                id: 3,
+                risk: 'Social',
+                likelihood: 'High',
+                severity: 'Medium',
+                total: 0,
+            }, {
+
+                id: 4,
+                risk: 'Technological',
+                likelihood: 'High',
+                severity: 'Medium',
+                total: 0,
+            }
+        ];
+
+
+
         if (this.props.businessPlan.overview === undefined) {
             return (<div></div>)
         } else {
@@ -312,7 +384,8 @@ class Overview extends React.Component {
                                                         <List.Item.Meta
                                                             avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to="/fixed-and-variable-costs">Fixed and Variable Costs</Link></Space>}
-                                                            description={overview.financial_projections === "" || overview.financial_projections === null ? "Fixed and variable costs" : overview.financial_projections.description} />
+                                                        // description={overview.financial_projections === "" || overview.financial_projections === null ? "Fixed and variable costs" : overview.financial_projections.description} 
+                                                        />
                                                         <div>...</div>
                                                     </List.Item>
                                                     <List.Item key='13' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
@@ -412,10 +485,31 @@ class Overview extends React.Component {
                             </TabPane>
                             <TabPane tab="Industry risks" key="3">
                                 <Row style={{ marginBottom: "50px" }}>
-                                    <Col span={8}>
+                                    <Col span={6}>
                                         <div style={{ marginRight: '40px' }}>
-                                            <Typography.Title style={aboutTitleTextStyle}>Industry risks</Typography.Title>
+                                            <Typography.Title style={aboutTitleTextStyle}>C11 Industry risks</Typography.Title>
+                                            <Typography.Text className="text-Style">
+                                                Product description Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+                                                Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+                                                You can add products at Value proposition
+                                            </Typography.Text>
                                         </div>
+                                    </Col>
+                                    <Col span={12}>
+                                        <IndustryRisksTable title='Macro' />
+                                        {/* <Card >
+                                            <Collapse bordered={false} defaultActiveKey={['1']}>
+                                                <Panel header="This is panel header 1" key="1">
+                                                    {text}
+                                                </Panel>
+                                                <Panel header="This is panel header 2" key="2">
+                                                    {text}
+                                                </Panel>
+                                                <Panel header="This is panel header 3" key="3">
+                                                    {text}
+                                                </Panel>
+                                            </Collapse>
+                                        </Card> */}
                                     </Col>
                                     <Col span={16}>
 
