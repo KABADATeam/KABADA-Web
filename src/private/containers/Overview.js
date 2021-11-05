@@ -312,7 +312,7 @@ class Overview extends React.Component {
                                                         <List.Item.Meta
                                                             avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to="/fixed-and-variable-costs">Fixed and Variable Costs</Link></Space>}
-                                                            description={overview.financial_projections === "" || overview.financial_projections === null ? "Fixed and variable costs" : overview.financial_projections.description} />
+                                                            description="something" />
                                                         <div>...</div>
                                                     </List.Item>
                                                     <List.Item key='13' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
@@ -350,7 +350,7 @@ class Overview extends React.Component {
                                                         <List.Item.Meta
                                                             avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/personal-characteristics'>Personal characteristics</Link></Space>}
-                                                            description={overview.financial_projections === "" || overview.financial_projections === null ? "4 of 4 questions answeered" : overview.financial_projections.description} />
+                                                            description="description"/>
                                                         <div>...</div>
                                                     </List.Item>
                                                 </List>
