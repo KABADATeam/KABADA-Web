@@ -4,7 +4,7 @@ export const dataSetForSurvivalRate = {
             {
                 tableCode: "bd_9bd_sz_cl_r2",
                 industries: ["B"],
-                variables: [ "V97043"]
+                variable: [ "V97043"]
             }
         ]
     },
@@ -31,7 +31,7 @@ export const dataSetForSurvivalRate = {
             {
                 tableCode: "bd_9bd_sz_cl_r2",
                 industries: [ "M", "M69", "M70", "M71", "M72", "M73", "M74", "M75" ],
-                variable: ["V97043"]
+                variables: ["V97043"]
             }
         ]
     },
@@ -40,7 +40,7 @@ export const dataSetForSurvivalRate = {
             {
                 tableCode: "bd_9bd_sz_cl_r2",
                 industries: [ "P", "P85" ],
-                variables: ["V97043"]
+                variable: ["V97043"]
             }
         ]
     },
@@ -49,7 +49,7 @@ export const dataSetForSurvivalRate = {
             {
                 tableCode: "bd_9bd_sz_cl_r2",
                 industries: [ "R", "R90", "R91", "R92", "R93" ],
-                variables: [ "V97043"]
+                variable: [ "V97043"]
             }
         ]
     },
@@ -58,7 +58,7 @@ export const dataSetForSurvivalRate = {
             {
                 tableCode: "bd_9bd_sz_cl_r2",
                 industries: ["S", "S94", "S95", "S96"],
-                variables: ["V97043"]
+                variable: ["V97043"]
             }
         ]
     },
@@ -94,7 +94,7 @@ export const dataSetForSurvivalRate = {
 			{
                 tableCode: "bd_9bd_sz_cl_r2",
                 industries: [ "D" ],
-                variables: [ "V97043" ]
+                variable: [ "V97043" ]
             }
         ]
     },
@@ -103,7 +103,7 @@ export const dataSetForSurvivalRate = {
 			{
                 tableCode: "bd_9bd_sz_cl_r2",
                 industries: [ "G","G45", "G46", "G47", "G471", "G472", "G473", "G474", "G475", "G476", "G477", "G478", "G479" ],
-                variables: [ "V97043"]
+                variable: [ "V97043"]
             }
         ]
     },
@@ -112,7 +112,7 @@ export const dataSetForSurvivalRate = {
 			{
                 tableCode: "bd_9bd_sz_cl_r2",
                 industries: [ "H","H49", "H50", "H51", "H52", "H53" ],
-                variables: [ "V97043" ]
+                variable: [ "V97043" ]
             }
         ]
     },
@@ -121,7 +121,7 @@ export const dataSetForSurvivalRate = {
 			{
                 tableCode: "bd_9bd_sz_cl_r2",
                 industries: [ "E" ],
-                variables: [ "V97043" ]
+                variable: [ "V97043" ]
             }
         ]
     },
@@ -130,7 +130,7 @@ export const dataSetForSurvivalRate = {
 			{
                 tableCode: "bd_9bd_sz_cl_r2",
                 industries: [ "L", "L68", "L681", "L6810", "L682", "L6820", "L683", "L6831", "L6832" ],
-                variables: [ "V97043"]
+                variable: [ "V97043"]
             }
         ]
     }

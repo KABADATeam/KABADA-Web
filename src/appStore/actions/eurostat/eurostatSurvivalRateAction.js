@@ -7,17 +7,24 @@ export const getSurvivalRate = () => {
         dispatch({ type: 'RESET_EUROSTATDATA', payload: null });
         console.log(getState());
         const nace_code = getState().selectedBusinessPlan.overview.nace.activity_code;
+        console.log(nace_code);
         const geo = getState().selectedBusinessPlan.countryShortCode;
+        console.log(geo);
         const geoTitle = getState().selectedBusinessPlan.countryTitle;
         const split_nace_code = nace_code.split('.');
+        console.group(split_nace_code)
         const industry = split_nace_code[0];
+        console.group(industry)
         const activityCode = industry.concat('', split_nace_code[1]);
+        console.log(activityCode);
         let queryData = dataSetForSurvivalRate[industry].dataSets;
+        console.log(queryData)
 
         
         if (queryData[0].industries.includes(activityCode)) {
             const tableCode = queryData[0].tableCode;
-            const variable = queryData[0].variables[0];
+            const variable = queryData[0].variable[0];
+            console.log(variable);
             try {
                 var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=" + activityCode);
                 console.log(response)
