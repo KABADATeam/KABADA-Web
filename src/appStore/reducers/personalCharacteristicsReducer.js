@@ -1,10 +1,9 @@
-export const personalCharacteristicsReducer = (state = {choices: [] },action)=>{
+export const personalCharacteristicsReducer = (state = {planId: null, choices: []},action)=>{
     switch(action.type){
         case 'LOADING':
             return {...state,'loading':action.payload}
         case 'FETCHING_PERSONAL_CHARACTERISTICS_SUCCESS':
-            const newChoices = action.payload.choices;
-            return {...state, 'loading':false, 'choices':newChoices}
+            return {...state, 'loading':false, 'choices':action.payload.choices, 'planId':action.payload.plan_id}
         case 'SAVE_PERSONAL_CHARACTERISTICS_SUCCESS':
             return {...state, 'loading':false, 'choices':action.payload}
         case 'ERROR':

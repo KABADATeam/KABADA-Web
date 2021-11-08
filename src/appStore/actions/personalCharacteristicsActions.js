@@ -1,6 +1,6 @@
-import axios from 'axios'
+import kabadaAPI from './kabadaAPI';
 
-export const getPersonalCharacteristics = (planId,callback) => async (dispatch, getState) => {
+export const getPersonalCharacteristics = (planId,callback) => async(dispatch, getState) => {
     try {
         dispatch({
             type: 'LOADING',
@@ -28,7 +28,7 @@ export const getPersonalCharacteristics = (planId,callback) => async (dispatch, 
 }
 
 
-export const addPersonalCharacteristics = (postObject,callback) => (dispatch,getState) => {
+export const savePersonalCharacteristics = (postObject,callback) => async(dispatch,getState) => {
     try{
         dispatch({
             type: 'LOADING',
@@ -36,7 +36,7 @@ export const addPersonalCharacteristics = (postObject,callback) => (dispatch,get
         });
         //get token from user redux state
         const token = getState().user.access_token;
-        const response = await axios.post('api/quest/personal/save', postObject, {headers: {Authorization: `Bearer ${token}`}})
+        const response = await kabadaAPI.post('api/quest/personal/save', postObject, {headers: {Authorization: `Bearer ${token}`}})
         dispatch({
             type: 'SAVE_PERSONAL_CHARACTERISTICS_SUCCESS',
             payload: response.data
