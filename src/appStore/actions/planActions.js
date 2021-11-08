@@ -204,7 +204,6 @@ export const getSelectedPlanDetails = (planId) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.post("api/plans/fetch", { "Id": planId }, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response.data);
             dispatch({ type: "FETCHING_SELECTED_PLAN_DETAILS_SUCCESS", payload: response.data });
         } finally {
             dispatch({ type: "LOADING", payload: false });

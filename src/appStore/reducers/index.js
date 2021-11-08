@@ -8,6 +8,7 @@ import { industriesReducer, activitiesReducer, industrySelectedReducer, activity
 import { countrySelectedReducer, countriesReducer, countryShortNameReducer } from './countryReducer';
 import { eurostatDataReducer } from '../reducers/eurostat/eurostatReducer';
 import { eurostatAllDataReducer } from '../reducers/eurostat/eurostatAllReducer';
+import { eurostatSurvivalRateReducer } from '../reducers/eurostat/eurostatSurvivalRateReducer'
 import { userSettingsReducer } from './settingsReducer';
 import { swotReducer } from './swotReducer';
 import { resourcesReducer, resourcesCategoriesReducer, selectedCategoryReducer, selectedResourceReducer } from './resourcesReducer';
@@ -36,6 +37,7 @@ export default combineReducers({
     countries: countriesReducer,
     eurostatData: eurostatDataReducer,
     eurostatAllData: eurostatAllDataReducer,
+    survivalRate: eurostatSurvivalRateReducer,
     industries: industriesReducer,
     language: languageReducer,
     loading: loadingReducer,

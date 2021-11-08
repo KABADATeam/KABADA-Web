@@ -7,11 +7,14 @@ import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { discardChanges, saveChanges } from "../../appStore/actions/swotAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { updateStatus, getMembers, deleteMember, getSelectedPlanOverview, getSelectedPlanDetails, getImage, removePlan } from "../../appStore/actions/planActions";
+import { getSurvivalRate } from '../../appStore/actions/eurostat/eurostatSurvivalRateAction';
 import { withRouter } from 'react-router-dom';
 import InviteMemberModal from '../components/overview/InviteMemberModal';
 import EditBusinessPlanModal from '../components/overview/EditBusinessPlanModal';
 import { UserOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
 import IndustryRisksTable from '../components/Industry_Risks/IndustryRisksTable'
+import { getCountryShortCodeV2 } from '../../appStore/actions/countriesActions' 
+import IndustryDataComponent from '../components/industry_data/IndustryDataComponent';
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
@@ -129,13 +132,14 @@ class Overview extends React.Component {
                     this.props.getMembers(this.props.businessPlan.id);
                     this.props.getSelectedPlanDetails(this.props.businessPlan.id);
                     this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+                    this.props.getSurvivalRate();
                 });
             }
         } else {
             this.props.getMembers(this.props.businessPlan.id);
             this.props.getSelectedPlanDetails(this.props.businessPlan.id);
             this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-
+            this.props.getSurvivalRate();
         }
     }
 
@@ -485,7 +489,7 @@ class Overview extends React.Component {
                                 <Row style={{ marginBottom: "50px" }}>
                                     <Col span={8}>
                                         <div style={{ marginRight: '40px' }}>
-                                            <Typography.Title style={aboutTitleTextStyle}>Industry data</Typography.Title>
+                                            <IndustryDataComponent />
                                         </div>
                                     </Col>
                                     <Col span={16}>
@@ -546,8 +550,9 @@ class Overview extends React.Component {
 const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
-        uploadedFile: state.uploadedFile
+        uploadedFile: state.uploadedFile,
+        survivalRate: state.survivalRate
     };
 }
 
-export default connect(mapStateToProps, { getImage, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, removePlan })(withRouter(Overview))
+export default connect(mapStateToProps, { getImage, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, removePlan, getSurvivalRate, getCountryShortCodeV2 })(withRouter(Overview))

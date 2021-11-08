@@ -41,12 +41,35 @@ export const privatePlansReducer = (state = [], action) => {
     }
 };
 
-export const selectedplanFetchReducer = (state = { 'id': null }, action) => {
+export const selectedplanFetchReducer = (state = {
+    'id': null,
+    'name': null,
+    'coverImage': null,
+    'dateCreated': null,
+    'overview': [],
+    'percentage': 0,
+    'planImage': null,
+    'public': false,
+    'sharedWithMe': false,
+    'countryShortCode': null,
+    'countryTitle': null
+    }, action) => {
     switch (action.type) {
         case "FETCHING_SELECTED_PLAN_SUCCESS":
-            return action.payload;
+            console.log(action.payload);
+            return {...state, 
+                "id": action.payload.id, 
+                "name": action.payload.name, 
+                "coverImage": action.payload.coverImage, 
+                "dateCreated": action.payload.dateCreated, 
+                "overview": action.payload.overview,
+                "percentage": action.payload.percentage,
+                "planImage": action.payload.planImage,
+                "public": action.payload.public,
+                "sharedWithMe": action.payload.sharedWithMe,
+            }
         case "FETCHING_SELECTED_PLAN_DETAILS_SUCCESS":
-            return { ...state, "name": action.payload.title, "activityId": action.payload.activity ? action.payload.activity.id : null, "industryId": action.payload.activity ? action.payload.activity.industryId : null, "countryId": action.payload.country ? action.payload.country.id : null, "planImage": action.payload.img ? action.payload.img : null, "languageId": action.payload.language ? action.payload.language.id : null };
+            return { ...state, "countryShortCode": action.payload.country.shortCode, "countryTitle": action.payload.country.title, "planImage": action.payload.img ? action.payload.img : null };
         case "UPDATING_SELECTED_PLAN_SUCCESS":
             return { ...state, ...action.payload };
         case "UPDATING_IMAGE_SUCCESS":
