@@ -1,6 +1,13 @@
 import React, { Component } from 'react'
-import { Table, Typography } from 'antd';
+import { Table, Typography, Tag } from 'antd';
+import '../../../css/IndustryRisks.css'
+
+
+
 const { Text } = Typography;
+
+
+
 export default class IndustryRisksTable extends Component {
     constructor(props) {
         super(props);
@@ -12,11 +19,9 @@ export default class IndustryRisksTable extends Component {
 
         const columns = [
             {
-                // <PlusSquareOutlined style={{ fontSize: '20px' }} />
                 title: 'Risk',
                 dataIndex: 'risk',
                 key: 'risk',
-                width: '35%',
                 render: (text, record, index) =>
                     <Text> {record.risk}</Text>
 
@@ -39,36 +44,44 @@ export default class IndustryRisksTable extends Component {
                 dataIndex: 'total',
                 key: 'total',
                 width: '5%',
+                render: total => (
+
+                    <Tag >
+                        {total === 0 ? <span className='low'>Low</span> : total === 5 ? <span className='medium'>midem</span> : <span className='high'>High</span>}
+                    </Tag >
+
+                ),
 
             }
 
         ];
         const dataSource = [
             {
-                id: 1,
+                key: 1,
                 risk: 'Political and legal',
                 likelihood: 'High',
                 severity: 'Medium',
-                total: 0,
+                total: 5,
                 description: ' A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be foundas a welcome guest in many households across the world.'
-            }, {
+            },
+            {
 
-                id: 2,
+                key: 2,
                 risk: 'Economic',
                 likelihood: 'High',
                 severity: 'Medium',
                 total: 0,
                 description: ' A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be foundas a welcome guest in many households across the world.'
             }, {
-                id: 3,
+                key: 3,
                 risk: 'Social',
                 likelihood: 'High',
                 severity: 'Medium',
-                total: 0,
+                total: 9,
                 description: ' A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be foundas a welcome guest in many households across the world.'
             }, {
 
-                id: 4,
+                key: 4,
                 risk: 'Technological',
                 likelihood: 'High',
                 severity: 'Medium',
@@ -76,13 +89,44 @@ export default class IndustryRisksTable extends Component {
                 description: ' A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be foundas a welcome guest in many households across the world.'
             }
         ];
+
+
         return (
             <div>
-                <Table title={() => this.props.title} columns={columns} dataSource={dataSource} expandable={{
-                    expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
-                    rowExpandable: record => record.name !== 'Not Expandable',
-                }} pagination={false} />
-            </div>
+                <Table
+                    title={this.props.title}
+                    columns={columns}
+                    expandable={{
+                        expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
+                        rowExpandable: record => record.name !== 'Not Expandable',
+                    }}
+                    dataSource={dataSource}
+                    pagination={false}
+                />
+
+                <Table
+                    style={{ marginTop: '25px' }}
+                    title={this.props.title}
+                    columns={columns}
+                    expandable={{
+                        expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
+                        rowExpandable: record => record.name !== 'Not Expandable',
+                    }}
+                    dataSource={dataSource}
+                    pagination={false}
+                />
+                <Table
+                    style={{ marginTop: '25px' }}
+                    title={this.props.title}
+                    columns={columns}
+                    expandable={{
+                        expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
+                        rowExpandable: record => record.name !== 'Not Expandable',
+                    }}
+                    dataSource={dataSource}
+                    pagination={false}
+                />
+            </div >
         )
     }
 }

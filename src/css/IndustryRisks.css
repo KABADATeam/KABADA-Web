@@ -1,0 +1,27 @@
+.ant-tag{
+    background: none !important; 
+    border: none !important;
+}
+.low {
+    color: green ;
+    background: #B7EB8F;
+    border-radius: 50px;
+    border: 2px solid #FFFFFF;
+    padding: 1px 8px
+}
+
+.medium {
+    color: #874D00;
+    background: #FFE58F;
+    border-radius: 50px;
+    border: 2px solid #FFFFFF;
+    padding: 1px 8px
+}
+
+.high {
+    color: #820014;
+    background: #FFA39E;
+    border-radius: 50px;
+    border: 2px solid #FFFFFF;
+    padding: 1px 8px
+}	

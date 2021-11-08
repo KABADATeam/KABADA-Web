@@ -13,7 +13,7 @@ import InviteMemberModal from '../components/overview/InviteMemberModal';
 import EditBusinessPlanModal from '../components/overview/EditBusinessPlanModal';
 import { UserOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
 import IndustryRisksTable from '../components/Industry_Risks/IndustryRisksTable'
-import { getCountryShortCodeV2 } from '../../appStore/actions/countriesActions' 
+import { getCountryShortCodeV2 } from '../../appStore/actions/countriesActions'
 import IndustryDataComponent from '../components/industry_data/IndustryDataComponent';
 
 const { TabPane } = Tabs;
@@ -132,14 +132,14 @@ class Overview extends React.Component {
                     this.props.getMembers(this.props.businessPlan.id);
                     this.props.getSelectedPlanDetails(this.props.businessPlan.id);
                     this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-                    this.props.getSurvivalRate();
+                    //this.props.getSurvivalRate();
                 });
             }
         } else {
             this.props.getMembers(this.props.businessPlan.id);
             this.props.getSelectedPlanDetails(this.props.businessPlan.id);
             this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-            this.props.getSurvivalRate();
+            //this.props.getSurvivalRate();
         }
     }
 
@@ -426,7 +426,7 @@ class Overview extends React.Component {
                                                         <List.Item.Meta
                                                             avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/personal-characteristics'>Personal characteristics</Link></Space>}
-                                                            description="description"/>
+                                                            description="description" />
                                                         <div>...</div>
                                                     </List.Item>
                                                 </List>
