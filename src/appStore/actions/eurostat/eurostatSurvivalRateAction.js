@@ -5,6 +5,7 @@ export const getSurvivalRate = () => {
     return async (dispatch, getState) => {
         //dispatch({ type: 'LOADING', payload: true });
         dispatch({ type: 'RESET_EUROSTATDATA', payload: null });
+        console.log(getState());
         const nace_code = getState().selectedBusinessPlan.overview.nace.activity_code;
         const geo = getState().selectedBusinessPlan.countryShortCode;
         const geoTitle = getState().selectedBusinessPlan.countryTitle;
@@ -17,23 +18,29 @@ export const getSurvivalRate = () => {
         if (queryData[0].industries.includes(activityCode)) {
             const tableCode = queryData[0].tableCode;
             const variable = queryData[0].variables[0];
-            console.log(queryData[0].variables[0]);
             try {
                 var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=" + activityCode);
-                console.log(response.data)
-                dispatch({ type: 'FETCHING_SURVIVAL_RATE_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: geoTitle, industry: activityCode }});   
+                console.log(response)
+                dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_EUROSTATDATA_SUCCESS', payload: {"data": response.data, "geoTitle": geoTitle, "industry": activityCode} });   
             } catch (error){
                 //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
             }
             try {
                 var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
-                dispatch({ type: 'FETCHING_SURVIVAL_RATE1_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: geoTitle } });   
+                if(response.data.error.label !== "Dataset contains no data. One or more filtering elements (query parameters) are probably invalid."){
+                    console.log('Country total')
+                    dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_TOTAL_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: geoTitle } });
+                }    
             } catch (error){
                 //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
             }
             try {
                 var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
-                dispatch({ type: 'FETCHING_SURVIVAL_RATE2_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: 'Europe' } });   
+                if(response.data.error.label !== "Dataset contains no data. One or more filtering elements (query parameters) are probably invalid."){
+                    console.log(' total')
+                    dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_ALL_EUROPE_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: 'Europe' } });
+                }
+                dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_TOTAL1_EUROSTATDATA_SUCCESS', payload: {data: 'work'}});
             } catch (error){
                 //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
             }

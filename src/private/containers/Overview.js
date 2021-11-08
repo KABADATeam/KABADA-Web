@@ -14,6 +14,7 @@ import EditBusinessPlanModal from '../components/overview/EditBusinessPlanModal'
 import { UserOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
 import IndustryRisksTable from '../components/Industry_Risks/IndustryRisksTable'
 import { getCountryShortCodeV2 } from '../../appStore/actions/countriesActions' 
+import IndustryDataComponent from '../components/industry_data/IndustryDataComponent';
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
@@ -488,7 +489,7 @@ class Overview extends React.Component {
                                 <Row style={{ marginBottom: "50px" }}>
                                     <Col span={8}>
                                         <div style={{ marginRight: '40px' }}>
-                                            <Typography.Title style={aboutTitleTextStyle}>Industry data</Typography.Title>
+                                            <IndustryDataComponent />
                                         </div>
                                     </Col>
                                     <Col span={16}>
@@ -549,7 +550,8 @@ class Overview extends React.Component {
 const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
-        uploadedFile: state.uploadedFile
+        uploadedFile: state.uploadedFile,
+        survivalRate: state.survivalRate
     };
 }
 

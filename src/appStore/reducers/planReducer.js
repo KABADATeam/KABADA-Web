@@ -56,6 +56,7 @@ export const selectedplanFetchReducer = (state = {
     }, action) => {
     switch (action.type) {
         case "FETCHING_SELECTED_PLAN_SUCCESS":
+            console.log(action.payload);
             return {...state, 
                 "id": action.payload.id, 
                 "name": action.payload.name, 
