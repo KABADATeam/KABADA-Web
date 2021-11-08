@@ -28,6 +28,7 @@ import { businessStartUpInvestmentReducer, necessaryCapitalReducer } from './bus
 import { cashFlowReducer } from './cashFlowReducer';
 import { assetsReducer } from './assetsReducer';
 import { countryVATReducer } from './vatReducer'
+import { personalCharacteristicsReducer } from './personalCharacteristicsReducer';
 
 
 export default combineReducers({
@@ -89,5 +90,6 @@ export default combineReducers({
     cashFlow: cashFlowReducer,
     assets: assetsReducer,
     vat: countryVATReducer,
-    nace: naceReducer
+    nace: naceReducer,
+    personalCharacteristics: personalCharacteristicsReducer
 });
