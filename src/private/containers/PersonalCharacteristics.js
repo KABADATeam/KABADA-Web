@@ -1,12 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Form, Select, InputNumber, Input, Divider, Button, Breadcrumb, Row, Col, Typography, Radio, Switch, Card, Table, Space, Tooltip, Tabs } from 'antd';
-import { ArrowLeftOutlined, InfoCircleFilled } from '@ant-design/icons';
-// import { tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
+import { Form, Select, Divider, Button, Breadcrumb, Row, Col, Typography, Radio, Card, Space, Tooltip, Tabs } from 'antd';
+import { ArrowLeftOutlined, CloseOutlined, InfoCircleFilled, InfoCircleOutlined } from '@ant-design/icons';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import { tableCardStyle } from '../../styles/customStyles'
 import { getPersonalCharacteristics, savePersonalCharacteristics } from '../../appStore/actions/personalCharacteristicsActions'
 
 
@@ -20,16 +20,6 @@ const aboutTitleTextStyle = {
     fontSize: '16px',
     marginBottom: '16px',
 }
-
-const textStyle = {
-    fontSize: '14px',
-    color: '#8C8C8C',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    lineHeight: '22px',
-    marginRight: '40px',
-}
-
 
 const titleTextStyle = {
     fontStyle: "normal",
@@ -48,237 +38,237 @@ const titleButtonStyle = {
     backgroundColor: "transparent",
 }
 
-const tableCardStyle = {
+const specialCardStyle = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#E6F7FF',
     boxShadow: '0px 0px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.08), 0px 0px 1px rgba(0, 0, 0, 0.04)',
     borderRadius: '8px',
-};
+    width: '100%',
+    borderStyle: 'solid',
+    borderWidth: '2px',
+    borderColor: '#69C0FF'
+}
 
 const tableCardBodyStyle = {
     width: '100%',
     padding: '15px 15px 15px 15px',
 };
 
-const tableTitleStyle = {
-    fontSize: "16px",
-    fontWeight: "600",
-    color: "#262626"
-};
 
 const questions = [
     {
         questionText: 'Your age group',
-        set_code: 1,
-        selection_code: 14,
+        set_code: '1',
+        selection_code: '14',
         answerOptions: [
-            { answerText: 'Under 18', optionCode: 12 },
-            { answerText: '18-24', optionCode: 13 },
-            { answerText: '35-44', optionCode: 14 },
-            { answerText: '45-54', optionCode: 15 },
-            { answerText: '55-64', optionCode: 16 },
-            { answerText: '65 or over', optionCode: 17 },
+            { answerText: 'Under 18', optionCode: '11' },
+            { answerText: '18-24', optionCode: '12' },
+            { answerText: '35-44', optionCode: '13' },
+            { answerText: '45-54', optionCode: '14' },
+            { answerText: '55-64', optionCode: '15' },
+            { answerText: '65 or over', optionCode: '16' },
         ],
     },
     {
         questionText: 'Your gender',
-        set_code: 2,
-        selection_code: 23,
+        set_code: '2',
+        selection_code: '22',
         answerOptions: [
-            { answerText: 'Female', optionCode: 22 },
-            { answerText: 'Male', optionCode: 23 },
-            { answerText: 'Prefer no to answer', optionCode: 24 },
+            { answerText: 'Female', optionCode: '21' },
+            { answerText: 'Male', optionCode: '22' },
+            { answerText: 'Prefer not to answer', optionCode: '23' },
         ],
     },
     {
         questionText: 'You country of origin',
-        set_code: 3,
-        selection_code: 32,
+        set_code: '3',
+        selection_code: '32',
         answerOptions: [
-            { answerText: 'Latvia', optionCode: 32 },
-            { answerText: 'Lithuania', optionCode: 33 },
+            { answerText: 'Latvia', optionCode: '31' },
+            { answerText: 'Lithuania', optionCode: '32' },
         ],
     },
     {
         questionText: 'Your education',
-        set_code: 4,
-        selection_code: 43,
+        set_code: '4',
+        selection_code: '41',
         answerOptions: [
-            { answerText: 'Graduate (bachelor or higher)', optionCode: 42 },
-            { answerText: 'Non-graduate', optionCode: 43 },
+            { answerText: 'Graduate (bachelor or higher)', optionCode: '41' },
+            { answerText: 'Non-graduate', optionCode: '42' },
         ],
     },
     {
         questionText: 'Reasons for starting business?',
-        set_code: 5,
-        selection_code: 52,
+        set_code: '5',
+        selection_code: '52',
         answerOptions: [
-            { answerText: 'Autonomy and independence', optionCode: 52 },
-            { answerText: 'To make a difference in the world', optionCode: 53 },
-            { answerText: 'To build great wealth or very high income', optionCode: 54 },
-            { answerText: 'To continue a family tradition', optionCode: 55 },
-            { answerText: 'To earn a living becouse jobs are scarce', optionCode: 56 },
-            { answerText: 'Other', optionCode: 57 }
+            { answerText: 'Autonomy and independence', optionCode: '51' },
+            { answerText: 'To make a difference in the world', optionCode: '52' },
+            { answerText: 'To build great wealth or very high income', optionCode: '53' },
+            { answerText: 'To continue a family tradition', optionCode: '54' },
+            { answerText: 'To earn a living becouse jobs are scarce', optionCode: '55' },
+            { answerText: 'Other', optionCode: '56' }
         ],
     },
     {
         questionText: 'Does you family support your business intention?',
-        set_code: 6,
-        selection_code: 64,
+        set_code: '6',
+        selection_code: '64',
         answerOptions: [
-            { answerText: 'Fully support', optionCode: 62 },
-            { answerText: 'Rather support', optionCode: 63 },
-            { answerText: 'Is neutral', optionCode: 64 },
-            { answerText: 'Does not support', optionCode: 65 },
-            { answerText: 'I do not have a family', optionCode: 66 },
+            { answerText: 'Fully support', optionCode: '61' },
+            { answerText: 'Rather support', optionCode: '62' },
+            { answerText: 'Is neutral', optionCode: '63' },
+            { answerText: 'Rather does not support', optionCode: '64' },
+            { answerText: 'Does not support', optionCode: '65' },
+            { answerText: 'I do not have a family', optionCode: '66' },
         ],
     },
     {
         questionText: 'Are you ready to lose your savings?',
-        set_code: 7,
-        selection_code: 72,
+        set_code: '7',
+        selection_code: '72',
         answerOptions: [
-            { answerText: 'Yes', optionCode: 72 },
-            { answerText: 'Not sure', optionCode: 73 },
-            { answerText: 'No', optionCode: 74 }
+            { answerText: 'Yes', optionCode: '71' },
+            { answerText: 'Not sure', optionCode: '72' },
+            { answerText: 'No', optionCode: '73' }
         ],
     },
     {
         questionText: 'Are you ready for a heavily increased workload and stress?',
-        set_code: 8,
-        selection_code: 83,
+        set_code: '8',
+        selection_code: '81',
         answerOptions: [
-            { answerText: 'Yes', optionCode: 82 },
-            { answerText: 'Not Sure', optionCode: 83 },
-            { answerText: 'No', optionCode: 84 },
+            { answerText: 'Yes', optionCode: '81' },
+            { answerText: 'Not Sure', optionCode: '82' },
+            { answerText: 'No', optionCode: '83' },
         ],
     },
     {
-        questionText: 'Do you like to be in charge and responsible?',
-        set_code: 9,
-        selection_code: 94,
+        questionText: 'Do you like to be in charge and be responsible?',
+        set_code: '9',
+        selection_code: '92',
         answerOptions: [
-            { answerText: 'Yes', optionCode: 92 },
-            { answerText: 'Not Sure', optionCode: 93 },
-            { answerText: 'No', optionCode: 94 },
+            { answerText: 'Yes', optionCode: '91' },
+            { answerText: 'Not Sure', optionCode: '92' },
+            { answerText: 'No', optionCode: '93' },
         ],
     },
     {
-        questionText: 'Can you make a desicion on a matter and then stick to desicion even when challenged?',
-        set_code: 10,
-        selection_code: 103,
+        questionText: 'Can you make a desicion on a matter and then stick to the desicion even when challenged?',
+        set_code: '10',
+        selection_code: '103',
         answerOptions: [
-            { answerText: 'Yes', optionCode: 101 },
-            { answerText: 'Mostly yes', optionCode: 102 },
-            { answerText: 'No', optionCode: 103 },
+            { answerText: 'Yes', optionCode: '101' },
+            { answerText: 'Mostly yes', optionCode: '102' },
+            { answerText: 'No', optionCode: '103' },
         ],
     },
     {
         questionText: 'Do you like meeting and dealing with people?',
-        set_code: 11,
-        selection_code: 112,
+        set_code: '11',
+        selection_code: '112',
         answerOptions: [
-            { answerText: 'Yes', optionCode: 111 },
-            { answerText: 'Sometimes', optionCode: 112 },
-            { answerText: 'No', optionCode: 113 },
+            { answerText: 'Yes', optionCode: '111' },
+            { answerText: 'Sometimes', optionCode: '112' },
+            { answerText: 'No', optionCode: '113' },
         ],
     },
     {
         questionText: 'Have you had an extensive experience in the type of business you wish to start?',
-        set_code: 12,
-        selection_code: 123,
+        set_code: '12',
+        selection_code: '123',
         answerOptions: [
-            { answerText: 'Yes', optionCode: 121 },
-            { answerText: 'I have some', optionCode: 122 },
-            { answerText: 'No', optionCode: 123 },
+            { answerText: 'Yes', optionCode: '121' },
+            { answerText: 'I have some', optionCode: '122' },
+            { answerText: 'No', optionCode: '123' },
         ],
     },
     {
         questionText: 'Do you have enough financial backing for the first year of operation?',
-        set_code: 13,
-        selection_code: 131,
+        set_code: '13',
+        selection_code: '131',
         answerOptions: [
-            { answerText: 'Yes', optionCode: 131 },
-            { answerText: 'Not sure', optionCode: 132 },
-            { answerText: 'No', optionCode: 133 },
+            { answerText: 'Yes', optionCode: '131' },
+            { answerText: 'Not sure', optionCode: '132' },
+            { answerText: 'No', optionCode: '133' },
         ],
     },
     {
         questionText: 'Do you know individuals who have the talents and expertise you lack?',
-        set_code: 14,
-        selection_code: 143,
+        set_code: '14',
+        selection_code: '143',
         answerOptions: [
-            { answerText: 'Yes', optionCode: 141 },
-            { answerText: 'Few', optionCode: 142 },
-            { answerText: 'No', optionCode: 143 },
+            { answerText: 'Yes', optionCode: '141' },
+            { answerText: 'Few', optionCode: '142' },
+            { answerText: 'No', optionCode: '143' },
         ],
     },
     {
-        questionText: 'Do you really want to start this business more that anything else?',
-        set_code: 15,
-        selection_code: 153,
+        questionText: 'Do you really want to start this business more than anything else?',
+        set_code: '15',
+        selection_code: '151',
         answerOptions: [
-            { answerText: 'Yes', optionCode: 151 },
-            { answerText: 'Not sure', optionCode: 152 },
-            { answerText: 'No', optionCode: 153 },
+            { answerText: 'Yes', optionCode: '151' },
+            { answerText: 'Not sure', optionCode: '152' },
+            { answerText: 'No', optionCode: '153' },
         ],
     },
     {
         questionText: 'Do others easily understand your concepts and ideas?',
-        set_code: 16,
-        selection_code: 161,
+        set_code: '16',
+        selection_code: '161',
         answerOptions: [
-            { answerText: 'Yes', optionCode: 161 },
-            { answerText: 'Not sure', optionCode: 162 },
-            { answerText: 'No', optionCode: 163 },
+            { answerText: 'Yes', optionCode: '161' },
+            { answerText: 'Not sure', optionCode: '162' },
+            { answerText: 'No', optionCode: '163' },
         ],
     },
     {
         questionText: 'Can you communicate effectively and persuade people to go along with your dream?',
-        set_code: 17,
-        selection_code: 172,
+        set_code: '17',
+        selection_code: '172',
         answerOptions: [
-            { answerText: 'Yes', optionCode: 171 },
-            { answerText: 'Not sure', optionCode: 172 },
-            { answerText: 'No', optionCode: 173 },
+            { answerText: 'Yes', optionCode: '171' },
+            { answerText: 'Not sure', optionCode: '172' },
+            { answerText: 'No', optionCode: '173' },
         ],
     },
     {
         questionText: 'Please, assess your skills in management',
-        set_code: 18,
-        selection_code: 185,
+        set_code: '18',
+        selection_code: '185',
         answerOptions: [
-            { answerText: '1', optionCode: 181 },
-            { answerText: '2', optionCode: 182 },
-            { answerText: '3', optionCode: 183 },
-            { answerText: '4', optionCode: 184 },
-            { answerText: '5', optionCode: 185 },
+            { answerText: '1', optionCode: '181' },
+            { answerText: '2', optionCode: '182' },
+            { answerText: '3', optionCode: '183' },
+            { answerText: '4', optionCode: '184' },
+            { answerText: '5', optionCode: '185' },
         ],
     },
     {
         questionText: 'Please, assess your skills in finance',
-        set_code: 19,
-        selection_code: 195,
+        set_code: '19',
+        selection_code: '192',
         answerOptions: [
-            { answerText: '1', optionCode: 191 },
-            { answerText: '2', optionCode: 192 },
-            { answerText: '3', optionCode: 193 },
-            { answerText: '4', optionCode: 194 },
-            { answerText: '5', optionCode: 195 },
+            { answerText: '1', optionCode: '191' },
+            { answerText: '2', optionCode: '192' },
+            { answerText: '3', optionCode: '193' },
+            { answerText: '4', optionCode: '194' },
+            { answerText: '5', optionCode: '195' },
         ],
     },
     {
         questionText: 'Please, assess your skills in marketing',
-        set_code: 20,
-        selection_code: 203,
+        set_code: '20',
+        selection_code: '203',
         answerOptions: [
-            { answerText: '1', optionCode: 201 },
-            { answerText: '2', optionCode: 202 },
-            { answerText: '3', optionCode: 203 },
-            { answerText: '4', optionCode: 204 },
-            { answerText: '5', optionCode: 205 },
+            { answerText: '1', optionCode: '201' },
+            { answerText: '2', optionCode: '202' },
+            { answerText: '3', optionCode: '203' },
+            { answerText: '4', optionCode: '204' },
+            { answerText: '5', optionCode: '205' },
         ],
     }
 ]
@@ -303,7 +293,8 @@ class PersonalCharacteristics extends React.Component {
     }
 
     saveChanges = () => {
-
+        // const questionsClone = 
+        const newChoicesArray = [];
     }
 
     arraysEqual = (array1, array2) => {
@@ -376,7 +367,26 @@ class PersonalCharacteristics extends React.Component {
                 questions: questions,
                 originalQuestions: questions
             });
+        } else {
+            const questionsArray = JSON.parse(JSON.stringify(questions))
+            //map through each element of choices array. then map through each element of questionsArray
+            //check if set_code(id's) match. then change selection_code. thats it
+            choicesClone.map((obj, index) => {
+                questionsArray.map((element, index1) => {
+                    if (obj.set_code === element.set_code) {
+                        element.selection_code = obj.selection_code;
+                    }
+                });
+            });
+
+            this.setState({
+                questions: questionsArray,
+                originalQuestions: questionsArray
+            }, () => console.log('Questions array set to:' + JSON.stringify(this.state.questions)));
         }
+    }
+    importAnswers = () => {
+        console.log('IMport answers')
     }
 
     componentDidMount() {
@@ -396,9 +406,6 @@ class PersonalCharacteristics extends React.Component {
             this.props.getPersonalCharacteristics(this.props.businessPlan.id, () => {
                 this.setQuestionsAnswers();
             });
-            // this.setState({
-            //     questions: questions
-            // });
         }
     }
     render() {
@@ -433,25 +440,68 @@ class PersonalCharacteristics extends React.Component {
                         </div>
                     </Col>
                 </Row>
+                <Row align="middle" style={{ marginTop: "9px" }}>
+                    <Col span={16} offset={4}>
+                        <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center', width: '100%' }}>
+                            <Card size={'small'} style={{ ...specialCardStyle }} >
+                                <div style={{ display: 'flex', width: '100%', padding: '10px' }}>
+                                    <div style={{ paddingRight: '15px' }}>
+                                        <InfoCircleOutlined style={{ fontSize: '25px', textAlign: 'center', color: '#1890FF' }} />
+                                    </div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                                        <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                                            <p style={{ ...aboutTitleTextStyle }}>Import answers from previous surveys</p>
+                                            {/* <CloseOutlined style={{ fontSize: '16px', paddingTop: '5px', color: '#8C8C8C' }} /> */}
+                                            <Button
+                                                style={{ backgroundColor: '#E6F7FF', borderStyle: 'none' }}
+                                                icon={<CloseOutlined style={{ fontSize: '16px', paddingTop: '5px', color: '#8C8C8C' }}/>}
+                                                size="large"
+                                            />
+                                        </div>
+                                        <p>To save time you can import answers from previous surveys</p>
+                                        <Button style={{ width: '150px', backgroundColor: '#E6F7FF' }} onClick={this.importAnswers}>Import answers</Button>
+                                    </div>
+                                </div>
+
+
+                            </Card>
+                        </div>
+                    </Col>
+                </Row>
                 {this.state.questions.map((element, index) => {
                     return (<Row align={'middle'} style={{ marginTop: 10 }}>
                         <Col span={16} offset={4}>
                             <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                                 <p style={aboutTitleTextStyle}>{(index + 1) + ' ' + element.questionText}</p>
-                                <Radio.Group onChange={this.onDataChange} defaultValue={element.selection_code}>
-                                    <Space direction={'vertical'}>
+                                {element.set_code < 18 ?
+                                    <Radio.Group onChange={this.onDataChange} defaultValue={element.selection_code}>
+                                        <Space direction={'vertical'}>
+                                            {element.answerOptions.map((element2, index2) => {
+                                                return (
+                                                    <Radio
+                                                        name={element.answerText}
+                                                        value={element2.optionCode}
+                                                    // checked={element2.optionCode === element.selection_code}
+                                                    >{element2.answerText}</Radio>
+                                                )
+
+                                            })}
+                                        </Space>
+                                    </Radio.Group> :
+                                    <Radio.Group style={{ width: "100%" }} compact onChange={this.onDataChange} defaultValue={element.selection_code} buttonStyle="solid">
                                         {element.answerOptions.map((element2, index2) => {
                                             return (
-                                                <Radio
+                                                <Radio.Button
                                                     name={element.answerText}
                                                     value={element2.optionCode}
-                                                    // checked={element2.optionCode === element.selection_code}
-                                                >{element2.answerText}</Radio>
+                                                    style={{ width: '20%', height: '40px', textAlign: 'center' }}
+                                                // checked={element2.optionCode === element.selection_code}
+                                                >{element2.answerText}</Radio.Button>
                                             )
 
                                         })}
-                                    </Space>
-                                </Radio.Group>
+                                    </Radio.Group>}
+
                             </Card>
                         </Col>
                     </Row>)
