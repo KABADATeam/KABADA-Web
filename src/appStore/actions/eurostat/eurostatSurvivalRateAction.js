@@ -4,19 +4,14 @@ import { dataSetForSurvivalRate } from './dataSetsSurvivalRate';
 export const getSurvivalRate = () => {
     return async (dispatch, getState) => {
         //dispatch({ type: 'LOADING', payload: true });
-        dispatch({ type: 'RESET_EUROSTATDATA', payload: null });
+        dispatch({ type: 'RESET', payload: null });
         console.log(getState());
         const nace_code = getState().selectedBusinessPlan.overview.nace.activity_code;
-        console.log(nace_code);
         const geo = getState().selectedBusinessPlan.countryShortCode;
-        console.log(geo);
         const geoTitle = getState().selectedBusinessPlan.countryTitle;
         const split_nace_code = nace_code.split('.');
-        console.group(split_nace_code)
         const industry = split_nace_code[0];
-        console.group(industry)
         const activityCode = industry.concat('', split_nace_code[1]);
-        console.log(activityCode);
         let queryData = dataSetForSurvivalRate[industry].dataSets;
         console.log(queryData)
 
@@ -47,7 +42,6 @@ export const getSurvivalRate = () => {
                     console.log(' total')
                     dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_ALL_EUROPE_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: 'Europe' } });
                 }
-                dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_TOTAL1_EUROSTATDATA_SUCCESS', payload: {data: 'work'}});
             } catch (error){
                 //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
             }

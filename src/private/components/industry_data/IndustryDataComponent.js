@@ -10,7 +10,7 @@ class IndustryDataComponent extends Component {
         this.props.getSurvivalRate();
     }
     render() {
-        console.log(this.props.survivalRate);
+        console.log(this.props.survival);
         return (
             <>
                 <div>
@@ -24,7 +24,7 @@ class IndustryDataComponent extends Component {
 const mapStateToProps = (state) => {
     return {
         personalPlans: state.personalBusinessPlans,
-        survivalRate: state.survivalRate
+        survival: state.survivalRate
     };
 }
 

@@ -132,14 +132,14 @@ class Overview extends React.Component {
                     this.props.getMembers(this.props.businessPlan.id);
                     this.props.getSelectedPlanDetails(this.props.businessPlan.id);
                     this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-                    //this.props.getSurvivalRate();
+                    this.props.getSurvivalRate();
                 });
             }
         } else {
             this.props.getMembers(this.props.businessPlan.id);
             this.props.getSelectedPlanDetails(this.props.businessPlan.id);
             this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-            //this.props.getSurvivalRate();
+            this.props.getSurvivalRate();
         }
     }
 
