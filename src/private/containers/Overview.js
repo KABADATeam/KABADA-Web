@@ -12,7 +12,7 @@ import { withRouter } from 'react-router-dom';
 import InviteMemberModal from '../components/overview/InviteMemberModal';
 import EditBusinessPlanModal from '../components/overview/EditBusinessPlanModal';
 import { UserOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
-import IndustryRisksTable from '../components/Industry_Risks/IndustryRisksTable'
+import IndustryRisks from '../components/Industry_Risks/IndustryRisks'
 import { getCountryShortCodeV2 } from '../../appStore/actions/countriesActions'
 import IndustryDataComponent from '../components/industry_data/IndustryDataComponent';
 
@@ -165,73 +165,6 @@ class Overview extends React.Component {
                 </Menu.Item>
             </Menu>
         );
-        const text = (
-            <p style={{ paddingLeft: 24 }}>
-                A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found
-                as a welcome guest in many households across the world.
-            </p>
-        );
-        const columns = [
-            {
-                title: 'Risk',
-                dataIndex: 'risk',
-                key: 'risk',
-                width: '35%',
-                render: (text, record, index) =>
-                    <Text><PlusSquareOutlined style={{ fontSize: '20px' }} /> {record.risk}</Text>
-
-            },
-            {
-                title: 'Likelihood',
-                dataIndex: 'likelihood',
-                key: 'likelihood',
-                width: '15%',
-            },
-            {
-                title: 'Severity',
-                dataIndex: 'severity',
-                key: 'severity',
-                width: '5%',
-
-            },
-            {
-                title: 'Total',
-                dataIndex: 'total',
-                key: 'total',
-                width: '5%',
-
-            }
-
-        ];
-        const dataSource = [
-            {
-                id: 1,
-                risk: 'Political and legal',
-                likelihood: 'High',
-                severity: 'Medium',
-                total: 0,
-            }, {
-
-                id: 2,
-                risk: 'Economic',
-                likelihood: 'High',
-                severity: 'Medium',
-                total: 0,
-            }, {
-                id: 3,
-                risk: 'Social',
-                likelihood: 'High',
-                severity: 'Medium',
-                total: 0,
-            }, {
-
-                id: 4,
-                risk: 'Technological',
-                likelihood: 'High',
-                severity: 'Medium',
-                total: 0,
-            }
-        ];
 
 
 
@@ -294,7 +227,8 @@ class Overview extends React.Component {
                                                         <List.Item.Meta
                                                             avatar={<Avatar src="complete.png" style={avatarStyle} />}
                                                             title={<Button style={{ paddingLeft: '0px' }} type="text" onClick={this.onEditBusinessPlan.bind(this)}>Create Bussines Plan</Button>}
-                                                            description={overview.nace === "" || overview.nace === null ? "NACE: " : "NACE: " + overview.nace.activity_code} />
+                                                            description={overview.nace === "" || overview.nace === null ? "NACE: " : "NACE: " + overview.nace.activity_code}
+                                                        />
                                                         <div>...</div>
                                                     </List.Item>
                                                 </List>
@@ -505,20 +439,8 @@ class Overview extends React.Component {
                                         </div>
                                     </Col>
                                     <Col span={12}>
-                                        <IndustryRisksTable title='Macro' />
-                                        {/* <Card >
-                                            <Collapse bordered={false} defaultActiveKey={['1']}>
-                                                <Panel header="This is panel header 1" key="1">
-                                                    {text}
-                                                </Panel>
-                                                <Panel header="This is panel header 2" key="2">
-                                                    {text}
-                                                </Panel>
-                                                <Panel header="This is panel header 3" key="3">
-                                                    {text}
-                                                </Panel>
-                                            </Collapse>
-                                        </Card> */}
+                                        <IndustryRisks />
+
                                     </Col>
                                     <Col span={16}>
 
