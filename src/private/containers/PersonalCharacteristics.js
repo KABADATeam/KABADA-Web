@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Form, Select, Divider, Button, Breadcrumb, Row, Col, Typography, Radio, Card, Space, Tooltip, Tabs } from 'antd';
+import { Form, Select,Input, Divider, Button, Breadcrumb, Row, Col, Typography, Radio, Card, Space, Tooltip, Tabs } from 'antd';
 import { ArrowLeftOutlined, CloseOutlined, InfoCircleFilled, InfoCircleOutlined } from '@ant-design/icons';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
 import { refreshPlan } from "../../appStore/actions/refreshAction";
@@ -321,22 +321,20 @@ class PersonalCharacteristics extends React.Component {
                 choices.push(objektas);
             });
         } else {
-            for(var i=0; i<originalChoices; i++){
-                if (originalChoices[i].selection_code !== modifiedChoices[i].selection_code ||
-                    originalChoices[i].extraText !== modifiedChoices[i].extraText) {
-                    const objektas = {
-                        "set_code": modifiedChoices[i].set_code, //code of question
-                        "selection_code": modifiedChoices[i].selection_code,  //code of answer
-                        "extraText": "text"        // brief answer text if needed
-                    }
-                    choices.push(objektas)
+            for (var i = 0; i < modifiedChoices.length; i++) {
+                const objektas = {
+                    "set_code": modifiedChoices[i].set_code, //code of question
+                    "selection_code": modifiedChoices[i].selection_code,  //code of answer
+                    "extraText": "text"        // brief answer text if needed
                 }
+                choices.push(objektas)
             }
         }
         const postObject = {
             "plan_id": this.props.businessPlan.id,
             "choices": choices
         }
+
         this.props.savePersonalCharacteristics(postObject, () => {
             this.props.getPersonalCharacteristics(this.props.businessPlan.id, () => {
                 this.setQuestionsAnswers();
@@ -387,7 +385,6 @@ class PersonalCharacteristics extends React.Component {
     }
 
     onDataChange = (e) => {
-        console.log('radio checked', e.target.value);
         const questionsClone = JSON.parse(JSON.stringify(this.state.questions))
         questionsClone.map((element, index) => {
             element.answerOptions.map((element2, index1) => {
@@ -399,7 +396,6 @@ class PersonalCharacteristics extends React.Component {
         this.setState({
             questions: questionsClone
         }, () => {
-            console.log('Questions state is:' + JSON.stringify(this.state.questions))
             let visibilityString = this.getWindowsUpdate();
             this.setState({
                 visibleHeader: visibilityString
@@ -430,46 +426,46 @@ class PersonalCharacteristics extends React.Component {
             this.setState({
                 questions: questionsArray,
                 originalQuestions: questionsArray
-            }, () => console.log('Questions array set to:' + JSON.stringify(this.state.questions)));
+            });
         }
     }
     importAnswers = (planId) => {
-        console.log('Save insert:' + planId)
         let array = [];
         this.props.getPersonalCharacteristics(planId, () => {
             const choicesClone = JSON.parse(JSON.stringify(this.props.personalCharacteristics.choices));
             if (choicesClone === null || choicesClone === undefined) {
                 const questionsClone = JSON.parse(JSON.stringify(questions));
-                questionsClone.map((element, index) => {
-                    //for each element in question array create new object
+                for (var i = 0; i < questionsClone.length; i++) {
+                    // for each element in question array create new object
                     const obj = {
-                        "set_code": element.set_code, //code of question
-                        "selection_code": element.selection_code,  //code of answer
+                        "set_code": questionsClone[i].set_code, //code of question
+                        "selection_code": questionsClone[i].selection_code,  //code of answer
                         "extraText": "text"        // brief answer text if needed
                     }
                     array.push(obj);
-                });
-                // array = questions;
+                }
             } else {
                 array = choicesClone;
             }
-        });
-        //update whole array
-        const postObject = {
-            "plan_id": this.props.businessPlan.id,
-            "choices": array
-        }
-        this.props.savePersonalCharacteristics(postObject, () => {
-            this.props.getPersonalCharacteristics(this.props.businessPlan.id, () => {
-                this.setQuestionsAnswers();
-                this.setState({
-                    visibleHeader: 'hidden'
+            //update whole array
+            const postObject = {
+                "plan_id": this.props.businessPlan.id,
+                "choices": array
+            }
+
+            this.props.savePersonalCharacteristics(postObject, () => {
+                this.props.getPersonalCharacteristics(this.props.businessPlan.id, () => {
+                    const choicesClone = JSON.parse(JSON.stringify(this.props.personalCharacteristics.choices))
+                    this.setQuestionsAnswers();
+                    this.setState({
+                       visibleHeader: 'hidden',
+                       visiblePopUp: false
+                    });
                 });
             });
         });
-
+        
     }
-
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
             if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
@@ -483,13 +479,13 @@ class PersonalCharacteristics extends React.Component {
                 });
             }
         } else {
-            console.log('Business plan id:' + this.props.businessPlan.id)
             this.props.getPersonalCharacteristics(this.props.businessPlan.id, () => {
                 this.setQuestionsAnswers();
             });
         }
     }
     render() {
+        const questions = this.state.questions;
         return (
             <>
                 <UnsavedChangesHeader
@@ -549,37 +545,35 @@ class PersonalCharacteristics extends React.Component {
                         </div>
                     </Col>
                 </Row>
-                {this.state.questions.map((element, index) => {
+                {questions.map((element, index) => {
                     return (<Row align={'middle'} style={{ marginTop: 10 }}>
                         <Col span={16} offset={4}>
                             <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                                 <p style={aboutTitleTextStyle}>{(index + 1) + ' ' + element.questionText}</p>
                                 {element.set_code < 18 ?
-                                    <Radio.Group onChange={this.onDataChange} defaultValue={element.selection_code}>
+                                    <Radio.Group onChange={this.onDataChange} value={element.selection_code}>
                                         <Space direction={'vertical'}>
                                             {element.answerOptions.map((element2, index2) => {
                                                 return (
                                                     <Radio
-                                                        name={element.answerText}
+                                                        name={element2.answerText}
                                                         value={element2.optionCode}
                                                     // checked={element2.optionCode === element.selection_code}
                                                     >{element2.answerText}</Radio>
                                                 )
-
                                             })}
                                         </Space>
                                     </Radio.Group> :
-                                    <Radio.Group style={{ width: "100%" }} compact onChange={this.onDataChange} defaultValue={element.selection_code} buttonStyle="solid">
+                                    <Radio.Group style={{ width: "100%" }} compact onChange={this.onDataChange} value={element.selection_code} buttonStyle="solid">
                                         {element.answerOptions.map((element2, index2) => {
                                             return (
                                                 <Radio.Button
-                                                    name={element.answerText}
+                                                    name={element2.answerText}
                                                     value={element2.optionCode}
                                                     style={{ width: '20%', height: '40px', textAlign: 'center' }}
                                                 // checked={element2.optionCode === element.selection_code}
                                                 >{element2.answerText}</Radio.Button>
                                             )
-
                                         })}
                                     </Radio.Group>}
 
