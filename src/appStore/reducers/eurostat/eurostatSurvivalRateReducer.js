@@ -8,12 +8,13 @@ export const eurostatSurvivalRateReducer = (
             const valuesObj = JSON.parse(JSON.stringify(action.payload.data)).value;
             const valuesObjValues = Object.values(valuesObj);
             const lastTwoValues = valuesObjValues.slice(-2);
-            //const lastValue = lastTwoValues[1];
-            //const compareValue = Math.abs(Math.round(lastTwoValues[1] - lastTwoValues[0]));
+            const lastValue = lastTwoValues[1];
+            const compareValue = Math.abs(Math.round(lastTwoValues[1] - lastTwoValues[0]));
             const viewObj = {
                 id: 1,
                 title: 'Your industry in ' + action.payload.geoTitle + ' (' + action.payload.industry + ')',
-                lastValues: lastTwoValues,
+                lastValue: lastTwoValues,
+                compareValue: compareValue
             }
             console.log(viewObj);
             const test = [...state.survival_rate_data, viewObj]
@@ -27,11 +28,13 @@ export const eurostatSurvivalRateReducer = (
             const _valuesObj = JSON.parse(JSON.stringify(action.payload.data)).value;
             const _valuesObjValues = Object.values(_valuesObj);
             const _lastTwoValues = _valuesObjValues.slice(-2);
+            const _lastValue = _lastTwoValues[1];
             const _compareValue = Math.abs(Math.round(_lastTwoValues[1] - _lastTwoValues[0]));
             const _viewObj = {
                 id: 2,
                 title: 'All industries in ' + action.payload.geoTitle,
-                lastValues: _lastTwoValues,
+                lastValue: _lastTwoValues,
+                compareValue: _compareValue
             }
             console.log(_viewObj)
             return {
@@ -43,11 +46,13 @@ export const eurostatSurvivalRateReducer = (
             const valuesObj_ = JSON.parse(JSON.stringify(action.payload.data)).value;
             const valuesObjValues_ = Object.values(valuesObj_);
             const lastTwoValues_ = valuesObjValues_.slice(-2);
+            const lastValue_ = lastTwoValues_[1];
             const compareValue_ = Math.abs(Math.round(lastTwoValues_[1] - lastTwoValues_[0]));
             const viewObj_ = {
                 id: 3,
                 title: 'All industries in Europe',
-                lastValues: lastTwoValues_,
+                lastValue: lastTwoValues_,
+                compareValue: compareValue_
             }
             console.log(viewObj_)
             return {

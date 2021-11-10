@@ -132,14 +132,12 @@ class Overview extends React.Component {
                     this.props.getMembers(this.props.businessPlan.id);
                     this.props.getSelectedPlanDetails(this.props.businessPlan.id);
                     this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-                    this.props.getSurvivalRate();
                 });
             }
         } else {
             this.props.getMembers(this.props.businessPlan.id);
             this.props.getSelectedPlanDetails(this.props.businessPlan.id);
             this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-            this.props.getSurvivalRate();
         }
     }
 
@@ -487,13 +485,10 @@ class Overview extends React.Component {
                             </TabPane>
                             <TabPane tab="Industry data" key="2">
                                 <Row style={{ marginBottom: "50px" }}>
-                                    <Col span={8}>
+                                    <Col>
                                         <div style={{ marginRight: '40px' }}>
                                             <IndustryDataComponent />
                                         </div>
-                                    </Col>
-                                    <Col span={16}>
-
                                     </Col>
                                 </Row>
                             </TabPane>
