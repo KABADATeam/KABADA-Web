@@ -14,7 +14,6 @@ export const getPersonalCharacteristics = (planId,callback) => async(dispatch, g
             type: 'FETCHING_PERSONAL_CHARACTERISTICS_SUCCESS',
             payload: response.data
         });
-        console.log('GOT personal characteristics:'+JSON.stringify(response.data))
         callback();
     } catch (error) {
         if (error.response === undefined) {
