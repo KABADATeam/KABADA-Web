@@ -293,8 +293,46 @@ class PersonalCharacteristics extends React.Component {
     }
 
     saveChanges = () => {
-        // const questionsClone = 
-        const newChoicesArray = [];
+        const modifiedChoices = JSON.parse(JSON.stringify(this.state.questions));
+        const originalChoices = JSON.parse(JSON.stringify(this.props.personalCharacteristics.choices));
+        let choices = [];
+        // if original choices were null. then set choices array to modifiedChoices state
+        if (originalChoices === null || originalChoices === undefined) {
+            modifiedChoices.map((element, index) => {
+                const objektas = {
+                    "set_code": element.set_code, //code of question
+                    "selection_code": element.selection_code,  //code of answer
+                    "extraText": "text"        // brief answer text if needed
+                }
+                choices.push(objektas);
+            });
+        } else {
+            modifiedChoices.map((obj, index) => {
+                originalChoices.map((element, index2) => {
+                    if (element.selection_code !== obj.selection_code ||
+                        element.extraText !== obj.extraText) {
+                        const objektas = {
+                            "set_code": obj.set_code, //code of question
+                            "selection_code": obj.selection_code,  //code of answer
+                            "extraText": "text"        // brief answer text if needed
+                        }
+                        choices.push(objektas)
+                    }
+                });
+            });
+        }
+        const postObject = {
+            "plan_id":this.props.businessPlan.id,
+            "choices": choices
+        }
+        this.props.savePersonalCharacteristics(postObject, () =>{
+            this.props.getPersonalCharacteristics(this.props.businessPlan.id, () =>{
+                this.setQuestionsAnswers();
+                this.setState({
+                    visibleHeader: 'hidden'
+                });
+            });
+        });
     }
 
     arraysEqual = (array1, array2) => {
@@ -319,8 +357,6 @@ class PersonalCharacteristics extends React.Component {
 
         return true;
     }
-
-
     getWindowsUpdate = () => {
         const originalClone = JSON.parse(JSON.stringify(this.state.originalQuestions));
         const modifiedClone = JSON.parse(JSON.stringify(this.state.questions));
@@ -385,9 +421,18 @@ class PersonalCharacteristics extends React.Component {
             }, () => console.log('Questions array set to:' + JSON.stringify(this.state.questions)));
         }
     }
-    importAnswers = () => {
-        console.log('IMport answers')
-    }
+    // importAnswers = (planId) => {
+    //     let array = [];
+    //     this.props.getPersonalCharacteristics(planId, () => {
+    //         const choicesClone = JSON.parse(JSON.stringify(this.props.personalCharacteristics.choices));
+    //         if(choicesClone === null){
+    //             array = questions;
+    //         }else{
+    //             array = choicesClone;
+    //         }
+    //     });
+
+    // }
 
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
@@ -454,7 +499,7 @@ class PersonalCharacteristics extends React.Component {
                                             {/* <CloseOutlined style={{ fontSize: '16px', paddingTop: '5px', color: '#8C8C8C' }} /> */}
                                             <Button
                                                 style={{ backgroundColor: '#E6F7FF', borderStyle: 'none' }}
-                                                icon={<CloseOutlined style={{ fontSize: '16px', paddingTop: '5px', color: '#8C8C8C' }}/>}
+                                                icon={<CloseOutlined style={{ fontSize: '16px', paddingTop: '5px', color: '#8C8C8C' }} />}
                                                 size="large"
                                             />
                                         </div>
