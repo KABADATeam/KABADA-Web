@@ -7,6 +7,7 @@ import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { tableCardStyle } from '../../styles/customStyles'
+import KeyPartnersPopUp from '../components/personal_characteristics/KeyPartnersPopUp';
 import { getPersonalCharacteristics, savePersonalCharacteristics } from '../../appStore/actions/personalCharacteristicsActions'
 
 
@@ -281,7 +282,8 @@ class PersonalCharacteristics extends React.Component {
             originalQuestions: [],
             questions: [],
             visibleHeader: 'hidden',
-            selectedQuestions: []
+            selectedQuestions: [],
+            visiblePopUp: false
         }
     }
     onBackClick = () => {
@@ -290,6 +292,18 @@ class PersonalCharacteristics extends React.Component {
 
     discardChanges = () => {
 
+    }
+
+    showImportPopUp = () => {
+        this.setState({
+            visiblePopUp: true
+        });
+    }
+
+    unshowImportPopUp = () => {
+        this.setState({
+            visiblePopUp: false
+        });
     }
 
     saveChanges = () => {
@@ -307,26 +321,24 @@ class PersonalCharacteristics extends React.Component {
                 choices.push(objektas);
             });
         } else {
-            modifiedChoices.map((obj, index) => {
-                originalChoices.map((element, index2) => {
-                    if (element.selection_code !== obj.selection_code ||
-                        element.extraText !== obj.extraText) {
-                        const objektas = {
-                            "set_code": obj.set_code, //code of question
-                            "selection_code": obj.selection_code,  //code of answer
-                            "extraText": "text"        // brief answer text if needed
-                        }
-                        choices.push(objektas)
+            for(var i=0; i<originalChoices; i++){
+                if (originalChoices[i].selection_code !== modifiedChoices[i].selection_code ||
+                    originalChoices[i].extraText !== modifiedChoices[i].extraText) {
+                    const objektas = {
+                        "set_code": modifiedChoices[i].set_code, //code of question
+                        "selection_code": modifiedChoices[i].selection_code,  //code of answer
+                        "extraText": "text"        // brief answer text if needed
                     }
-                });
-            });
+                    choices.push(objektas)
+                }
+            }
         }
         const postObject = {
-            "plan_id":this.props.businessPlan.id,
+            "plan_id": this.props.businessPlan.id,
             "choices": choices
         }
-        this.props.savePersonalCharacteristics(postObject, () =>{
-            this.props.getPersonalCharacteristics(this.props.businessPlan.id, () =>{
+        this.props.savePersonalCharacteristics(postObject, () => {
+            this.props.getPersonalCharacteristics(this.props.businessPlan.id, () => {
                 this.setQuestionsAnswers();
                 this.setState({
                     visibleHeader: 'hidden'
@@ -421,18 +433,42 @@ class PersonalCharacteristics extends React.Component {
             }, () => console.log('Questions array set to:' + JSON.stringify(this.state.questions)));
         }
     }
-    // importAnswers = (planId) => {
-    //     let array = [];
-    //     this.props.getPersonalCharacteristics(planId, () => {
-    //         const choicesClone = JSON.parse(JSON.stringify(this.props.personalCharacteristics.choices));
-    //         if(choicesClone === null){
-    //             array = questions;
-    //         }else{
-    //             array = choicesClone;
-    //         }
-    //     });
+    importAnswers = (planId) => {
+        console.log('Save insert:' + planId)
+        let array = [];
+        this.props.getPersonalCharacteristics(planId, () => {
+            const choicesClone = JSON.parse(JSON.stringify(this.props.personalCharacteristics.choices));
+            if (choicesClone === null || choicesClone === undefined) {
+                const questionsClone = JSON.parse(JSON.stringify(questions));
+                questionsClone.map((element, index) => {
+                    //for each element in question array create new object
+                    const obj = {
+                        "set_code": element.set_code, //code of question
+                        "selection_code": element.selection_code,  //code of answer
+                        "extraText": "text"        // brief answer text if needed
+                    }
+                    array.push(obj);
+                });
+                // array = questions;
+            } else {
+                array = choicesClone;
+            }
+        });
+        //update whole array
+        const postObject = {
+            "plan_id": this.props.businessPlan.id,
+            "choices": array
+        }
+        this.props.savePersonalCharacteristics(postObject, () => {
+            this.props.getPersonalCharacteristics(this.props.businessPlan.id, () => {
+                this.setQuestionsAnswers();
+                this.setState({
+                    visibleHeader: 'hidden'
+                });
+            });
+        });
 
-    // }
+    }
 
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
@@ -504,7 +540,7 @@ class PersonalCharacteristics extends React.Component {
                                             />
                                         </div>
                                         <p>To save time you can import answers from previous surveys</p>
-                                        <Button style={{ width: '150px', backgroundColor: '#E6F7FF' }} onClick={this.importAnswers}>Import answers</Button>
+                                        <Button style={{ width: '150px', backgroundColor: '#E6F7FF' }} onClick={this.showImportPopUp}>Import answers</Button>
                                     </div>
                                 </div>
 
@@ -551,6 +587,12 @@ class PersonalCharacteristics extends React.Component {
                         </Col>
                     </Row>)
                 })}
+                <KeyPartnersPopUp visible={this.state.visiblePopUp}
+                    plans={this.props.personalBusinessPlans}
+                    planId={this.props.businessPlan.id}
+                    onClose={this.unshowImportPopUp}
+                    save={this.importAnswers}
+                />
             </>
         )
     }
@@ -560,7 +602,9 @@ class PersonalCharacteristics extends React.Component {
 const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
-        personalCharacteristics: state.personalCharacteristics
+        personalCharacteristics: state.personalCharacteristics,
+        personalBusinessPlans: state.personalBusinessPlans
+
     }
 }
 //to connect passing mapStateToProps and all actions that we will be dispatching

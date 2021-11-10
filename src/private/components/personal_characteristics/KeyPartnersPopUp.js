@@ -22,13 +22,13 @@ class KeyPartnersPopUp extends React.Component {
     save = () => {
         if(this.state.planId === this.props.planId){
             this.onCancel();
+            console.log('Selected plan is same')
         }else{
             this.props.save(this.state.planId)
         }
     }
     componentDidMount() {
         const planIdClone = JSON.parse(JSON.stringify(this.props.planId));
-        const plansClone = JSON.parse(JSON.stringify(this.props.plans))
         this.setState({
             planId: planIdClone
         });
