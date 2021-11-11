@@ -282,7 +282,6 @@ class PersonalCharacteristics extends React.Component {
             originalQuestions: [],
             questions: [],
             visibleHeader: 'hidden',
-            selectedQuestions: [],
             visiblePopUp: false
         }
     }
@@ -291,7 +290,10 @@ class PersonalCharacteristics extends React.Component {
     }
 
     discardChanges = () => {
-
+        this.setQuestionsAnswers();
+        this.setState({
+            visibleHeader: 'hidden'
+        });
     }
 
     showImportPopUp = () => {
