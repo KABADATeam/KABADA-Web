@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Form, Select,Input, Divider, Button, Breadcrumb, Row, Col, Typography, Radio, Card, Space, Tooltip, Tabs } from 'antd';
+import { Form, Select, Input, Divider, Button, Breadcrumb, Row, Col, Typography, Radio, Card, Space, Tooltip, Tabs } from 'antd';
 import { ArrowLeftOutlined, CloseOutlined, InfoCircleFilled, InfoCircleOutlined } from '@ant-design/icons';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
 import { refreshPlan } from "../../appStore/actions/refreshAction";
@@ -282,7 +282,8 @@ class PersonalCharacteristics extends React.Component {
             originalQuestions: [],
             questions: [],
             visibleHeader: 'hidden',
-            visiblePopUp: false
+            visiblePopUp: false,
+            importCardVisibility: true
         }
     }
     onBackClick = () => {
@@ -305,6 +306,12 @@ class PersonalCharacteristics extends React.Component {
     unshowImportPopUp = () => {
         this.setState({
             visiblePopUp: false
+        });
+    }
+
+    closeImportCard = () => {
+        this.setState({
+            importCardVisibility: false
         });
     }
 
@@ -460,13 +467,13 @@ class PersonalCharacteristics extends React.Component {
                     const choicesClone = JSON.parse(JSON.stringify(this.props.personalCharacteristics.choices))
                     this.setQuestionsAnswers();
                     this.setState({
-                       visibleHeader: 'hidden',
-                       visiblePopUp: false
+                        visibleHeader: 'hidden',
+                        visiblePopUp: false
                     });
                 });
             });
         });
-        
+
     }
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
@@ -519,34 +526,37 @@ class PersonalCharacteristics extends React.Component {
                         </div>
                     </Col>
                 </Row>
-                <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col span={16} offset={4}>
-                        <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center', width: '100%' }}>
-                            <Card size={'small'} style={{ ...specialCardStyle }} >
-                                <div style={{ display: 'flex', width: '100%', padding: '10px' }}>
-                                    <div style={{ paddingRight: '15px' }}>
-                                        <InfoCircleOutlined style={{ fontSize: '25px', textAlign: 'center', color: '#1890FF' }} />
-                                    </div>
-                                    <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                                        <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-                                            <p style={{ ...aboutTitleTextStyle }}>Import answers from previous surveys</p>
-                                            {/* <CloseOutlined style={{ fontSize: '16px', paddingTop: '5px', color: '#8C8C8C' }} /> */}
-                                            <Button
-                                                style={{ backgroundColor: '#E6F7FF', borderStyle: 'none' }}
-                                                icon={<CloseOutlined style={{ fontSize: '16px', paddingTop: '5px', color: '#8C8C8C' }} />}
-                                                size="large"
-                                            />
+                {this.state.importCardVisibility === true ?
+                    <Row align="middle" style={{ marginTop: "9px" }}>
+                        <Col span={16} offset={4}>
+                            <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center', width: '100%' }}>
+                                <Card size={'small'} style={{ ...specialCardStyle }} visible={false}>
+                                    <div style={{ display: 'flex', width: '100%', padding: '10px' }}>
+                                        <div style={{ paddingRight: '15px' }}>
+                                            <InfoCircleOutlined style={{ fontSize: '25px', textAlign: 'center', color: '#1890FF' }} />
                                         </div>
-                                        <p>To save time you can import answers from previous surveys</p>
-                                        <Button style={{ width: '150px', backgroundColor: '#E6F7FF' }} onClick={this.showImportPopUp}>Import answers</Button>
+                                        <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                                            <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                                                <p style={{ ...aboutTitleTextStyle }}>Import answers from previous surveys</p>
+                                                {/* <CloseOutlined style={{ fontSize: '16px', paddingTop: '5px', color: '#8C8C8C' }} /> */}
+                                                <Button
+                                                    style={{ backgroundColor: '#E6F7FF', borderStyle: 'none' }}
+                                                    icon={<CloseOutlined style={{ fontSize: '16px', paddingTop: '5px', color: '#8C8C8C' }} />}
+                                                    size="large"
+                                                    onClick={this.closeImportCard}
+                                                />
+                                            </div>
+                                            <p>To save time you can import answers from previous surveys</p>
+                                            <Button style={{ width: '150px', backgroundColor: '#E6F7FF' }} onClick={this.showImportPopUp}>Import answers</Button>
+                                        </div>
                                     </div>
-                                </div>
 
 
-                            </Card>
-                        </div>
-                    </Col>
-                </Row>
+                                </Card>
+                            </div>
+                        </Col>
+                    </Row> : null}
+
                 {questions.map((element, index) => {
                     return (<Row align={'middle'} style={{ marginTop: 10 }}>
                         <Col span={16} offset={4}>
