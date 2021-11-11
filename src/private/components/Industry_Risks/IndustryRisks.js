@@ -62,42 +62,55 @@ class IndustryRisks extends Component {
 
 
     filterriskMacro = () => {
-        const macros = this.state.riskscol.filter((x, index) => x.category === 'MACRO')
-        macros.map((element1, index = 1) => {
+        if (this.state.riskscol === null) {
+            return;
+        } else {
+            const macros = this.state.riskscol.filter((x, index) => x.category === 'MACRO')
+            macros.map((element1, index = 1) => {
 
-            element1.key = index++;
-            //console.log(JSON.stringify(element1))
-            return element1;
+                element1.key = index++;
+                //console.log(JSON.stringify(element1))
+                return element1;
+            })
+            return macros
+        }
 
-        })
+
         //console.log(JSON.stringify(macros));
-        return macros
+
     }
 
     filterriskIndustry = () => {
-        const industry = this.state.riskscol.filter((x, index) => x.category === 'INDUSTRY')
-        industry.map((element1, index = 1) => {
+        if (this.state.riskscol === null) {
+            return
+        } else {
+            const industry = this.state.riskscol.filter((x, index) => x.category === 'INDUSTRY')
+            industry.map((element1, index = 1) => {
 
-            element1.key = index++;
-            //console.log(JSON.stringify(element1))
-            return element1;
+                element1.key = index++;
+                //console.log(JSON.stringify(element1))
+                return element1;
 
-        })
-        //console.log(JSON.stringify(industry));
-        return industry
+            })
+            //console.log(JSON.stringify(industry));
+            return industry
+        }
     }
 
     filterriskCompany = () => {
-        const company = this.state.riskscol.filter((x, index) => x.category === 'COMPANY')
-        company.map((element1, index = 1) => {
+        if (this.state.riskscol === null) {
+        } else {
+            const company = this.state.riskscol.filter((x, index) => x.category === 'COMPANY')
+            company.map((element1, index = 1) => {
 
-            element1.key = index++;
-            //console.log(JSON.stringify(element1))
-            return element1;
+                element1.key = index++;
+                //console.log(JSON.stringify(element1))
+                return element1;
 
-        })
-        //console.log(JSON.stringify(company));
-        return company
+            })
+            //console.log(JSON.stringify(company));
+            return company
+        }
     }
     render() {
 
