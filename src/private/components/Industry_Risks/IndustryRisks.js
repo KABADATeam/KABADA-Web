@@ -1,6 +1,10 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Table, Typography, Tag } from 'antd';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import '../../../css/IndustryRisks.css'
+import { getRisks, getSelectedPlanActiveKey } from '../../../appStore/actions/industryRiskAction'
+import { getSelectedPlanDetails } from '../../../appStore/actions/planActions'
 
 
 
@@ -8,123 +12,196 @@ const { Text } = Typography;
 
 
 
-const IndustryRisks = () => {
+class IndustryRisks extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            riskscol: [],
+            macro: []
+        }
+    }
 
 
-    const columns = [
-        {
-            title: 'Risk',
-            dataIndex: 'risk',
-            key: 'risk',
-            render: (text, record, index) =>
-                <Text> {record.risk}</Text>
+    componentDidMount() {
+        if (this.props.businessPlan.id === null) {
+            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                this.props.history.push(`/`);
+            } else {
+                this.props.getSelectedPlanActiveKey(this.props.businessPlan.id)
+                this.props.getRisks(this.props.industryRisk.activeKey, () => {
+                    this.setState({
+                        riskscol: this.props.industryRisk.risks.risks
+                    })
+                    console.log(this.state.riskscol)
+                    this.filterriskMacro();
+                    //console.log(JSON.stringify(this.props.industryRisk.risks))
+                    console.log('master ' + this.props.industryRisk.activeKey)
+                    console.log('master ' + this.props.businessPlan.id)
+                })
 
-        },
-        {
-            title: 'Likelihood',
-            dataIndex: 'likelihood',
-            key: 'likelihood',
-            width: '15%',
-        },
-        {
-            title: 'Severity',
-            dataIndex: 'severity',
-            key: 'severity',
-            width: '5%',
+            }
+        } else {
+            this.props.getSelectedPlanActiveKey(this.props.businessPlan.id, () => {
+                this.props.getRisks(this.props.industryRisk.activeKey, () => {
+                    this.setState({
+                        riskscol: this.props.industryRisk.risks.risks
+                    })
+                    console.log(this.state.riskscol)
 
-        },
-        {
-            title: 'Total',
-            dataIndex: 'total',
-            key: 'total',
-            width: '5%',
-            render: total => (
+                    //console.log(JSON.stringify(this.props.industryRisk.risks))
+                    console.log('master ' + this.props.industryRisk.activeKey)
+                    console.log('master ' + this.props.businessPlan.id)
+                })
+            })
 
-                <Tag >
-                    {total === 0 ? <span className='low'>Low</span> : total === 5 ? <span className='medium'>midem</span> : <span className='high'>High</span>}
-                </Tag >
 
-            ),
 
         }
-
-    ];
-    const dataSource = [
-        {
-            key: 1,
-            risk: 'Political and legal',
-            likelihood: 'High',
-            severity: 'Medium',
-            total: 5,
-            description: ' A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be foundas a welcome guest in many households across the world.'
-        },
-        {
-
-            key: 2,
-            risk: 'Economic',
-            likelihood: 'High',
-            severity: 'Medium',
-            total: 0,
-            description: ' A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be foundas a welcome guest in many households across the world.'
-        }, {
-            key: 3,
-            risk: 'Social',
-            likelihood: 'High',
-            severity: 'Medium',
-            total: 9,
-            description: ' A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be foundas a welcome guest in many households across the world.'
-        }, {
-
-            key: 4,
-            risk: 'Technological',
-            likelihood: 'High',
-            severity: 'Medium',
-            total: 0,
-            description: ' A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be foundas a welcome guest in many households across the world.'
-        }
-    ];
+    }
 
 
-    return (
-        <div>
-            <Table
-                columns={columns}
-                title={() => 'Macro'}
-                expandable={{
-                    expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
-                    rowExpandable: record => record.name !== 'Not Expandable',
-                }}
-                dataSource={dataSource}
-                pagination={false}
-            />
+    filterriskMacro = () => {
+        const macros = this.state.riskscol.filter((x, index) => x.category === 'MACRO')
+        macros.map((element1, index = 1) => {
 
-            <Table
-                title={() => 'Industry'}
-                style={{ marginTop: '25px' }}
-                columns={columns}
+            element1.key = index++;
+            //console.log(JSON.stringify(element1))
+            return element1;
 
-                expandable={{
-                    expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
-                    rowExpandable: record => record.name !== 'Not Expandable',
-                }}
-                dataSource={dataSource}
-                pagination={false}
-            />
-            <Table
-                title={() => 'Company'}
-                style={{ marginTop: '25px' }}
-                columns={columns}
+        })
+        //console.log(JSON.stringify(macros));
+        return macros
+    }
 
-                expandable={{
-                    expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
-                    rowExpandable: record => record.name !== 'Not Expandable',
-                }}
-                dataSource={dataSource}
-                pagination={false}
-            />
-        </div >
-    )
+    filterriskIndustry = () => {
+        const industry = this.state.riskscol.filter((x, index) => x.category === 'INDUSTRY')
+        industry.map((element1, index = 1) => {
+
+            element1.key = index++;
+            //console.log(JSON.stringify(element1))
+            return element1;
+
+        })
+        //console.log(JSON.stringify(industry));
+        return industry
+    }
+
+    filterriskCompany = () => {
+        const company = this.state.riskscol.filter((x, index) => x.category === 'COMPANY')
+        company.map((element1, index = 1) => {
+
+            element1.key = index++;
+            //console.log(JSON.stringify(element1))
+            return element1;
+
+        })
+        //console.log(JSON.stringify(company));
+        return company
+    }
+    render() {
+
+        const columns = [
+            {
+                title: 'Risk',
+                dataIndex: 'risk',
+                key: 'risk',
+                render: (text, record, index) =>
+                    <Text> {record.type}</Text>
+
+            },
+            {
+                title: 'Likelihood',
+                dataIndex: 'likelihood',
+                key: 'likelihood',
+                width: '15%',
+                render: (text, record, index) =>
+                    <Text> {record.likelihood === 1 ? 'Low' : record.likelihood === 2 ? 'Medium' : record.likelihood === 3 && 'High'}</Text>
+            },
+            {
+                title: 'Severity',
+                dataIndex: 'severity',
+                key: 'severity',
+                width: '5%',
+                render: (text, record, index) =>
+                    <Text> {record.severity === 1 ? 'Low' : record.severity === 2 ? 'Medium' : record.severity === 3 && 'High'}</Text>
+
+            },
+            {
+                title: 'Total',
+                dataIndex: 'total',
+                key: 'total',
+                width: '5%',
+                render: (text, record, index) => (
+
+                    <Tag style={{ border: 'none', background: 'none' }} >
+
+                        {record.likelihood === 3 && record.severity === 2 ?
+                            <span className='high'>High medium</span> :
+                            record.likelihood === 2 && record.severity === 3 ?
+                                <span className='medium'>Medium high</span> :
+                                record.likelihood === 1 && record.severity === 2 ?
+                                    <span className='low'>Low medium</span> :
+                                    record.likelihood && record.severity === 2 ?
+                                        <span className='medium'>Midem</span> :
+                                        record.likelihood && record.severity === 1 ?
+                                            <span className='low'>Low</span> :
+                                            <span className='high'>High</span>
+                        }
+                    </Tag >
+
+                ),
+
+            }
+
+        ];
+
+
+        return (
+            <div>
+
+                <Table
+                    title={() => 'Macro'}
+                    columns={columns}
+                    expandable={{
+                        expandedRowRender: record => <p style={{ margin: 0 }}>{record.comments}</p>,
+                        rowExpandable: record => record.name !== 'Not Expandable',
+                    }}
+                    dataSource={this.filterriskMacro()}
+                    pagination={false}
+                />
+
+                <Table
+                    style={{ marginTop: '25px' }}
+                    title={() => 'Industry'}
+                    columns={columns}
+                    expandable={{
+                        expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
+                        rowExpandable: record => record.name !== 'Not Expandable',
+                    }}
+                    dataSource={this.filterriskIndustry()}
+                    pagination={false}
+                />
+                <Table
+                    style={{ marginTop: '25px' }}
+                    title={() => 'Company'}
+                    columns={columns}
+                    expandable={{
+                        expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
+                        rowExpandable: record => record.name !== 'Not Expandable',
+                    }}
+                    dataSource={this.filterriskCompany()}
+                    pagination={false}
+                />
+
+            </div >
+        )
+    }
 }
 
-
-export default IndustryRisks;
+const mapStateToProps = (state) => {
+    return {
+        businessPlan: state.selectedBusinessPlan,
+        industryRisk: state.industryRisk,
+    };
+}
+export default connect(mapStateToProps, { getRisks, getSelectedPlanDetails, getSelectedPlanActiveKey })(withRouter(IndustryRisks))
