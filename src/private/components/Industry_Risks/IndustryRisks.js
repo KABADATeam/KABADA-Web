@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Table, Typography, Tag } from 'antd';
+import { Table, Typography, Tag, Alert } from 'antd';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import '../../../css/IndustryRisks.css'
+import '../../../css/IndustryRisks.css';
+import { InfoCircleFilled } from '@ant-design/icons';
 import { getRisks, getSelectedPlanActiveKey } from '../../../appStore/actions/industryRiskAction'
 import { getSelectedPlanDetails } from '../../../appStore/actions/planActions'
 
@@ -160,10 +161,22 @@ class IndustryRisks extends Component {
             <div>
 
                 <Table
-                    title={() => 'Macro'}
+                    title={() => (
+
+                        <>
+                            <span>Macro</span> <InfoCircleFilled style={{ color: '#BFBFBF' }} />
+
+                        </>
+                    )
+                    }
                     columns={columns}
                     expandable={{
-                        expandedRowRender: record => <p style={{ margin: 0 }}>{record.comments}</p>,
+                        expandedRowRender: record => (
+                            <>
+                                <p style={{ margin: 0 }}>Alco: {record.comments}</p>
+                                <Alert message={"Possible country-specific deviations: " + record.countryDeviationScore + " - Paskaidrojošais teksts"} type="info" showIcon />
+                            </>
+                        ),
                         rowExpandable: record => record.name !== 'Not Expandable',
                     }}
                     dataSource={this.filterriskMacro()}
@@ -172,10 +185,19 @@ class IndustryRisks extends Component {
 
                 <Table
                     style={{ marginTop: '25px' }}
-                    title={() => 'Industry'}
+                    title={() => (
+                        <>
+                            <span>Industry</span> <InfoCircleFilled style={{ color: '#BFBFBF' }} />
+                        </>
+                    )}
                     columns={columns}
                     expandable={{
-                        expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
+                        expandedRowRender: record => (
+                            <>
+                                <p style={{ margin: 0 }}>Alco: {record.comments}</p>
+                                <Alert message={"Possible country-specific deviations: " + record.countryDeviationScore + " - Paskaidrojošais teksts"} type="info" showIcon />
+                            </>
+                        ),
                         rowExpandable: record => record.name !== 'Not Expandable',
                     }}
                     dataSource={this.filterriskIndustry()}
@@ -183,10 +205,19 @@ class IndustryRisks extends Component {
                 />
                 <Table
                     style={{ marginTop: '25px' }}
-                    title={() => 'Company'}
+                    title={() => (
+                        <>
+                            <span>Company</span> <InfoCircleFilled style={{ color: '#BFBFBF' }} />
+                        </>
+                    )}
                     columns={columns}
                     expandable={{
-                        expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
+                        expandedRowRender: record => (
+                            <>
+                                <p style={{ margin: 0 }}>Alco: {record.comments}</p>
+                                <Alert message={"Possible country-specific deviations: " + record.countryDeviationScore + " - Paskaidrojošais teksts"} type="info" showIcon />
+                            </>
+                        ),
                         rowExpandable: record => record.name !== 'Not Expandable',
                     }}
                     dataSource={this.filterriskCompany()}
