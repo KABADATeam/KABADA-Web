@@ -418,13 +418,7 @@ class Overview extends React.Component {
                                 </Row>
                             </TabPane>
                             <TabPane tab="Industry data" key="2">
-                                <Row style={{ marginBottom: "50px" }}>
-                                    <Col>
-                                        <div style={{ marginRight: '40px' }}>
-                                            <IndustryDataComponent />
-                                        </div>
-                                    </Col>
-                                </Row>
+                                <IndustryDataComponent />
                             </TabPane>
                             <TabPane tab="Industry risks" key="3">
                                 <Row style={{ marginBottom: "50px" }}>
