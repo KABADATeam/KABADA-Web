@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Card, Typography, List, Row, Col, Tooltip } from 'antd';
+import { Card, Typography, List, Row, Col, Tooltip, Divider } from 'antd';
 import { getSurvivalRate } from '../../../appStore/actions/eurostat/eurostatSurvivalRateAction'
+import { getGreatnessIndustry } from '../../../appStore/actions/eurostat/eurostatGreatnessIndustryAction'
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { CaretDownFilled, UserOutlined, InfoCircleFilled, ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
@@ -28,6 +29,7 @@ const numberStyle = {
 class IndustryDataComponent extends Component {
     componentDidMount() {
         this.props.getSurvivalRate();
+        this.props.getGreatnessIndustry();
     }
     render() {
         console.log(this.props.survival.survival_rate_data);
@@ -73,13 +75,18 @@ class IndustryDataComponent extends Component {
                                                         </div>
                                                     }
                                                 </div>
-
                                             </Col>
                                         </Row>
                                     </Card>
                                 </List.Item>
                             )}
                         />
+                    </Row>
+                    <Divider style={{width: '1200px'}}/>
+                    <Row>
+                        <div>
+                            <Typography.Title style={{ ...aboutTitleTextStyle }}>Company Survival rate (3 year)</Typography.Title>
+                        </div>
                     </Row>
                 </div>
             </>
@@ -94,4 +101,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSurvivalRate })(withRouter(IndustryDataComponent));
+export default connect(mapStateToProps, { getSurvivalRate, getGreatnessIndustry })(withRouter(IndustryDataComponent));
