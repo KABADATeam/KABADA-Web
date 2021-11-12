@@ -1,12 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Form, Select, Divider, Button, Breadcrumb, Row, Col, Typography, Radio, Card, Space, Tooltip, Tabs } from 'antd';
+import { Form, Select, Input, Divider, Button, Breadcrumb, Row, Col, Typography, Radio, Card, Space, Tooltip, Tabs } from 'antd';
 import { ArrowLeftOutlined, CloseOutlined, InfoCircleFilled, InfoCircleOutlined } from '@ant-design/icons';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { tableCardStyle } from '../../styles/customStyles'
+import KeyPartnersPopUp from '../components/personal_characteristics/KeyPartnersPopUp';
 import { getPersonalCharacteristics, savePersonalCharacteristics } from '../../appStore/actions/personalCharacteristicsActions'
 
 
@@ -281,7 +282,8 @@ class PersonalCharacteristics extends React.Component {
             originalQuestions: [],
             questions: [],
             visibleHeader: 'hidden',
-            selectedQuestions: []
+            visiblePopUp: false,
+            importCardVisibility: true
         }
     }
     onBackClick = () => {
@@ -289,12 +291,67 @@ class PersonalCharacteristics extends React.Component {
     }
 
     discardChanges = () => {
+        this.setQuestionsAnswers();
+        this.setState({
+            visibleHeader: 'hidden'
+        });
+    }
 
+    showImportPopUp = () => {
+        this.setState({
+            visiblePopUp: true
+        });
+    }
+
+    unshowImportPopUp = () => {
+        this.setState({
+            visiblePopUp: false
+        });
+    }
+
+    closeImportCard = () => {
+        this.setState({
+            importCardVisibility: false
+        });
     }
 
     saveChanges = () => {
-        // const questionsClone = 
-        const newChoicesArray = [];
+        const modifiedChoices = JSON.parse(JSON.stringify(this.state.questions));
+        const originalChoices = JSON.parse(JSON.stringify(this.props.personalCharacteristics.choices));
+        let choices = [];
+        // if original choices were null. then set choices array to modifiedChoices state
+        if (originalChoices === null || originalChoices === undefined) {
+            modifiedChoices.map((element, index) => {
+                const objektas = {
+                    "set_code": element.set_code, //code of question
+                    "selection_code": element.selection_code,  //code of answer
+                    "extraText": "text"        // brief answer text if needed
+                }
+                choices.push(objektas);
+            });
+        } else {
+            for (var i = 0; i < modifiedChoices.length; i++) {
+                const objektas = {
+                    "set_code": modifiedChoices[i].set_code, //code of question
+                    "selection_code": modifiedChoices[i].selection_code,  //code of answer
+                    "extraText": "text"        // brief answer text if needed
+                }
+                choices.push(objektas)
+            }
+        }
+        const postObject = {
+            "plan_id": this.props.businessPlan.id,
+            "choices": choices
+        }
+
+        this.props.savePersonalCharacteristics(postObject, () => {
+            this.props.getPersonalCharacteristics(this.props.businessPlan.id, () => {
+                this.setQuestionsAnswers();
+                this.setState({
+                    visibleHeader: 'hidden'
+                });
+            });
+        });
     }
 
     arraysEqual = (array1, array2) => {
@@ -319,8 +376,6 @@ class PersonalCharacteristics extends React.Component {
 
         return true;
     }
-
-
     getWindowsUpdate = () => {
         const originalClone = JSON.parse(JSON.stringify(this.state.originalQuestions));
         const modifiedClone = JSON.parse(JSON.stringify(this.state.questions));
@@ -339,7 +394,6 @@ class PersonalCharacteristics extends React.Component {
     }
 
     onDataChange = (e) => {
-        console.log('radio checked', e.target.value);
         const questionsClone = JSON.parse(JSON.stringify(this.state.questions))
         questionsClone.map((element, index) => {
             element.answerOptions.map((element2, index1) => {
@@ -351,7 +405,6 @@ class PersonalCharacteristics extends React.Component {
         this.setState({
             questions: questionsClone
         }, () => {
-            console.log('Questions state is:' + JSON.stringify(this.state.questions))
             let visibilityString = this.getWindowsUpdate();
             this.setState({
                 visibleHeader: visibilityString
@@ -382,13 +435,46 @@ class PersonalCharacteristics extends React.Component {
             this.setState({
                 questions: questionsArray,
                 originalQuestions: questionsArray
-            }, () => console.log('Questions array set to:' + JSON.stringify(this.state.questions)));
+            });
         }
     }
-    importAnswers = () => {
-        console.log('IMport answers')
-    }
+    importAnswers = (planId) => {
+        let array = [];
+        this.props.getPersonalCharacteristics(planId, () => {
+            const choicesClone = JSON.parse(JSON.stringify(this.props.personalCharacteristics.choices));
+            if (choicesClone === null || choicesClone === undefined) {
+                const questionsClone = JSON.parse(JSON.stringify(questions));
+                for (var i = 0; i < questionsClone.length; i++) {
+                    // for each element in question array create new object
+                    const obj = {
+                        "set_code": questionsClone[i].set_code, //code of question
+                        "selection_code": questionsClone[i].selection_code,  //code of answer
+                        "extraText": "text"        // brief answer text if needed
+                    }
+                    array.push(obj);
+                }
+            } else {
+                array = choicesClone;
+            }
+            //update whole array
+            const postObject = {
+                "plan_id": this.props.businessPlan.id,
+                "choices": array
+            }
 
+            this.props.savePersonalCharacteristics(postObject, () => {
+                this.props.getPersonalCharacteristics(this.props.businessPlan.id, () => {
+                    const choicesClone = JSON.parse(JSON.stringify(this.props.personalCharacteristics.choices))
+                    this.setQuestionsAnswers();
+                    this.setState({
+                        visibleHeader: 'hidden',
+                        visiblePopUp: false
+                    });
+                });
+            });
+        });
+
+    }
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
             if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
@@ -402,13 +488,13 @@ class PersonalCharacteristics extends React.Component {
                 });
             }
         } else {
-            console.log('Business plan id:' + this.props.businessPlan.id)
             this.props.getPersonalCharacteristics(this.props.businessPlan.id, () => {
                 this.setQuestionsAnswers();
             });
         }
     }
     render() {
+        const questions = this.state.questions;
         return (
             <>
                 <UnsavedChangesHeader
@@ -440,65 +526,66 @@ class PersonalCharacteristics extends React.Component {
                         </div>
                     </Col>
                 </Row>
-                <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col span={16} offset={4}>
-                        <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center', width: '100%' }}>
-                            <Card size={'small'} style={{ ...specialCardStyle }} >
-                                <div style={{ display: 'flex', width: '100%', padding: '10px' }}>
-                                    <div style={{ paddingRight: '15px' }}>
-                                        <InfoCircleOutlined style={{ fontSize: '25px', textAlign: 'center', color: '#1890FF' }} />
-                                    </div>
-                                    <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                                        <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-                                            <p style={{ ...aboutTitleTextStyle }}>Import answers from previous surveys</p>
-                                            {/* <CloseOutlined style={{ fontSize: '16px', paddingTop: '5px', color: '#8C8C8C' }} /> */}
-                                            <Button
-                                                style={{ backgroundColor: '#E6F7FF', borderStyle: 'none' }}
-                                                icon={<CloseOutlined style={{ fontSize: '16px', paddingTop: '5px', color: '#8C8C8C' }}/>}
-                                                size="large"
-                                            />
+                {this.state.importCardVisibility === true ?
+                    <Row align="middle" style={{ marginTop: "9px" }}>
+                        <Col span={16} offset={4}>
+                            <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center', width: '100%' }}>
+                                <Card size={'small'} style={{ ...specialCardStyle }} visible={false}>
+                                    <div style={{ display: 'flex', width: '100%', padding: '10px' }}>
+                                        <div style={{ paddingRight: '15px' }}>
+                                            <InfoCircleOutlined style={{ fontSize: '25px', textAlign: 'center', color: '#1890FF' }} />
                                         </div>
-                                        <p>To save time you can import answers from previous surveys</p>
-                                        <Button style={{ width: '150px', backgroundColor: '#E6F7FF' }} onClick={this.importAnswers}>Import answers</Button>
+                                        <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                                            <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                                                <p style={{ ...aboutTitleTextStyle }}>Import answers from previous surveys</p>
+                                                {/* <CloseOutlined style={{ fontSize: '16px', paddingTop: '5px', color: '#8C8C8C' }} /> */}
+                                                <Button
+                                                    style={{ backgroundColor: '#E6F7FF', borderStyle: 'none' }}
+                                                    icon={<CloseOutlined style={{ fontSize: '16px', paddingTop: '5px', color: '#8C8C8C' }} />}
+                                                    size="large"
+                                                    onClick={this.closeImportCard}
+                                                />
+                                            </div>
+                                            <p>To save time you can import answers from previous surveys</p>
+                                            <Button style={{ width: '150px', backgroundColor: '#E6F7FF' }} onClick={this.showImportPopUp}>Import answers</Button>
+                                        </div>
                                     </div>
-                                </div>
 
 
-                            </Card>
-                        </div>
-                    </Col>
-                </Row>
-                {this.state.questions.map((element, index) => {
+                                </Card>
+                            </div>
+                        </Col>
+                    </Row> : null}
+
+                {questions.map((element, index) => {
                     return (<Row align={'middle'} style={{ marginTop: 10 }}>
                         <Col span={16} offset={4}>
                             <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                                 <p style={aboutTitleTextStyle}>{(index + 1) + ' ' + element.questionText}</p>
                                 {element.set_code < 18 ?
-                                    <Radio.Group onChange={this.onDataChange} defaultValue={element.selection_code}>
+                                    <Radio.Group onChange={this.onDataChange} value={element.selection_code}>
                                         <Space direction={'vertical'}>
                                             {element.answerOptions.map((element2, index2) => {
                                                 return (
                                                     <Radio
-                                                        name={element.answerText}
+                                                        name={element2.answerText}
                                                         value={element2.optionCode}
                                                     // checked={element2.optionCode === element.selection_code}
                                                     >{element2.answerText}</Radio>
                                                 )
-
                                             })}
                                         </Space>
                                     </Radio.Group> :
-                                    <Radio.Group style={{ width: "100%" }} compact onChange={this.onDataChange} defaultValue={element.selection_code} buttonStyle="solid">
+                                    <Radio.Group style={{ width: "100%" }} compact onChange={this.onDataChange} value={element.selection_code} buttonStyle="solid">
                                         {element.answerOptions.map((element2, index2) => {
                                             return (
                                                 <Radio.Button
-                                                    name={element.answerText}
+                                                    name={element2.answerText}
                                                     value={element2.optionCode}
                                                     style={{ width: '20%', height: '40px', textAlign: 'center' }}
                                                 // checked={element2.optionCode === element.selection_code}
                                                 >{element2.answerText}</Radio.Button>
                                             )
-
                                         })}
                                     </Radio.Group>}
 
@@ -506,6 +593,12 @@ class PersonalCharacteristics extends React.Component {
                         </Col>
                     </Row>)
                 })}
+                <KeyPartnersPopUp visible={this.state.visiblePopUp}
+                    plans={this.props.personalBusinessPlans}
+                    planId={this.props.businessPlan.id}
+                    onClose={this.unshowImportPopUp}
+                    save={this.importAnswers}
+                />
             </>
         )
     }
@@ -515,7 +608,9 @@ class PersonalCharacteristics extends React.Component {
 const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
-        personalCharacteristics: state.personalCharacteristics
+        personalCharacteristics: state.personalCharacteristics,
+        personalBusinessPlans: state.personalBusinessPlans
+
     }
 }
 //to connect passing mapStateToProps and all actions that we will be dispatching
