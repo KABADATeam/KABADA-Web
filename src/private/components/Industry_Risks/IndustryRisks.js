@@ -60,56 +60,18 @@ class IndustryRisks extends Component {
         }
     }
 
-
-    filterriskMacro = () => {
+    filterRisks = (type) => {
         if (this.state.riskscol === null) {
             return;
         } else {
-            const macros = this.state.riskscol.filter((x, index) => x.category === 'MACRO')
-            macros.map((element1, index = 1) => {
+            const riskGroup = this.state.riskscol.filter((x, index) => x.category === type)
+            riskGroup.map((element1, index = 1) => {
 
                 element1.key = index++;
-                //console.log(JSON.stringify(element1))
+
                 return element1;
             })
-            return macros
-        }
-
-
-        //console.log(JSON.stringify(macros));
-
-    }
-
-    filterriskIndustry = () => {
-        if (this.state.riskscol === null) {
-            return
-        } else {
-            const industry = this.state.riskscol.filter((x, index) => x.category === 'INDUSTRY')
-            industry.map((element1, index = 1) => {
-
-                element1.key = index++;
-                //console.log(JSON.stringify(element1))
-                return element1;
-
-            })
-            //console.log(JSON.stringify(industry));
-            return industry
-        }
-    }
-
-    filterriskCompany = () => {
-        if (this.state.riskscol === null) {
-        } else {
-            const company = this.state.riskscol.filter((x, index) => x.category === 'COMPANY')
-            company.map((element1, index = 1) => {
-
-                element1.key = index++;
-                //console.log(JSON.stringify(element1))
-                return element1;
-
-            })
-            //console.log(JSON.stringify(company));
-            return company
+            return riskGroup
         }
     }
     render() {
@@ -156,7 +118,7 @@ class IndustryRisks extends Component {
                                 record.likelihood === 1 && record.severity === 2 ?
                                     <span className='low'>Low medium</span> :
                                     record.likelihood && record.severity === 2 ?
-                                        <span className='medium'>Midem</span> :
+                                        <span className='medium'>medium</span> :
                                         record.likelihood && record.severity === 1 ?
                                             <span className='low'>Low</span> :
                                             <span className='high'>High</span>
@@ -192,7 +154,7 @@ class IndustryRisks extends Component {
                         ),
                         rowExpandable: record => record.name !== 'Not Expandable',
                     }}
-                    dataSource={this.filterriskMacro()}
+                    dataSource={this.filterRisks('MACRO')}
                     pagination={false}
                 />
 
@@ -213,7 +175,7 @@ class IndustryRisks extends Component {
                         ),
                         rowExpandable: record => record.name !== 'Not Expandable',
                     }}
-                    dataSource={this.filterriskIndustry()}
+                    dataSource={this.filterRisks('INDUSTRY')}
                     pagination={false}
                 />
                 <Table
@@ -233,7 +195,7 @@ class IndustryRisks extends Component {
                         ),
                         rowExpandable: record => record.name !== 'Not Expandable',
                     }}
-                    dataSource={this.filterriskCompany()}
+                    dataSource={this.filterRisks('COMPANY')}
                     pagination={false}
                 />
 
