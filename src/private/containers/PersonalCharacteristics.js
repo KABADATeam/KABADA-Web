@@ -87,8 +87,42 @@ const questions = [
         set_code: '3',
         selection_code: '32',
         answerOptions: [
-            { answerText: 'Latvia', optionCode: '31' },
-            { answerText: 'Lithuania', optionCode: '32' },
+            { answerText: 'Austria', optionCode: '31' },
+            { answerText: 'Belgium', optionCode: '32' },
+            { answerText: 'Bosnia and Herzegovina', optionCode: '33' },
+            { answerText: 'Bulgaria', optionCode: '34' },
+            { answerText: 'Croatia', optionCode: '35' },
+            { answerText: 'Cyprus', optionCode: '36' },
+            { answerText: 'Czechia', optionCode: '37' },
+            { answerText: 'Denmark', optionCode: '38' },
+            { answerText: 'Estonia', optionCode: '39' },
+            { answerText: 'Finland', optionCode: '311' },
+            { answerText: 'France', optionCode: '312' },
+            { answerText: 'Germany', optionCode: '313' },
+            { answerText: 'Greece', optionCode: '314' },
+            { answerText: 'Hungary', optionCode: '315' },
+            { answerText: 'Iceland', optionCode: '316' },
+            { answerText: 'Ireland', optionCode: '317' },
+            { answerText: 'Italy', optionCode: '318' },
+            { answerText: 'Latvia', optionCode: '319' },
+            { answerText: 'Liechtenstein', optionCode: '320' },
+            { answerText: 'Lithuania', optionCode: '321' },
+            { answerText: 'Luxembourg', optionCode: '322' },
+            { answerText: 'Malta', optionCode: '323' },
+            { answerText: 'Netherlands', optionCode: '324' },
+            { answerText: 'North Macedonia', optionCode: '325' },
+            { answerText: 'Norway', optionCode: '326' },
+            { answerText: 'Poland', optionCode: '327' },
+            { answerText: 'Portugal', optionCode: '328' },
+            { answerText: 'Romania', optionCode: '329' },
+            { answerText: 'Serbia', optionCode: '330' },
+            { answerText: 'Slovakia', optionCode: '331' },
+            { answerText: 'Slovenia', optionCode: '332' },
+            { answerText: 'Spain', optionCode: '333' },
+            { answerText: 'Sweden', optionCode: '334' },
+            { answerText: 'Switzerland', optionCode: '335' },
+            { answerText: 'Turkey', optionCode: '336' },
+            { answerText: 'United Kingdom', optionCode: '337' },
         ],
     },
     {
@@ -397,8 +431,8 @@ class PersonalCharacteristics extends React.Component {
         const questionsClone = JSON.parse(JSON.stringify(this.state.questions))
         questionsClone.map((element, index) => {
             element.answerOptions.map((element2, index1) => {
-                if (element2.optionCode === e.target.value) {
-                    element.selection_code = e.target.value;
+                if (element2.optionCode === e) {
+                    element.selection_code = e;
                 }
             })
         });
@@ -562,8 +596,8 @@ class PersonalCharacteristics extends React.Component {
                         <Col span={16} offset={4}>
                             <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                                 <p style={aboutTitleTextStyle}>{(index + 1) + ' ' + element.questionText}</p>
-                                {element.set_code < 18 ?
-                                    <Radio.Group onChange={this.onDataChange} value={element.selection_code}>
+                                {element.set_code < 3 ?
+                                    <Radio.Group onChange={(e) => this.onDataChange(e.target.value)} value={element.selection_code}>
                                         <Space direction={'vertical'}>
                                             {element.answerOptions.map((element2, index2) => {
                                                 return (
@@ -575,19 +609,48 @@ class PersonalCharacteristics extends React.Component {
                                                 )
                                             })}
                                         </Space>
-                                    </Radio.Group> :
-                                    <Radio.Group style={{ width: "100%" }} compact onChange={this.onDataChange} value={element.selection_code} buttonStyle="solid">
-                                        {element.answerOptions.map((element2, index2) => {
-                                            return (
-                                                <Radio.Button
-                                                    name={element2.answerText}
-                                                    value={element2.optionCode}
-                                                    style={{ width: '20%', height: '40px', textAlign: 'center' }}
-                                                // checked={element2.optionCode === element.selection_code}
-                                                >{element2.answerText}</Radio.Button>
-                                            )
-                                        })}
-                                    </Radio.Group>}
+                                    </Radio.Group> : element.set_code == 3 ?
+                                        <Select
+                                            showSearch
+                                            style={{ width: '320px' }}
+                                            placeholder="Pasirinkite šalį"
+                                            optionFilterProp="children"
+                                            onChange={(e) => this.onDataChange(e)}
+                                            defaultValue={element.selection_code}
+                                            value={element.selection_code}
+                                        >
+                                            {element.answerOptions.map((element2, index) => {
+                                                return (<Option key={element2.optionCode} name={element2.answerText}
+                                                    value={element2.optionCode}>{element2.answerText}</Option>)
+                                            })}
+                                        </Select> : element.set_code > 3 && element.set_code < 18 ?
+                                            <Radio.Group onChange={this.onDataChange} value={element.selection_code}>
+                                                <Space direction={'vertical'}>
+                                                    {element.answerOptions.map((element2, index2) => {
+                                                        return (
+                                                            <Radio
+                                                                name={element2.answerText}
+                                                                value={element2.optionCode}
+                                                            // checked={element2.optionCode === element.selection_code}
+                                                            >{element2.answerText}</Radio>
+                                                        )
+                                                    })}
+                                                </Space>
+                                            </Radio.Group> : element.set_code >= 18 ?
+                                                <Radio.Group style={{ width: "100%" }} compact onChange={(e) => this.onDataChange(e.target.value)} value={element.selection_code} buttonStyle="solid">
+                                                    {element.answerOptions.map((element2, index2) => {
+                                                        return (
+                                                            <Radio.Button
+                                                                name={element2.answerText}
+                                                                value={element2.optionCode}
+                                                                style={{ width: '20%', height: '40px', textAlign: 'center' }}
+                                                            // checked={element2.optionCode === element.selection_code}
+                                                            >{element2.answerText}</Radio.Button>
+                                                        )
+                                                    })}
+                                                </Radio.Group> : null
+
+                                }
 
                             </Card>
                         </Col>
