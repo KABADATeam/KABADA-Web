@@ -370,10 +370,12 @@ class FixedAndVariableCosts extends React.Component {
                         this.setFixedAndVarCosts();
                         const obj = { id: this.props.businessPlan.id }
                         this.props.getCountryShortCode(obj, (data) => {
-                            this.props.getCountryVat(this.props.country.countryShortCode);
-                            this.setState({
-                                vats: this.props.countryVats
+                            this.props.getCountryVat(this.props.country.countryShortCode, () =>{
+                                this.setState({
+                                    vats: this.props.countryVats
+                                });
                             });
+                            
                         });
 
                         this.monthsSet();
@@ -387,9 +389,10 @@ class FixedAndVariableCosts extends React.Component {
                 this.setFixedAndVarCosts();
                 const obj = { id: this.props.businessPlan.id }
                 this.props.getCountryShortCode(obj, (data) => {
-                    this.props.getCountryVat(this.props.country.countryShortCode);
-                    this.setState({
-                        vats: this.props.countryVats
+                    this.props.getCountryVat(this.props.country.countryShortCode, () =>{
+                        this.setState({
+                            vats: this.props.countryVats
+                        });
                     });
                 });
 
@@ -428,11 +431,11 @@ class FixedAndVariableCosts extends React.Component {
                 dataIndex: 'vat',
                 width: '10%',
                 render: (text, record, index) => (
-                    <Select defaultValue={text === null ? 'Null' : text} value={text} onChange={e => this.onFixedChange(e, record, "vat")}>
-                        <Option value={this.props.countryVats.standardRate}>{this.props.countryVats.standardRate + "%"}</Option>
-                        <Option value={this.props.countryVats.reducedRates2}>{this.props.countryVats.reducedRates2 + "%"}</Option>
-                        <Option value={this.props.countryVats.reducedRates1}>{this.props.countryVats.reducedRates1 + "%"}</Option>
-                        <Option value={this.props.countryVats.superReducedRate}>{this.props.countryVats.superReducedRate === null ? "Null" : this.props.countryVats.superReducedRate}</Option>
+                    <Select defaultValue={text===null?this.state.vats.standardRate:text} value={text===null?this.state.vats.standardRate:text} onChange={e => this.onFixedChange(e, record, "vat")}>
+                        <Option value={this.state.vats.standardRate}>{this.state.vats.standardRate + "%"}</Option>
+                        <Option value={this.state.vats.reducedRates2}>{this.state.vats.reducedRates2 + "%"}</Option>
+                        <Option value={this.state.vats.reducedRates1}>{this.state.vats.reducedRates1 + "%"}</Option>
+                        {/* <Option value={this.state.vats.superReducedRate}>{this.state.vats.superReducedRate === null ? "Null" : this.state.vats.superReducedRate}</Option> */}
                     </Select>
                 )
             },
@@ -532,11 +535,11 @@ class FixedAndVariableCosts extends React.Component {
                 width: '10%',
                 render: (text, record, index) => (
                     <Input.Group compact>
-                        <Select defaultValue={text === null ? 'Null' : text} value={text} onChange={e => this.onVariableChange(e, record, "vat",0)}>
-                            <Option value={this.props.countryVats.standardRate}>{this.props.countryVats.standardRate + "%"}</Option>
-                            <Option value={this.props.countryVats.reducedRates2}>{this.props.countryVats.reducedRates2 + "%"}</Option>
-                            <Option value={this.props.countryVats.reducedRates1}>{this.props.countryVats.reducedRates1 + "%"}</Option>
-                            <Option value={this.props.countryVats.superReducedRate}>{this.props.countryVats.superReducedRate === null ? "Null" : this.props.countryVats.superReducedRate}</Option>
+                        <Select defaultValue={text===null?this.state.vats.standardRate:text} value={text===null?this.state.vats.standardRate:text} onChange={e => this.onVariableChange(e, record, "vat",0)}>
+                            <Option value={this.state.vats.standardRate}>{this.state.vats.standardRate + "%"}</Option>
+                            <Option value={this.state.vats.reducedRates2}>{this.state.vats.reducedRates2 + "%"}</Option>
+                            <Option value={this.state.vats.reducedRates1}>{this.state.vats.reducedRates1 + "%"}</Option>
+                            {/* <Option value={this.state.vats.superReducedRate}>{this.state.vats.superReducedRate === null ? "Null" : this.state.vats.superReducedRate}</Option> */}
                         </Select>
                     </Input.Group>
                 )
