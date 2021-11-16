@@ -1096,31 +1096,26 @@ class SalesForecast extends React.Component {
                                                             </Col>
 
                                                             < Col span={12} offset={2} className="margin-top-5px" >
-                                                                <Card className="card-style-height-border-radius"  >
-                                                                    <Row>
+                                                                <Card style={{ borderRadius: '15px' }}  >
+                                                                    <Row style={{ marginBottom: '20px' }}>
 
-                                                                        <Col span={9}><p className="card-style-font">When Ready?</p></Col>
-                                                                        <Col span={3} offset={12}>
+                                                                        <Col span={8} ><p className="card-style-font">When Ready ?</p></Col>
+                                                                        <Col span={4} offset={12} >
 
-                                                                            <Input.Group compact className="card-input-Group-style">
+                                                                            <Input.Group compact >
                                                                                 <SalesForecastSelect defaultValue={element.when_ready === 0 ? this.state.readyMonth + "st mo." : element.when_ready + "th mo."} onChange={this.onMonthChange} dataSource={dataSourceMonth} />
-
                                                                             </Input.Group>
+
                                                                         </Col>
+
+
                                                                     </Row>
-                                                                </Card>
-
-                                                            </Col>
-
-                                                        </Row>
-                                                        <Row align="middle" className="margin-top-20px">
-                                                            <Col span={12} offset={8} >
-                                                                <Card className="card-style-height-border-radius" >
-                                                                    <Row>
+                                                                    <hr style={{ borderColor: '#D9D9D9' }} />
+                                                                    <Row style={{ marginTop: '20px' }}>
 
                                                                         <Col span={9}><p className="card-style-font">Do you have plan to export? </p></Col>
                                                                         <Col span={3} offset={12}>
-                                                                            <Input.Group compact className="card-input-Group-style" >
+                                                                            <Input.Group compact >
                                                                                 <Select defaultValue={element.export === false ? 'NO' : 'yes'} onChange={(e) => this.changePlan(x.id, e)}  >
                                                                                     <Option value={true} >Yes</Option>
                                                                                     <Option value={false} >NO</Option>
@@ -1129,12 +1124,13 @@ class SalesForecast extends React.Component {
                                                                             </Input.Group>
 
                                                                         </Col>
+
                                                                     </Row>
                                                                 </Card>
+
                                                             </Col>
+
                                                         </Row>
-
-
 
                                                         <Row align="middle" className="margin-top-20px">
                                                             <Col span={12} offset={8} >

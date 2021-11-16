@@ -1,17 +1,17 @@
 import React from 'react'
 import { Select } from 'antd'
-
+const { Option } = Select;
 function SalesForecastSelect({ defaultValue, onChange, dataSource }) {
 
     return (
-        <div>
-            <Select defaultValue={defaultValue} onChange={onChange}>
-                {dataSource.map(x => (
-                    <option key={x.key} value={x.value}>{x.name}</option>
-                ))}
 
-            </Select>
-        </div>
+        <Select defaultValue={defaultValue} onChange={onChange}>
+            {dataSource.map(x => (
+                <Option key={x.key} value={x.value}>{x.name}</Option>
+            ))}
+
+        </Select>
+
     )
 }
 
