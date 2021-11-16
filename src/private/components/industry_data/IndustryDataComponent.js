@@ -25,6 +25,18 @@ const numberStyle = {
     fontSize: '30px',
     lineHeight: '38px',
 }
+const numberStyleForEUAndTotal = {
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    fontSize: '14px',
+    lineHeight: '22px',
+}
+const textStyleForEUAndTotal = {
+    fontStyle: 'normal',
+    fontWeight: '400px',
+    fontSize: '14px',
+    lineHeight: '22px',
+}
 
 class IndustryDataComponent extends Component {
     componentDidMount() {
@@ -66,12 +78,12 @@ class IndustryDataComponent extends Component {
                                                     {item.lastValue[1] - item.lastValue[0] > 0 ?
                                                         <div style={{ ...numberStyle, color: '#389E0D' }}>
                                                             <ArrowUpOutlined />
-                                                            <Text style={{ color: '#389E0D' }}>{item.compareValue}%</Text>
+                                                            <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.compareValue}%</Text>
                                                         </div>
                                                         :
                                                         <div style={{ ...numberStyle, color: '#CF1322' }}>
                                                             <ArrowDownOutlined />
-                                                            <Text style={{ color: '#CF1322' }}>{item.compareValue}%</Text>
+                                                            <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.compareValue}%</Text>
                                                         </div>
                                                     }
                                                 </div>
@@ -82,11 +94,100 @@ class IndustryDataComponent extends Component {
                             )}
                         />
                     </Row>
-                    <Divider style={{width: '1200px'}}/>
+                    <Divider style={{ width: '1200px' }} />
                     <Row>
                         <div>
                             <Typography.Title style={{ ...aboutTitleTextStyle }}>Company Survival rate (3 year)</Typography.Title>
                         </div>
+                    </Row>
+                    <Row>
+                        <List
+                            grid={{ gutter: 16 }}
+                            dataSource={this.props.greatnessIndustry.greatness_industry_data}
+                            itemLayout='vertical'
+                            renderItem={item => (
+                                <List.Item >
+                                    <Card style={{ width: '384px', height: '581px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
+                                        <Row>
+                                            <div>
+                                                <Text style={{ ...textStyle }}>{item.variableTitle} {item.industry}</Text>
+                                                <Tooltip title="Tooltip text">
+                                                    <InfoCircleFilled style={{ color: '#BFBFBF' }} />
+                                                </Tooltip>
+                                            </div>
+                                        </Row>
+                                        <Row style={{ marginTop: '8px' }}>
+                                            <Col span={12}>
+                                                <Text style={{ ...numberStyle }}>{item.activityValue[1]}%</Text>
+                                            </Col>
+                                            <Col span={12}>
+                                                <div style={{ float: 'right' }}>
+                                                    {item.activityValue[1] - item.activityValue[0] > 0 ?
+                                                        <div style={{ ...numberStyle, color: '#389E0D' }}>
+                                                            <ArrowUpOutlined />
+                                                            <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.activityProgress}%</Text>
+                                                        </div>
+                                                        :
+                                                        <div style={{ ...numberStyle, color: '#CF1322' }}>
+                                                            <ArrowDownOutlined />
+                                                            <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.activityProgress}%</Text>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                        <Divider />
+                                        <Row style={{ marginTop: '8px' }}>
+                                            <Col span={13}>
+                                                <Text style={{ ...textStyleForEUAndTotal }}>{item.geo} (Total)</Text>
+                                            </Col>
+                                            <Col span={5}>
+                                                <div>
+                                                    <Text style={{ ...textStyleForEUAndTotal }}>{item.totalActivitiesValue[1]}M</Text>
+                                                </div>
+                                            </Col>
+                                            <Col span={6}>
+                                                <div style={{ float: 'right' }}>
+                                                    {item.totalActivitiesValue[1] - item.totalActivitiesValue[0] > 0 ?
+                                                        <div style={{ ...numberStyleForEUAndTotal, color: '#389E0D' }}>
+                                                            <ArrowUpOutlined />
+                                                            <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.totalActivitiesProgress}</Text>
+                                                        </div>
+                                                        :
+                                                        <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
+                                                            <ArrowDownOutlined />
+                                                            <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.totalActivitiesProgress}</Text>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col span={13}>
+                                                <Text style={{ ...textStyleForEUAndTotal }}>European Union</Text>
+                                            </Col>
+                                            <Col span={11}>
+                                                <div style={{ float: 'right' }}>
+                                                    {item.totalActivitiesValue[1] - item.euActivitiesValue[0] > 0 ?
+                                                        <div style={{ ...numberStyleForEUAndTotal, color: '#389E0D' }}>
+                                                            <Text style={{ ...textStyleForEUAndTotal }}>{item.euActivitiesValue[1]}M</Text>
+                                                            <ArrowUpOutlined />
+                                                            <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.euActivitiesProgress}</Text>
+                                                        </div>
+                                                        :
+                                                        <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
+                                                            <Text style={{ ...textStyleForEUAndTotal }}>{item.euActivitiesValue[1]}M</Text>
+                                                            <ArrowDownOutlined />
+                                                            <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.euActivitiesProgress}</Text>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                    </Card>
+                                </List.Item>
+                            )}
+                        />
                     </Row>
                 </div>
             </>
@@ -97,7 +198,8 @@ class IndustryDataComponent extends Component {
 const mapStateToProps = (state) => {
     return {
         personalPlans: state.personalBusinessPlans,
-        survival: state.survivalRate
+        survival: state.survivalRate,
+        greatnessIndustry: state.greatnessIndustry
     };
 }
 

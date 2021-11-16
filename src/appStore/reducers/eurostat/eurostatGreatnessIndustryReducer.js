@@ -1,4 +1,18 @@
-
+const getVariableShortTitle = (variable) => {
+    if (variable === 'V11110') {
+        let variableTitle = 'Enterprices'
+        return variableTitle
+    } else if (variable === 'V12110') {
+        let variableTitle = 'Turnover'
+        return variableTitle
+    } else if (variable === 'V15110') {
+        let variableTitle = 'Gross investment'
+        return variableTitle
+    } else if (variable === 'V16140') {
+        let variableTitle = 'Employees in full time'
+        return variableTitle
+    }
+}
 
 export const eurostatGreatnessIndustryReducer = (
     state = {
@@ -8,31 +22,47 @@ export const eurostatGreatnessIndustryReducer = (
         case 'FETCHING_GREATNESS_INDUSTRY_FOR_COUNTRY_EUROSTATDATA_SUCCESS':
             console.log(action.payload);
             const activityValuesObj = JSON.parse(JSON.stringify(action.payload.activityData)).value;
-            console.log(activityValuesObj);
             const totalActivitiesValuesObj = JSON.parse(JSON.stringify(action.payload.totalActivitiesData)).value;
-            console.log(totalActivitiesValuesObj);
-            const euActivitiesValuesObj = JSON.parse(JSON.stringify(action.payload.euActivitiesData)).value;
+            const euActivitiesValuesObj = JSON.parse(JSON.stringify(action.payload.euActivitiesData)).value === undefined ? null : JSON.parse(JSON.stringify(action.payload.euActivitiesData)).value;
             console.log(euActivitiesValuesObj);
-            // const valuesObjValues = Object.values(valuesObj);
+            const activityValuesObjValues = Object.values(activityValuesObj);
+            const activitylastTwoValues = activityValuesObjValues.slice(-2);
+            const activityCompareValue = Math.abs(Math.round(activitylastTwoValues[1] - activitylastTwoValues[0]));
+            const totalActivitiesValuesObjValues = Object.values(totalActivitiesValuesObj);
+            const totalActivitiesLastTwoValues = totalActivitiesValuesObjValues.slice(-2);
+            const totalActivitiesCompareValue = Math.abs(Math.round(totalActivitiesLastTwoValues[1] - totalActivitiesLastTwoValues[0]));
+            const euActivitiesValuesObjValues = euActivitiesValuesObj !== null ? Object.values(euActivitiesValuesObj) : [];
+            console.log(euActivitiesValuesObjValues);
+            const euActivitiesLastTwoValues = euActivitiesValuesObjValues.length > 0 ? euActivitiesValuesObjValues.slice(-2) : [];
+            console.log(euActivitiesLastTwoValues);
+            const euActivitiesCompareValue = euActivitiesLastTwoValues.length > 0 ? Math.abs(Math.round(euActivitiesLastTwoValues[1] - euActivitiesLastTwoValues[0])) : null;
+            console.log(euActivitiesCompareValue);
+            //console.log(euActivitiesValuesObjValues);
             // const lastTwoValues = valuesObjValues.slice(-2);
             // const lastValue = lastTwoValues[1];
             // const compareValue = Math.abs(Math.round(lastTwoValues[1] - lastTwoValues[0]));
-
-            // const viewObj = {
-            //     title: 'Name',
-            //     lastValue: lastTwoValues,
-            //     compareValue: compareValue
-            // }
-
+            const variableTitle = getVariableShortTitle(action.payload.variable)
+            console.log(variableTitle)
+            const viewObj = {
+                variableTitle: variableTitle,
+                industry: action.payload.industry,
+                geo: action.payload.geo,
+                activityValue: activitylastTwoValues, 
+                activityProgress: activityCompareValue,
+                totalActivitiesValue: totalActivitiesLastTwoValues,
+                totalActivitiesProgress: totalActivitiesCompareValue, 
+                euActivitiesValue: euActivitiesLastTwoValues,
+                euActivitiesProgress: euActivitiesCompareValue
+            }
+            console.log(viewObj)
             return {
                 ...state,
-                geoTitle: action.payload.geoTitle,
-                activityCode: action.payload.activityCode,
+                greatness_industry_data: [...state.greatness_industry_data, viewObj]
             }
         case 'RESET_GREATNESS_DATA':
             return {
                 ...state,
-                survival_rate_data: []
+                greatness_industry_data: []
             };
         default:
             return state;
