@@ -29,7 +29,7 @@ export const getSurvivalRate = () => {
                 //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
             }
             try {
-                var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
+                var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
                 console.log(response.data);
                 if(response.data.source === "Eurostat"){
                     console.log('Country total')
@@ -41,7 +41,7 @@ export const getSurvivalRate = () => {
                 //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
             }
             try {
-                var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
+                var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
                 console.log(response.data)
                 if(response.data.source === "Eurostat"){
                     console.log(' total')
@@ -59,20 +59,17 @@ export const getSurvivalRate = () => {
             const tableCode = queryData[0].tableCode;
             const variable = queryData[0].variable[0];
             const industryCode = queryData[0].industries[0];
-            console.log(industryCode);
             if (activityCode === 'C10' || activityCode === 'C11' || activityCode === 'C12') {
                 try {
                     var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=C10-C12");
-                    console.log(response)
                     dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_EUROSTATDATA_SUCCESS', payload: {"data": response.data, "geoTitle": geoTitle, "industry": 'C10-C12'} });   
                 } catch (error){
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
+                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
                     console.log(response.data);
                     if(response.data.source === "Eurostat"){
-                        console.log('Country total')
                         dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_TOTAL_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: geoTitle } });
                     }  else {
                         console.log("Country")
@@ -81,13 +78,13 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
+                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
                     console.log(response.data)
                     if(response.data.source === "Eurostat"){
                         console.log(' total')
                         dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_ALL_EUROPE_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: 'Europe' } });
                     } else {
-                        console.log('All europe in activity')
+                        console.log('All europe in activity does not working')
                     }
                     
                 } catch (error){
@@ -102,7 +99,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
+                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
                     console.log(response.data);
                     if(response.data.source === "Eurostat"){
                         console.log('Country total')
@@ -114,7 +111,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
+                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
                     console.log(response.data)
                     if(response.data.source === "Eurostat"){
                         console.log(' total')
@@ -135,7 +132,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
+                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
                     console.log(response.data);
                     if(response.data.source === "Eurostat"){
                         console.log('Country total')
@@ -147,7 +144,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
+                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
                     console.log(response.data)
                     if(response.data.source === "Eurostat"){
                         console.log(' total')
@@ -168,7 +165,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
+                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
                     console.log(response.data);
                     if(response.data.source === "Eurostat"){
                         console.log('Country total')
@@ -180,7 +177,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
+                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
                     console.log(response.data)
                     if(response.data.source === "Eurostat"){
                         console.log(' total')
@@ -201,7 +198,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
+                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
                     console.log(response.data);
                     if(response.data.source === "Eurostat"){
                         console.log('Country total')
@@ -213,7 +210,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
+                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
                     console.log(response.data)
                     if(response.data.source === "Eurostat"){
                         console.log(' total')
@@ -234,7 +231,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
+                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
                     console.log(response.data);
                     if(response.data.source === "Eurostat"){
                         console.log('Country total')
@@ -246,7 +243,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
+                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
                     console.log(response.data)
                     if(response.data.source === "Eurostat"){
                         console.log(' total')
@@ -267,7 +264,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
+                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
                     console.log(response.data);
                     if(response.data.source === "Eurostat"){
                         console.log('Country total')
@@ -279,7 +276,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
+                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
                     console.log(response.data)
                     if(response.data.source === "Eurostat"){
                         console.log(' total')
@@ -301,7 +298,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
+                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
                     console.log(response.data);
                     if(response.data.source === "Eurostat"){
                         console.log('Country total')
@@ -313,7 +310,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=TOTAL");
+                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
                     console.log(response.data)
                     if(response.data.source === "Eurostat"){
                         console.log(' total')

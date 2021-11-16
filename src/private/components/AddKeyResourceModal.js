@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Form, Space, Select, Radio, Input} from 'antd';
+import { Modal, Button, Form, Space, Select, Radio, Input } from 'antd';
 import '../../css/customModal.css';
 import { saveResource } from "../../appStore/actions/resourcesAction";
 import { ArrowLeftOutlined } from '@ant-design/icons';
@@ -23,15 +23,16 @@ const inputStyle = {
 class AddKeyResourceModal extends Component {
     state = {
         selectedItemId: null,
-        selections: [ 0, 0 ],
-        description: ''
+        selections: [0, 0],
+        description: '',
+        disable: false
     }
 
     onCancel = () => {
         this.props.handleClose();
         this.setState({
             selectedItemId: null,
-            selections: [ 0, 0 ],
+            selections: [0, 0],
             description: ''
         });
     }
@@ -58,7 +59,7 @@ class AddKeyResourceModal extends Component {
         this.props.saveResource(postObject, this.props.category);
         this.setState({
             selectedItemId: null,
-            selections: [ 0, 0 ],
+            selections: [0, 0],
             description: ''
         });
         this.props.handleClose();
@@ -77,22 +78,44 @@ class AddKeyResourceModal extends Component {
 
     getSelections(id) {
         const item = this.props.category.types.find(x => x.id === id);
+        console.log('Item:'+JSON.stringify(item))
         if (item !== null && item !== undefined) {
-            const uiElements = item.selections.map((item, i) =>
-                <Form.Item key={i} label={item.title}>
-                    <Radio.Group key={i} onChange={this.onRadioSelection.bind(this, i)} value={this.state.selections[i]}>
+            // const uiElements = item.selections.map((item, i) =>
+            return (
+                <Form.Item key={0} label={item.selections[0].title}>
+                    <Radio.Group key={0} onChange={this.onRadioSelection.bind(this, 0)} value={this.state.selections[0]}>
                         <Space direction="vertical">
-                            {item.options.map((o, j) =>
+                            {item.selections[0].options.map((o, j) =>
                                 <Radio key={j} value={j}>{o.title}</Radio>
                             )}
-    
                         </Space>
                     </Radio.Group>
                 </Form.Item>
-            );
-            return uiElements;
+            )
         }
-        else{
+        else {
+            return <div></div>
+        }
+    }
+
+    getSelectionsSecond(id) {
+        const item = this.props.category.types.find(x => x.id === id);
+        console.log('Item:'+JSON.stringify(item))
+        if (item !== null && item !== undefined) {
+            // const uiElements = item.selections.map((item, i) =>
+            return (
+                <Form.Item key={1} label={item.selections[1].title}>
+                    <Radio.Group disabled={this.state.disable} key={1} onChange={this.onRadioSelection.bind(this, 1)} value={this.state.selections[1]}>
+                        <Space direction="vertical">
+                            {item.selections[1].options.map((o, j) =>
+                                <Radio key={j} value={j}>{o.title}</Radio>
+                            )}
+                        </Space>
+                    </Radio.Group>
+                </Form.Item>
+            )
+        }
+        else {
             return <div></div>
         }
     }
@@ -100,9 +123,19 @@ class AddKeyResourceModal extends Component {
     onRadioSelection(item, e) {
         const array = this.state.selections;
         array[item] = e.target.value;
-        this.setState({
-            selections: array
-        });
+        // if not Rent is selected set disabled to true
+        if(array[0] !== 0){
+            this.setState({
+                selections: array,
+                disable: true
+            });
+        }else{
+            this.setState({
+                selections: array,
+                disable: false
+            });
+        }
+        
     }
 
     onSelectionChange(id) {
@@ -117,7 +150,8 @@ class AddKeyResourceModal extends Component {
         );
         const defaultValue = this.props.category.types.length > 0 ? this.props.category.types[0].id : "";
         const elements = this.getSelections(this.state.selectedItemId === null ? defaultValue : this.state.selectedItemId);
-
+        const element2 = this.getSelectionsSecond(this.state.selectedItemId === null ? defaultValue : this.state.selectedItemId);
+        
         return (
             <>
                 <Modal
@@ -135,16 +169,17 @@ class AddKeyResourceModal extends Component {
 
                     <Form layout="vertical">
                         <Form.Item key={100} label="Type">
-                            <Select defaultValue={defaultValue} value={this.state.selectedItemId === null ? defaultValue : this.state.selectedItemId} onChange={this.onSelectionChange.bind(this)} style={{width:548}}>
+                            <Select defaultValue={defaultValue} value={this.state.selectedItemId === null ? defaultValue : this.state.selectedItemId} onChange={this.onSelectionChange.bind(this)} style={{ width: 548 }}>
                                 {options}
-                            </Select>                                                           
+                            </Select>
                         </Form.Item>
 
                         <Form.Item key={101} label="Description (optional)">
-                            <Input placeholder="Your description goes here" value={this.state.description} onChange={this.onChange.bind(this)} size="large" style={{...inputStyle, width:548}}/>                                                
-                        </Form.Item>    
-                        {elements}                   
-                    </Form>            
+                            <Input placeholder="Your description goes here" value={this.state.description} onChange={this.onChange.bind(this)} size="large" style={{ ...inputStyle, width: 548 }} />
+                        </Form.Item>
+                        {elements}
+                        {element2}
+                    </Form>
                 </Modal >
             </>
         )
@@ -158,5 +193,5 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { saveResource } )(AddKeyResourceModal);
+export default connect(mapStateToProps, { saveResource })(AddKeyResourceModal);
 
