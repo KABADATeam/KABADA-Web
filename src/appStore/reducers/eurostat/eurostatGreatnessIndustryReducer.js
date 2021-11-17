@@ -22,21 +22,50 @@ export const eurostatGreatnessIndustryReducer = (
         case 'FETCHING_GREATNESS_INDUSTRY_FOR_COUNTRY_EUROSTATDATA_SUCCESS':
             console.log(action.payload);
             const activityValuesObj = JSON.parse(JSON.stringify(action.payload.activityData)).value;
+            const activityTimeLabelObj = JSON.parse(JSON.stringify(action.payload.activityData)).dimension.time.category.label;
             const totalActivitiesValuesObj = JSON.parse(JSON.stringify(action.payload.totalActivitiesData)).value;
             const euActivitiesValuesObj = JSON.parse(JSON.stringify(action.payload.euActivitiesData)).value === undefined ? null : JSON.parse(JSON.stringify(action.payload.euActivitiesData)).value;
             console.log(euActivitiesValuesObj);
             const activityValuesObjValues = Object.values(activityValuesObj);
             const activitylastTwoValues = activityValuesObjValues.slice(-2);
             const activityCompareValue = Math.abs(Math.round(activitylastTwoValues[1] - activitylastTwoValues[0]));
+            const activityTimeLabelObjValues = Object.values(activityTimeLabelObj);
             const totalActivitiesValuesObjValues = Object.values(totalActivitiesValuesObj);
             const totalActivitiesLastTwoValues = totalActivitiesValuesObjValues.slice(-2);
             const totalActivitiesCompareValue = Math.abs(Math.round(totalActivitiesLastTwoValues[1] - totalActivitiesLastTwoValues[0]));
             const euActivitiesValuesObjValues = euActivitiesValuesObj !== null ? Object.values(euActivitiesValuesObj) : [];
-            console.log(euActivitiesValuesObjValues);
             const euActivitiesLastTwoValues = euActivitiesValuesObjValues.length > 0 ? euActivitiesValuesObjValues.slice(-2) : [];
-            console.log(euActivitiesLastTwoValues);
             const euActivitiesCompareValue = euActivitiesLastTwoValues.length > 0 ? Math.abs(Math.round(euActivitiesLastTwoValues[1] - euActivitiesLastTwoValues[0])) : null;
-            console.log(euActivitiesCompareValue);
+            console.log(activityValuesObjValues);
+            console.log(totalActivitiesValuesObjValues);
+            const activityTimeLabels = (activityTimeLabelObjValues.slice(- activityValuesObjValues.length));
+            const Data = [];
+            var legendData = '';
+    
+            var i = activityValuesObjValues.lenght;
+            for (const property in activityTimeLabels){
+                legendData = activityTimeLabels[property]
+                console.log(legendData);
+                Data.push({ name: activityTimeLabels[property], uv: '', pv: ''})
+            }
+            console.log(legendData);
+            i = 0 ;
+            for (const property in activityValuesObj){
+                Data[i].uv = activityValuesObj[property]
+                i++;
+            }
+            i = 0;
+            for (const property in totalActivitiesValuesObj){
+                Data[i].pv = totalActivitiesValuesObj[property]
+                i++;
+            }
+            console.log(Data);
+            
+            // i = 0;
+            // for (const property in yearObj){
+            //     Data[i].name = yearObj[property]
+            //     i++
+            // }
             //console.log(euActivitiesValuesObjValues);
             // const lastTwoValues = valuesObjValues.slice(-2);
             // const lastValue = lastTwoValues[1];
@@ -52,7 +81,11 @@ export const eurostatGreatnessIndustryReducer = (
                 totalActivitiesValue: totalActivitiesLastTwoValues,
                 totalActivitiesProgress: totalActivitiesCompareValue, 
                 euActivitiesValue: euActivitiesLastTwoValues,
-                euActivitiesProgress: euActivitiesCompareValue
+                euActivitiesProgress: euActivitiesCompareValue,
+                data: Data, 
+                timeLabels: activityTimeLabels,
+                activityValues: activityValuesObjValues,
+                totalActivitiesValues: totalActivitiesValuesObjValues,
             }
             console.log(viewObj)
             return {
