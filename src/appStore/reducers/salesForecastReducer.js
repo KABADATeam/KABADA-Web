@@ -3,7 +3,7 @@ export const salesForecastReducer = (
         is_sales_forecast_completed: false,
         productsTitles: [],
         products: [],
-        product_id: 5,
+        product_id: 0,
         when_ready: 1,
         export: true,
         sales_forecast_eu: [],
