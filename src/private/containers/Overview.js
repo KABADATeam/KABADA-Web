@@ -122,6 +122,10 @@ class Overview extends React.Component {
         this.props.removePlan(this.props.businessPlan.id)
         this.props.history.push(`/personal-business-plans`);
     };
+    getuseremail = () => {
+        const email = this.props.userInf.email.split('@');
+        return email[0]
+    }
 
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
@@ -146,6 +150,7 @@ class Overview extends React.Component {
         const membersList = this.props.businessPlan.members === null ? [] : this.props.businessPlan.members;
         const overview = this.props.businessPlan.overview;
         console.log(overview);
+        console.log(membersList);
         const viewMenu = (
             <Menu>
                 <Menu.Item key="1">View</Menu.Item>
@@ -405,8 +410,10 @@ class Overview extends React.Component {
                                                 <List.Item actions={[<Button type="link" onClick={this.onDeleteMember.bind(this, item)}><DeleteOutlined /></Button>]}>
                                                     <List.Item.Meta
                                                         avatar={<Avatar size="small" icon={<UserOutlined />} src={item.photo ? "data:image/png;base64," + item.photo : ""} />}
-                                                        title={item.name + " " + item.surname}
+                                                        title={item.name && item.surname !== '' ? item.name + " " + item.surname : this.getuseremail()}
+
                                                     />
+
                                                 </List.Item>
                                             )}>
                                                 <List.Item key='2' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
@@ -462,7 +469,8 @@ const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
         uploadedFile: state.uploadedFile,
-        survivalRate: state.survivalRate
+        survivalRate: state.survivalRate,
+        userInf: state.user
     };
 }
 
