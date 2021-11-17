@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar, Dropdown, Menu, message, Popconfirm, Collapse } from 'antd';
-import { ArrowLeftOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, InfoCircleFilled, PlusSquareOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { discardChanges, saveChanges } from "../../appStore/actions/swotAction";
@@ -238,7 +238,10 @@ class Overview extends React.Component {
                                                     </List.Item>
                                                 </List>
                                             </Card>
-                                            <Card title="Business canvas" style={{ marginTop: '10px' }}>
+                                            <Card
+
+                                                title={<><span> Business canvas</span> <InfoCircleFilled style={{ color: '#BFBFBF' }} /></>}
+                                                style={{ marginTop: '10px' }}>
                                                 <List>
                                                     <List.Item key='1' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
@@ -305,30 +308,29 @@ class Overview extends React.Component {
                                                     </List.Item>
                                                 </List>
                                             </Card>
-                                            <Card style={{ marginTop: '10px' }}>
+                                            <Card
+
+                                                title={<><span> Financial projections</span> <InfoCircleFilled style={{ color: '#BFBFBF' }} /></>}
+
+                                                style={{ marginTop: '10px' }}>
                                                 <List>
-                                                    <List.Item key='16' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                    <List.Item key='10' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
                                                             avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/assets'>Assets</Link></Space>}
                                                             description="Description goes here" />
                                                         <div>...</div>
                                                     </List.Item>
+
                                                     <List.Item key='11' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/business-start-up-investments'>Business start-up investments</Link></Space>}
-                                                            description="Description goes here" />
-                                                        <div>...</div>
-                                                    </List.Item>
-                                                    <List.Item key='10' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
                                                             avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to="/fixed-and-variable-costs">Fixed and Variable Costs</Link></Space>}
                                                             description="something" />
                                                         <div>...</div>
                                                     </List.Item>
-                                                    <List.Item key='13' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+
+                                                    <List.Item key='12' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
                                                             avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to="/sales-forecast">Sales Forecast</Link></Space>}
@@ -336,7 +338,14 @@ class Overview extends React.Component {
                                                         />
                                                         <div>...</div>
                                                     </List.Item>
-                                                    <List.Item key='15' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                    <List.Item key='13' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                        <List.Item.Meta
+                                                            avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                            title={<Space><Link to='/business-start-up-investments'>Business start-up investments</Link></Space>}
+                                                            description="Description goes here" />
+                                                        <div>...</div>
+                                                    </List.Item>
+                                                    <List.Item key='14' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
                                                             avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to="/cash-flow">Cash Flow</Link></Space>}
@@ -348,7 +357,7 @@ class Overview extends React.Component {
                                             </Card>
                                             <Card style={{ marginTop: '10px' }}>
                                                 <List>
-                                                    <List.Item key='12' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                    <List.Item key='15' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
                                                             avatar={overview.swot.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/swot'>SWOT</Link></Space>}
@@ -359,7 +368,7 @@ class Overview extends React.Component {
                                             </Card>
                                             <Card style={{ marginTop: '10px' }}>
                                                 <List>
-                                                    <List.Item key='12' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                    <List.Item key='16' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
                                                             avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/personal-characteristics'>Personal characteristics</Link></Space>}
@@ -370,7 +379,7 @@ class Overview extends React.Component {
                                             </Card>
                                             <Card style={{ marginTop: '10px' }}>
                                                 <List >
-                                                    <List.Item key='14' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                    <List.Item key='17' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
                                                             avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title="Team and competencies"
