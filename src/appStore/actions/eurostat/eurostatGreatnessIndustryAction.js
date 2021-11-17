@@ -32,7 +32,7 @@ export const getGreatnessIndustry = () => {
                         var response2 = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2005&precision=1&geo=EU27_2020&indic_sb=" + variable + "&nace_r2=" +activityCode);
                         console.log(response2)
                         dispatch({ type: 'FETCHING_GREATNESS_INDUSTRY_FOR_COUNTRY_EUROSTATDATA_SUCCESS', 
-                            payload: {"activityData": response.data, "totalActivitiesData": response1.data, "euActivitiesData": response2.data ,"geoTitle": geoTitle, "industry": activityCode, "variable": variable} });   
+                            payload: {"activityData": response.data, "totalActivitiesData": response1.data, "euActivitiesData": response2.data ,"geoTitle": geoTitle, "industry": activityCode, "variable": variable, "geo": geo} });   
                     } catch (error){
                         //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                     }

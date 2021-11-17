@@ -4,7 +4,6 @@ export const eurostatSurvivalRateReducer = (
     }, action) => {
     switch (action.type) {
         case 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_EUROSTATDATA_SUCCESS':
-            console.log(action.payload);
             const valuesObj = JSON.parse(JSON.stringify(action.payload.data)).value;
             const valuesObjValues = Object.values(valuesObj);
             const lastTwoValues = valuesObjValues.slice(-2);
@@ -16,15 +15,11 @@ export const eurostatSurvivalRateReducer = (
                 lastValue: lastTwoValues,
                 compareValue: compareValue
             }
-            console.log(viewObj);
-            const test = [...state.survival_rate_data, viewObj]
-            console.log(test);
             return {
                 ...state,
                 survival_rate_data: [...state.survival_rate_data, viewObj]
             }
         case 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_TOTAL_EUROSTATDATA_SUCCESS':
-            console.log(action.payload);
             const _valuesObj = JSON.parse(JSON.stringify(action.payload.data)).value;
             const _valuesObjValues = Object.values(_valuesObj);
             const _lastTwoValues = _valuesObjValues.slice(-2);
@@ -36,13 +31,11 @@ export const eurostatSurvivalRateReducer = (
                 lastValue: _lastTwoValues,
                 compareValue: _compareValue
             }
-            console.log(_viewObj)
             return {
                 ...state,
                 survival_rate_data: [...state.survival_rate_data, _viewObj]
             }
         case 'FETCHING_SURVIVAL_RATE_FOR_ALL_EUROPE_EUROSTATDATA_SUCCESS':
-            console.log(action.payload);
             const valuesObj_ = JSON.parse(JSON.stringify(action.payload.data)).value;
             const valuesObjValues_ = Object.values(valuesObj_);
             const lastTwoValues_ = valuesObjValues_.slice(-2);
@@ -54,7 +47,6 @@ export const eurostatSurvivalRateReducer = (
                 lastValue: lastTwoValues_,
                 compareValue: compareValue_
             }
-            console.log(viewObj_)
             return {
                 ...state,
                 survival_rate_data: [...state.survival_rate_data, viewObj_]
