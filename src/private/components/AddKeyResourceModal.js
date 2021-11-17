@@ -78,7 +78,6 @@ class AddKeyResourceModal extends Component {
 
     getSelections(id) {
         const item = this.props.category.types.find(x => x.id === id);
-        console.log('Item:'+JSON.stringify(item))
         if (item !== null && item !== undefined) {
             // const uiElements = item.selections.map((item, i) =>
             return (
@@ -126,7 +125,7 @@ class AddKeyResourceModal extends Component {
         // if not Rent is selected set disabled to true
         if(array[0] !== 0){
             this.setState({
-                selections: array,
+                selections: [e.target.value,0],
                 disable: true
             });
         }else{
@@ -180,7 +179,7 @@ class AddKeyResourceModal extends Component {
                         {elements}
                         {element2}
                     </Form>
-                </Modal >
+                </Modal>
             </>
         )
     }

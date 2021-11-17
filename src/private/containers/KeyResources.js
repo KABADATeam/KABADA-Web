@@ -219,10 +219,14 @@ class KeyResources extends React.Component {
                                     pagination={false}
                                     footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddNewItem.bind(this)}><PlusOutlined />Add key resource</Button>)}
                                 />
-                            </Card >
+                            </Card>
                         </Col>
+                        
                         <KeyResourcesCategoriesModal visibility={this.state.is_categories_modal_visible} handleClose={this.onCloseNewItemModal} handleOpen={this.onOpenCategoriesModal} />
-                        <EditKeyResourceModal visibility={this.state.is_edit_resource_modal_visible} handleClose={this.onCloseEditItemModal}/>
+                    {this.state.is_edit_resource_modal_visible !== false?
+                        <EditKeyResourceModal visibility={this.state.is_edit_resource_modal_visible} handleClose={this.onCloseEditItemModal}/>:null}
+                        
+
                     </Row>
                 </Col>
             </>
