@@ -114,11 +114,11 @@ class KeyResources extends React.Component {
             this.props.getResourcesList(this.props.businessPlan.id);
             this.props.getResourcesCategoriesList();
         }
-        
+
     }
 
     render() {
-        const data = this.props.resources.key_resources.map(obj=> ({ ...obj, type: obj.category.description }));
+        const data = this.props.resources.key_resources.map(obj => ({ ...obj, type: obj.category.description }));
         const columns = [
             {
                 title: 'Type',
@@ -153,7 +153,7 @@ class KeyResources extends React.Component {
         ];
 
         return (
-            
+
             <>
                 <Col span={16} offset={4}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
@@ -212,7 +212,7 @@ class KeyResources extends React.Component {
                                         <Typography style={{ ...tableTitleStyle }}>Key resources</Typography>
                                         <Typography style={{ ...tableDescriptionStyle }}>
                                             Only state those resources that make you unique compared to your competitors in the market.
-                                            </Typography>
+                                        </Typography>
                                     </>}
                                     dataSource={data}
                                     columns={columns}
@@ -221,11 +221,15 @@ class KeyResources extends React.Component {
                                 />
                             </Card>
                         </Col>
-                        
-                        <KeyResourcesCategoriesModal visibility={this.state.is_categories_modal_visible} handleClose={this.onCloseNewItemModal} handleOpen={this.onOpenCategoriesModal} />
-                    {this.state.is_edit_resource_modal_visible !== false?
-                        <EditKeyResourceModal visibility={this.state.is_edit_resource_modal_visible} handleClose={this.onCloseEditItemModal}/>:null}
-                        
+                        {this.state.is_categories_modal_visible !== false ?
+                            <KeyResourcesCategoriesModal visibility={this.state.is_categories_modal_visible}
+                                handleClose={this.onCloseNewItemModal} handleOpen={this.onOpenCategoriesModal} />
+                            : null
+
+                        }
+                        {this.state.is_edit_resource_modal_visible !== false ?
+                            <EditKeyResourceModal visibility={this.state.is_edit_resource_modal_visible} handleClose={this.onCloseEditItemModal} /> : null}
+
 
                     </Row>
                 </Col>
