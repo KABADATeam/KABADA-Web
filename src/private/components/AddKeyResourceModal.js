@@ -35,6 +35,7 @@ class AddKeyResourceModal extends Component {
             selections: [0, 0],
             description: ''
         });
+        this.props.closeCategories();
     }
 
     onOk = () => {
@@ -78,7 +79,6 @@ class AddKeyResourceModal extends Component {
 
     getSelections(id) {
         const item = this.props.category.types.find(x => x.id === id);
-        console.log('Item:'+JSON.stringify(item))
         if (item !== null && item !== undefined) {
             // const uiElements = item.selections.map((item, i) =>
             return (
@@ -100,7 +100,7 @@ class AddKeyResourceModal extends Component {
 
     getSelectionsSecond(id) {
         const item = this.props.category.types.find(x => x.id === id);
-        console.log('Item:'+JSON.stringify(item))
+        console.log('Item:' + JSON.stringify(item))
         if (item !== null && item !== undefined) {
             // const uiElements = item.selections.map((item, i) =>
             return (
@@ -124,24 +124,44 @@ class AddKeyResourceModal extends Component {
         const array = this.state.selections;
         array[item] = e.target.value;
         // if not Rent is selected set disabled to true
-        if(array[0] !== 0){
-            this.setState({
-                selections: array,
-                disable: true
-            });
+        if (this.props.resourceType !== "Human resources") {
+            if (array[0] !== 0) {
+                this.setState({
+                    selections: [e.target.value, 0],
+                    disable: true
+                });
+            } else {
+                this.setState({
+                    selections: array,
+                    disable: false
+                });
+            }
         }else{
-            this.setState({
-                selections: array,
-                disable: false
-            });
+            // if its human resources.
+            //if not Myself is selected disable
+            if(array[0] === 2){
+                this.setState({
+                    selections: [e.target.value, 0],
+                    disable: true
+                });
+            }else{
+                this.setState({
+                    selections: array,
+                    disable: false
+                })
+            }
         }
-        
+
     }
 
     onSelectionChange(id) {
         this.setState({
             selectedItemId: id
         });
+    }
+
+    componentDidMount() {
+        console.log('Resource type came to add:' + this.props.resourceType)
     }
 
     render() {
@@ -151,7 +171,7 @@ class AddKeyResourceModal extends Component {
         const defaultValue = this.props.category.types.length > 0 ? this.props.category.types[0].id : "";
         const elements = this.getSelections(this.state.selectedItemId === null ? defaultValue : this.state.selectedItemId);
         const element2 = this.getSelectionsSecond(this.state.selectedItemId === null ? defaultValue : this.state.selectedItemId);
-        
+
         return (
             <>
                 <Modal
@@ -180,7 +200,7 @@ class AddKeyResourceModal extends Component {
                         {elements}
                         {element2}
                     </Form>
-                </Modal >
+                </Modal>
             </>
         )
     }

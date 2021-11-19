@@ -24,7 +24,8 @@ class EditKeyResourceModal extends Component {
         selectedItemId: null,
         selections: [0, 0],
         name: null,
-        is_changed: [false, false]
+        is_changed: [false, false],
+        disable: false
     }
 
     onCancel = () => {
@@ -92,13 +93,14 @@ class EditKeyResourceModal extends Component {
             const type = category.types.find(x => x.id === this.state.selectedItemId);
             const uiElements = type.selections.map((item, i) =>
                 <Form.Item key={i} label={item.title}>
-                    <Radio.Group key={i} onChange={this.onRadioSelection.bind(this, i)} value={this.state.selections[i]}>
+                <Radio.Group key={i} onChange={this.onRadioSelection.bind(this, i)} value={this.state.selections[i]}>
                         <Space direction="vertical">
                             {item.options.map((o, j) =>
                                 <Radio key={j} value={j}>{o.title}</Radio>
                             )}
                         </Space>
                     </Radio.Group>
+
                 </Form.Item>
             );
             return uiElements;
@@ -112,14 +114,23 @@ class EditKeyResourceModal extends Component {
         const array = this.transformSelections();
         const uiElements = this.props.resource.selections !== null ? this.props.resource.selections.map((item, i) =>
             <Form.Item key={i} label={item.title}>
-                <Radio.Group key={i} onChange={this.onRadioSelection.bind(this, i)} value={this.state.is_changed[i] === false ? array[i] : this.state.selections[i]} >
-                    <Space direction="vertical">
-                        {item.options.map((o, j) =>
-                            <Radio key={j} value={j}>{o.title}</Radio>
-                        )}
+                {item.title === 'Frequency' ?
+                    <Radio.Group key={i} disabled={this.state.disable} onChange={this.onRadioSelection.bind(this, i)} value={this.state.is_changed[i] === false ? array[i] : this.state.selections[i]} >
+                        <Space direction="vertical">
+                            {item.options.map((o, j) =>
+                                <Radio key={j} value={j}>{o.title}</Radio>
+                            )}
 
-                    </Space>
-                </Radio.Group>
+                        </Space>
+                    </Radio.Group> : <Radio.Group key={i} onChange={this.onRadioSelection.bind(this, i)} value={this.state.is_changed[i] === false ? array[i] : this.state.selections[i]} >
+                        <Space direction="vertical">
+                            {item.options.map((o, j) =>
+                                <Radio key={j} value={j}>{o.title}</Radio>
+                            )}
+
+                        </Space>
+                    </Radio.Group>}
+
             </Form.Item>
         )
             : []
@@ -129,12 +140,23 @@ class EditKeyResourceModal extends Component {
     onRadioSelection(item, e) {
         const array = this.state.selections;
         const changesArray = this.state.is_changed;
-        array[item] = e.target.value;
         changesArray[item] = true;
-        this.setState({
-            selections: array,
-            is_changed: changesArray
-        });
+        array[item] = e.target.value;
+        // if not Rent is selected set disabled to true
+        if(array[0] !== 0){
+            this.setState({
+                selections: [e.target.value,0],
+                is_changed: [true,true],
+                disable: true
+            })
+        }else{
+            this.setState({
+                selections: array,
+                is_changed: changesArray,
+                disable: false
+            })
+        }
+        
     }
 
     onSelectionChange(id) {
@@ -153,6 +175,13 @@ class EditKeyResourceModal extends Component {
             return options;
         } else {
             return <div></div>;
+        }
+    }
+    componentDidMount() {
+        if (this.props.resource.selections[0].options[1].selected === true || this.props.resource.selections[0].options[2].selected === true) {
+            this.setState({
+                disable: true
+            })
         }
     }
 
@@ -194,7 +223,7 @@ class EditKeyResourceModal extends Component {
                         </Form.Item>
                         {elements}
                     </Form>
-                </Modal >
+                </Modal>
             </>
         )
     }
