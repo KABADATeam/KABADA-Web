@@ -11,6 +11,7 @@ import { eurostatAllDataReducer } from '../reducers/eurostat/eurostatAllReducer'
 import { eurostatSurvivalRateReducer } from '../reducers/eurostat/eurostatSurvivalRateReducer';
 import { eurostatGreatnessIndustryReducer } from '../reducers/eurostat/eurostatGreatnessIndustryReducer';
 import { eurostatCostProductivityReducer } from './eurostat/eurostatCostsProductivityReducer';
+import { eurostatCompanySizeReducer } from './eurostat/eurostatCompanySizeReducer';
 import { userSettingsReducer } from './settingsReducer';
 import { swotReducer } from './swotReducer';
 import { resourcesReducer, resourcesCategoriesReducer, selectedCategoryReducer, selectedResourceReducer } from './resourcesReducer';
@@ -43,6 +44,7 @@ export default combineReducers({
     survivalRate: eurostatSurvivalRateReducer,
     greatnessIndustry: eurostatGreatnessIndustryReducer,
     costsProductivity: eurostatCostProductivityReducer,
+    companySize: eurostatCompanySizeReducer,
     industries: industriesReducer,
     language: languageReducer,
     loading: loadingReducer,
