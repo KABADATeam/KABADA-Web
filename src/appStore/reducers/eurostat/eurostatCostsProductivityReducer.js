@@ -1,25 +1,22 @@
 const getVariableShortTitle = (variable) => {
-    if (variable === 'V11110') {
-        let variableTitle = 'Enterprices'
+    if (variable === 'V91110') {
+        let variableTitle = 'Labour productivity'
         return variableTitle
-    } else if (variable === 'V12110') {
-        let variableTitle = 'Turnover'
+    } else if (variable === 'V91170') {
+        let variableTitle = 'Share of personnel costs'
         return variableTitle
-    } else if (variable === 'V15110') {
-        let variableTitle = 'Gross investment'
-        return variableTitle
-    } else if (variable === 'V16140') {
-        let variableTitle = 'Employees in full time'
+    } else if (variable === 'V91210') {
+        let variableTitle = 'Average personnel cost'
         return variableTitle
     }
 }
 
-export const eurostatGreatnessIndustryReducer = (
+export const eurostatCostProductivityReducer = (
     state = {
-        greatness_industry_data: []
+        costs_productivity_data: []
     }, action) => {
     switch (action.type) {
-        case 'FETCHING_GREATNESS_INDUSTRY_FOR_COUNTRY_EUROSTATDATA_SUCCESS':
+        case 'FETCHING_COSTS_PRODUCTIVITY_EUROSTATDATA_SUCCESS':
             console.log(action.payload);
             const activityValuesObj = JSON.parse(JSON.stringify(action.payload.activityData)).value;
             const activityTimeLabelObj = JSON.parse(JSON.stringify(action.payload.activityData)).dimension.time.category.label;
@@ -91,12 +88,12 @@ export const eurostatGreatnessIndustryReducer = (
             console.log(viewObj)
             return {
                 ...state,
-                greatness_industry_data: [...state.greatness_industry_data, viewObj]
+                costs_productivity_data: [...state.costs_productivity_data, viewObj]
             }
-        case 'RESET_GREATNESS_DATA':
+        case 'RESET_COSTS_PRODUCTIVITY_DATA':
             return {
                 ...state,
-                greatness_industry_data: []
+                costs_productivity_data: []
             };
         default:
             return state;
