@@ -93,7 +93,7 @@ class EditKeyResourceModal extends Component {
             const type = category.types.find(x => x.id === this.state.selectedItemId);
             const uiElements = type.selections.map((item, i) =>
                 <Form.Item key={i} label={item.title}>
-                <Radio.Group key={i} onChange={this.onRadioSelection.bind(this, i)} value={this.state.selections[i]}>
+                    <Radio.Group key={i} onChange={this.onRadioSelection.bind(this, i)} value={this.state.selections[i]}>
                         <Space direction="vertical">
                             {item.options.map((o, j) =>
                                 <Radio key={j} value={j}>{o.title}</Radio>
@@ -143,20 +143,20 @@ class EditKeyResourceModal extends Component {
         changesArray[item] = true;
         array[item] = e.target.value;
         // if not Rent is selected set disabled to true
-        if(array[0] !== 0){
+        if (array[0] !== 0) {
             this.setState({
-                selections: [e.target.value,0],
-                is_changed: [true,true],
+                selections: [e.target.value, 0],
+                is_changed: [true, true],
                 disable: true
             })
-        }else{
+        } else {
             this.setState({
                 selections: array,
                 is_changed: changesArray,
                 disable: false
             })
         }
-        
+
     }
 
     onSelectionChange(id) {
@@ -178,10 +178,17 @@ class EditKeyResourceModal extends Component {
         }
     }
     componentDidMount() {
-        if (this.props.resource.selections[0].options[1].selected === true || this.props.resource.selections[0].options[2].selected === true) {
+        // if options length is only 2 then its raw material selected
+        if (this.props.resource.selections[0].options.length === 2) {
             this.setState({
-                disable: true
+                disable: false
             })
+        } else {
+            if (this.props.resource.selections[0].options[1].selected === true || this.props.resource.selections[0].options[2].selected === true) {
+                this.setState({
+                    disable: true
+                })
+            }
         }
     }
 

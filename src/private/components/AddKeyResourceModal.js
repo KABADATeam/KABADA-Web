@@ -25,7 +25,8 @@ class AddKeyResourceModal extends Component {
         selectedItemId: null,
         selections: [0, 0],
         description: '',
-        disable: false
+        disable: false,
+        typeTitle: ''
     }
 
     onCancel = () => {
@@ -80,46 +81,34 @@ class AddKeyResourceModal extends Component {
     getSelections(id) {
         const item = this.props.category.types.find(x => x.id === id);
         if (item !== null && item !== undefined) {
-            // const uiElements = item.selections.map((item, i) =>
-            return (
-                <Form.Item key={0} label={item.selections[0].title}>
-                    <Radio.Group key={0} onChange={this.onRadioSelection.bind(this, 0)} value={this.state.selections[0]}>
+            const uiElements = item.selections.map((item, i) =>
+            <div>
+                {i === 1?<Form.Item key={i} label={item.title}>
+                    <Radio.Group disabled={this.state.disable} key={i} onChange={this.onRadioSelection.bind(this, i)} value={this.state.selections[i]}>
                         <Space direction="vertical">
-                            {item.selections[0].options.map((o, j) =>
+                            {item.options.map((o, j) =>
                                 <Radio key={j} value={j}>{o.title}</Radio>
                             )}
                         </Space>
                     </Radio.Group>
-                </Form.Item>
-            )
-        }
-        else {
-            return <div></div>
-        }
-    }
-
-    getSelectionsSecond(id) {
-        const item = this.props.category.types.find(x => x.id === id);
-        console.log('Item:' + JSON.stringify(item))
-        if (item !== null && item !== undefined) {
-            // const uiElements = item.selections.map((item, i) =>
-            return (
-                <Form.Item key={1} label={item.selections[1].title}>
-                    <Radio.Group disabled={this.state.disable} key={1} onChange={this.onRadioSelection.bind(this, 1)} value={this.state.selections[1]}>
+                </Form.Item>:<Form.Item key={i} label={item.title}>
+                    <Radio.Group key={i} onChange={this.onRadioSelection.bind(this, i)} value={this.state.selections[i]}>
                         <Space direction="vertical">
-                            {item.selections[1].options.map((o, j) =>
+                            {item.options.map((o, j) =>
                                 <Radio key={j} value={j}>{o.title}</Radio>
                             )}
                         </Space>
                     </Radio.Group>
-                </Form.Item>
-            )
+                </Form.Item>}
+                
+                </div>
+            );
+            return uiElements;
         }
-        else {
+        else{
             return <div></div>
         }
     }
-
     onRadioSelection(item, e) {
         const array = this.state.selections;
         array[item] = e.target.value;
@@ -129,7 +118,7 @@ class AddKeyResourceModal extends Component {
                 this.setState({
                     selections: [e.target.value, 0],
                     disable: true
-                });
+                }, () => console.log('State disable:'+this.state.disable));
             } else {
                 this.setState({
                     selections: array,
@@ -155,7 +144,15 @@ class AddKeyResourceModal extends Component {
     }
 
     onSelectionChange(id) {
+        const typesClone = JSON.parse(JSON.stringify(this.props.category.types));
+        let name = '';
+        typesClone.map((element,index)=>{
+            if(element.id === id){
+                name = element.title
+            }
+        });
         this.setState({
+            typeTitle: name,
             selectedItemId: id
         });
     }
@@ -166,11 +163,11 @@ class AddKeyResourceModal extends Component {
 
     render() {
         const options = this.props.category.types.map(t =>
-            <Option key={t.id} value={t.id}>{t.title}</Option>
+            <Option key={t.id} value={t.id} name={t.title}>{t.title}</Option>
         );
         const defaultValue = this.props.category.types.length > 0 ? this.props.category.types[0].id : "";
         const elements = this.getSelections(this.state.selectedItemId === null ? defaultValue : this.state.selectedItemId);
-        const element2 = this.getSelectionsSecond(this.state.selectedItemId === null ? defaultValue : this.state.selectedItemId);
+        // const element2 = this.getSelectionsSecond(this.state.selectedItemId === null ? defaultValue : this.state.selectedItemId);
 
         return (
             <>
@@ -198,7 +195,6 @@ class AddKeyResourceModal extends Component {
                             <Input placeholder="Your description goes here" value={this.state.description} onChange={this.onChange.bind(this)} size="large" style={{ ...inputStyle, width: 548 }} />
                         </Form.Item>
                         {elements}
-                        {element2}
                     </Form>
                 </Modal>
             </>

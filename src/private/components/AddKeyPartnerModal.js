@@ -127,7 +127,7 @@ class AddKeyPartnerModal extends Component {
                             <Input size="large" style={inputStyle} onChange={this.onCommentChange} />
                         </Form.Item>
                     </Form>
-                </Modal >
+                </Modal>
             </>
         )
     }
