@@ -157,7 +157,7 @@ class AssetsWindow extends React.Component {
             const value = parseInt(Object.values(obj));
             total_investments_values_list.push(value);
         })
-        const total_investments_value = total_investments_values_list.reduce(function(total_investments_value, value) {
+        const total_investments_value = total_investments_values_list.reduce(function (total_investments_value, value) {
             const updated_total_investments_value = total_investments_value + value;
             return updated_total_investments_value;
         })
@@ -169,7 +169,7 @@ class AssetsWindow extends React.Component {
             const value = parseInt(Object.values(obj));
             own_assets_values_list.push(value);
         })
-        const own_assets_value = own_assets_values_list.reduce(function(own_assets_value, value) {
+        const own_assets_value = own_assets_values_list.reduce(function (own_assets_value, value) {
             const updated_own_assets_value = own_assets_value + value;
             return updated_own_assets_value
         });
@@ -410,65 +410,69 @@ class AssetsWindow extends React.Component {
                             </Col>
                             <Col span={16}>
                                 <div>
-                                    <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                        <div style={{ marginTop: 20, marginLeft: 16, marginBottom: 20 }}>
-                                            <Text style={{ ...titleTextStyle }}>Physical and Intellectual assets</Text>
-                                        </div>
-                                        <Table
-                                            rowKey="resource_id"
-                                            dataSource={this.state.assets_items}
-                                            columns={assetsColumns}
-                                            pagination={false}
-                                            footer={pageData => {
-                                                let total_amount = 0;
-                                                let own_assets_amount = 0;
-                                                pageData.forEach(({ amount }) => {
-                                                    total_amount += amount;
-                                                });
-                                                const ownAssets = pageData.filter((item) => item.resource_status === 'Own')
-                                                ownAssets.forEach(({ amount }) => {
-                                                    own_assets_amount += amount
-                                                })
-                                                return (
-                                                    <>
-                                                        <div style={{ marginTop: 16, marginBottom: 16 }}>
-                                                            <Row style={{ marginBottom: 8 }}>
+                                    <Table
+                                        title={() => (
+                                            <div>
+                                                <Row style={{ marginBottom: 16 }}>
+                                                    <div>
+                                                        <Text style={{ ...titleTextStyle }}>Physical and Intellectual assets</Text>
+                                                    </div>
+                                                </Row>
+                                            </div>
+                                        )}
+                                        rowKey="resource_id"
+                                        dataSource={this.state.assets_items}
+                                        columns={assetsColumns}
+                                        pagination={false}
+                                        footer={pageData => {
+                                            let total_amount = 0;
+                                            let own_assets_amount = 0;
+                                            pageData.forEach(({ amount }) => {
+                                                total_amount += amount;
+                                            });
+                                            const ownAssets = pageData.filter((item) => item.resource_status === 'Own')
+                                            ownAssets.forEach(({ amount }) => {
+                                                own_assets_amount += amount
+                                            })
+                                            return (
+                                                <>
+                                                    <div style={{ marginTop: 16, marginBottom: 16 }}>
+                                                        <Row style={{ marginBottom: 8 }}>
 
-                                                                <Col span={16}>
-                                                                    <Text>Investments</Text>
-                                                                </Col>
-                                                                <Col span={8}>
-                                                                    <div style={{ float: 'right' }}>
-                                                                        <Text>{total_amount}</Text>
-                                                                    </div>
-                                                                </Col>
-                                                            </Row>
-                                                            <Row style={{ marginBottom: 8 }}>
-                                                                <Col span={16}>
-                                                                    <Text>Own Assets (physical & intellectual)</Text>
-                                                                </Col>
-                                                                <Col span={8}>
-                                                                    <div style={{ float: 'right' }}>
-                                                                        <Text>{own_assets_amount}</Text>
-                                                                    </div>
-                                                                </Col>
-                                                            </Row>
-                                                            <Row style={{ marginBottom: 8 }}>
-                                                                <Col span={16}>
-                                                                    <Text>Additional necessary funds for investments in assets</Text>
-                                                                </Col>
-                                                                <Col span={8}>
-                                                                    <div style={{ float: 'right' }}>
-                                                                        <Text>{total_amount - own_assets_amount}</Text>
-                                                                    </div>
-                                                                </Col>
-                                                            </Row>
-                                                        </div>
-                                                    </>
-                                                )
-                                            }}
-                                        />
-                                    </Card >
+                                                            <Col span={16}>
+                                                                <Text>Investments</Text>
+                                                            </Col>
+                                                            <Col span={8}>
+                                                                <div style={{ float: 'right' }}>
+                                                                    <Text>{total_amount}</Text>
+                                                                </div>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row style={{ marginBottom: 8 }}>
+                                                            <Col span={16}>
+                                                                <Text>Own Assets (physical & intellectual)</Text>
+                                                            </Col>
+                                                            <Col span={8}>
+                                                                <div style={{ float: 'right' }}>
+                                                                    <Text>{own_assets_amount}</Text>
+                                                                </div>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row style={{ marginBottom: 8 }}>
+                                                            <Col span={16}>
+                                                                <Text>Additional necessary funds for investments in assets</Text>
+                                                            </Col>
+                                                            <Col span={8}>
+                                                                <div style={{ float: 'right' }}>
+                                                                    <Text>{total_amount - own_assets_amount}</Text>
+                                                                </div>
+                                                            </Col>
+                                                        </Row>
+                                                    </div>
+                                                </>
+                                            )
+                                        }}
+                                    />
                                 </div>
                             </Col>
                         </Row>
