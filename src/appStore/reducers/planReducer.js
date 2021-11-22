@@ -1,18 +1,23 @@
 const getPercentage = (overview) => {
-    const total = 12;
+    const total = 17;
     let k = 0;
 
+    k = overview.assets.is_completed === true ? k + 1 : k;
+    k = overview.business_start_up_investments.is_completed === true ? k + 1 : k;
+    k = overview.cash_flow.is_completed === true ? k + 1 : k;
     k = overview.channels.is_completed === true ? k + 1 : k;
     k = overview.cost_structure.is_completed === true ? k + 1 : k;
     k = overview.customer_relationship.is_completed === true ? k + 1 : k;
     k = overview.customer_segments.is_completed === true ? k + 1 : k;
-    //k = overview.financial_projections.is_completed === true ? k + 1 : k;     // not implemented, yet
+    k = overview.fixed_and_variables_costs.is_completed === true ? k + 1 : k;     // not implemented, yet
     k = overview.key_activities.is_completed === true ? k + 1 : k;
     k = overview.key_partners.is_completed === true ? k + 1 : k;
     k = overview.key_resources.is_completed === true ? k + 1 : k;
+    k = overview.personal_characteristics.is_completed === true ? k + 1 : k;
     k = overview.revenue_streams.is_completed === true ? k + 1 : k;
+    k = overview.sales_forecast.is_completed === true ? k + 1 : k;
     k = overview.swot.is_completed === true ? k + 1 : k;
-    //k = overview.team_competencies.is_completed === true ? k + 1 : k;         // not implemented, yet
+    k = overview.team_competencies.is_completed === true ? k + 1 : k;         // not implemented, yet
     k = overview.value_proposition.is_completed === true ? k + 1 : k;
 
     return Math.round((k / total) * 100);

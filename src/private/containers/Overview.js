@@ -316,40 +316,39 @@ class Overview extends React.Component {
                                                 <List>
                                                     <List.Item key='10' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                            avatar={overview.assets.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/assets'>Assets</Link></Space>}
-                                                            description="Description goes here" />
+                                                        />
                                                         <div>...</div>
                                                     </List.Item>
 
                                                     <List.Item key='11' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                            avatar={overview.fixed_and_variables_costs.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to="/fixed-and-variable-costs">Fixed and Variable Costs</Link></Space>}
-                                                            description="something" />
+                                                        />
                                                         <div>...</div>
                                                     </List.Item>
 
                                                     <List.Item key='12' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                            avatar={overview.sales_forecast.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to="/sales-forecast">Sales Forecast</Link></Space>}
-                                                            description="something"
                                                         />
                                                         <div>...</div>
                                                     </List.Item>
                                                     <List.Item key='13' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                            avatar={overview.business_start_up_investments.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/business-start-up-investments'>Business start-up investments</Link></Space>}
-                                                            description="Description goes here" />
+                                                        />
                                                         <div>...</div>
                                                     </List.Item>
                                                     <List.Item key='14' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                            avatar={overview.assets.is_completed === true && overview.fixed_and_variables_costs.is_completed === true && overview.sales_forecast.is_completed === true && overview.business_start_up_investments.is_completed === true? 
+                                                                <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to="/cash-flow">Cash Flow</Link></Space>}
-                                                            description="..."
                                                         />
                                                         <div>...</div>
                                                     </List.Item>
