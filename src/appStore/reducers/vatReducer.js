@@ -17,8 +17,13 @@ export const countryVATReducer = (
                     })
                 }
             }
-            console.log(vatArray);
-            return { ...state, vat: vatArray };
+            vatArray.push({
+                key: vatArray.length,
+                vatTitle: 'zeroRate',
+                vatValue: 0
+            })
+            const sortedVATArray = vatArray.sort((a,b) => { return b.vatValue - a.vatValue})
+            return { ...state, vat: sortedVATArray };
         default:
             return state;
     }

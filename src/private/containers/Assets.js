@@ -413,7 +413,7 @@ class AssetsWindow extends React.Component {
                                     <Table
                                         title={() => (
                                             <div>
-                                                <Row style={{ marginBottom: 16 }}>
+                                                <Row>
                                                     <div>
                                                         <Text style={{ ...titleTextStyle }}>Physical and Intellectual assets</Text>
                                                     </div>
