@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Form, Space, Select, InputNumber } from 'antd';
+import { Modal, Button, Form, Space, Select, InputNumber, Input } from 'antd';
 import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { updateBusinessSegment } from "../../../appStore/actions/customerSegmentAction";
@@ -18,6 +18,7 @@ class EditBusinessSegmentModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            name: "",
             type: this.props.item.business_type.map(e => e.id),
             companySize: this.props.item.company_size.map(e => e.id),
             //annualRevenue: this.props.item.annual_revenue,
@@ -69,6 +70,12 @@ class EditBusinessSegmentModal extends Component {
         this.props.updateBusinessSegment(postObj, reducerObj);
 
         this.props.onClose();
+    }
+
+    onNameChange(value) {
+        this.setState({
+            name: value
+        })
     }
 
     onTypeChange(value) {
@@ -138,6 +145,12 @@ class EditBusinessSegmentModal extends Component {
                             //budget: this.props.item.budget,
                             geographicLocation: this.props.item.geographic_location.map(e => e.id),
                         }}>
+
+                        <Form.Item key="name" name="name" label="Segment name">
+                            <Input style={{width: '100%'}} placeholder="Edit segment name" defaultValue={this.state.name}
+                            value={this.state.name} onChange={this.onNameChange.bind(this)}/>
+                        </Form.Item>
+
                         <Form.Item key="type" name="type" label="Type"
                             rules={[{ required: true, message: 'Select business type' }]}>
                             <Select style={{ width: '100%' }} mode="multiple" placeholder="Select type" onChange={this.onTypeChange.bind(this)} >

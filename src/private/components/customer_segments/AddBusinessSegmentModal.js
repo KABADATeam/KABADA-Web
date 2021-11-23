@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Form, Space, Select, InputNumber } from 'antd';
+import { Modal, Button, Form, Space, Select, InputNumber, Input} from 'antd';
 import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { saveBusinessSegment } from "../../../appStore/actions/customerSegmentAction";
@@ -17,6 +17,7 @@ const inputStyle = {
 
 class AddBusinessSegmentModal extends Component {
     state = {
+        name: null,
         type: null,
         companySize: null,
         locationType: null,
@@ -65,6 +66,12 @@ class AddBusinessSegmentModal extends Component {
         this.props.saveBusinessSegment(postObj, reducerObj);
 
         this.props.onClose();
+    }
+
+    onNameChange(value) {
+        this.setState({
+            name: value
+        })
     }
 
     onTypeChange(value) {
@@ -127,6 +134,9 @@ class AddBusinessSegmentModal extends Component {
                     }
                 >
                     <Form hideRequiredMark layout="vertical" id="addBusinessSegmentForm" name="addBusinessSegmentForm" onFinish={this.onOK.bind(this)}>
+                        <Form.Item key="name" name="name" label="Segment name">
+                            <Input style={{width: '100%'}} placeholder="Add segment name" onChange={this.onNameChange.bind(this)}/>
+                        </Form.Item>
                         <Form.Item key="type" name="type" label="Type"
                             rules={[{ required: true, message: 'Select business type' }]}>
                             <Select style={{ width: '100%' }} mode="multiple" placeholder="Select type" onChange={this.onTypeChange.bind(this)} >
@@ -159,7 +169,7 @@ class AddBusinessSegmentModal extends Component {
                             </Select>
                         </Form.Item>
                     </Form>
-                </Modal >
+                </Modal>
             </>
         )
     }

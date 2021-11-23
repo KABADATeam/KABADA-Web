@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Form, Space, Select, Radio } from 'antd';
+import { Modal, Button, Form, Space, Select, Radio, Input } from 'antd';
 import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { updateConsumerSegment } from "../../../appStore/actions/customerSegmentAction";
@@ -11,9 +11,9 @@ class EditConsumerSegmentModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            name: "",
             ageGroup: this.props.item.age.map(e => e.id),
             genderType: this.props.item.gender.map(e => e.id),
-            isChildren: this.props.item.is_children,
             educationType: this.props.item.education.map(e => e.id),
             incomeType: this.props.item.income.map(e => e.id),
             locationType: this.props.item.geographic_location.map(e => e.id),
@@ -32,7 +32,6 @@ class EditConsumerSegmentModal extends Component {
         const postObj = {
             "id": this.props.item.id,
             "business_plan_id": this.props.businessPlan.id,
-            "is_children": this.state.isChildren,
             "age": this.state.ageGroup,
             "gender": this.state.genderType,
             "education": this.state.educationType,
@@ -49,7 +48,6 @@ class EditConsumerSegmentModal extends Component {
         const reducerObj = {
             "id": this.props.item.id,
             "key": this.props.item.id,
-            "is_children": this.state.isChildren,
             "age": selected_ages,
             "age_titles": selected_ages.map(e => e.title).join(", "),
             "gender": selected_genders,
@@ -66,6 +64,12 @@ class EditConsumerSegmentModal extends Component {
         this.props.onClose();
     }
 
+    onNameChange(value) {
+        this.setState({
+            name: value
+        })
+    }
+
     onAgeGroupChange(value) {
         this.setState({
             ageGroup: value
@@ -75,12 +79,6 @@ class EditConsumerSegmentModal extends Component {
     onGenderTypeChange(value) {
         this.setState({
             genderType: value
-        });
-    }
-
-    onIsChildrenChange = e => {
-        this.setState({
-            isChildren: e.target.value,
         });
     }
 
@@ -103,7 +101,6 @@ class EditConsumerSegmentModal extends Component {
 
     render() {
 
-        const isChildren = this.state.isChildren
 
 
         const ageGroupOptions = this.props.categories.customer_segments_types.age_groups.map((obj) =>
@@ -146,12 +143,15 @@ class EditConsumerSegmentModal extends Component {
                         initialValues={{
                             age: this.props.item.age.map(e => e.id),
                             gender: this.props.item.gender.map(e => e.id),
-                            isChildren: this.props.item.is_children,
                             education: this.props.item.education.map(e => e.id),
                             income: this.props.item.income.map(e => e.id),
                             geographicLocation: this.props.item.geographic_location.map(e => e.id),
                         }}
                     >
+                        <Form.Item key="name" name="name" label="Segment name">
+                            <Input style={{ width: '100%' }} placeholder="Edit segment name" defaultValue={this.state.name}
+                                value={this.state.name} onChange={this.onNameChange.bind(this)} />
+                        </Form.Item>
                         <Form.Item key="age" name="age" label="Age group (years)"
                             rules={[{ required: true, message: 'Select age group (years)' }]}>
                             <Select style={{ width: '100%' }} mode="multiple"
@@ -165,16 +165,6 @@ class EditConsumerSegmentModal extends Component {
                             <Select style={{ width: '100%' }} mode="multiple" placeholder="Select gender" onChange={this.onGenderTypeChange.bind(this)} >
                                 {genderOptions}
                             </Select>
-                        </Form.Item>
-
-                        <Form.Item key="isChildren" name="isChildren" label="Children"
-                            rules={[{ required: true, message: 'Select if consumers are children' }]}>
-                            <Radio.Group onChange={this.onIsChildrenChange} value={isChildren}>
-                                <Space direction="vertical">
-                                    <Radio value={true}>Yes</Radio>
-                                    <Radio value={false}>No</Radio>
-                                </Space>
-                            </Radio.Group>
                         </Form.Item>
 
                         <Form.Item key="education" name="education" label="Education"

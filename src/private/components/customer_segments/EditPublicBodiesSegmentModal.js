@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Form, Space, Select } from 'antd';
+import { Modal, Button, Form, Space, Select, Input } from 'antd';
 import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { updateNgoSegment } from "../../../appStore/actions/customerSegmentAction";
@@ -11,6 +11,7 @@ class EditPublicBodiesSegmentModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            name: "",
             ngoType: this.props.item.ngo_types.map(e => e.id),
         }
     }
@@ -46,6 +47,12 @@ class EditPublicBodiesSegmentModal extends Component {
         this.props.onClose();
     }
 
+    onNameChange(value){
+        this.setState({
+            name: value
+        })
+    }
+
     onNgoTypeChange(value) {
         this.setState({
             ngoType: value
@@ -76,6 +83,10 @@ class EditPublicBodiesSegmentModal extends Component {
                         initialValues={{
                             type: this.props.item.ngo_types.map(e => e.id),
                         }}>
+                        <Form.Item key="name" name="name" label="Segment name">
+                            <Input style={{width: '100%'}} placeholder="Edit segment name" defaultValue={this.state.name}
+                            value={this.state.name} onChange={this.onNameChange.bind(this)}/>
+                        </Form.Item>
                         <Form.Item key="type" name="type" label="Type"
                             rules={[{ required: true, message: 'Select type' }]}>
                             <Select style={{ width: '100%' }} mode="multiple" placeholder="Select type" onChange={this.onNgoTypeChange.bind(this)} >
@@ -83,7 +94,7 @@ class EditPublicBodiesSegmentModal extends Component {
                             </Select>
                         </Form.Item>
                     </Form>
-                </Modal >
+                </Modal>
             </>
         )
     }

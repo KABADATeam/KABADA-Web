@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Form, Space, Select, Radio } from 'antd';
+import { Modal, Button, Form, Space, Select, Radio, Input} from 'antd';
 import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { saveConsumerSegment } from "../../../appStore/actions/customerSegmentAction";
@@ -9,9 +9,9 @@ const { Option } = Select;
 
 class AddConsumerSegmentModal extends Component {
     state = {
+        name: null,
         ageGroup: null,
         genderType: null,
-        isChildren: null,
         educationType: null,
         incomeType: null,
         locationType: null,
@@ -29,7 +29,6 @@ class AddConsumerSegmentModal extends Component {
         const postObj = {
             "id": null,
             "business_plan_id": this.props.businessPlan.id,
-            "is_children": this.state.isChildren,
             "age": this.state.ageGroup,
             "gender": this.state.genderType,
             "education": this.state.educationType,
@@ -44,7 +43,6 @@ class AddConsumerSegmentModal extends Component {
         const selected_locations = this.props.categories.customer_segments_types.geographic_locations.filter((item) => this.state.locationType.some((field) => item.id === field));
 
         const reducerObj = {
-            "is_children": this.state.isChildren,
             "age": selected_ages,
             "age_titles": selected_ages.map(e => e.title).join(", "),
             "gender": selected_genders,
@@ -61,6 +59,12 @@ class AddConsumerSegmentModal extends Component {
         this.props.onClose();
     }
 
+    onNameChange(value) {
+        this.setState({
+            name: value
+        })
+    }
+
     onAgeGroupChange(value) {
         this.setState({
             ageGroup: value
@@ -70,12 +74,6 @@ class AddConsumerSegmentModal extends Component {
     onGenderTypeChange(value) {
         this.setState({
             genderType: value
-        });
-    }
-
-    onIsChildrenChange = e => {
-        this.setState({
-            isChildren: e.target.value,
         });
     }
 
@@ -97,8 +95,6 @@ class AddConsumerSegmentModal extends Component {
     }
 
     render() {
-
-        const isChildren = this.state.isChildren
 
         const ageGroupOptions = this.props.categories.customer_segments_types.age_groups.map((obj) =>
             <Option key={obj.id} value={obj.id}>{obj.title}</Option>
@@ -136,7 +132,10 @@ class AddConsumerSegmentModal extends Component {
                     }
                 >
                     <Form hideRequiredMark layout="vertical" id="addConsumerForm" name="addConsumerForm" onFinish={this.onOK}>
-                        <Form.Item key="name" name="name" label="Age group (years)"
+                        <Form.Item key="name" name="name" label="Segment Name">
+                           <Input style={{width: '100%'}} placeholder="Add segment name" onChange={this.onNameChange.bind(this)}/>
+                        </Form.Item>
+                        <Form.Item key="age" name="age" label="Age group (years)"
                             rules={[{ required: true, message: 'Select age group (years)' }]}>
                             <Select style={{ width: '100%' }} mode="multiple" placeholder="Select age group (years)" onChange={this.onAgeGroupChange.bind(this)} >
                                 {ageGroupOptions}
@@ -148,16 +147,6 @@ class AddConsumerSegmentModal extends Component {
                             <Select style={{ width: '100%' }} mode="multiple" placeholder="Select gender" onChange={this.onGenderTypeChange.bind(this)} >
                                 {genderOptions}
                             </Select>
-                        </Form.Item>
-
-                        <Form.Item key="isChildren" name="isChildren" label="Children"
-                            rules={[{ required: true, message: 'Select if consumers are children' }]}>
-                            <Radio.Group onChange={this.onIsChildrenChange} value={isChildren}>
-                                <Space direction="vertical">
-                                    <Radio value={true}>Yes</Radio>
-                                    <Radio value={false}>No</Radio>
-                                </Space>
-                            </Radio.Group>
                         </Form.Item>
 
                         <Form.Item key="education" name="education" label="Education"

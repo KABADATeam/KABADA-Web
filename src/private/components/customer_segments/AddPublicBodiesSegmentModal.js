@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Form, Space, Select } from 'antd';
+import { Modal, Button, Form, Space, Select, Input } from 'antd';
 import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { saveNgoSegment } from "../../../appStore/actions/customerSegmentAction";
@@ -9,6 +9,7 @@ const { Option } = Select;
 
 class AddPublicBodiesSegmentModal extends Component {
     state = {
+        name: null,
         ngoType: null,
     }
 
@@ -40,6 +41,12 @@ class AddPublicBodiesSegmentModal extends Component {
         this.props.onClose();
     }
 
+    onNameChange(value) {
+        this.setState({
+            name: value
+        })
+    }
+
     onNgoTypeChange(value) {
         this.setState({
             ngoType: value
@@ -68,6 +75,9 @@ class AddPublicBodiesSegmentModal extends Component {
                     }
                 >
                     <Form hideRequiredMark layout="vertical" id="addPublicBodiesNgoForm" name="addPublicBodiesNgoForm" onFinish={this.onOK}>
+                        <Form.Item key="name" name="name" label="Segment name">
+                            <Input style={{width: '100%'}} placeholder="Add segment name" onChange={this.onNameChange.bind(this)}/>
+                        </Form.Item>
                         <Form.Item key="type" name="type" label="Type"
                             rules={[{ required: true, message: 'Select type' }]}>
                             <Select style={{ width: '100%' }} mode="multiple" allowClear placeholder="Select type" onChange={this.onNgoTypeChange.bind(this)} >
@@ -75,7 +85,7 @@ class AddPublicBodiesSegmentModal extends Component {
                             </Select>
                         </Form.Item>
                     </Form>
-                </Modal >
+                </Modal>
             </>
         )
     }
