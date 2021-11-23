@@ -27,7 +27,7 @@ export const cashFlowReducer = (state = [], action) => {
             const renderContent = (value, row, index) => {
                 const obj = {
                     children: <p style={{ marginBottom: 0 }}>{(typeof value === 'number') ? value : '-'}</p>,
-                    props: { style: { color: (typeof value === 'number' && value < 0) ? '#820014' : "#262626", background: (typeof value === 'number' && value <= 0) ? "#FFCCC7" : '#FFFFFF' } },
+                    props: { style: { color: (typeof value === 'number' && value < 0) ? '#820014' : "#262626", background: (typeof value === 'number' && value < 0) ? "#FFCCC7" : '#FFFFFF' } },
                 };
                 if (row.tag === "title" || row.tag === "section") {
                     obj.props.colSpan = 0;
@@ -45,6 +45,8 @@ export const cashFlowReducer = (state = [], action) => {
                 tableColumns.push({ title: index.toString(), dataIndex: index, key: index, align: 'center', width: 90, render: renderContent })
             }
             return { ...cash, "dataForTable": dataForTable.map((obj, index) => ({ ...obj, "key": index })), "tableColumns": tableColumns };
+        case 'RESET_CASH_FLOW':
+            return {state: []}
         default:
             return state;
     }
