@@ -11,7 +11,7 @@ class EditPublicBodiesSegmentModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: "",
+            name: this.props.item.comment,
             ngoType: this.props.item.ngo_types.map(e => e.id),
         }
     }
@@ -30,6 +30,7 @@ class EditPublicBodiesSegmentModal extends Component {
             "id": this.props.item.id,
             "business_plan_id": this.props.businessPlan.id,
             "ngo_types": this.state.ngoType,
+            "comment":this.state.name
         };
 
         const selected_ngo_types = this.props.categories.customer_segments_types.ngo_types.filter((item) => this.state.ngoType.some((field) => item.id === field));
@@ -39,7 +40,7 @@ class EditPublicBodiesSegmentModal extends Component {
             "key": this.props.item.id,
             "ngo_types": selected_ngo_types,
             "ngo_types_titles": selected_ngo_types.map(e => e.title).join(", "),
-            "comment": null
+            "comment": this.state.name
         };
 
         this.props.updateNgoSegment(postObj, reducerObj);
@@ -85,7 +86,7 @@ class EditPublicBodiesSegmentModal extends Component {
                         }}>
                         <Form.Item key="name" name="name" label="Segment name">
                             <Input style={{width: '100%'}} placeholder="Edit segment name" defaultValue={this.state.name}
-                            value={this.state.name} onChange={this.onNameChange.bind(this)}/>
+                            value={this.state.name} onChange={(e) => this.onNameChange(e.target.value)}/>
                         </Form.Item>
                         <Form.Item key="type" name="type" label="Type"
                             rules={[{ required: true, message: 'Select type' }]}>

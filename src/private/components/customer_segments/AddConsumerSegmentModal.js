@@ -33,7 +33,8 @@ class AddConsumerSegmentModal extends Component {
             "gender": this.state.genderType,
             "education": this.state.educationType,
             "income": this.state.incomeType,
-            "geographic_location": this.state.locationType
+            "geographic_location": this.state.locationType,
+            "comment": this.state.name
         };
 
         const selected_ages = this.props.categories.customer_segments_types.age_groups.filter((item) => this.state.ageGroup.some((field) => item.id === field));
@@ -51,9 +52,11 @@ class AddConsumerSegmentModal extends Component {
             "income": selected_incomes,
             "geographic_location": selected_locations,
             "location_titles": selected_locations.map(e => e.title).join(", "),
-            "comment": null
+            "comment": this.state.name
         }
 
+        console.log('Post obj:'+JSON.stringify(postObj))
+        console.log('Reducer obj:'+JSON.stringify(reducerObj))
         this.props.saveConsumerSegment(postObj, reducerObj);
 
         this.props.onClose();
@@ -133,7 +136,7 @@ class AddConsumerSegmentModal extends Component {
                 >
                     <Form hideRequiredMark layout="vertical" id="addConsumerForm" name="addConsumerForm" onFinish={this.onOK}>
                         <Form.Item key="name" name="name" label="Segment Name">
-                           <Input style={{width: '100%'}} placeholder="Add segment name" onChange={this.onNameChange.bind(this)}/>
+                           <Input style={{width: '100%'}} placeholder="Add segment name" onChange={(e) =>this.onNameChange(e.target.value)}/>
                         </Form.Item>
                         <Form.Item key="age" name="age" label="Age group (years)"
                             rules={[{ required: true, message: 'Select age group (years)' }]}>
@@ -170,7 +173,7 @@ class AddConsumerSegmentModal extends Component {
                             </Select>
                         </Form.Item>
                     </Form>
-                </Modal >
+                </Modal>
             </>
         )
     }

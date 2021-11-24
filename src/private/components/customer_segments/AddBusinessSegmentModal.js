@@ -37,6 +37,7 @@ class AddBusinessSegmentModal extends Component {
 
         const postObj = {
             "id": null,
+            "comment": this.state.name,
             "business_plan_id": this.props.businessPlan.id,
             "business_type": this.state.type,
             "company_size": this.state.companySize,
@@ -60,8 +61,11 @@ class AddBusinessSegmentModal extends Component {
             //"income": [],
             "geographic_location": selected_locations,
             "location_titles": selected_locations.map(e => e.title).join(", "),
-            "comment": null
+            "comment": this.state.name
         };
+
+        console.log("Post obj:"+JSON.stringify(postObj))
+        console.log("Reducer obj:"+JSON.stringify(reducerObj))
 
         this.props.saveBusinessSegment(postObj, reducerObj);
 
@@ -135,7 +139,7 @@ class AddBusinessSegmentModal extends Component {
                 >
                     <Form hideRequiredMark layout="vertical" id="addBusinessSegmentForm" name="addBusinessSegmentForm" onFinish={this.onOK.bind(this)}>
                         <Form.Item key="name" name="name" label="Segment name">
-                            <Input style={{width: '100%'}} placeholder="Add segment name" onChange={this.onNameChange.bind(this)}/>
+                            <Input style={{width: '100%'}} placeholder="Add segment name" onChange={(e) => this.onNameChange(e.target.value)}/>
                         </Form.Item>
                         <Form.Item key="type" name="type" label="Type"
                             rules={[{ required: true, message: 'Select business type' }]}>

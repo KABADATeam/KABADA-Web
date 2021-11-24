@@ -36,7 +36,8 @@ class EditConsumerSegmentModal extends Component {
             "gender": this.state.genderType,
             "education": this.state.educationType,
             "income": this.state.incomeType,
-            "geographic_location": this.state.locationType
+            "geographic_location": this.state.locationType,
+            "comment": this.state.name
         };
 
         const selected_ages = this.props.categories.customer_segments_types.age_groups.filter((item) => this.state.ageGroup.some((field) => item.id === field));
@@ -56,7 +57,7 @@ class EditConsumerSegmentModal extends Component {
             "income": selected_incomes,
             "geographic_location": selected_locations,
             "location_titles": selected_locations.map(e => e.title).join(", "),
-            "comment": null
+            "comment": this.state.name
         };
 
         this.props.updateConsumerSegment(postObj, reducerObj);
@@ -150,7 +151,7 @@ class EditConsumerSegmentModal extends Component {
                     >
                         <Form.Item key="name" name="name" label="Segment name">
                             <Input style={{ width: '100%' }} placeholder="Edit segment name" defaultValue={this.state.name}
-                                value={this.state.name} onChange={this.onNameChange.bind(this)} />
+                                value={this.state.name} onChange={(e) => this.onNameChange(e.target.value)} />
                         </Form.Item>
                         <Form.Item key="age" name="age" label="Age group (years)"
                             rules={[{ required: true, message: 'Select age group (years)' }]}>
