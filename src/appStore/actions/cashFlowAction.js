@@ -4,6 +4,7 @@ import { errorHandler } from './errorHandler';
 export const getCashFlow = (planId) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
+        dispatch({ type: 'RESET_CASH_FLOW' })
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/plans/cashflow/' + planId, { headers: { Authorization: `Bearer ${token}` } });

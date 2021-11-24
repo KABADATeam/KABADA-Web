@@ -1,6 +1,7 @@
 export const countryVATReducer = (
     state = {
-        vat : []
+        vat : [],
+        defaultVAT: null
     }, action) => {
     switch (action.type) {
         case 'FETCHING_COUNTRY_VAT_SUCCESS':
@@ -23,7 +24,9 @@ export const countryVATReducer = (
                 vatValue: 0
             })
             const sortedVATArray = vatArray.sort((a,b) => { return b.vatValue - a.vatValue})
-            return { ...state, vat: sortedVATArray };
+            const defaultVAT = objectValues[0];
+            console.log(defaultVAT);
+            return { ...state, vat: sortedVATArray, defaultVAT: defaultVAT };
         default:
             return state;
     }
