@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Form, Space, Select } from 'antd';
+import { Modal, Button, Form, Space, Select, Input } from 'antd';
 import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { saveNgoSegment } from "../../../appStore/actions/customerSegmentAction";
@@ -9,6 +9,7 @@ const { Option } = Select;
 
 class AddPublicBodiesSegmentModal extends Component {
     state = {
+        name: null,
         ngoType: null,
     }
 
@@ -25,6 +26,7 @@ class AddPublicBodiesSegmentModal extends Component {
             "id": null,
             "business_plan_id": this.props.businessPlan.id,
             "ngo_types": this.state.ngoType,
+            "comment":this.state.name
         };
 
         const selected_ngo_types = this.props.categories.customer_segments_types.ngo_types.filter((item) => this.state.ngoType.some((field) => item.id === field));
@@ -32,12 +34,21 @@ class AddPublicBodiesSegmentModal extends Component {
         const reducerObj = {
             "ngo_types": selected_ngo_types,
             "ngo_types_titles": selected_ngo_types.map(e => e.title).join(", "),
-            "comment": null
+            "comment": this.state.name
         }
+
+        console.log("Post obj:"+JSON.stringify(postObj))
+        console.log("Reducer obj:"+JSON.stringify(reducerObj))
 
         this.props.saveNgoSegment(postObj, reducerObj);
 
         this.props.onClose();
+    }
+
+    onNameChange(value) {
+        this.setState({
+            name: value
+        })
     }
 
     onNgoTypeChange(value) {
@@ -68,6 +79,9 @@ class AddPublicBodiesSegmentModal extends Component {
                     }
                 >
                     <Form hideRequiredMark layout="vertical" id="addPublicBodiesNgoForm" name="addPublicBodiesNgoForm" onFinish={this.onOK}>
+                        <Form.Item key="name" name="name" label="Segment name">
+                            <Input style={{width: '100%'}} placeholder="Add segment name" onChange={(e) => this.onNameChange(e.target.value)}/>
+                        </Form.Item>
                         <Form.Item key="type" name="type" label="Type"
                             rules={[{ required: true, message: 'Select type' }]}>
                             <Select style={{ width: '100%' }} mode="multiple" allowClear placeholder="Select type" onChange={this.onNgoTypeChange.bind(this)} >
@@ -75,7 +89,7 @@ class AddPublicBodiesSegmentModal extends Component {
                             </Select>
                         </Form.Item>
                     </Form>
-                </Modal >
+                </Modal>
             </>
         )
     }

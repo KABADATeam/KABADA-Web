@@ -57,6 +57,7 @@ class AddKeyResourceModal extends Component {
             "name": this.state.description,
             "selections": selections
         };
+        console.log('post obj:'+JSON.stringify(postObject))
 
         this.props.saveResource(postObject, this.props.category);
         this.setState({
@@ -116,7 +117,7 @@ class AddKeyResourceModal extends Component {
         if (this.props.resourceType !== "Human resources") {
             if (array[0] !== 0) {
                 this.setState({
-                    selections: [e.target.value, 0],
+                    selections: array,
                     disable: true
                 }, () => console.log('State disable:'+this.state.disable));
             } else {
@@ -130,7 +131,7 @@ class AddKeyResourceModal extends Component {
             //if not Myself is selected disable
             if(array[0] === 2){
                 this.setState({
-                    selections: [e.target.value, 0],
+                    selections: array,
                     disable: true
                 });
             }else{

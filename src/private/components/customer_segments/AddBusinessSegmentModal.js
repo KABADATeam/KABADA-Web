@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Form, Space, Select, InputNumber } from 'antd';
+import { Modal, Button, Form, Space, Select, InputNumber, Input} from 'antd';
 import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { saveBusinessSegment } from "../../../appStore/actions/customerSegmentAction";
@@ -17,6 +17,7 @@ const inputStyle = {
 
 class AddBusinessSegmentModal extends Component {
     state = {
+        name: null,
         type: null,
         companySize: null,
         locationType: null,
@@ -36,6 +37,7 @@ class AddBusinessSegmentModal extends Component {
 
         const postObj = {
             "id": null,
+            "comment": this.state.name,
             "business_plan_id": this.props.businessPlan.id,
             "business_type": this.state.type,
             "company_size": this.state.companySize,
@@ -59,12 +61,21 @@ class AddBusinessSegmentModal extends Component {
             //"income": [],
             "geographic_location": selected_locations,
             "location_titles": selected_locations.map(e => e.title).join(", "),
-            "comment": null
+            "comment": this.state.name
         };
+
+        console.log("Post obj:"+JSON.stringify(postObj))
+        console.log("Reducer obj:"+JSON.stringify(reducerObj))
 
         this.props.saveBusinessSegment(postObj, reducerObj);
 
         this.props.onClose();
+    }
+
+    onNameChange(value) {
+        this.setState({
+            name: value
+        })
     }
 
     onTypeChange(value) {
@@ -127,6 +138,9 @@ class AddBusinessSegmentModal extends Component {
                     }
                 >
                     <Form hideRequiredMark layout="vertical" id="addBusinessSegmentForm" name="addBusinessSegmentForm" onFinish={this.onOK.bind(this)}>
+                        <Form.Item key="name" name="name" label="Segment name">
+                            <Input style={{width: '100%'}} placeholder="Add segment name" onChange={(e) => this.onNameChange(e.target.value)}/>
+                        </Form.Item>
                         <Form.Item key="type" name="type" label="Type"
                             rules={[{ required: true, message: 'Select business type' }]}>
                             <Select style={{ width: '100%' }} mode="multiple" placeholder="Select type" onChange={this.onTypeChange.bind(this)} >
@@ -159,7 +173,7 @@ class AddBusinessSegmentModal extends Component {
                             </Select>
                         </Form.Item>
                     </Form>
-                </Modal >
+                </Modal>
             </>
         )
     }

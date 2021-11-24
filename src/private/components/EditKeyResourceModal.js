@@ -24,8 +24,7 @@ class EditKeyResourceModal extends Component {
         selectedItemId: null,
         selections: [0, 0],
         name: null,
-        is_changed: [false, false],
-        disable: false
+        is_changed: [false, false]
     }
 
     onCancel = () => {
@@ -92,16 +91,29 @@ class EditKeyResourceModal extends Component {
         if (category !== null) {
             const type = category.types.find(x => x.id === this.state.selectedItemId);
             const uiElements = type.selections.map((item, i) =>
-                <Form.Item key={i} label={item.title}>
-                    <Radio.Group key={i} onChange={this.onRadioSelection.bind(this, i)} value={this.state.selections[i]}>
-                        <Space direction="vertical">
-                            {item.options.map((o, j) =>
-                                <Radio key={j} value={j}>{o.title}</Radio>
-                            )}
-                        </Space>
-                    </Radio.Group>
+                <div>
+                    {item.title === 'Frequency' ?
+                        <Form.Item key={i} label={item.title}>
+                            <Radio.Group key={i} disabled={this.state.disable} onChange={this.onRadioSelection.bind(this, i)} value={this.state.selections[i]}>
+                                <Space direction="vertical">
+                                    {item.options.map((o, j) =>
+                                        <Radio key={j} value={j}>{o.title}</Radio>
+                                    )}
+                                </Space>
+                            </Radio.Group>
 
-                </Form.Item>
+                        </Form.Item> :
+                        <Form.Item key={i} label={item.title}>
+                            <Radio.Group key={i} onChange={this.onRadioSelection.bind(this, i)} value={this.state.selections[i]}>
+                                <Space direction="vertical">
+                                    {item.options.map((o, j) =>
+                                        <Radio key={j} value={j}>{o.title}</Radio>
+                                    )}
+                                </Space>
+                            </Radio.Group>
+
+                        </Form.Item>}
+                </div>
             );
             return uiElements;
         }
@@ -113,25 +125,30 @@ class EditKeyResourceModal extends Component {
     getInitialSelections() {
         const array = this.transformSelections();
         const uiElements = this.props.resource.selections !== null ? this.props.resource.selections.map((item, i) =>
-            <Form.Item key={i} label={item.title}>
+            <div>
                 {item.title === 'Frequency' ?
-                    <Radio.Group key={i} disabled={this.state.disable} onChange={this.onRadioSelection.bind(this, i)} value={this.state.is_changed[i] === false ? array[i] : this.state.selections[i]} >
-                        <Space direction="vertical">
-                            {item.options.map((o, j) =>
-                                <Radio key={j} value={j}>{o.title}</Radio>
-                            )}
+                    <Form.Item key={i} label={item.title}>
+                        <Radio.Group key={i} disabled={this.state.disable} onChange={this.onRadioSelection.bind(this, i)} value={this.state.is_changed[i] === false ? array[i] : this.state.selections[i]} >
+                            <Space direction="vertical">
+                                {item.options.map((o, j) =>
+                                    <Radio key={j} value={j}>{o.title}</Radio>
+                                )}
 
-                        </Space>
-                    </Radio.Group> : <Radio.Group key={i} onChange={this.onRadioSelection.bind(this, i)} value={this.state.is_changed[i] === false ? array[i] : this.state.selections[i]} >
-                        <Space direction="vertical">
-                            {item.options.map((o, j) =>
-                                <Radio key={j} value={j}>{o.title}</Radio>
-                            )}
+                            </Space>
+                        </Radio.Group>
+                    </Form.Item>
+                    : <Form.Item>
+                        <Radio.Group key={i} onChange={this.onRadioSelection.bind(this, i)} value={this.state.is_changed[i] === false ? array[i] : this.state.selections[i]} >
+                            <Space direction="vertical">
+                                {item.options.map((o, j) =>
+                                    <Radio key={j} value={j}>{o.title}</Radio>
+                                )}
 
-                        </Space>
-                    </Radio.Group>}
+                            </Space>
+                        </Radio.Group>
+                    </Form.Item>}
+            </div>
 
-            </Form.Item>
         )
             : []
         return uiElements;
@@ -142,20 +159,37 @@ class EditKeyResourceModal extends Component {
         const changesArray = this.state.is_changed;
         changesArray[item] = true;
         array[item] = e.target.value;
-        // if not Rent is selected set disabled to true
-        if (array[0] !== 0) {
-            this.setState({
-                selections: [e.target.value, 0],
-                is_changed: [true, true],
-                disable: true
-            })
-        } else {
-            this.setState({
-                selections: array,
-                is_changed: changesArray,
-                disable: false
-            })
+        if (this.props.resource.category.description === 'Human resources') {
+            if (array[0] === 2) {
+                this.setState({
+                    selections: array,
+                    is_changed: changesArray,
+                    disable: true
+                })
+            } else {
+                this.setState({
+                    selections: array,
+                    is_changed: changesArray,
+                    disable: false
+                })
+            }
+        } else if (this.props.resource.category.description === "Physical resources" || this.props.resource.category.description === "Intellectual resources") {
+            //if its Physical or Intelectual resources. THEN if not Rent is selected set disabled to true
+            if (array[0] !== 0) {
+                this.setState({
+                    selections: array,
+                    is_changed: changesArray,
+                    disable: true
+                })
+            } else {
+                this.setState({
+                    selections: array,
+                    is_changed: changesArray,
+                    disable: false
+                })
+            }
         }
+
 
     }
 
@@ -178,16 +212,36 @@ class EditKeyResourceModal extends Component {
         }
     }
     componentDidMount() {
+        console.log('Selected item id:' + this.state.selectedItemId + 'props id:' + this.props.resource.type_id)
+        // if(this.state.selectedItemId === null){
+        //     this.setState({
+        //         selectedItemId: this.props.resource.type_id
+        //     }, () => console.log('Selected item id set to:'+this.state.selectedItemId))
+        // }
+
         // if options length is only 2 then its raw material selected
         if (this.props.resource.selections[0].options.length === 2) {
             this.setState({
                 disable: false
             })
         } else {
-            if (this.props.resource.selections[0].options[1].selected === true || this.props.resource.selections[0].options[2].selected === true) {
-                this.setState({
-                    disable: true
-                })
+            // if we are editing one of Human recources
+            if (this.props.resource.category.description === 'Human resources') {
+                // If ownership type is Mysalf then disable frequencies
+                if (this.props.resource.selections[0].options[2].selected === true) {
+                    this.setState({
+                        disable: true
+                    })
+                }
+            } else if (this.props.resource.category.description === "Physical resources" || this.props.resource.category.description === "Intellectual resources") {
+                // if we are editing Physical or Intelectual recourses. which structure is basically same
+                // if selected ownership type is Buy or Own we have to disable Frequencies
+                if (this.props.resource.selections[0].options[1].selected === true || this.props.resource.selections[0].options[2].selected === true) {
+                    console.log('Disable')
+                    this.setState({
+                        disable: true
+                    })
+                }
             }
         }
     }
