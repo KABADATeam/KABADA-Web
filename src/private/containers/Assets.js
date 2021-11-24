@@ -291,7 +291,8 @@ class AssetsWindow extends React.Component {
     }
 
     render() {
-        const defaultVATValue = this.props.vat.vat.find((element) => element.key === 0);
+        console.log(this.props.vat);
+        //const defaultVATValue = this.props.vat.vat.find((element) => element.key === 0).vatValue;
         const vatOptions = this.props.vat.vat.map((v, index) => (
             <Option value={v.vatValue}>{v.vatValue + "%"}</Option>
         ))
@@ -353,7 +354,7 @@ class AssetsWindow extends React.Component {
                 width: '20%',
                 render: (text, obj, record) => (
                     <Space size={0}>
-                        <Select defaultValue={text === null ? defaultVATValue.vatValue : text}
+                        <Select defaultValue={text === null ? this.props.vat.defaultVAT : text}
                             suffixIcon={<CaretDownFilled />}
                             onChange={e => this.updateAssetsItemsProperties(e, obj, 'vat')}
                         >
@@ -421,7 +422,7 @@ class AssetsWindow extends React.Component {
                                             </div>
                                         )}
                                         rowKey="resource_id"
-                                        dataSource={this.state.assets_items}
+                                        dataSource={this.props.assets.physical_assets}
                                         columns={assetsColumns}
                                         pagination={false}
                                         footer={pageData => {
