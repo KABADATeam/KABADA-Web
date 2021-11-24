@@ -52,7 +52,8 @@ class Channels extends React.Component {
         super(props);
         this.state = {
             item: null,
-            showAddChannelModal: false
+            showAddChannelModal: false,
+            productId: ""
         };
     }
 
@@ -93,7 +94,12 @@ class Channels extends React.Component {
             this.props.getSelectedPlanOverview(this.props.businessPlan.id);
         });
     }
-
+    onProductChange = (id) => {
+        console.log(id)
+        this.setState({
+            productId: id
+        })
+    }
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
             if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
@@ -114,7 +120,7 @@ class Channels extends React.Component {
 
     render() {
         console.log(this.props)
-;
+            ;
         const data = this.props.channels.channels.map(item => {
             const channel_name = item.channel_type.name;
             const distribution_names = item.distribution_channels === null ? [] : item.distribution_channels.map(item => item.name);
@@ -227,15 +233,15 @@ class Channels extends React.Component {
                         </Col>
                     </Row>
                 </Col>
-                
+
                 {
                     this.state.showAddChannelModal === true ?
-                        <AddChannelModal visibility={true} onClose={this.onCloseAddChannelModal} />
+                        <AddChannelModal visibility={true} onClose={this.onCloseAddChannelModal} onProductChange={this.onProductChange.bind(this)} />
                         : null
                 }
-                
+
                 {
-                    this.state.item !== null ? 
+                    this.state.item !== null ?
                         <EditChannelModal visibility={true} item={this.state.item} onClose={this.onCloseEditChannelModal} />
                         : null
                 }

@@ -13,6 +13,7 @@ class AddChannelModal extends Component {
         productError: '',
         channelError: '',
         subchannelError: '',
+        productType: '',
 
         shopType: null,
         location: null,
@@ -46,14 +47,14 @@ class AddChannelModal extends Component {
             return;
         }
 
-        if ( Object.keys(this.state.selectedChannel).length === 1) {
+        if (Object.keys(this.state.selectedChannel).length === 1) {
             this.setState({
                 channelError: 'Select channel'
             });
             return;
         }
 
-        if ( Object.keys(this.state.selectedChannel).length > 1) {
+        if (Object.keys(this.state.selectedChannel).length > 1) {
             if (this.state.selectedChannel.subtypes !== null && Object.keys(this.state.selectedSubChannel).length === 1) {
                 this.setState({
                     subchannelError: 'Select channel'
@@ -98,12 +99,8 @@ class AddChannelModal extends Component {
         this.props.onClose();
     }
 
-    onProductChange (id) {
-        this.setState({
-            selectedProducts: id,
-            productError: ''
-        });
-    }
+
+
 
     onChannelChange(itemId) {
         const selectedChannel = this.props.types.find(x => x.id === itemId);
@@ -158,22 +155,60 @@ class AddChannelModal extends Component {
         });
     }
 
+    componentDidMount() {
+        console.log(this.props.products.products);
+        console.log(this.props.types);
+    }
+
+    // onProductChange(id, product_type) {
+
+    //     console.log(id);
+    //     console.log(this.state.selectedProducts);
+    //     console.log(this.props.products.products.map((x) => x.id));
+    //     console.log(product_type);
+    //     const filter = this.props.products.products.filter((x, index) => x.id === id[0])
+    //     console.log(filter.map((x) => x.product_type));
+
+    //     this.setState({
+    //         selectedProducts: id,
+    //         productError: '',
+    //         productType: filter.map((x) => x.product_type)
+    //     }, () => console.log(this.state.productType));
+    // }
+
+
+
+    onProductChange = (id, type) => {
+
+
+        const filter = this.props.products.products.filter((x, index) => x.id === id[0])
+        type = filter.map((x) => x.product_type)
+        this.setState({
+            selectedProducts: id,
+            productType: type
+        }, () => console.log(this.state.productType))
+        console.log(id);
+
+    }
+
     render() {
         const productOptions = this.props.products.products.map((obj) =>
+
             <Option key={obj.id} value={obj.id}>{obj.name}</Option>
+
         );
 
         const channelOptions = this.props.types.map((obj) =>
+
             <Option key={obj.id} value={obj.id}>{obj.name}</Option>
         );
 
         const channelSubtypeOptions = this.state.selectedChannel.subtypes === null ? [] :
-            this.state.selectedChannel.subtypes.map((obj) =>
-                {
-                    return (obj.name !== "" ? <Option key={obj.id} value={obj.id}>{obj.name}</Option> : null)
-                }
+            this.state.selectedChannel.subtypes.map((obj) => {
+                return (obj.name !== "" ? <Option key={obj.id} value={obj.id}>{obj.name}</Option> : null)
+            }
             );
-        
+
         const shopTypeOptions = this.state.selectedSubChannel.types === null ? [] : this.state.selectedSubChannel.types.map((obj) =>
             <Radio key={obj.id} value={obj.id}>{obj.name}</Radio>
         );
@@ -193,7 +228,7 @@ class AddChannelModal extends Component {
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
-                    title={<Space><ArrowLeftOutlined onClick={this.onBack}/>Add New Channel</Space>}
+                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />Add New Channel</Space>}
                     visible={this.props.visibility}
                     onCancel={this.onCancel}
                     footer={
@@ -206,7 +241,10 @@ class AddChannelModal extends Component {
                     <Form layout="vertical" id="myForm" name="myForm" onFinish={this.handleOk}>
                         <Form.Item key="product" name="product" label="Choose product"
                             validateStatus={this.state.productError !== '' ? 'error' : 'success'}>
-                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Select product(s)" onChange={this.onProductChange.bind(this)} >
+                            {/* <Select style={{ width: '100%' }} mode="multiple" placeholder="Select product(s)" onChange={this.onProductChange.bind(this)} >
+                                {productOptions}
+                            </Select> */}
+                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Select product(s)" onChange={(e) => this.onProductChange(e)} >
                                 {productOptions}
                             </Select>
                         </Form.Item>
@@ -214,7 +252,13 @@ class AddChannelModal extends Component {
                         <Form.Item key="channelType" name="channelType" label="Channel"
                             validateStatus={this.state.channelError !== '' ? 'error' : 'success'}>
                             <Select style={{ width: '100%' }} placeholder="Select channel" onChange={this.onChannelChange.bind(this)} >
-                                {channelOptions}
+                                {this.state.productType[0] !== 'Service' ? channelOptions : (
+                                    <>
+                                        <Option key='3c81ac65-960e-44aa-b752-17808fa31c1f' value='3c81ac65-960e-44aa-b752-17808fa31c1f'>Direct sales</Option>
+                                        <Option key='b0cb1000-5a92-47a0-a45b-499c5f580524' value='b0cb1000-5a92-47a0-a45b-499c5f580524'>Agents</Option>
+                                        <Option key='d57d1d34-e721-4d46-a5f4-a3f9e7d3a198' value='d57d1d34-e721-4d46-a5f4-a3f9e7d3a198'>Other</Option>
+                                    </>
+                                )}
                             </Select>
                         </Form.Item>
 
@@ -238,10 +282,10 @@ class AddChannelModal extends Component {
                                     </Radio.Group>
                                 </Form.Item>
                         }
-                        
+
                         {
                             this.state.shopType === null ? null :
-                                this.state.shopType.name === "Physical" ? 
+                                this.state.shopType.name === "Physical" ?
                                     <>
                                         <Form.Item key="physicalLocation" label="Physical store location">
                                             <Radio.Group key="groupTwo" onChange={this.onLocationSelection.bind(this)} value={this.state.location === null ? 0 : this.state.location.id}>
