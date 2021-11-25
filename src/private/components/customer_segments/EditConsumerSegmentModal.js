@@ -11,7 +11,7 @@ class EditConsumerSegmentModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: "",
+            segmentName: this.props.item.segment_name,
             ageGroup: this.props.item.age.map(e => e.id),
             genderType: this.props.item.gender.map(e => e.id),
             educationType: this.props.item.education.map(e => e.id),
@@ -37,7 +37,7 @@ class EditConsumerSegmentModal extends Component {
             "education": this.state.educationType,
             "income": this.state.incomeType,
             "geographic_location": this.state.locationType,
-            "comment": this.state.name
+            "segment_name": this.state.segmentName
         };
 
         const selected_ages = this.props.categories.customer_segments_types.age_groups.filter((item) => this.state.ageGroup.some((field) => item.id === field));
@@ -57,7 +57,7 @@ class EditConsumerSegmentModal extends Component {
             "income": selected_incomes,
             "geographic_location": selected_locations,
             "location_titles": selected_locations.map(e => e.title).join(", "),
-            "comment": this.state.name
+            "segment_name": this.state.segmentName
         };
 
         this.props.updateConsumerSegment(postObj, reducerObj);
@@ -67,7 +67,7 @@ class EditConsumerSegmentModal extends Component {
 
     onNameChange(value) {
         this.setState({
-            name: value
+            segmentName: value
         })
     }
 
@@ -150,8 +150,8 @@ class EditConsumerSegmentModal extends Component {
                         }}
                     >
                         <Form.Item key="name" name="name" label="Segment name">
-                            <Input style={{ width: '100%' }} placeholder="Edit segment name" defaultValue={this.state.name}
-                                value={this.state.name} onChange={(e) => this.onNameChange(e.target.value)} />
+                            <Input style={{ width: '100%' }} placeholder="Edit segment name" defaultValue={this.state.segmentName}
+                                value={this.state.segmentName} onChange={(e) => this.onNameChange(e.target.value)} />
                         </Form.Item>
                         <Form.Item key="age" name="age" label="Age group (years)"
                             rules={[{ required: true, message: 'Select age group (years)' }]}>

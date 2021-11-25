@@ -17,7 +17,7 @@ const inputStyle = {
 
 class AddBusinessSegmentModal extends Component {
     state = {
-        name: null,
+        segmentName: null,
         type: null,
         companySize: null,
         locationType: null,
@@ -37,7 +37,7 @@ class AddBusinessSegmentModal extends Component {
 
         const postObj = {
             "id": null,
-            "comment": this.state.name,
+            "segment_name": this.state.segmentName,
             "business_plan_id": this.props.businessPlan.id,
             "business_type": this.state.type,
             "company_size": this.state.companySize,
@@ -61,7 +61,7 @@ class AddBusinessSegmentModal extends Component {
             //"income": [],
             "geographic_location": selected_locations,
             "location_titles": selected_locations.map(e => e.title).join(", "),
-            "comment": this.state.name
+            "segment_name": this.state.segmentName
         };
 
         console.log("Post obj:"+JSON.stringify(postObj))
@@ -74,7 +74,7 @@ class AddBusinessSegmentModal extends Component {
 
     onNameChange(value) {
         this.setState({
-            name: value
+            segmentName: value
         })
     }
 
