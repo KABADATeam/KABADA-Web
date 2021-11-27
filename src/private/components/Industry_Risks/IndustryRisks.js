@@ -148,8 +148,8 @@ class IndustryRisks extends Component {
                     expandable={{
                         expandedRowRender: record => (
                             <>
-                                <p style={{ margin: 0 }}>Alco: {record.comments}</p>
-                                <Alert message={"Possible country-specific deviations: " + record.countryDeviationScore + " - Paskaidrojošais teksts"} type="info" showIcon />
+                                <p style={{ margin: 0 }}>{record.comments}</p>
+                                <Alert message={"Possible country-specific deviations: " + record.countryDeviationScore} type="info" showIcon />
                             </>
                         ),
                         rowExpandable: record => record.name !== 'Not Expandable',
@@ -169,8 +169,8 @@ class IndustryRisks extends Component {
                     expandable={{
                         expandedRowRender: record => (
                             <>
-                                <p style={{ margin: 0 }}>Alco: {record.comments}</p>
-                                <Alert message={"Possible country-specific deviations: " + record.countryDeviationScore + " - Paskaidrojošais teksts"} type="info" showIcon />
+                                <p style={{ margin: 0 }}>{record.comments}</p>
+                                <Alert message={"Possible country-specific deviations: " + record.countryDeviationScore} type="info" showIcon />
                             </>
                         ),
                         rowExpandable: record => record.name !== 'Not Expandable',
@@ -189,8 +189,8 @@ class IndustryRisks extends Component {
                     expandable={{
                         expandedRowRender: record => (
                             <>
-                                <p style={{ margin: 0 }}>Alco: {record.comments}</p>
-                                <Alert message={"Possible country-specific deviations: " + record.countryDeviationScore + " - Paskaidrojošais teksts"} type="info" showIcon />
+                                <p style={{ margin: 0 }}>{record.comments}</p>
+                                <Alert message={"Possible country-specific deviations: " + record.countryDeviationScore} type="info" showIcon />
                             </>
                         ),
                         rowExpandable: record => record.name !== 'Not Expandable',
