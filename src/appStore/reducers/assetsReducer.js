@@ -1,64 +1,138 @@
+const computeTotalInvestments = (array) => {
+    const total_investments_values_list = [];
+    const filtered = array.filter(obj => obj.amount != null)
+    filtered.map((item) => {
+        const obj = {
+            amount: item.amount
+        }
+        console.log(obj);
+        const value = parseInt(Object.values(obj))
+        console.log(value);
+        total_investments_values_list.push(value);
+    })
+    console.log(total_investments_values_list)
+    const total_investments_value = total_investments_values_list.reduce(function (total_investments_value, value) {
+        const updated_total_investments_value = total_investments_value + value;
+        return updated_total_investments_value;
+    })
+    return total_investments_value
+}
+const computeOwnAssets = (array) => {
+    const own_assets_values_list = [];
+    const filtered = array.filter(obj => obj.amount != null && obj.resource_status === 'Own')
+    filtered.map((item) => {
+        const obj = {
+            amount: item.amount
+        }
+        console.log(obj);
+        const value = parseInt(Object.values(obj))
+        console.log(value);
+        own_assets_values_list.push(value);
+    })
+    console.log(own_assets_values_list)
+    const own_assets_value = own_assets_values_list.reduce(function (own_assets_value, value) {
+        const updated_own_assets_value = own_assets_value + value;
+        return updated_own_assets_value;
+    })
+    return own_assets_value
+}
+
 export const assetsReducer = (
     state = {
         is_assets_completed: false,
-        total_investments: 0,
-        own_assets: 0,
-        investment_amount: 0,
+        total_investments: null,
+        own_assets: null,
+        investment_amount: null,
         physical_assets: [],
+        physical_assets_original: [],
+        physical_assets_updated: []
     }, action) => {
     switch (action.type) {
         case 'FETCHING_ASSETS_SUCCESS':
-            const physical_assets_status = action.payload.physical_assets.filter((obj) => obj.resource_status === 'Buy' || obj.resource_status === 'Own' );
-            console.log(physical_assets_status);
+            const physical_assets_status = action.payload.data.physical_assets.filter((obj) => obj.resource_status === 'Buy' || obj.resource_status === 'Own');
             const filtered_physical_assets = physical_assets_status.filter((obj) => obj.type_title === 'Buildings' || obj.type_title === 'Transport' || obj.type_title === 'Other' || obj.type_title === 'Equipment' || obj.type_title === 'Brands' || obj.type_title === 'Licenses' || obj.type_title === 'Software');
             console.log(filtered_physical_assets);
-            const is_completed = action.payload.is_assets_completed;
-            const total_investments = action.payload.total_investments;
-            const own_assets = action.payload.own_assets;
-            const investment_amount = action.payload.investment_amount;
+            const new_physical_assets_list = [];
+            filtered_physical_assets.map((item) => {
+                const obj = {
+                    'amount': item.amount === null ? 0 : item.amount,
+                    'resource_id': item.resource_id,
+                    'resource_title': item.resource_title,
+                    'resource_status': item.resource_status,
+                    'type_title': item.type_title,
+                    'vat': item.vat === null ? action.payload.defaultVAT : item.vat,
+                }
+                new_physical_assets_list.push(obj);
+            })
+            console.log(new_physical_assets_list);
+            const is_completed = action.payload.data.is_assets_completed;
+            const total_investments = action.payload.data.total_investments;
+            const own_assets = action.payload.data.own_assets;
+            const investment_amount = action.payload.data.investment_amount;
             return {
                 ...state,
-                'physical_assets': filtered_physical_assets,
+                'physical_assets': new_physical_assets_list,
+                'physical_assets_original': new_physical_assets_list,
+                'physical_assets_updated': new_physical_assets_list,
                 is_assets_completed: is_completed,
                 total_investments: total_investments,
                 own_assets: own_assets,
                 investment_amount: investment_amount
             };
-        case 'UPDATE_ASSETS_LIST_SUCCESS':
-            console.log(action.payload);
-            const _physical_assets = action.payload.physical_assets.map(obj => ({ ...obj, "key": obj.resource_id }))
-            console.log(_physical_assets);
-            const _is_completed = action.payload.is_assets_completed;
-            const _total_investments = action.payload.total_investments;
-            const _own_assets = action.payload.own_assets;
-            const _investment_amount = action.payload.investment_amount;
-            return {
-                ...state,
-                'physical_assets': _physical_assets,
-                is_assets_completed: _is_completed,
-                total_investments: _total_investments,
-                own_assets: _own_assets,
-                investment_amount: _investment_amount
-            };
         case "SAVE_STATE_SUCCESS":
             console.log(action.payload)
             return { ...state, "is_assets_completed": action.payload }
+        case 'UPDATE_ASSETS_ITEM_AMOUNT':
+            console.log(action.payload);
+            const index = state.physical_assets_updated.findIndex(x => x.resource_id === action.payload.asset.resource_id);
+            console.log(index)
+            const updatedAsset = {
+                'amount': Number(action.payload.value),
+                'resource_id': state.physical_assets_updated[index].resource_id,
+                'resource_title': state.physical_assets_updated[index].resource_title,
+                'resource_status': state.physical_assets_updated[index].resource_status,
+                'type_title': state.physical_assets_updated[index].type_title,
+                'vat': state.physical_assets_updated[index].vat,
+            }
+            const updatedAssetsList = [...state.physical_assets_updated];
+            updatedAssetsList[index] = updatedAsset;
+            console.log(updatedAssetsList);
+            const total_investments_value = computeTotalInvestments(updatedAssetsList)
+            console.log(total_investments_value)
+            const own_assets_value = computeOwnAssets(updatedAssetsList)
+            console.log(own_assets_value);
+            const investment_amount_value = total_investments_value - own_assets_value
+            return {
+                ...state,
+                'physical_assets_updated': updatedAssetsList,
+                'total_investments': total_investments_value,
+                'own_assets': own_assets_value,
+                'investment_amount': investment_amount_value
+            }
+        case 'UPDATE_ASSETS_ITEM_VAT':
+            console.log(action.payload);
+            const _index = state.physical_assets_updated.findIndex(x => x.resource_id === action.payload.asset.resource_id);
+            const _updatedAsset = {
+                'amount': state.physical_assets_updated[_index].amount,
+                'resource_id': state.physical_assets_updated[_index].resource_id,
+                'resource_title': state.physical_assets_updated[_index].resource_title,
+                'resource_status': state.physical_assets_updated[_index].resource_status,
+                'type_title': state.physical_assets_updated[_index].type_title,
+                'vat': action.payload.value
+            }
+            const _updatedAssetsList = [...state.physical_assets_updated];
+            _updatedAssetsList[_index] = _updatedAsset;
+            console.log(_updatedAssetsList);
+            return {
+                ...state,
+                'physical_assets_updated': _updatedAssetsList
+            }
+        case "DISCARD_CHANGES_SUCCESS":
+            console.log(state.physical_assets_updated)
+            const discardObj = JSON.parse(JSON.stringify(state.physical_assets_original))
+            console.log(discardObj)
+            return { ...state, 'physical_assets': discardObj, 'physical_assets_updated': state.physical_assets_original };
         default:
             return state
     }
 }
-/*
-case "UPDATE_ITEM_SUCCESS":
-            if (action.payload.type === 1) {
-                const strengths = state.original.strengths_weakness_items;
-                const updated = strengths.map(x => x.id === action.payload.item.id ? action.payload.item : x);
-                const obj = { ...state.original, strengths_weakness_items: updated };
-                return { ...state, updates: state.updates, original: obj };
-            } else if (action.payload.type === 2) {
-                const opportunities = state.original.oportunities_threats;
-                const updated = opportunities.map(x => x.id === action.payload.item.id ? action.payload.item : x);
-                const obj = { ...state.original, oportunities_threats: updated };
-                return { ...state, updates: state.updates, original: obj };
-            }
-            return state;
-*/
