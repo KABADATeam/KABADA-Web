@@ -11,7 +11,7 @@ class EditPublicBodiesSegmentModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: this.props.item.comment,
+            segmentName: this.props.item.segment_name,
             ngoType: this.props.item.ngo_types.map(e => e.id),
         }
     }
@@ -30,7 +30,7 @@ class EditPublicBodiesSegmentModal extends Component {
             "id": this.props.item.id,
             "business_plan_id": this.props.businessPlan.id,
             "ngo_types": this.state.ngoType,
-            "comment":this.state.name
+            "segment_name":this.state.segmentName
         };
 
         const selected_ngo_types = this.props.categories.customer_segments_types.ngo_types.filter((item) => this.state.ngoType.some((field) => item.id === field));
@@ -40,7 +40,7 @@ class EditPublicBodiesSegmentModal extends Component {
             "key": this.props.item.id,
             "ngo_types": selected_ngo_types,
             "ngo_types_titles": selected_ngo_types.map(e => e.title).join(", "),
-            "comment": this.state.name
+            "segment_name": this.state.segmentName
         };
 
         this.props.updateNgoSegment(postObj, reducerObj);
@@ -50,7 +50,7 @@ class EditPublicBodiesSegmentModal extends Component {
 
     onNameChange(value){
         this.setState({
-            name: value
+            segmentName: value
         })
     }
 
@@ -85,8 +85,8 @@ class EditPublicBodiesSegmentModal extends Component {
                             type: this.props.item.ngo_types.map(e => e.id),
                         }}>
                         <Form.Item key="name" name="name" label="Segment name">
-                            <Input style={{width: '100%'}} placeholder="Edit segment name" defaultValue={this.state.name}
-                            value={this.state.name} onChange={(e) => this.onNameChange(e.target.value)}/>
+                            <Input style={{width: '100%'}} placeholder="Edit segment name" defaultValue={this.state.segmentName}
+                            value={this.state.segmentName} onChange={(e) => this.onNameChange(e.target.value)}/>
                         </Form.Item>
                         <Form.Item key="type" name="type" label="Type"
                             rules={[{ required: true, message: 'Select type' }]}>

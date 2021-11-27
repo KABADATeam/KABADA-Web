@@ -9,7 +9,7 @@ const { Option } = Select;
 
 class AddConsumerSegmentModal extends Component {
     state = {
-        name: null,
+        segmentName: null,
         ageGroup: null,
         genderType: null,
         educationType: null,
@@ -34,7 +34,7 @@ class AddConsumerSegmentModal extends Component {
             "education": this.state.educationType,
             "income": this.state.incomeType,
             "geographic_location": this.state.locationType,
-            "comment": this.state.name
+            "segment_name": this.state.segmentName
         };
 
         const selected_ages = this.props.categories.customer_segments_types.age_groups.filter((item) => this.state.ageGroup.some((field) => item.id === field));
@@ -52,7 +52,7 @@ class AddConsumerSegmentModal extends Component {
             "income": selected_incomes,
             "geographic_location": selected_locations,
             "location_titles": selected_locations.map(e => e.title).join(", "),
-            "comment": this.state.name
+            "segment_name": this.state.segmentName
         }
 
         console.log('Post obj:'+JSON.stringify(postObj))
@@ -64,7 +64,7 @@ class AddConsumerSegmentModal extends Component {
 
     onNameChange(value) {
         this.setState({
-            name: value
+            segmentName: value
         })
     }
 

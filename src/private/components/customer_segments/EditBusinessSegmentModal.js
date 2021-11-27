@@ -18,7 +18,7 @@ class EditBusinessSegmentModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: this.props.item.comment,
+            segmentName: this.props.item.segment_name,
             type: this.props.item.business_type.map(e => e.id),
             companySize: this.props.item.company_size.map(e => e.id),
             //annualRevenue: this.props.item.annual_revenue,
@@ -46,7 +46,7 @@ class EditBusinessSegmentModal extends Component {
             //"budget": this.state.budget,
             //"income": [],
             "geographic_location": this.state.locationType,
-            "comment":this.state.name
+            "segment_name":this.state.segmentName
         };
 
         const selected_types = this.props.categories.customer_segments_types.business_types.filter((item) => this.state.type.some((field) => item.id === field));
@@ -65,7 +65,7 @@ class EditBusinessSegmentModal extends Component {
             //"income": [],
             "geographic_location": selected_locations,
             "location_titles": selected_locations.map(e => e.title).join(", "),
-            "comment": this.state.name
+            "segment_name": this.state.segmentName
         };
 
         this.props.updateBusinessSegment(postObj, reducerObj);
@@ -75,7 +75,7 @@ class EditBusinessSegmentModal extends Component {
 
     onNameChange(value) {
         this.setState({
-            name: value
+            segmentName: value
         })
     }
 
@@ -148,8 +148,8 @@ class EditBusinessSegmentModal extends Component {
                         }}>
 
                         <Form.Item key="name" name="name" label="Segment name">
-                            <Input style={{width: '100%'}} placeholder="Edit segment name" defaultValue={this.state.name}
-                            value={this.state.name} onChange={(e) => this.onNameChange(e.target.value)}/>
+                            <Input style={{width: '100%'}} placeholder="Edit segment name" defaultValue={this.state.segmentName}
+                            value={this.state.segmentName} onChange={(e) => this.onNameChange(e.target.value)}/>
                         </Form.Item>
 
                         <Form.Item key="type" name="type" label="Type"
@@ -184,7 +184,7 @@ class EditBusinessSegmentModal extends Component {
                             </Select>
                         </Form.Item>
                     </Form>
-                </Modal >
+                </Modal>
             </>
         )
     }

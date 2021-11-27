@@ -9,7 +9,7 @@ const { Option } = Select;
 
 class AddPublicBodiesSegmentModal extends Component {
     state = {
-        name: null,
+        segmentName: null,
         ngoType: null,
     }
 
@@ -26,7 +26,7 @@ class AddPublicBodiesSegmentModal extends Component {
             "id": null,
             "business_plan_id": this.props.businessPlan.id,
             "ngo_types": this.state.ngoType,
-            "comment":this.state.name
+            "segment_name":this.state.segmentName
         };
 
         const selected_ngo_types = this.props.categories.customer_segments_types.ngo_types.filter((item) => this.state.ngoType.some((field) => item.id === field));
@@ -34,7 +34,7 @@ class AddPublicBodiesSegmentModal extends Component {
         const reducerObj = {
             "ngo_types": selected_ngo_types,
             "ngo_types_titles": selected_ngo_types.map(e => e.title).join(", "),
-            "comment": this.state.name
+            "segment_name": this.state.segmentName
         }
 
         console.log("Post obj:"+JSON.stringify(postObj))
@@ -47,7 +47,7 @@ class AddPublicBodiesSegmentModal extends Component {
 
     onNameChange(value) {
         this.setState({
-            name: value
+            segmentName: value
         })
     }
 
