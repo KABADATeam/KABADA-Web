@@ -346,7 +346,7 @@ class Overview extends React.Component {
                                                     </List.Item>
                                                     <List.Item key='14' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={overview.assets.is_completed === true && overview.fixed_and_variables_costs.is_completed === true && overview.sales_forecast.is_completed === true && overview.business_start_up_investments.is_completed === true? 
+                                                            avatar={overview.assets.is_completed === true && overview.fixed_and_variables_costs.is_completed === true && overview.sales_forecast.is_completed === true && overview.business_start_up_investments.is_completed === true ?
                                                                 <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to="/cash-flow">Cash Flow</Link></Space>}
                                                         />
@@ -439,7 +439,7 @@ class Overview extends React.Component {
                                 <Row style={{ marginBottom: "50px" }}>
                                     <Col span={6}>
                                         <div style={{ marginRight: '40px' }}>
-                                            <Typography.Title style={aboutTitleTextStyle}>C11 Industry risks</Typography.Title>
+                                            <Typography.Title style={aboutTitleTextStyle}>{overview.nace.activity_code} Industry risks</Typography.Title>
                                             <Typography.Text className="text-Style">
                                                 Product description Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
                                                 Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
