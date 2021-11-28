@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import WorkingCapital from '../components/businessFinancialInvestments/WorkingCapital';
 import BusinessFinancing from '../components/businessFinancialInvestments/BusinessFinancing';
-import { getBusinessStartUpInvestmentInformation, changeVisibility, updateBusinessStartUpInvestmentInformation, getNecessaryCapitalInformation, saveState, recalculateInvestment } from "../../appStore/actions/businessInvestmentAction";
+import { getBusinessStartUpInvestmentInformation, changeVisibility, saveChanges, getNecessaryCapitalInformation, saveState, recalculateInvestment, discardChanges } from "../../appStore/actions/businessInvestmentAction";
 import { getCountryShortCode } from '../../appStore/actions/countriesActions';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
@@ -89,65 +89,59 @@ class BusinessInvestmentsWindow extends React.Component {
         return true;
     }
 
-    getUpdatesWindowState = (original, modified) => {
-        if (original === null) {
+    getUpdatesWindowState() {
+        let original = JSON.stringify(this.props.investments.original);
+        let modified = JSON.stringify(this.props.investments.updates)
+        console.log(this.props.investments.original)
+        console.log(this.props.investments.updates)
+        if (original === modified) {
             return 'hidden'
-        }
-        if (modified === null) {
-            return 'hidden'
-        }
-        if (this.arraysEqual(original, modified) === false) {
+        } else {
             return 'visible'
         }
-        return 'hidden'
     }
+    // saveChanges = () => {
+    //     const postObject = {
+    //         business_plan_id: this.props.businessPlan.id,
+    //         period: this.props.investments.period === null ? 12 : this.props.investments.period,
+    //         vat_payer: this.props.investments.vat_payer === null ? true : this.props.investments.vat_payer,
+    //         own_money: this.props.investments.own_money,
+    //         loan_amount: this.props.investments.loan_amount,
+    //         working_capital_amount: this.props.investments.working_capital_amount,
+    //         own_money_short: this.props.investments.own_money_short,
+    //         loan_amount_short: this.props.investments.loan_amount_short,
+    //         payment_period: this.props.investments.payment_period,
+    //         interest_rate: this.props.investments.interest_rate,
+    //         grace_period: this.props.investments.grace_period,
+    //         payment_period_short: this.props.investments.payment_period_short,
+    //         interest_rate_short: this.props.investments.interest_rate_short,
+    //         grace_period_short: this.props.investments.grace_period_short,
+    //         total_investments: this.props.investments.total_investments,
+    //         own_assets: this.props.investments.own_assets,
+    //         investment_amount: this.props.investments.investment_amount,
+    //         working_capitals: this.props.investments.working_capital,
+    //     }
+    //     const recalculatePostObject = {
+    //         business_plan_id: this.props.businessPlan.id,
+    //         working_capitals: this.props.investments.working_capital,
+    //     }
+    //     console.log(postObject);
+    //     if (this.props.investments.grace_period_short > 0) {
+    //         this.props.recalculateInvestment(postObject);
+    //         this.props.updateBusinessStartUpInvestmentInformation(postObject);
+    //         this.props.changeVisibility('hidden');
+    //     } else {
+    //         this.props.updateBusinessStartUpInvestmentInformation(postObject);
+    //         this.props.changeVisibility('hidden');
+    //     }
+    // }
     saveChanges = () => {
-        const postObject = {
-            business_plan_id: this.props.businessPlan.id,
-            period: this.props.investments.period === null ? 12 : this.props.investments.period,
-            vat_payer: this.props.investments.vat_payer === null ? true : this.props.investments.vat_payer,
-            own_money: this.props.investments.own_money,
-            loan_amount: this.props.investments.loan_amount,
-            working_capital_amount: this.props.investments.working_capital_amount,
-            own_money_short: this.props.investments.own_money_short,
-            loan_amount_short: this.props.investments.loan_amount_short,
-            payment_period: this.props.investments.payment_period,
-            interest_rate: this.props.investments.interest_rate,
-            grace_period: this.props.investments.grace_period,
-            payment_period_short: this.props.investments.payment_period_short,
-            interest_rate_short: this.props.investments.interest_rate_short,
-            grace_period_short: this.props.investments.grace_period_short,
-            total_investments: this.props.investments.total_investments,
-            own_assets: this.props.investments.own_assets,
-            investment_amount: this.props.investments.investment_amount,
-            working_capitals: this.props.investments.working_capital,
-        }
-        const recalculatePostObject = {
-            business_plan_id: this.props.businessPlan.id,
-            working_capitals: this.props.investments.working_capital,
-        }
-        console.log(postObject);
-        if (this.props.investments.grace_period_short > 0) {
-            this.props.recalculateInvestment(postObject);
-            this.props.updateBusinessStartUpInvestmentInformation(postObject);
-            this.props.changeVisibility('hidden');
-        } else {
-            this.props.updateBusinessStartUpInvestmentInformation(postObject);
-            this.props.changeVisibility('hidden');
-        }
-    }
-    recalChanges = () => {
-        const postObject = {
-            business_plan_id: this.props.businessPlan.id,
-            working_capitals: this.props.investments.working_capital,
-        }
-        console.log(postObject)
-        this.props.recalculateInvestment(postObject);
-        this.props.changeVisibility('hidden');
+        this.props.saveChanges(this.props.businessPlan.id, () => {
+            this.props.getAssets(this.props.businessPlan.id);
+        });
     }
     discardChanges = () => {
-        this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id)
-        this.props.changeVisibility('hidden');
+        this.props.discardChanges();
     }
     onCompletedChange(state) {
         console.log('test')
@@ -174,10 +168,12 @@ class BusinessInvestmentsWindow extends React.Component {
 
 
     render() {
+        console.log(this.props.investments.updates);
+        const isVisibleHeader = this.getUpdatesWindowState();
         return (
             <>
                 <UnsavedChangesHeader
-                    visibility={this.props.investments.visibility}
+                    visibility={isVisibleHeader}
                     discardChanges={this.discardChanges}
                     saveChanges={this.saveChanges}
                 />
@@ -233,4 +229,4 @@ const mapStateToProps = (state) => {
         totalNecessary: state.necessaryCapital
     };
 }
-export default connect(mapStateToProps, { refreshPlan, getBusinessStartUpInvestmentInformation, getCountryShortCode, changeVisibility, updateBusinessStartUpInvestmentInformation, getNecessaryCapitalInformation, saveState, getSelectedPlanOverview, recalculateInvestment })(BusinessInvestmentsWindow);
+export default connect(mapStateToProps, { refreshPlan, getBusinessStartUpInvestmentInformation, getCountryShortCode, changeVisibility, saveChanges, getNecessaryCapitalInformation, saveState, getSelectedPlanOverview, recalculateInvestment, discardChanges })(BusinessInvestmentsWindow);

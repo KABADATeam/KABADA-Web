@@ -46,6 +46,43 @@ export const updateBusinessStartUpInvestmentInformation = (postObject) => {
         }
     };
 };
+export const saveChanges = (planId, callback) => {
+    return async (dispatch, getState) => {
+        try {
+            const token = getState().user.access_token;
+            const dataToObj = getState().businessInvestments;
+            console.log(dataToObj)
+            const postObject = {
+                business_plan_id: planId,
+                period: dataToObj.updates.period,
+                vat_payer: dataToObj.updates.vat_payer,
+                own_money: dataToObj.updates.own_money,
+                loan_amount: dataToObj.updates.loan_amount,
+                working_capital_amount: dataToObj.updates.working_capital_amount,
+                own_money_short: dataToObj.updates.own_money_short,
+                loan_amount_short: dataToObj.updates.loan_amount_short,
+                payment_period: dataToObj.updates.payment_period,
+                interest_rate: dataToObj.updates.interest_rate,
+                grace_period: dataToObj.updates.grace_period,
+                payment_period_short: dataToObj.updates.payment_period_short,
+                interest_rate_short: dataToObj.updates.interest_rate_short,
+                grace_period_short: dataToObj.updates.grace_period_short,
+                total_investments: dataToObj.total_investments,
+                own_assets: dataToObj.own_assets,
+                investment_amount: dataToObj.investment_amount,
+                working_capitals: dataToObj.updates.working_capital,
+            }
+            console.log(postObject)
+            await kabadaAPI.post('/api/kres/investment/update', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            if (callback !== null) {
+                callback();
+            }
+        } catch (error) {
+            dispatch({ type: 'ERROR', payload: errorHandler(error) });
+        } finally {
+        }
+    }
+};
 export const recalculateInvestment = (postObject) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
@@ -84,24 +121,11 @@ export function changePeriod(period) {
 export function changeVatPrayer(vat_payer) {
     return { type: 'CHANGE_VAT_PRAYER_SUCCESS', vat_payer: vat_payer }
 }
-/*export function changeLoanAmount(own_money, loan_amount) {
-    return { type: 'CHANGE_LOAN_AMOUNT_SUCCESS', own_money: own_money, loan_amount: loan_amount }
-}*/
-export function changeWorkingCapitalAmount(working_capital_amount) {
-    return { type: 'CHANGE_WORKING_CAPITAL_SUCCESS', working_capital_amount: working_capital_amount }
-}
-export const changeOwnMoney = (own_money, callback) => {
-    console.log(own_money)
+export const changeOwnMoney = (own_money) => {
     return async (dispatch, getState) => {
-        dispatch({type: 'CHANGE_OWN_MONEY_SUCCESS', own_money: own_money})
-        callback();
+        const own_money_value = Number(own_money);
+        dispatch({ type: 'CHANGE_OWN_MONEY_SUCCESS', own_money: own_money_value })
     }
-}
-export function changeLoanAmount(loan_amount) {
-    return { type: 'CHANGE_LOAN_AMOUNT_SUCCESS', loan_amount: loan_amount }
-}
-export function changeOwnMoneyShort(own_money_short, loan_amount_short) {
-    return {type: 'CHANGE_OWN_MONEY_SHORT_SUCCESS', own_money_short: own_money_short, loan_amount_short: loan_amount_short}
 }
 export function changePaymentPeriod(payment_period) {
     return { type: 'CHANGE_PAYMENT_PERIOD_SUCCESS', payment_period: payment_period }
@@ -111,6 +135,15 @@ export function changeInterestRate(interest_rate) {
 }
 export function changeGracePeriod(grace_period) {
     return { type: 'CHANGE_GRACE_PERIOD_SUCCESS', grace_period }
+}
+//short loan 
+export function changeWorkingCapitalAmount(working_capital_amount) {
+    const working_capital_amount_value = Number(working_capital_amount);
+    return { type: 'CHANGE_WORKING_CAPITAL_SUCCESS', working_capital_amount: working_capital_amount_value }
+}
+export function changeOwnMoneyShort(own_money_short) {
+    const own_money_short_value = Number(own_money_short);
+    return { type: 'CHANGE_OWN_MONEY_SHORT_SUCCESS', own_money_short: own_money_short_value }
 }
 export function changePaymentPeriodShort(payment_period_short) {
     return { type: 'CHANGE_PAYMENT_PERIOD_SHORT_SUCCESS', payment_period_short: payment_period_short }
@@ -122,7 +155,7 @@ export function changeGracePeriodShort(grace_period_short) {
     return { type: 'CHANGE_GRACE_PERIOD_SHORT_SUCCESS', grace_period_short }
 }
 export function changeWorkingCapital(working_capital) {
-    return { type: 'CHANGE_WORKING_CAPITAL_ARRAY_SUCCESS', working_capital: working_capital}
+    return { type: 'CHANGE_WORKING_CAPITAL_ARRAY_SUCCESS', working_capital: working_capital }
 }
 
 export const getNecessaryCapitalInformation = (planId) => {
@@ -159,6 +192,17 @@ export const saveState = (planId, is_completed, callback) => {
             callback();
         } finally {
             dispatch({ type: "LOADING", payload: false });
+        }
+    }
+};
+export const discardChanges = () => {
+    return async (dispatch, getState) => {
+        try {
+            console.log('test');
+            dispatch({ type: 'DISCARD_CHANGES_SUCCESS', payload: {} });
+        } catch (error) {
+            dispatch({ type: 'ERROR', payload: errorHandler(error) });
+        } finally {
         }
     }
 };
