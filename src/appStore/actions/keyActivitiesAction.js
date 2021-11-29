@@ -1,13 +1,14 @@
 import kabadaAPI from './kabadaAPI';
 import { errorHandler } from './errorHandler';
 
-export const getKeyActivitiesList = (planId) => {
+export const getKeyActivitiesList = (planId, callback) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/activities/' + planId, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: "FETCHING_KEY_ACTIVITIES_SUCCESS", payload: response.data });
+            callback();
         } catch (error) {
             if (error.response === undefined) {
                 dispatch({
@@ -46,11 +47,11 @@ export const saveActivity = (postObject, reducerObject) => {
     return async (dispatch, getState) => {
         try {
             const token = getState().user.access_token;
-            const response = await kabadaAPI.post('api/activities/save', postObject, {headers: {Authorization: `Bearer ${token}`}});
+            const response = await kabadaAPI.post('api/activities/save', postObject, { headers: { Authorization: `Bearer ${token}` } });
             console.log(response.data)
-            dispatch({ type: 'SAVE_KEY_ACTIVITY_SUCCESS', payload: { ...reducerObject, "id": response.data, "key": response.data }})
+            dispatch({ type: 'SAVE_KEY_ACTIVITY_SUCCESS', payload: { ...reducerObject, "id": response.data, "key": response.data } })
         } catch (error) {
-            dispatch({ type: 'LOADING', payload: false})
+            dispatch({ type: 'LOADING', payload: false })
         } finally {
 
         }

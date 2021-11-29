@@ -35,8 +35,8 @@ class KeyActivities extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activityCategoriesModalVisibility: false, 
-            addSubTypeModalVisibility: false, 
+            activityCategoriesModalVisibility: false,
+            addSubTypeModalVisibility: false,
             productID: null,
             item: null
         };
@@ -74,7 +74,7 @@ class KeyActivities extends React.Component {
     }
     openEditKeyActivityModal = (item) => {
         this.setState({
-            item: { ...item},
+            item: { ...item },
         })
     }
     onCloseEditKeyActivityModal = () => {
@@ -92,13 +92,16 @@ class KeyActivities extends React.Component {
                 this.props.history.push(`/`);
             } else {
                 this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getKeyActivitiesList(this.props.businessPlan.id)
-                    this.props.getCategories()
-                });                
+                    this.props.getKeyActivitiesList(this.props.businessPlan.id, () => {
+                        this.props.getCategories()
+                    })
+
+                });
             }
         } else {
-            this.props.getKeyActivitiesList(this.props.businessPlan.id)
-            this.props.getCategories()
+            this.props.getKeyActivitiesList(this.props.businessPlan.id, () => {
+                this.props.getCategories()
+            })
         }
     }
     render() {
@@ -142,22 +145,22 @@ class KeyActivities extends React.Component {
                             <ProductComponent data={item} onOpen={this.openCategoriesModal} onClose={this.closeCategoriesModal} getProductID={this.getProductID} onOpenEditModal={this.openEditKeyActivityModal} />
                         </List.Item>
                     )}
-                                        
+
                 />
                 {
-                        this.state.activityCategoriesModalVisibility === true ? 
-                            <KeyActivityTypesModal visibility={true} onClose={this.onCloseCategoriesModal} onOpen={this.openAddSubTypeModal}/>
-                            : null
+                    this.state.activityCategoriesModalVisibility === true ?
+                        <KeyActivityTypesModal visibility={true} onClose={this.onCloseCategoriesModal} onOpen={this.openAddSubTypeModal} />
+                        : null
                 }
                 {
-                        this.state.addSubTypeModalVisibility === true ? 
-                            <AddKeyActivityModal visibility={true} onClose={this.onCloseAddSubTypeModal} productID={this.state.productID}/>
-                            : null
+                    this.state.addSubTypeModalVisibility === true ?
+                        <AddKeyActivityModal visibility={true} onClose={this.onCloseAddSubTypeModal} productID={this.state.productID} />
+                        : null
                 }
                 {
-                        this.state.item !== null ? 
-                            <EditKeyActivityModal visibility={true} item={this.state.item} onClose={this.onCloseEditKeyActivityModal} productID={this.state.productID} />
-                            : null
+                    this.state.item !== null ?
+                        <EditKeyActivityModal visibility={true} item={this.state.item} onClose={this.onCloseEditKeyActivityModal} productID={this.state.productID} />
+                        : null
                 }
             </>
         );
@@ -172,4 +175,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, {refreshPlan, getCategories, getKeyActivitiesList, saveState})(KeyActivities);
+export default connect(mapStateToProps, { refreshPlan, getCategories, getKeyActivitiesList, saveState })(KeyActivities);
