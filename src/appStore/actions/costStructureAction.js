@@ -1,13 +1,14 @@
 import kabadaAPI from './kabadaAPI';
 import { errorHandler } from './errorHandler';
 
-export const getCostStructureList = (planId) => {
+export const getCostStructureList = (planId, callback) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/cost/' + planId, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: "FETCHING_COST_STRUCTURE_SUCCESS", payload: response.data });
+            callback();
         } catch (error) {
             if (error.response === undefined) {
                 dispatch({
@@ -47,10 +48,10 @@ export const saveFixedCost = (postObject, reducerObject) => {
         try {
             const token = getState().user.access_token;
             console.log(postObject);
-            const response = await kabadaAPI.post('api/cost/fixed/save', postObject, {headers: {Authorization: `Bearer ${token}`}});
-            dispatch({ type: 'SAVE_COST_SUCCESS', payload: {...reducerObject, "id": response.data, "key": response.data }})
+            const response = await kabadaAPI.post('api/cost/fixed/save', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: 'SAVE_COST_SUCCESS', payload: { ...reducerObject, "id": response.data, "key": response.data } })
         } catch (error) {
-            dispatch({ type: 'LOADING', payload: false})
+            dispatch({ type: 'LOADING', payload: false })
         } finally {
 
         }
@@ -60,10 +61,10 @@ export const saveVariableCost = (postObject, reducerObject) => {
     return async (dispatch, getState) => {
         try {
             const token = getState().user.access_token;
-            const response = await kabadaAPI.post('api/cost/var/save', postObject, {headers: {Authorization: `Bearer ${token}`}});
-            dispatch({ type: 'SAVE_COST_SUCCESS', payload: {...reducerObject, "id": response.data, "key": response.data }})
+            const response = await kabadaAPI.post('api/cost/var/save', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: 'SAVE_COST_SUCCESS', payload: { ...reducerObject, "id": response.data, "key": response.data } })
         } catch (error) {
-            dispatch({ type: 'LOADING', payload: false})
+            dispatch({ type: 'LOADING', payload: false })
         } finally {
 
         }

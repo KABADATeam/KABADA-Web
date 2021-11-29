@@ -31,7 +31,7 @@ class AddKeyActivityModal extends Component {
     onCancel = () => {
         this.props.onClose();
         this.setState({
-            selectedSubTypeId: null,
+            selectedSubTypeId: '',
             name: '',
             description: ''
         })
@@ -39,6 +39,11 @@ class AddKeyActivityModal extends Component {
 
     onBack = () => {
         this.props.onClose()
+    }
+    onSelectionChange(id) {
+        this.setState({
+            selectedSubTypeId: id
+        });
     }
     onOK = () => {
         /*if (this.state.selectedTypeID === null) {
@@ -59,7 +64,7 @@ class AddKeyActivityModal extends Component {
             "description": this.state.description,
 
         }
-        const subTypeTitle = this.props.activity_category.subtypes.find(x => x.id = this.state.selectedSubTypeId)
+        const subTypeTitle = this.props.activity_category.subtypes.find(x => x.id === this.state.selectedSubTypeId)
         const reducerObject = {
             "category_id": this.props.activity_category.id,
             "category_title": this.props.activity_category.title,
@@ -75,13 +80,13 @@ class AddKeyActivityModal extends Component {
             description: ''
         })
         this.props.saveActivity(postObject, reducerObject);
+        console.log(postObject, reducerObject);
+        console.log(this.state.selectedSubTypeId);
+        console.log(this.props.activity_category.subtypes.find(x => x.id === this.state.selectedSubTypeId));
+        console.log(subTypeTitle.title);
         this.props.onClose();
     }
-    onSelectionChange(id) {
-        this.setState({
-            selectedSubTypeId: id
-        });
-    }
+
 
     onChangeName(e) {
         this.setState({
@@ -121,9 +126,16 @@ class AddKeyActivityModal extends Component {
                 >
                     <Form layout="vertical">
                         <Form.Item key={100} label="Type">
-                            <Select placeholder="Select type" value={this.state.selectedTypeId} onChange={this.onSelectionChange.bind(this)} style={{ width: 548 }}>
+                            {/* <Select placeholder="Select type" value={this.state.selectedTypeId} onChange={this.onSelectionChange.bind(this)} style={{ width: 548 }}>
                                 {options}
+                            </Select> */}
+                            <Select placeholder="Select type" value={this.state.selectedTypeId} onChange={(id) => this.onSelectionChange(id)} style={{ width: 548 }}>
+                                {this.props.activity_category.subtypes.map(s =>
+                                    <Option key={s.id} value={s.id}>{s.title}</Option>
+                                )}
                             </Select>
+
+
                         </Form.Item>
                         <Form.Item key={101} label="Name"
                             rules={[
