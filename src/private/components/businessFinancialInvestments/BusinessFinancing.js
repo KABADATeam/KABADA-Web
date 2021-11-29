@@ -47,116 +47,10 @@ const loanAmountText = {
 }
 
 class BusinessStartUpInvestments extends React.Component {
-    state = {
-        loan_amount: this.props.data.loan_amount,
-        payment_period: this.props.data.payment_period,
-        interest_rate: this.props.data.interest_rate,
-        grace_period: this.props.data.grace_period,
-        startup_loan_amount: this.props.data.startup_loan_amount,
-        payment_period_short: this.props.data.payment_period_short,
-        interest_rate_short: this.props.data.interest_rate_short,
-        grace_period_short: this.props.data.grace_period_short,
-        original_object: [],
-        updated_object: []
-    }
-    componentDidMount() {
-        this.setOriginalObject(this.props.data);
-        this.setUpdatedObject(this.props.data);
-        console.log(this.props.data);
-    }
-    setOriginalObject = (data) => {
-        const array = []
-        const obj = {
-            payment_period: data.payment_period === null ? 0: data.payment_period,
-            interest_rate: data.interest_rate === null ? 0: data.interest_rate,
-            grace_period: data.grace_period === null ? 0 : data.grace_period,
-            payment_period_short: data.payment_period_short === null ? 12: data.payment_period_short,
-            interest_rate_short: data.interest_rate_short === null ? 0: data.interest_rate_short,
-            grace_period_short: data.grace_period_short === null ? 0 : data.grace_period_short,
-        }
-        array.push(obj);
-        this.setState({
-            original_object: array,
-        })
-    }
-    setUpdatedObject = (data) => {
-        const array = []
-        const obj = {
-            payment_period: data.payment_period === null ? 0: data.payment_period,
-            interest_rate: data.interest_rate === null ? 0: data.interest_rate,
-            grace_period: data.grace_period === null ? 0 : data.grace_period,
-            payment_period_short: data.payment_period_short === null ? 6: data.payment_period_short,
-            interest_rate_short: data.interest_rate_short === null ? 0: data.interest_rate_short,
-            grace_period_short: data.grace_period_short === null ? 0 : data.grace_period_short,
-        }
-        array.push(obj);
-        this.setState({
-            updated_object: array,
-        })
-    }
-    arraysEqual = (array1, array2) => {
-        let a = JSON.parse(JSON.stringify(array1));
-        let b = JSON.parse(JSON.stringify(array2));
-        let original = array1;
-        let modified = array2;
-        console.log('test')
-        console.log(original)
-        console.log(modified)
-        if (a === b) {
-            this.props.changeVisibility('hidden');
-        }
-        //if (a == null || b == null) return this.props.changeVisibility('visible');
-        //if (a.length !== b.length) return this.props.changeVisibility('visible');
-
-        a = a.sort();
-        b = b.sort();
-        for (var i = 0; i < original.length; ++i) {
-            if (original[i].grace_period !== modified[i].grace_period || 
-                original[i].grace_period_short !== modified[i].grace_period_short ||
-                original[i].interest_rate !== modified[i].interest_rate ||
-                original[i].interest_rate_short !== modified[i].interest_rate_short ||
-                original[i].payment_period !== modified[i].payment_period ||
-                original[i].payment_period_short !== modified[i].payment_period_short 
-                ) {
-                // console.log('Original price:' + original[i].price + ", modified price is: " + modified[i].price)
-                console.log('They are not equal')
-                this.props.changeVisibility('visible')
-                //return 'visible';
-            }
-        }
-    }
-    updateProperties = (value, inputName) => {
-        const array = this.state.updated_object
-
-        array.forEach(item => {
-            if (inputName === 'interest_rate') {
-                item.interest_rate = Number(value);
-                this.props.changeInterestRate(Number(value));
-            } else if (inputName === 'payment_period') {
-                item.payment_period = value;
-                this.props.changePaymentPeriod(value);
-            } else if (inputName === 'grace_period') {
-                item.grace_period = value;
-                this.props.changeGracePeriod(value);
-            } else if (inputName === 'interest_rate_short') {
-                item.interest_rate_short = Number(value);
-                this.props.changeInterestRateShort(Number(value));
-            } else if (inputName === 'payment_period_short') {
-                item.payment_period_short = value;  
-                this.props.changePaymentPeriodShort(value);
-            } else if (inputName === 'grace_period_short') {
-                item.grace_period_short = value;
-                this.props.changeGracePeriodShort(value);
-            }
-        })
-        this.setState({
-            updated_object: array
-        })
-       this.arraysEqual(this.state.original_object, array);
-    }
+    
     render() {
         const gracePeriodSelectionArray = []
-        for (let i = 0; i < (this.props.data.period - 5); i++) {
+        for (let i = 0; i < (this.props.data.original.period - 5); i++) {
             gracePeriodSelectionArray[i] = {
                 value: i,
                 label: i + ' mo.'
@@ -167,19 +61,19 @@ class BusinessStartUpInvestments extends React.Component {
         ))
         const loanLongDataSource = [
             {
-                loan_amount: this.props.data.loan_amount,
-                payment_period: this.props.data.payment_period,
-                interest_rate: this.props.data.interest_rate,
-                grace_period: this.props.data.grace_period,
+                loan_amount: this.props.data.updates.loan_amount === null ? this.props.data.investment_amount: this.props.data.updates.loan_amount ,
+                payment_period: this.props.data.original.payment_period,
+                interest_rate: this.props.data.original.interest_rate,
+                grace_period: this.props.data.original.grace_period,
             },
         ]
 
         const loanShortDataSource = [
             {
-                loan_amount_short: this.props.data.loan_amount_short,
-                payment_period_short: this.props.data.payment_period_short,
-                interest_rate_short: this.props.data.interest_rate_short,
-                grace_period_short: this.props.data.grace_period_short,
+                loan_amount_short: this.props.data.updates.loan_amount_short,
+                payment_period_short: this.props.data.updates.payment_period_short,
+                interest_rate_short: this.props.data.updates.interest_rate_short,
+                grace_period_short: this.props.data.updates.grace_period_short,
             },
         ]
 
@@ -199,7 +93,7 @@ class BusinessStartUpInvestments extends React.Component {
                 key: 'payment_period',
                 width: '20%',
                 render: (text, obj, record) => (
-                    <Select defaultValue={text === null ? 12 : text + " mo."} suffixIcon={<CaretDownFilled />} onChange={e => this.updateProperties(e, 'payment_period')}>
+                    <Select defaultValue={text === null ? 12 : text + " mo."} suffixIcon={<CaretDownFilled />} onChange={e => this.props.changePaymentPeriod(e)}>
                         <Option value={3}>3 mo.</Option>
                         <Option value={6}>6 mo.</Option>
                         <Option value={9}>9 mo.</Option>
@@ -229,9 +123,9 @@ class BusinessStartUpInvestments extends React.Component {
                 render: (text, obj, record) => (
                     <InputNumber
                         size="large"
-                        defaultValue={this.props.data.interest_rate === null ? 0 + ' %' : this.props.data.interest_rate + ' %'}
+                        defaultValue={this.props.data.original.interest_rate === null ? 0 + ' %' : this.props.data.original.interest_rate + ' %'}
                         formatter={value => `${value} %`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                        onChange={e => this.updateProperties(e, 'interest_rate')}
+                        onChange={e => this.props.changeInterestRate(e)}
                     />
                 )
             },
@@ -241,9 +135,9 @@ class BusinessStartUpInvestments extends React.Component {
                 key: 'grace_period',
                 width: '20%',
                 render: (text, obj, record) => (
-                    <Select defaultValue={this.state.grace_period === null ? 0 : this.state.grace_period}
+                    <Select defaultValue={this.props.data.original.grace_period === null ? 0 : this.props.data.original.grace_period}
                         suffixIcon={<CaretDownFilled />}
-                        onChange={e => this.updateProperties(e, 'grace_period')}
+                        onChange={e => this.props.changeGracePeriod(e)}
                     >
                         {gracePeriodOptions}
                     </Select>
@@ -267,7 +161,7 @@ class BusinessStartUpInvestments extends React.Component {
                 key: 'payment_period',
                 width: '20%',
                 render: (text, obj, record) => (
-                    <Select defaultValue={text === null ? 1 : text + " mo."} suffixIcon={<CaretDownFilled />} onChange={e => this.updateProperties(e, 'payment_period_short')}>
+                    <Select defaultValue={text === null ? 1 : text + " mo."} suffixIcon={<CaretDownFilled />} onChange={e => this.props.changePaymentPeriodShort(e)}>
                         <Option value={1}>1 mo.</Option>
                         <Option value={2}>2 mo.</Option>
                         <Option value={3}>3 mo.</Option>
@@ -303,9 +197,9 @@ class BusinessStartUpInvestments extends React.Component {
                 render: (text, obj, record) => (
                     <InputNumber
                         size="large"
-                        defaultValue={this.props.data.interest_rate === null ? 0 + ' %' : this.props.data.interest_rate + ' %'}
+                        defaultValue={this.props.data.original.interest_rate === null ? 0 + ' %' : this.props.data.original.interest_rate + ' %'}
                         formatter={value => `${value} %`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                        onChange={e => this.updateProperties(e, 'interest_rate_short')}
+                        onChange={e => this.props.changeInterestRateShort(e)}
                     />
                 )
             },
@@ -315,9 +209,9 @@ class BusinessStartUpInvestments extends React.Component {
                 key: 'grace_period',
                 width: '20%',
                 render: (text, obj, record) => (
-                    <Select defaultValue={this.state.grace_period_short === null ? 0 : this.state.grace_period_short}
+                    <Select defaultValue={this.props.data.original.grace_period_short === null ? 0 : this.props.data.original.grace_period_short}
                         suffixIcon={<CaretDownFilled />}
-                        onChange={e => this.updateProperties(e, 'grace_period_short')}
+                        onChange={e => this.props.changeGracePeriodShort(e)}
                     >
                         {gracePeriodOptions}
                     </Select>
