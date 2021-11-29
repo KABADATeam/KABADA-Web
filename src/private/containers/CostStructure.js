@@ -66,8 +66,9 @@ class CostStructure extends React.Component {
     openFixedCostCategories = () => {
         this.setState({
             costNumber: 1,
-            fixedCostNumber:1
+            fixedCostNumber: 1
         });
+
     }
     openVarCostCategories = () => {
         this.setState({
@@ -80,18 +81,24 @@ class CostStructure extends React.Component {
             addModalVisibility: true,
             costNumber: null
         })
+
     }
     closeAddCostModal = () => {
         this.setState({
             addModalVisibility: null,
             costNumber: this.state.fixedCostNumber
         })
+
+        this.onCloseCostCategoriesModal();
+
     }
     onCloseCostCategoriesModal = () => {
         this.setState({
             costNumber: null,
-            
+
         });
+
+
     };
     onDeleteFixedCost(item) {
         this.props.deleteFixedCost({ "id": item.id, "number": 1 });
@@ -101,16 +108,16 @@ class CostStructure extends React.Component {
     }
     onEditFixedCost(item) {
         this.setState({
-            item: { ...item},
+            item: { ...item },
             fixedCostNumber: 1
         })
     }
     onEditVarCost(item) {
         this.setState({
-            item: { ...item},
+            item: { ...item },
             fixedCostNumber: 2
         })
-         
+
     }
     onCloseEditCostModal = () => {
         this.setState({
@@ -130,8 +137,10 @@ class CostStructure extends React.Component {
                 this.props.history.push(`/`);
             } else {
                 this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getCostStructureList(this.props.businessPlan.id);
-                    this.props.getCategories();
+                    this.props.getCostStructureList(this.props.businessPlan.id, () => {
+                        this.props.getCategories();
+                    });
+
                 });
             }
         } else {
@@ -151,7 +160,7 @@ class CostStructure extends React.Component {
                 title: 'Type',
                 dataIndex: 'type_title',
                 key: 'type_title',
-                width: '30%',
+                width: '30%'
             },
             {
                 title: 'Name',
@@ -254,7 +263,7 @@ class CostStructure extends React.Component {
                                     dataSource={this.props.costs.fixed_costs}
                                     columns={fixedCostsColumns}
                                     pagination={false}
-                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }}  onClick={this.openFixedCostCategories.bind(this)}><PlusOutlined />Add fixed cost</Button></Space>)}
+                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.openFixedCostCategories.bind(this)}><PlusOutlined />Add fixed cost</Button></Space>)}
                                 />
                             </Card >
                         </Col>
@@ -265,7 +274,7 @@ class CostStructure extends React.Component {
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Variable costs</Typography.Title>
                                 <Typography.Text style={{ ...textStyle }}>
-                                Are costs that changes in proportion to production output or service amount. Variable costs increase or decrease depending on a production or service volume; they rise as it increases and fall as production decreases. 
+                                    Are costs that changes in proportion to production output or service amount. Variable costs increase or decrease depending on a production or service volume; they rise as it increases and fall as production decreases.
                                 </Typography.Text>
                             </div>
                         </Col>
@@ -275,29 +284,29 @@ class CostStructure extends React.Component {
                                     dataSource={this.props.costs.variable_costs}
                                     columns={varCostsColumns}
                                     pagination={false}
-                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }}  onClick={this.openVarCostCategories.bind(this)}><PlusOutlined />Add variable cost</Button></Space>)}
+                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.openVarCostCategories.bind(this)}><PlusOutlined />Add variable cost</Button></Space>)}
                                 />
                             </Card >
                         </Col>
                     </Row>
                 </Col>
 
-                    {
-                        this.state.costNumber !== null ? 
-                            <CostCategoriesModal visibility={true} number={this.state.fixedCostNumber} onClose={this.onCloseCostCategoriesModal} onOpen={this.openAddCostModal}/>
-                            : null
-                    }
-                    {
-                        this.state.item !== null ?
-                            <EditCostModal visibility={true} item={this.state.item} onClose={this.onCloseEditCostModal} number={this.state.fixedCostNumber}/>
-                            : null
-                    }
-                    {
-                        this.state.addModalVisibility !== null ?
-                            <AddCostModal visibility={true} number={this.state.fixedCostNumber} onClose={this.closeAddCostModal}/>
-                            : null
-                    }
-                    
+                {
+                    this.state.costNumber !== null ?
+                        <CostCategoriesModal visibility={true} number={this.state.fixedCostNumber} onClose={this.onCloseCostCategoriesModal} onOpen={this.openAddCostModal} />
+                        : null
+                }
+                {
+                    this.state.item !== null ?
+                        <EditCostModal visibility={true} item={this.state.item} onClose={this.onCloseEditCostModal} number={this.state.fixedCostNumber} />
+                        : null
+                }
+                {
+                    this.state.addModalVisibility !== null ?
+                        <AddCostModal visibility={true} number={this.state.fixedCostNumber} onClose={this.closeAddCostModal} />
+                        : null
+                }
+
             </>
         );
     }
@@ -312,4 +321,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, {getSelectedPlanOverview, deleteFixedCost, deleteVariableCost, getCategories, getCostStructureList, refreshPlan, saveState, selectCostCategory})(CostStructure);
+export default connect(mapStateToProps, { getSelectedPlanOverview, deleteFixedCost, deleteVariableCost, getCategories, getCostStructureList, refreshPlan, saveState, selectCostCategory })(CostStructure);

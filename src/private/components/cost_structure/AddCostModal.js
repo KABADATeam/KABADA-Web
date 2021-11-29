@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Form, Select, Button, Input, Space } from 'antd';
-import  '../../../css/customModal.css';
-import {ArrowLeftOutlined} from '@ant-design/icons';
+import '../../../css/customModal.css';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { saveFixedCost, saveVariableCost } from "../../../appStore/actions/costStructureAction";
 
-const {Option} = Select;
+const { Option } = Select;
 
 const inputStyle = {
     border: '1px solid #BFBFBF',
@@ -51,15 +51,17 @@ class AddCostModal extends Component {
                 selectedTypeError: 'Wrong'
             })
         }*/
+        const typeTitle = this.props.category.types.find(element => element.type_id === this.state.selectedTypeId)
+
         const postObject = {
-            "id": null,
+            //"id": null,
             "business_plan_id": this.props.businessPlan.id,
             "type_id": this.state.selectedTypeId,
             "name": this.state.name,
             "description": this.state.description,
 
         }
-        const typeTitle = this.props.category.types.find(x => x.type_id = this.state.selectedTypeId) 
+
         //const type_id = this.state.selectedTypeId;
         const reducerObject = {
             "category_id": this.props.category.category_id,
@@ -70,7 +72,9 @@ class AddCostModal extends Component {
             "description": this.state.description,
             "number": this.props.number
         }
-        console.log(reducerObject)
+        console.log(reducerObject, postObject)
+        console.log(typeTitle)
+        console.log(this.state.selectedTypeId)
         this.setState({
             selectedTypeId: null,
             name: '',
@@ -85,14 +89,13 @@ class AddCostModal extends Component {
         } else {
             this.props.onClose();
         }
-        
 
     }
     onSelectionChange(id) {
         this.setState({
             selectedTypeId: id
         });
-        console.log(id)
+        console.log(this.state.selectedTypeId)
     }
 
     onChangeName(e) {
@@ -134,9 +137,9 @@ class AddCostModal extends Component {
                 >
                     <Form layout="vertical">
                         <Form.Item key={100} label="Type">
-                            <Select placeholder="Select type" value={this.state.selectedTypeId} onChange={this.onSelectionChange.bind(this)} style={{width:548}}>
+                            <Select placeholder="Select type" value={this.state.selectedTypeId} onChange={this.onSelectionChange.bind(this)} style={{ width: 548 }}>
                                 {options}
-                            </Select>                                                           
+                            </Select>
                         </Form.Item>
                         <Form.Item key={101} label="Name"
                             rules={[
@@ -149,15 +152,15 @@ class AddCostModal extends Component {
                                 },
                             ]}
                         >
-                            <Input placeholder="Your description goes here" value={this.state.name} onChange={this.onChangeName.bind(this)} size="large" style={{...inputStyle, width:548}}/>                                                
+                            <Input placeholder="Your description goes here" value={this.state.name} onChange={this.onChangeName.bind(this)} size="large" style={{ ...inputStyle, width: 548 }} />
                         </Form.Item>
                         <Form.Item key={102} label="Description (optional)">
-                            <Input placeholder="Your description goes here" value={this.state.description} onChange={this.onChangeDescription.bind(this)} size="large" style={{...inputStyle, width:548}}/>                                                
-                        </Form.Item>    
-                                          
-                    </Form> 
+                            <Input placeholder="Your description goes here" value={this.state.description} onChange={this.onChangeDescription.bind(this)} size="large" style={{ ...inputStyle, width: 548 }} />
+                        </Form.Item>
+
+                    </Form>
                 </Modal >
-    
+
             </>
         )
     }
@@ -166,10 +169,10 @@ class AddCostModal extends Component {
 const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
-        category: state.selectedCostCategory        
+        category: state.selectedCostCategory
     };
 }
 
-export default connect(mapStateToProps, {saveFixedCost, saveVariableCost} )(AddCostModal);
+export default connect(mapStateToProps, { saveFixedCost, saveVariableCost })(AddCostModal);
 
 
