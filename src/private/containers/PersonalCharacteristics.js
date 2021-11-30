@@ -545,7 +545,7 @@ class PersonalCharacteristics extends React.Component {
                             <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Space>Personal characteristics template</Space>
+                            <Space>Personal characteristics</Space>
                         </Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
