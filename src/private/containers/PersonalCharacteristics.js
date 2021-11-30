@@ -624,7 +624,7 @@ class PersonalCharacteristics extends React.Component {
                                                     value={element2.optionCode}>{element2.answerText}</Option>)
                                             })}
                                         </Select> : element.set_code > 3 && element.set_code < 18 ?
-                                            <Radio.Group onChange={this.onDataChange} value={element.selection_code}>
+                                            <Radio.Group onChange={(e) => this.onDataChange(e.target.value)} value={element.selection_code}>
                                                 <Space direction={'vertical'}>
                                                     {element.answerOptions.map((element2, index2) => {
                                                         return (
