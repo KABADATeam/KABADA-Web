@@ -23,29 +23,7 @@ export const getBusinessStartUpInvestmentInformation = (planId) => {
     };
 };
 
-export const updateBusinessStartUpInvestmentInformation = (postObject) => {
-    return async (dispatch, getState) => {
-        dispatch({ type: "LOADING", payload: true });
-        try {
-            const token = getState().user.access_token;
-            const response = await kabadaAPI.post('/api/kres/investment/update', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response);
-            dispatch({ type: "UPDATE_INVESTMENT_SUCCESS", payload: response.data });
-        } catch (error) {
-            console.log(error.response);
-            if (error.response === undefined) {
-                dispatch({
-                    type: "ERROR",
-                    payload: { message: "Oopsie... System error. Try again, later" },
-                });
-            } else {
-                dispatch({ type: "ERROR", payload: error.response.data });
-            }
-        } finally {
-            dispatch({ type: "LOADING", payload: false });
-        }
-    };
-};
+
 export const saveChanges = (planId, callback) => {
     return async (dispatch, getState) => {
         try {
@@ -195,14 +173,39 @@ export const saveState = (planId, is_completed, callback) => {
         }
     }
 };
-export const discardChanges = () => {
+export const discardChanges = (callback) => {
     return async (dispatch, getState) => {
         try {
             console.log('test');
-            dispatch({ type: 'DISCARD_CHANGES_SUCCESS', payload: {} });
+            dispatch({ type: 'DISCARD_INVESTMENTS_CHANGES_SUCCESS', payload: {} });
+            callback();
         } catch (error) {
             dispatch({ type: 'ERROR', payload: errorHandler(error) });
         } finally {
         }
     }
 };
+
+export const updateWorkingCapitalMyMoney = (value, record) => {
+    return async (dispatch, getState) => {
+        try {
+            const my_money_value = Number(value);
+            console.log(value);
+            dispatch({ type: 'UPDATE_WORKING_CAPITAL_ITEM_MY_MONEY', payload: {"value": my_money_value, "record": record}})
+        } catch (error) {
+            dispatch({ type: 'ERROR', payload: errorHandler(error)})
+        } finally {
+        }
+    }
+}
+export const updateWorkingCapitalLoanAmount = (value, record) => {
+    return async (dispatch, getState) => {
+        try {
+            const loan_amount_value = Number(value);
+            dispatch({ type: 'UPDATE_WORKING_CAPITAL_ITEM_LOAN_AMOUNT', payload: {"value": loan_amount_value, "record": record}})
+        } catch (error) {
+            dispatch({ type: 'ERROR', payload: errorHandler(error)})
+        } finally {
+        }
+    }
+}

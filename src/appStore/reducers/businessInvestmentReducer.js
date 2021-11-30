@@ -7,6 +7,31 @@ const computeShortLoanValue = (workings_amount, my_money) => {
     return loan_amount;
 }
 
+const dataWorkingCapital = (grace_period_short) => {
+    const array = [];
+    const array1 = [];
+    if (grace_period_short > 0) {
+        const uniqueObj = {
+            own_amount: 0,
+            loan_amount: 0
+        }
+        for (var i = 0; i < grace_period_short; i++) {
+            array.push(uniqueObj);
+        }
+        return array;
+    } else {
+        console.log(array1);
+        return array1;
+    }
+}
+const findIndex = (working_capital, record) => {
+    for (var index = 0; index <= working_capital.length; index++) {
+        if (index === record - 1) {
+            return index;
+        }
+    }
+
+}
 export const businessStartUpInvestmentReducer = (
     state = {
         is_business_investments_completed: false,
@@ -19,7 +44,9 @@ export const businessStartUpInvestmentReducer = (
     }, action) => {
     switch (action.type) {
         case 'FETCHING_INVESTMENT_SUCCESS':
-            console.log(action.payload)
+            console.log(action.payload);
+            const working_capitals = dataWorkingCapital(action.payload.grace_period_short);
+            console.log(working_capitals);
             const obj = {
                 period: action.payload.period === null ? 12 : action.payload.period,
                 vat_payer: action.payload.vat_payer === null ? true : action.payload.vat_payer,
@@ -29,12 +56,12 @@ export const businessStartUpInvestmentReducer = (
                 interest_rate: action.payload.interest_rate === null ? 0 : action.payload.interest_rate,
                 grace_period: action.payload.grace_period === null ? 0 : action.payload.grace_period,
                 working_capital_amount: action.payload.working_capital_amount == null ? 0 : action.payload.working_capital_amount,
-                own_money_short: action.payload.own_money_short === null ? 0 : action.payload.own_money,
-                loan_amount_short: action.payload.loan_amount_short,
+                own_money_short: action.payload.own_money_short === null ? 0 : action.payload.own_money_short,
+                loan_amount_short: action.payload.loan_amount_short === null ? 0 : action.payload.loan_amount_short,
                 payment_period_short: action.payload.payment_period_short === null ? 1 : action.payload.payment_period_short,
                 interest_rate_short: action.payload.interest_rate_short === null ? 0 : action.payload.interest_rate_short,
                 grace_period_short: action.payload.grace_period_short === null ? 0 : action.payload.grace_period_short,
-                working_capital: action.payload.working_capital
+                working_capital: action.payload.working_capital === null ? working_capitals : action.payload.working_capital
             }
             return {
                 ...state,
@@ -114,7 +141,8 @@ export const businessStartUpInvestmentReducer = (
                 }
             }
         case 'CHANGE_WORKING_CAPITAL_SUCCESS':
-            console.log(action)
+            console.log(action);
+            const _loan_amount_short = computeShortLoanValue(action.working_capital_amount, state.updates.own_money_short)
             return {
                 ...state,
                 'updates': {
@@ -127,7 +155,7 @@ export const businessStartUpInvestmentReducer = (
                     grace_period: state.updates.grace_period,
                     working_capital_amount: action.working_capital_amount,
                     own_money_short: state.updates.own_money_short,
-                    loan_amount_short: state.updates.loan_amount_short,
+                    loan_amount_short: _loan_amount_short,
                     payment_period_short: state.updates.payment_period_short,
                     interest_rate_short: state.updates.interest_rate_short,
                     grace_period_short: state.updates.grace_period_short,
@@ -296,15 +324,77 @@ export const businessStartUpInvestmentReducer = (
             return {
                 ...state,
             }
-        case "DISCARD_CHANGES_SUCCESS":
-            
+        case "DISCARD_INVESTMENTS_CHANGES_SUCCESS":
             const discardObj = JSON.parse(JSON.stringify(state.original))
             console.log(discardObj)
-            return { 
-                ...state, 
+            return {
+                ...state,
                 'original': discardObj,
                 'updates': discardObj
             };
+        case 'UPDATE_WORKING_CAPITAL_ITEM_MY_MONEY':
+            console.log(action.payload);
+            console.log(state.updates);
+            const index = findIndex(state.updates.working_capital, action.payload.record);
+            console.log(index);
+            const updatedWorkingCapitalItem = {
+                own_amount: action.payload.value,
+                loan_amount: state.updates.working_capital[index].loan_amount,
+            }
+            console.log(updatedWorkingCapitalItem)
+            const updatedWorkingCapitalItemsList = [...state.updates.working_capital];
+            updatedWorkingCapitalItemsList[index] = updatedWorkingCapitalItem;
+    
+            return {
+                ...state,
+                'updates': {
+                    period: state.updates.period,
+                    vat_payer: state.updates.vat_payer,
+                    own_money: state.updates.own_money,
+                    loan_amount: state.updates.loan_amount,
+                    payment_period: state.updates.payment_period,
+                    interest_rate: state.updates.interest_rate,
+                    grace_period: state.updates.grace_period,
+                    working_capital_amount: state.updates.working_capital_amount,
+                    own_money_short: state.updates.own_money_short,
+                    loan_amount_short: state.updates.loan_amount_short,
+                    payment_period_short: state.updates.payment_period_short,
+                    interest_rate_short: state.updates.interest_rate_short,
+                    grace_period_short: state.updates.grace_period_short,
+                    working_capital: updatedWorkingCapitalItemsList
+                }
+            }
+        case 'UPDATE_WORKING_CAPITAL_ITEM_LOAN_AMOUNT':
+            console.log(action.payload);
+            const _index = findIndex(state.updates.working_capital, action.payload.record);
+            console.log(_index);
+            const _updatedWorkingCapitalItem = {
+                own_amount: state.updates.working_capital[_index].own_amount,
+                loan_amount: action.payload.value,
+            }
+            console.log(_updatedWorkingCapitalItem)
+            const _updatedWorkingCapitalItemsList = [...state.updates.working_capital];
+            _updatedWorkingCapitalItemsList[_index] = _updatedWorkingCapitalItem;
+    
+            return {
+                ...state,
+                'updates': {
+                    period: state.updates.period,
+                    vat_payer: state.updates.vat_payer,
+                    own_money: state.updates.own_money,
+                    loan_amount: state.updates.loan_amount,
+                    payment_period: state.updates.payment_period,
+                    interest_rate: state.updates.interest_rate,
+                    grace_period: state.updates.grace_period,
+                    working_capital_amount: state.updates.working_capital_amount,
+                    own_money_short: state.updates.own_money_short,
+                    loan_amount_short: state.updates.loan_amount_short,
+                    payment_period_short: state.updates.payment_period_short,
+                    interest_rate_short: state.updates.interest_rate_short,
+                    grace_period_short: state.updates.grace_period_short,
+                    working_capital: _updatedWorkingCapitalItemsList
+                }
+            }
         default:
             return state
     }

@@ -85,7 +85,6 @@ export const assetsReducer = (
         case 'UPDATE_ASSETS_ITEM_AMOUNT':
             console.log(action.payload);
             const index = state.physical_assets_updated.findIndex(x => x.resource_id === action.payload.asset.resource_id);
-            console.log(index)
             const updatedAsset = {
                 'amount': Number(action.payload.value),
                 'resource_id': state.physical_assets_updated[index].resource_id,
@@ -96,11 +95,8 @@ export const assetsReducer = (
             }
             const updatedAssetsList = [...state.physical_assets_updated];
             updatedAssetsList[index] = updatedAsset;
-            console.log(updatedAssetsList);
-            const total_investments_value = computeTotalInvestments(updatedAssetsList)
-            console.log(total_investments_value)
-            const own_assets_value = computeOwnAssets(updatedAssetsList)
-            console.log(own_assets_value);
+            const total_investments_value = computeTotalInvestments(updatedAssetsList);
+            const own_assets_value = computeOwnAssets(updatedAssetsList);
             const investment_amount_value = total_investments_value - own_assets_value
             return {
                 ...state,
@@ -122,7 +118,6 @@ export const assetsReducer = (
             }
             const _updatedAssetsList = [...state.physical_assets_updated];
             _updatedAssetsList[_index] = _updatedAsset;
-            console.log(_updatedAssetsList);
             return {
                 ...state,
                 'physical_assets_updated': _updatedAssetsList

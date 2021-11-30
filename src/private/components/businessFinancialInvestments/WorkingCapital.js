@@ -4,7 +4,9 @@ import { Divider, Row, Col, Typography, Card, Select, Input, Table, Tooltip, Spa
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
 import { connect } from 'react-redux';
 import { changeVisibility, changePeriod, changeVatPrayer, changeOwnMoney, changeWorkingCapitalAmount, changeOwnMoneyShort, changeWorkingCapital } from "../../../appStore/actions/businessInvestmentAction";
-import { CaretDownFilled, UserOutlined, InfoCircleFilled } from '@ant-design/icons';
+import { CaretDownFilled, UserOutlined, InfoCircleFilled, ImportOutlined } from '@ant-design/icons';
+import WorkingCapitalScenario1 from './WorkingCapitalScenario1';
+import WorkingCapitalScenario2 from './WorkingCapitalScenario2';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -44,192 +46,9 @@ const titleButtonStyle = {
 
 class WorkingCapital extends React.Component {
     state = {
-        period: null,
-        vat_payer: null,
-        own_money: null,
-        loan_amount: null,
-        working_capital_amount: null,
-        own_money_short: null,
-        loan_amount_short: null,
         working_capital_for_table: [], //used in table
-        working_capital_original: [],
-        working_capital_updated: [],
-        original_object: [],
-        updated_object: [],
     }
 
-    setOriginalObject = (data) => {
-        const array = []
-        const obj = {
-            period: data.period === null ? 12 : data.period,
-            vat_payer: data.vat_payer,
-            own_money: data.own_money === null ? 0 : data.own_money,
-            loan_amount: data.loan_amount === null ? 0 : data.loan_amount,
-            working_capital_amount: data.working_capital_amount === null ? 0 : data.working_capital_amount,
-            own_money_short: data.own_money_short === null ? 0 : data.own_money_short,
-            loan_amount_short: data.loan_amount_short === null ? 0 : data.loan_amount_short,
-            working_capital: data.working_capital === null ? null : data.working_capital
-        }
-        array.push(obj);
-        this.setState({
-            original_object: array,
-        })
-    }
-    setUpdatedObject = () => {
-        const array = []
-        const obj = {
-            period: this.state.period,
-            vat_payer: this.state.vat_payer,
-            own_money: this.state.own_money,
-            loan_amount: this.state.loan_amount,
-            working_capital_amount: this.state.working_capital_amount,
-            own_money_short: this.state.own_money_short,
-            loan_amount_short: this.state.loan_amount_short,
-            working_capital: this.state.working_capital_updated
-        }
-        array.push(obj);
-        this.setState({
-            updated_object: array,
-        })
-    }
-    setWorkingCapitalOriginalArray = (data) => {
-        const grace_period = this.props.data.original.grace_period_short + 1;
-        const array = [];
-        if (data.original.working_capital === null) {
-            for (var i = 0; i < grace_period; i++) {
-                const monthRow = {
-                    own_amount: 0,
-                    loan_amount: 0,
-                }
-                array.push(monthRow);
-            }
-            this.setState({
-                working_capital_original: array
-            })
-        } else {
-            this.setState({
-                working_capital_original: data.original.working_capital
-            })
-            console.log(data.working_capital)
-        }
-    }
-    setWorkingCapitalUpdatedArray = (data) => {
-        const grace_period = this.props.data.grace_period_short + 1;
-        const array = [];
-        if (data.original.working_capital === null) {
-            for (var i = 0; i < grace_period; i++) {
-                const monthRow = {
-                    own_amount: 0,
-                    loan_amount: 0,
-                }
-                array.push(monthRow);
-            }
-            this.setState({
-                working_capital_updated: array
-            })
-        } else {
-            this.setState({
-                working_capital_updated: data.working_capital
-            })
-            console.log(data.working_capital)
-        }
-    }
-    updateWorkingItemsProperties = (value, inputName, record) => {
-        const array = this.state.working_capital_updated;
-        console.log(this.state.working_capital_original);
-        console.log(array)
-        array.forEach((item, index) => {
-            if (index === record) {
-                console.log(record);
-                if (inputName === 'own_amount' && record !== 0) {
-                    console.log(value);
-                    item.own_amount = Number(value);
-                } else if (inputName === 'loan_amount') {
-                    console.log('Update', + value);
-                    item.loan_amount = Number(value);
-                } else if (inputName === 'own_amount' && record === 0) {
-                    const loan_amount_short = this.props.data.working_capital_amount - Number(value);
-                    this.setState({
-                        own_money_short: Number(value),
-                        loan_amount_short: loan_amount_short
-                    })
-                    this.props.changeOwnMoneyShort(Number(value), loan_amount_short);
-                }
-            }
-        })
-        console.log(array);
-
-        //this.compareWorkingCapitalArrays(this.state.working_capital_original, array)
-        this.setState({
-            working_capital_updated: array
-        })
-        this.props.changeWorkingCapital(array);
-        this.arraysEqual(this.state.original_object)
-    }
-    compareWorkingCapitalArrays = (array1, array2) => {
-        let a = JSON.parse(JSON.stringify(array1));
-        let b = JSON.parse(JSON.stringify(array2));
-        let original = array1;
-        let modified = array2;
-        console.log(original);
-        console.log(modified);
-        if (a === b) {
-            this.props.changeVisibility('hidden');
-        }
-        //if (a == null || b == null) return this.props.changeVisibility('visible');
-        //if (a.length !== b.length) return this.props.changeVisibility('visible');
-
-        a = a.sort();
-        b = b.sort();
-        for (var i = 0; i < original.length; ++i) {
-            if (original[i].own_amount !== modified[i].own_amount || original[i].loan_amount !== modified[i].loan_amount) {
-                // console.log('Original price:' + original[i].price + ", modified price is: " + modified[i].price)
-                console.log('They are not equal');
-                this.props.changeVisibility('visible');
-            }
-        }
-    }
-    arraysEqual = (array1) => {
-        let a = JSON.parse(JSON.stringify(array1));
-        let array2 = [];
-        const obj = {
-            period: this.state.period,
-            vat_payer: this.state.vat_payer,
-            own_money: this.state.own_money,
-            loan_amount: this.state.loan_amount,
-            working_capital_amount: this.state.working_capital_amount,
-            own_money_short: this.state.own_money_short,
-            loan_amount_short: this.state.loan_amount_short,
-            working_capital: this.state.working_capital_updated
-        }
-        array2.push(obj);
-        let b = JSON.parse(JSON.stringify(array2));
-        let original = array1;
-        let modified = array2;
-        if (a === b) {
-            this.props.changeVisibility('hidden');
-        }
-        //if (a == null || b == null) return this.props.changeVisibility('visible');
-        //if (a.length !== b.length) return this.props.changeVisibility('visible');
-
-        a = a.sort();
-        b = b.sort();
-        for (var i = 0; i < original.length; ++i) {
-            if (original[i].period !== modified[i].period ||
-                original[i].vat_payer !== modified[i].vat_payer ||
-                original[i].own_money !== modified[i].own_money ||
-                original[i].loan_amount !== modified[i].loan_amount ||
-                original[i].working_capital_amount !== modified[i].working_capital_amount ||
-                original[i].own_money_short !== modified[i].own_money_short ||
-                original[i].loan_amount_short !== modified[i].loan_amount_short ||
-                original[i].working_capital !== modified[i].working_capital
-            ) {
-                // console.log('Original price:' + original[i].price + ", modified price is: " + modified[i].price)
-                this.props.changeVisibility('visible')
-                //return 'visible';
-            }
-        }
-    }
     setWorkingCapital = (data) => {
         const newMonthsArray = []
         if (data.original.grace_period_short === null) {
@@ -240,7 +59,7 @@ class WorkingCapital extends React.Component {
                 total_necessary: null,
             }
             newMonthsArray.push(objUnique);
-        } else if (data.grace_period_short === 0) {
+        } else if (data.original.grace_period_short === 0) {
             const objUnique = {
                 month: 'Startup',
                 own_amount: data.updates.own_money_short,
@@ -291,93 +110,9 @@ class WorkingCapital extends React.Component {
         })
     }
     componentDidMount() {
-        this.setOriginalObject(this.props.data);
-        this.setUpdatedObject();
-        this.setWorkingCapitalOriginalArray(this.props.data);
-        this.setWorkingCapitalUpdatedArray(this.props.data);
         this.setWorkingCapital(this.props.data);
     }
     render() {
-        console.log(this.props.data.original.period)
-        const defaultPeriodValue = this.props.data.original.period === null ? 12 : this.props.data.original.period;
-        const defaultPayVATValue = this.props.data.original.vat_payer === null ? true : this.props.data.original.vat_payer;
-        const getLoanAmount = this.props.data.total_investments - this.props.data.own_assets - this.props.data.own_money;
-        const dataWorkingCapitalV1 = [{
-            title: 'Startup',
-            own_amount: this.props.data.own_money_short,
-            loan_amount: this.props.data.loan_amount_short,
-        }]
-        const workingCapitalColumnsV1 = [
-            {
-                title: 'Month',
-                dataIndex: 'month',
-                key: 'month',
-                width: '32.5%',
-                render: (text, obj, record) => (
-                    record === 0 ? <Text>Startup</Text> : <Text>{text} month</Text>
-                )
-            },
-            {
-                title: () => (
-                    <Space>
-                        <Text>My money</Text>
-                        <Tooltip title="Tooltip text">
-                            <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF' }} />
-                        </Tooltip>
-                    </Space>
-                ),
-                dataIndex: 'own_amount',
-                key: 'own_amount',
-                width: '20%',
-                align: 'center',
-                render: (text, obj, record) => (
-                    <div style={{ float: 'right' }}>
-                        <Input style={{ width: 103 }}
-                            prefix="€"
-                            size="large"
-                            defaultValue={text === null ? 0 : text}
-                            onChange={e => this.onOwnMoneyShortChange(e)}
-                        />
-                    </div>
-
-                )
-            },
-            {
-                title: () => (
-                    <Space>
-                        <Text>Loan Amount</Text>
-                        <Tooltip title="Tooltip text">
-                            <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF' }} />
-                        </Tooltip>
-                    </Space>
-                ),
-                dataIndex: 'loan_amount',
-                key: 'loan_amount',
-                width: '22.5%',
-                align: 'right',
-                render: (text, obj, record) => (
-                    <Text>{text}</Text>
-                )
-            },
-
-            {
-                title: () => (
-                    <Space>
-                        <Text>Total Necessary</Text>
-                        <Tooltip title="Tooltip text">
-                            <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF' }} />
-                        </Tooltip>
-                    </Space>
-                ),
-                dataIndex: 'total',
-                key: 'total',
-                width: '25%',
-                align: 'right',
-                render: (text, obj, record) => (
-                    <Text style={{ color: '#CF1322' }}>-</Text>
-                )
-            },
-        ];
         const workingCapitalColumnsV2 = [
             {
                 title: 'Month',
@@ -480,7 +215,7 @@ class WorkingCapital extends React.Component {
                                         </Col>
                                         <Col span={12}>
                                             <div style={{ float: "right", marginTop: 16, marginRight: 16 }}>
-                                                <Select defaultValue={defaultPeriodValue} suffixIcon={<CaretDownFilled />} size='default' onSelect={value => this.props.changePeriod(value)}>
+                                                <Select defaultValue={this.props.investments.original.period === null ? 12 : this.props.investments.original.period} suffixIcon={<CaretDownFilled />} size='default' onSelect={value => this.props.changePeriod(value)}>
                                                     <Option value={12}>12 mo.</Option>
                                                     <Option value={24}>24 mo.</Option>
                                                 </Select>
@@ -496,7 +231,7 @@ class WorkingCapital extends React.Component {
                                         </Col>
                                         <Col span={12}>
                                             <div style={{ float: "right", marginBottom: 16, marginRight: 16 }}>
-                                                <Select defaultValue={defaultPayVATValue} suffixIcon={<CaretDownFilled />} onChange={value => this.props.changeVatPrayer(value)}>
+                                                <Select defaultValue={this.props.investments.original.vat_payer === null ? true : this.props.investments.original.vat_payer} suffixIcon={<CaretDownFilled />} onChange={value => this.props.changeVatPrayer(value)}>
                                                     <Option value={true}>Yes</Option>
                                                     <Option value={false}>No</Option>
                                                 </Select>
@@ -518,7 +253,7 @@ class WorkingCapital extends React.Component {
                                             </Col>
                                             <Col span={8}>
                                                 <div style={{ float: 'right' }}>
-                                                    <Text>{this.props.data.total_investments}</Text>
+                                                    <Text>{this.props.investments.total_investments}</Text>
                                                 </div>
                                             </Col>
                                         </Row>
@@ -528,7 +263,7 @@ class WorkingCapital extends React.Component {
                                             </Col>
                                             <Col span={8}>
                                                 <div style={{ float: 'right' }}>
-                                                    <Text>{this.props.data.own_assets}</Text>
+                                                    <Text>{this.props.investments.own_assets}</Text>
                                                 </div>
                                             </Col>
                                         </Row>
@@ -538,7 +273,7 @@ class WorkingCapital extends React.Component {
                                             </Col>
                                             <Col span={8}>
                                                 <div style={{ float: 'right' }}>
-                                                    <Text>{this.props.data.investment_amount}</Text>
+                                                    <Text>{this.props.investments.investment_amount}</Text>
                                                 </div>
                                             </Col>
                                         </Row>
@@ -554,7 +289,7 @@ class WorkingCapital extends React.Component {
                                                         prefix="€"
                                                         size="large"
                                                         onChange={e => this.props.changeOwnMoney(e.target.value)}
-                                                        defaultValue={this.props.data.original.own_money}
+                                                        defaultValue={this.props.investments.original.own_money}
                                                     />
                                                 </div>
                                             </Col>
@@ -566,7 +301,7 @@ class WorkingCapital extends React.Component {
                                             </Col>
                                             <Col span={8}>
                                                 <div style={{ float: 'right' }}>
-                                                    <Text style={{ fontWeight: 600, fontSize: 14, fontStyle: 'normal' }}>{this.props.data.updates.loan_amount === null ? this.props.data.investment_amount: this.props.data.updates.loan_amount }</Text>
+                                                    <Text style={{ fontWeight: 600, fontSize: 14, fontStyle: 'normal' }}>{this.props.investments.updates.loan_amount === null ? this.props.investments.investment_amount : this.props.investments.updates.loan_amount}</Text>
                                                 </div>
                                             </Col>
                                         </Row>
@@ -574,43 +309,19 @@ class WorkingCapital extends React.Component {
                                 </Card >
                             </div>
                             <div style={{ marginTop: 24 }}>
-                                <Row>
-                                    <Col span={24}>
-                                        <Table
-                                            title={() => (
-                                                <div>
-                                                    <Row style={{ marginBottom: 16 }}>
-                                                        <div>
-                                                            <Text>Working capital</Text>
-                                                            <Tooltip title="Tooltip text">
-                                                                <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF', marginLeft: '5.25px' }} />
-                                                            </Tooltip>
-                                                        </div>
-                                                    </Row>
-                                                    <Row style={{ marginBottom: 8 }}>
-                                                        <Col span={16} style={{ marginTop: 5 }}>
-                                                            <Text style={{ fontWeight: 400, fontSize: 14 }}>My initial guess, how big Working Capital I need</Text>
-                                                        </Col>
-                                                        <Col span={8}>
-                                                            <div style={{ float: 'right' }}>
-                                                                <Input style={{ width: 103 }}
-                                                                    prefix="€"
-                                                                    size="large"
-                                                                    defaultValue={this.props.data.original.working_capital_amount === null ? 0 : this.props.data.original.working_capital_amount}
-                                                                    onChange={e => this.props.changeWorkingCapitalAmount(e.target.value)}
-                                                                />
-                                                            </div>
-                                                        </Col>
-                                                    </Row>
-                                                </div>
-                                            )}
-                                            dataSource={this.state.working_capital_for_table}
-                                            columns={workingCapitalColumnsV2}
-                                            pagination={false}
-                                        />
-                                    </Col>
-                                </Row>
-
+                                {this.props.investments.original.grace_period_short === 0 ?
+                                    <Row>
+                                        <Col span={24}>
+                                            <WorkingCapitalScenario1 />
+                                        </Col>
+                                    </Row>
+                                    :
+                                    <Row>
+                                        <Col span={24}>
+                                            <WorkingCapitalScenario2 />
+                                        </Col>
+                                    </Row>
+                                }
                             </div>
                         </Col>
                     </Row>
@@ -624,6 +335,7 @@ class WorkingCapital extends React.Component {
 const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
+        investments: state.businessInvestments,
     };
 }
 
