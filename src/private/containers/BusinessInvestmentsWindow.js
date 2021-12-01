@@ -61,90 +61,27 @@ class BusinessInvestmentsWindow extends React.Component {
         this.props.history.push(`/overview`);
     }
 
-    arraysEqual = (array1, array2) => {
-        let a = JSON.parse(JSON.stringify(array1));
-        let b = JSON.parse(JSON.stringify(array2));
-        let original = array1;
-        let modified = array2;
-
-        if (a === b) return true;
-        if (a == null || b == null) return false;
-        if (a.length !== b.length) return false;
-
-        a = a.sort();
-        b = b.sort();
-        for (var i = 0; i < original.length; ++i) {
-            if (original[i].grace_period !== modified[i].grace_period ||
-                original[i].grace_period_short !== modified[i].grace_period_short ||
-                original[i].interest_rate !== modified[i].interest_rate ||
-                original[i].interest_rate_short !== modified[i].interest_rate_short ||
-                original[i].payment_period !== modified[i].payment_period ||
-                original[i].payment_period_short !== modified[i].payment_period_short
-            ) {
-                // console.log('Original price:' + original[i].price + ", modified price is: " + modified[i].price)
-                console.log('They are not equal')
-                return false;
-            }
-        }
-        return true;
-    }
-
     getUpdatesWindowState() {
         let original = JSON.stringify(this.props.investments.original);
-        let modified = JSON.stringify(this.props.investments.updates)
-        console.log(this.props.investments.original)
-        console.log(this.props.investments.updates)
+        let modified = JSON.stringify(this.props.investments.updates);
         if (original === modified) {
             return 'hidden'
         } else {
             return 'visible'
         }
     }
-    // saveChanges = () => {
-    //     const postObject = {
-    //         business_plan_id: this.props.businessPlan.id,
-    //         period: this.props.investments.period === null ? 12 : this.props.investments.period,
-    //         vat_payer: this.props.investments.vat_payer === null ? true : this.props.investments.vat_payer,
-    //         own_money: this.props.investments.own_money,
-    //         loan_amount: this.props.investments.loan_amount,
-    //         working_capital_amount: this.props.investments.working_capital_amount,
-    //         own_money_short: this.props.investments.own_money_short,
-    //         loan_amount_short: this.props.investments.loan_amount_short,
-    //         payment_period: this.props.investments.payment_period,
-    //         interest_rate: this.props.investments.interest_rate,
-    //         grace_period: this.props.investments.grace_period,
-    //         payment_period_short: this.props.investments.payment_period_short,
-    //         interest_rate_short: this.props.investments.interest_rate_short,
-    //         grace_period_short: this.props.investments.grace_period_short,
-    //         total_investments: this.props.investments.total_investments,
-    //         own_assets: this.props.investments.own_assets,
-    //         investment_amount: this.props.investments.investment_amount,
-    //         working_capitals: this.props.investments.working_capital,
-    //     }
-    //     const recalculatePostObject = {
-    //         business_plan_id: this.props.businessPlan.id,
-    //         working_capitals: this.props.investments.working_capital,
-    //     }
-    //     console.log(postObject);
-    //     if (this.props.investments.grace_period_short > 0) {
-    //         this.props.recalculateInvestment(postObject);
-    //         this.props.updateBusinessStartUpInvestmentInformation(postObject);
-    //         this.props.changeVisibility('hidden');
-    //     } else {
-    //         this.props.updateBusinessStartUpInvestmentInformation(postObject);
-    //         this.props.changeVisibility('hidden');
-    //     }
-    // }
+    
     saveChanges = () => {
         this.props.saveChanges(this.props.businessPlan.id, () => {
-            this.props.getAssets(this.props.businessPlan.id);
+            this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);
         });
     }
     discardChanges = () => {
-        this.props.discardChanges();
+        this.props.discardChanges(()=> {
+            this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);
+        });
     }
     onCompletedChange(state) {
-        console.log('test')
         this.props.saveState(this.props.businessPlan.id, state, () => {
             this.props.getSelectedPlanOverview(this.props.businessPlan.id);
         });
