@@ -72,9 +72,6 @@ class AddCostModal extends Component {
             "description": this.state.description,
             "number": this.props.number
         }
-        console.log(reducerObject, postObject)
-        console.log(typeTitle)
-        console.log(this.state.selectedTypeId)
         this.setState({
             selectedTypeId: null,
             name: '',
@@ -114,6 +111,15 @@ class AddCostModal extends Component {
         this.props.handleClose();
     }
 
+    componentDidMount() {
+        // if its only option and if its type title is 'Other' then select it from start and dont show it
+        if (this.props.category.types.length < 2 && this.props.category.types[0].type_title === 'Other') {
+            this.setState({
+                selectedTypeId: this.props.category.types[0].type_id
+            })
+        }
+    }
+
     render() {
         const options = this.props.category.types.map(t =>
             <Option key={t.type_id} value={t.type_id}>{t.type_title}</Option>
@@ -136,11 +142,14 @@ class AddCostModal extends Component {
                     width={588}
                 >
                     <Form layout="vertical">
-                        <Form.Item key={100} label="Type">
-                            <Select placeholder="Select type" value={this.state.selectedTypeId} onChange={this.onSelectionChange.bind(this)} style={{ width: 548 }}>
-                                {options}
-                            </Select>
-                        </Form.Item>
+                        {this.props.category.types.length < 2 && this.props.category.types[0].type_title === 'Other' ?
+                            null :
+                            <Form.Item key={100} label="Type">
+                                <Select placeholder="Select type" value={this.state.selectedTypeId} onChange={this.onSelectionChange.bind(this)} style={{ width: 548 }}>
+                                    {options}
+                                </Select>
+                            </Form.Item>}
+
                         <Form.Item key={101} label="Name"
                             rules={[
                                 {
