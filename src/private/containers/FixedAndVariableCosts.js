@@ -78,8 +78,6 @@ class FixedAndVariableCosts extends React.Component {
 
     showModal = (recordas, data, index) => {
         // creating object which will hold visible value,category_id and ...
-        console.log('Fixed and costs monthly_expenses:' + JSON.stringify(data))
-        console.log('Record is equal to:' + JSON.stringify(recordas))
         const obj = {
             category_id: null,
             category_title: null,
@@ -139,7 +137,6 @@ class FixedAndVariableCosts extends React.Component {
 
 
     discardChanges = () => {
-        console.log('Dicard changes');
         // cloning fixed and variable states from redux state
         const fixedArray = JSON.parse(JSON.stringify(this.props.financialProjections.fixed));
         const variableArray = JSON.parse(JSON.stringify(this.props.financialProjections.variable));
@@ -151,8 +148,6 @@ class FixedAndVariableCosts extends React.Component {
         });
     }
     saveChanges = () => {
-        console.log('Saving changes');
-        console.log('Modified variable array"'+JSON.stringify(this.state.variable));
         const items = [];
 
         // cloning fixed and variable from financialProjections. i dont work directly with states
@@ -188,14 +183,12 @@ class FixedAndVariableCosts extends React.Component {
             obj.types.map((element, index1) => {
                 if (originalVariableArray[index].types[index1].price !== modifiedVariableArray[index].types[index1].price ||
                     originalVariableArray[index].types[index1].vat !== modifiedVariableArray[index].types[index1].vat ||
-                    originalVariableArray[index].types[index1].first_expenses !== modifiedVariableArray[index].types[index1].first_expenses ||
                     originalVariableArray[index].types[index1].monthly_expenses !== modifiedVariableArray[index].types[index1].monthly_expenses
                 ) {
                     const modifiedObj = {
                         cost_item_id: modifiedVariableArray[index].types[index1].cost_item_id,
                         price: modifiedVariableArray[index].types[index1].price,
                         vat: modifiedVariableArray[index].types[index1].vat,
-                        first_expenses: modifiedVariableArray[index].types[index1].first_expenses,
                         monthly_expenses: modifiedVariableArray[index].types[index1].monthly_expenses
                     }
                     items.push(modifiedObj);
@@ -245,7 +238,6 @@ class FixedAndVariableCosts extends React.Component {
                     original[index].types[index1].vat !== modified[index].types[index1].vat ||
                     original[index].types[index1].first_expenses !== modified[index].types[index1].first_expenses
                 ) {
-                    console.log('They are not equal!!!')
                     return false;
                 }
             });
@@ -280,15 +272,12 @@ class FixedAndVariableCosts extends React.Component {
             obj.types.map((element, index2) => {
                 if (element.cost_item_id === record.cost_item_id) {
                     if (inputName === "price") {
-                        console.log('Want to change PRICE from:' + element.price + ", to:" + value)
                         element.price = value;
                     }
                     if (inputName === "vat") {
-                        console.log('Want to change VAT from:' + element.vat + ", to:" + value);
                         element.vat = value;
                     }
                     if (inputName === "first_expenses") {
-                        console.log('Want to change First_Expenses from:' + element.first_expenses + ', to: ' + value);
                         // const st = value.charAt(0);
                         const expensesSliced = value.slice(0, -6)
                         element.first_expenses = Number(expensesSliced)
@@ -301,9 +290,6 @@ class FixedAndVariableCosts extends React.Component {
         });
 
         this.getUpdateWindowState();
-
-        console.log('Array of fixed is:' + JSON.stringify(originalArray));
-        console.log('Modified fixed array is:' + JSON.stringify(this.state.fixed))
 
     }
 
@@ -323,24 +309,17 @@ class FixedAndVariableCosts extends React.Component {
                 }
             });
         });
-        console.log('Array of variable is:' + JSON.stringify(originalArray));
         if(updateFrom === 0){
             this.setState({
                 variable: arrayOfVariable
             });
-            console.log('Modified variable array is:' + JSON.stringify(this.state.variable));
             this.getUpdateWindowState();
         }if(updateFrom === 1){
             this.setState({variable: arrayOfVariable},()=>{
-                console.log('Modified variable array is:' + JSON.stringify(this.state.variable));
                 this.saveChanges();
             });
         }
         
-
-        
-        
-        // console.log('Modified variable array is:' + JSON.stringify(this.state.variable));
     }
 
 
@@ -406,9 +385,14 @@ class FixedAndVariableCosts extends React.Component {
     render() {
         const fixed_costs_columns = [
             {
-                title: 'Name',
+                title: 'Type',
                 dataIndex: 'type_title',
-                width: '55%',
+                width: '25%',
+            },
+            {
+                title: 'Name',
+                dataIndex: 'type_name',
+                width: '25%'
             },
             {
                 title: 'Euro/mo. without VAT',
@@ -445,7 +429,7 @@ class FixedAndVariableCosts extends React.Component {
                 width: '15%',
                 render: (text, record, index) => (
                     <Input.Group compact>
-                        <Select defaultValue={text === null ? "1st mo." : text + "st mo."} value={text + "st mo."} onChange={e => this.onFixedChange(e, record, "first_expenses")}>
+                        <Select value={text === null ? "1st mo." : text + "st mo."} onChange={e => this.onFixedChange(e, record, "first_expenses")}>
                             {this.state.selectedPeriod.map((value, index) => (
                                 <Option value={value + "st mo."}>{value + "st mo."}</Option>
                             ))}
@@ -457,9 +441,14 @@ class FixedAndVariableCosts extends React.Component {
 
         const fixed_salaries_costs_columns = [
             {
-                title: 'Name',
+                title: 'Type',
                 dataIndex: 'type_title',
-                width: '55%',
+                width: '25%',
+            },
+            {
+                title: 'Name',
+                dataIndex: 'type_name',
+                width: '25%'
             },
             {
                 title: 'Euro/mo. without VAT',
@@ -483,7 +472,7 @@ class FixedAndVariableCosts extends React.Component {
                 width: '15%',
                 render: (text, record, index) => (
                     <Input.Group compact>
-                        <Select defaultValue={text === null ? "1st mo." : text + "st mo."} value={text + "st mo."} onChange={e => this.onFixedChange(e, record, "first_expenses")}>
+                        <Select value={text === null ? "1st mo." : text + "st mo."} onChange={e => this.onFixedChange(e, record, "first_expenses")}>
                             {this.state.selectedPeriod.map((value, index) => (
                                 <Option value={value + "st mo."}>{value + "st mo."}</Option>
                             ))}
@@ -495,9 +484,14 @@ class FixedAndVariableCosts extends React.Component {
 
         const variable_salaries_costs_columns = [
             {
-                title: 'Name',
+                title: 'Type',
                 dataIndex: 'type_title',
-                width: '65%',
+                width: '25%',
+            },
+            {
+                title: 'Name',
+                dataIndex: 'type_name',
+                width: '25%'
             },
             {
                 title: 'Euro/mo. without VAT',
@@ -514,9 +508,14 @@ class FixedAndVariableCosts extends React.Component {
 
         const variable_costs_columns = [
             {
-                title: 'Name',
+                title: 'Type',
                 dataIndex: 'type_title',
-                width: '55%',
+                width: '25%',
+            },
+            {
+                title: 'Name',
+                dataIndex: 'type_name',
+                width: '25%'
             },
             {
                 title: 'Euro/mo. without VAT',

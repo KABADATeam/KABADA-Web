@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Form, Select, Button, Input, Space } from 'antd';
-import  '../../../css/customModal.css';
-import {ArrowLeftOutlined} from '@ant-design/icons';
+import '../../../css/customModal.css';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { updateFixedCost, updateVariableCost } from "../../../appStore/actions/costStructureAction";
 
-const {Option} = Select;
+const { Option } = Select;
 
 const inputStyle = {
     border: '1px solid #BFBFBF',
@@ -43,7 +43,6 @@ class EditCostModal extends Component {
             "name": this.state.name,
             "description": this.state.description,
         }
-        console.log(postObject);
         const optionsData = this.props.number === 1 ? this.props.categories.fixed_categories.find(x => x.category_id === this.props.item.category_id) : this.props.categories.variable_categories.find(x => x.category_id === this.props.item.category_id)
         const typeTitle = optionsData.types.find(x => x.type_id === this.state.cost)
         const reducerObject = {
@@ -57,7 +56,6 @@ class EditCostModal extends Component {
             "description": this.state.description,
             "number": this.props.number
         }
-        console.log(reducerObject);
         if (this.props.number === 1) {
             this.props.updateFixedCost(postObject, reducerObject);
             this.props.onClose();
@@ -67,7 +65,7 @@ class EditCostModal extends Component {
         } else {
             this.props.onClose();
         }
-        
+
 
     }
 
@@ -75,7 +73,6 @@ class EditCostModal extends Component {
         this.setState({
             cost: id
         });
-        console.log(id)
     }
 
     onChangeName(e) {
@@ -99,7 +96,6 @@ class EditCostModal extends Component {
         const options = optionsData.types.map(t =>
             <Option key={t.type_id} value={t.type_id}>{t.type_title}</Option>
         );
-        console.log(options)
         const defaultValue = optionsData.types.find(x => x.type_id === this.props.item.type_id)
         return (
             <>
@@ -118,11 +114,12 @@ class EditCostModal extends Component {
                     width={588}
                 >
                     <Form layout="vertical">
-                        <Form.Item key={100} label="Type">
-                            <Select defaultValue={defaultValue.type_id} value={this.state.cost} onChange={this.onSelectionChange.bind(this)} style={{width:548}}>
-                                {options}
-                            </Select>                                                           
-                        </Form.Item>
+                        {optionsData.types.length < 2 && optionsData.types[0].type_title==="Other"?
+                            null : <Form.Item key={100} label="Type">
+                                <Select defaultValue={defaultValue.type_id} value={this.state.cost} onChange={this.onSelectionChange.bind(this)} style={{ width: 548 }}>
+                                    {options}
+                                </Select>
+                            </Form.Item>}
                         <Form.Item key={101} label="Name"
                             rules={[
                                 {
@@ -134,15 +131,15 @@ class EditCostModal extends Component {
                                 },
                             ]}
                         >
-                            <Input placeholder="Your description goes here" value={this.state.name} onChange={this.onChangeName.bind(this)} size="large" style={{...inputStyle, width:548}}/>                                                
+                            <Input placeholder="Your description goes here" value={this.state.name} onChange={this.onChangeName.bind(this)} size="large" style={{ ...inputStyle, width: 548 }} />
                         </Form.Item>
                         <Form.Item key={102} label="Description (optional)">
-                            <Input placeholder="Your description goes here" value={this.state.description} onChange={this.onChangeDescription.bind(this)} size="large" style={{...inputStyle, width:548}}/>                                                
-                        </Form.Item>    
-                                          
-                    </Form> 
+                            <Input placeholder="Your description goes here" value={this.state.description} onChange={this.onChangeDescription.bind(this)} size="large" style={{ ...inputStyle, width: 548 }} />
+                        </Form.Item>
+
+                    </Form>
                 </Modal >
-    
+
             </>
         )
     }
@@ -152,10 +149,10 @@ const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
         categories: state.costCategoriesList,
-        category: state.selectedCostCategory        
+        category: state.selectedCostCategory
     };
 }
 
-export default connect(mapStateToProps, {updateFixedCost, updateVariableCost} )(EditCostModal);
+export default connect(mapStateToProps, { updateFixedCost, updateVariableCost })(EditCostModal);
 
 

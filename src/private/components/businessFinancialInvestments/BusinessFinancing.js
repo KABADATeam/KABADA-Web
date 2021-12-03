@@ -197,7 +197,7 @@ class BusinessStartUpInvestments extends React.Component {
                 render: (text, obj, record) => (
                     <InputNumber
                         size="large"
-                        defaultValue={this.props.data.original.interest_rate === null ? 0 + ' %' : this.props.data.original.interest_rate + ' %'}
+                        defaultValue={this.props.data.original.interest_rate_short === null ? 0 + ' %' : this.props.data.original.interest_rate_short + ' %'}
                         formatter={value => `${value} %`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                         onChange={e => this.props.changeInterestRateShort(e)}
                     />

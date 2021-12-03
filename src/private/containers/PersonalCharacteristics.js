@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Form, Select, Input, Divider, Button, Breadcrumb, Row, Col, Typography, Radio, Card, Space, Tooltip, Tabs } from 'antd';
+import { Select, Switch, Button, Breadcrumb, Row, Col, Typography, Radio, Card, Space, Tooltip, Tabs } from 'antd';
 import { ArrowLeftOutlined, CloseOutlined, InfoCircleFilled, InfoCircleOutlined } from '@ant-design/icons';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
 import { refreshPlan } from "../../appStore/actions/refreshAction";
@@ -62,7 +62,7 @@ const questions = [
     {
         questionText: 'Your age group',
         set_code: '1',
-        selection_code: '14',
+        selection_code: null,
         answerOptions: [
             { answerText: 'Under 18', optionCode: '11' },
             { answerText: '18-24', optionCode: '12' },
@@ -75,7 +75,7 @@ const questions = [
     {
         questionText: 'Your gender',
         set_code: '2',
-        selection_code: '22',
+        selection_code: null,
         answerOptions: [
             { answerText: 'Female', optionCode: '21' },
             { answerText: 'Male', optionCode: '22' },
@@ -85,7 +85,7 @@ const questions = [
     {
         questionText: 'You country of origin',
         set_code: '3',
-        selection_code: '32',
+        selection_code: null,
         answerOptions: [
             { answerText: 'Austria', optionCode: '31' },
             { answerText: 'Belgium', optionCode: '32' },
@@ -128,7 +128,7 @@ const questions = [
     {
         questionText: 'Your education',
         set_code: '4',
-        selection_code: '41',
+        selection_code: null,
         answerOptions: [
             { answerText: 'Graduate (bachelor or higher)', optionCode: '41' },
             { answerText: 'Non-graduate', optionCode: '42' },
@@ -137,7 +137,7 @@ const questions = [
     {
         questionText: 'Reasons for starting business?',
         set_code: '5',
-        selection_code: '52',
+        selection_code: null,
         answerOptions: [
             { answerText: 'Autonomy and independence', optionCode: '51' },
             { answerText: 'To make a difference in the world', optionCode: '52' },
@@ -150,7 +150,7 @@ const questions = [
     {
         questionText: 'Does you family support your business intention?',
         set_code: '6',
-        selection_code: '64',
+        selection_code: null,
         answerOptions: [
             { answerText: 'Fully support', optionCode: '61' },
             { answerText: 'Rather support', optionCode: '62' },
@@ -163,7 +163,7 @@ const questions = [
     {
         questionText: 'Are you ready to lose your savings?',
         set_code: '7',
-        selection_code: '72',
+        selection_code: null,
         answerOptions: [
             { answerText: 'Yes', optionCode: '71' },
             { answerText: 'Not sure', optionCode: '72' },
@@ -173,7 +173,7 @@ const questions = [
     {
         questionText: 'Are you ready for a heavily increased workload and stress?',
         set_code: '8',
-        selection_code: '81',
+        selection_code: null,
         answerOptions: [
             { answerText: 'Yes', optionCode: '81' },
             { answerText: 'Not Sure', optionCode: '82' },
@@ -183,7 +183,7 @@ const questions = [
     {
         questionText: 'Do you like to be in charge and be responsible?',
         set_code: '9',
-        selection_code: '92',
+        selection_code: null,
         answerOptions: [
             { answerText: 'Yes', optionCode: '91' },
             { answerText: 'Not Sure', optionCode: '92' },
@@ -193,7 +193,7 @@ const questions = [
     {
         questionText: 'Can you make a desicion on a matter and then stick to the desicion even when challenged?',
         set_code: '10',
-        selection_code: '103',
+        selection_code: null,
         answerOptions: [
             { answerText: 'Yes', optionCode: '101' },
             { answerText: 'Mostly yes', optionCode: '102' },
@@ -203,7 +203,7 @@ const questions = [
     {
         questionText: 'Do you like meeting and dealing with people?',
         set_code: '11',
-        selection_code: '112',
+        selection_code: null,
         answerOptions: [
             { answerText: 'Yes', optionCode: '111' },
             { answerText: 'Sometimes', optionCode: '112' },
@@ -213,7 +213,7 @@ const questions = [
     {
         questionText: 'Have you had an extensive experience in the type of business you wish to start?',
         set_code: '12',
-        selection_code: '123',
+        selection_code: null,
         answerOptions: [
             { answerText: 'Yes', optionCode: '121' },
             { answerText: 'I have some', optionCode: '122' },
@@ -223,7 +223,7 @@ const questions = [
     {
         questionText: 'Do you have enough financial backing for the first year of operation?',
         set_code: '13',
-        selection_code: '131',
+        selection_code: null,
         answerOptions: [
             { answerText: 'Yes', optionCode: '131' },
             { answerText: 'Not sure', optionCode: '132' },
@@ -233,7 +233,7 @@ const questions = [
     {
         questionText: 'Do you know individuals who have the talents and expertise you lack?',
         set_code: '14',
-        selection_code: '143',
+        selection_code: null,
         answerOptions: [
             { answerText: 'Yes', optionCode: '141' },
             { answerText: 'Few', optionCode: '142' },
@@ -243,7 +243,7 @@ const questions = [
     {
         questionText: 'Do you really want to start this business more than anything else?',
         set_code: '15',
-        selection_code: '151',
+        selection_code: null,
         answerOptions: [
             { answerText: 'Yes', optionCode: '151' },
             { answerText: 'Not sure', optionCode: '152' },
@@ -253,7 +253,7 @@ const questions = [
     {
         questionText: 'Do others easily understand your concepts and ideas?',
         set_code: '16',
-        selection_code: '161',
+        selection_code: null,
         answerOptions: [
             { answerText: 'Yes', optionCode: '161' },
             { answerText: 'Not sure', optionCode: '162' },
@@ -263,7 +263,7 @@ const questions = [
     {
         questionText: 'Can you communicate effectively and persuade people to go along with your dream?',
         set_code: '17',
-        selection_code: '172',
+        selection_code: null,
         answerOptions: [
             { answerText: 'Yes', optionCode: '171' },
             { answerText: 'Not sure', optionCode: '172' },
@@ -273,7 +273,7 @@ const questions = [
     {
         questionText: 'Please, assess your skills in management',
         set_code: '18',
-        selection_code: '185',
+        selection_code: null,
         answerOptions: [
             { answerText: '1', optionCode: '181' },
             { answerText: '2', optionCode: '182' },
@@ -285,7 +285,7 @@ const questions = [
     {
         questionText: 'Please, assess your skills in finance',
         set_code: '19',
-        selection_code: '192',
+        selection_code: null,
         answerOptions: [
             { answerText: '1', optionCode: '191' },
             { answerText: '2', optionCode: '192' },
@@ -297,7 +297,7 @@ const questions = [
     {
         questionText: 'Please, assess your skills in marketing',
         set_code: '20',
-        selection_code: '203',
+        selection_code: null,
         answerOptions: [
             { answerText: '1', optionCode: '201' },
             { answerText: '2', optionCode: '202' },
@@ -509,6 +509,11 @@ class PersonalCharacteristics extends React.Component {
         });
 
     }
+    onCompletedChange = (state)=>{
+        // this.props.saveState(this.props.businessPlan.id, state, () => {
+            
+        // });
+    }
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
             if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
@@ -545,7 +550,7 @@ class PersonalCharacteristics extends React.Component {
                             <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Space>Personal characteristics template</Space>
+                            <Space>Personal characteristics</Space>
                         </Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
@@ -557,6 +562,11 @@ class PersonalCharacteristics extends React.Component {
                             <Tooltip title="Tooltip text">
                                 <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
                             </Tooltip>
+                        </div>
+                    </Col>
+                    <Col span={4}>
+                        <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
+                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={false} onClick={this.onCompletedChange.bind(this)} />
                         </div>
                     </Col>
                 </Row>
@@ -624,7 +634,7 @@ class PersonalCharacteristics extends React.Component {
                                                     value={element2.optionCode}>{element2.answerText}</Option>)
                                             })}
                                         </Select> : element.set_code > 3 && element.set_code < 18 ?
-                                            <Radio.Group onChange={this.onDataChange} value={element.selection_code}>
+                                            <Radio.Group onChange={(e) => this.onDataChange(e.target.value)} value={element.selection_code}>
                                                 <Space direction={'vertical'}>
                                                     {element.answerOptions.map((element2, index2) => {
                                                         return (

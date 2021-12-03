@@ -4,6 +4,7 @@ import { errorHandler } from './errorHandler';
 export const getBusinessStartUpInvestmentInformation = (planId) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
+        dispatch({ type: "RESET_INVESTMENT_SUCCESS", payload: {}});
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/kres/investment/' + planId, { headers: { Authorization: `Bearer ${token}` } });
@@ -23,35 +24,12 @@ export const getBusinessStartUpInvestmentInformation = (planId) => {
     };
 };
 
-export const updateBusinessStartUpInvestmentInformation = (postObject) => {
-    return async (dispatch, getState) => {
-        dispatch({ type: "LOADING", payload: true });
-        try {
-            const token = getState().user.access_token;
-            const response = await kabadaAPI.post('/api/kres/investment/update', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response);
-            dispatch({ type: "UPDATE_INVESTMENT_SUCCESS", payload: response.data });
-        } catch (error) {
-            console.log(error.response);
-            if (error.response === undefined) {
-                dispatch({
-                    type: "ERROR",
-                    payload: { message: "Oopsie... System error. Try again, later" },
-                });
-            } else {
-                dispatch({ type: "ERROR", payload: error.response.data });
-            }
-        } finally {
-            dispatch({ type: "LOADING", payload: false });
-        }
-    };
-};
+
 export const saveChanges = (planId, callback) => {
     return async (dispatch, getState) => {
         try {
             const token = getState().user.access_token;
             const dataToObj = getState().businessInvestments;
-            console.log(dataToObj)
             const postObject = {
                 business_plan_id: planId,
                 period: dataToObj.updates.period,
@@ -70,7 +48,7 @@ export const saveChanges = (planId, callback) => {
                 total_investments: dataToObj.total_investments,
                 own_assets: dataToObj.own_assets,
                 investment_amount: dataToObj.investment_amount,
-                working_capitals: dataToObj.updates.working_capital,
+                working_capitals: dataToObj.temporary.working_capital === null ? null : dataToObj.updates.working_capital,
             }
             console.log(postObject)
             await kabadaAPI.post('/api/kres/investment/update', postObject, { headers: { Authorization: `Bearer ${token}` } });
@@ -83,14 +61,37 @@ export const saveChanges = (planId, callback) => {
         }
     }
 };
-export const recalculateInvestment = (postObject) => {
+export const recalculateInvestment = (planId, callback) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
         try {
             const token = getState().user.access_token;
-            const response = await kabadaAPI.post('/api/plans/investmentSaveRecalc', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response.data);
-            dispatch({ type: "RECALCULATE_INVESTMENT_SUCCESS", payload: response.data });
+            const dataToObj = getState().businessInvestments;
+            const postObject = {
+                business_plan_id: planId,
+                period: dataToObj.updates.period,
+                vat_payer: dataToObj.updates.vat_payer,
+                own_money: dataToObj.updates.own_money,
+                loan_amount: dataToObj.updates.loan_amount,
+                working_capital_amount: dataToObj.updates.working_capital_amount,
+                own_money_short: dataToObj.updates.own_money_short,
+                loan_amount_short: dataToObj.updates.loan_amount_short,
+                payment_period: dataToObj.updates.payment_period,
+                interest_rate: dataToObj.updates.interest_rate,
+                grace_period: dataToObj.updates.grace_period,
+                payment_period_short: dataToObj.updates.payment_period_short,
+                interest_rate_short: dataToObj.updates.interest_rate_short,
+                grace_period_short: dataToObj.updates.grace_period_short,
+                total_investments: dataToObj.total_investments,
+                own_assets: dataToObj.own_assets,
+                investment_amount: dataToObj.investment_amount,
+                working_capitals: dataToObj.updates.working_capital
+            }
+            console.log(postObject);
+            await kabadaAPI.post('/api/plans/investmentSaveRecalc', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            if (callback !== null) {
+                callback();
+            }
         } catch (error) {
             if (error.response === undefined) {
                 dispatch({
@@ -164,7 +165,6 @@ export const getNecessaryCapitalInformation = (planId) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('/api/plans/necessaryCapital/' + planId, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response);
             dispatch({ type: "FETCHING_NECESSARY_CAPITAL_SUCCESS", payload: response.data });
         } catch (error) {
             if (error.response === undefined) {
@@ -195,14 +195,39 @@ export const saveState = (planId, is_completed, callback) => {
         }
     }
 };
-export const discardChanges = () => {
+export const discardChanges = (callback) => {
     return async (dispatch, getState) => {
         try {
             console.log('test');
-            dispatch({ type: 'DISCARD_CHANGES_SUCCESS', payload: {} });
+            dispatch({ type: 'DISCARD_INVESTMENTS_CHANGES_SUCCESS', payload: {} });
+            callback();
         } catch (error) {
             dispatch({ type: 'ERROR', payload: errorHandler(error) });
         } finally {
         }
     }
 };
+
+export const updateWorkingCapitalMyMoney = (value, record) => {
+    return async (dispatch, getState) => {
+        try {
+            const my_money_value = Number(value);
+            console.log(value);
+            dispatch({ type: 'UPDATE_WORKING_CAPITAL_ITEM_MY_MONEY', payload: {"value": my_money_value, "record": record}})
+        } catch (error) {
+            dispatch({ type: 'ERROR', payload: errorHandler(error)})
+        } finally {
+        }
+    }
+}
+export const updateWorkingCapitalLoanAmount = (value, record) => {
+    return async (dispatch, getState) => {
+        try {
+            const loan_amount_value = Number(value);
+            dispatch({ type: 'UPDATE_WORKING_CAPITAL_ITEM_LOAN_AMOUNT', payload: {"value": loan_amount_value, "record": record}})
+        } catch (error) {
+            dispatch({ type: 'ERROR', payload: errorHandler(error)})
+        } finally {
+        }
+    }
+}
