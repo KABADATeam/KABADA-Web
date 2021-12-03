@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Modal, List, Button } from 'antd';
 import '../../../css/customModal.css';
 import { RightOutlined } from '@ant-design/icons';
-import { selectRelationshipCategory } from "../../../appStore/actions/customerRelationshipsAction";
+import { selectRelationshipCategory, saveCustomerRelationship } from "../../../appStore/actions/customerRelationshipsAction";
 
 class RelationshipCategoriesModal extends Component {
     addNewRelationship = (item) => {
@@ -18,7 +18,7 @@ class RelationshipCategoriesModal extends Component {
     }
 
     render() {
-        const title = 'Add customer relationships';
+        const title = 'Add customer relationship mechanism';
         const data = this.props.categories.categories;
 
         return (
@@ -61,4 +61,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { selectRelationshipCategory })(RelationshipCategoriesModal);
+export default connect(mapStateToProps, { selectRelationshipCategory, saveCustomerRelationship })(RelationshipCategoriesModal);
