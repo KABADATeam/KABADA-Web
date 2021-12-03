@@ -72,9 +72,23 @@ class BusinessInvestmentsWindow extends React.Component {
     }
     
     saveChanges = () => {
-        this.props.saveChanges(this.props.businessPlan.id, () => {
-            this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);
-        });
+        if(this.props.investments.original.grace_period_short > 0){
+            console.log('OK')
+            console.log(this.props.totalNecessary);
+            this.props.recalculateInvestment(this.props.businessPlan.id, () => {
+                console.log('recalculate');
+                this.props.getNecessaryCapitalInformation(this.props.businessPlan.id);
+                this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);
+            })
+        } else {
+            console.log('First save');
+            this.props.saveChanges(this.props.businessPlan.id, () => {
+                this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);
+                this.props.getNecessaryCapitalInformation(this.props.businessPlan.id);
+            });
+        }
+        
+        
     }
     discardChanges = () => {
         this.props.discardChanges(()=> {
@@ -106,6 +120,7 @@ class BusinessInvestmentsWindow extends React.Component {
 
     render() {
         console.log(this.props.investments.updates);
+        console.log(this.props.investments.original);
         const isVisibleHeader = this.getUpdatesWindowState();
         return (
             <>

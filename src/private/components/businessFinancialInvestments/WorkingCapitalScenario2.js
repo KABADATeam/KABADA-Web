@@ -17,7 +17,9 @@ class WorkingCapitalScenario2 extends React.Component {
     dataWorkingCapitalTest = (data) => {
         const newMonthsArray = []
         console.log(data.original.grace_period_short);
-        if (data.original.grace_period_short > 0 && data.original.working_capital !== null) {
+        console.log(data.original.working_capital);
+        console.log(this.props.totalNecessary);
+        if (data.original.grace_period_short > 0 && data.original.working_capital === null) {
             const objUnique = {
                 month: 'Startup',
                 own_amount: data.original.own_money_short,
@@ -31,6 +33,24 @@ class WorkingCapitalScenario2 extends React.Component {
                     own_amount: null,
                     loan_amount: null,
                     total_necessary: this.props.totalNecessary.necessaryCapital[i]
+                }
+                console.log(monthRow)
+                newMonthsArray.push(monthRow)
+            }
+        } else if(data.original.grace_period_short > 0 && data.original.working_capital !== null) {
+            const objUnique = {
+                month: 'Startup',
+                own_amount: data.original.own_money_short,
+                loan_amount: data.original.loan_amount_short,
+                total_necessary: null,
+            }
+            newMonthsArray.push(objUnique);
+            for (var i = 1; i < data.original.grace_period_short + 1; i++) {
+                const monthRow = {
+                    month: i,
+                    own_amount: data.original.working_capital[i-1].own_amount,
+                    loan_amount: data.original.working_capital[i-1].loan_amount,
+                    total_necessary: this.props.totalNecessary.necessaryCapital === null ? null : this.props.totalNecessary.necessaryCapital[i]
                 }
                 console.log(monthRow)
                 newMonthsArray.push(monthRow)

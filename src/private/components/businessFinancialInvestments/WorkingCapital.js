@@ -80,7 +80,7 @@ class WorkingCapital extends React.Component {
                     month: i,
                     own_amount: null,
                     loan_amount: null,
-                    total_necessary: this.props.totalNecessary.necessaryCapital[i]
+                    total_necessary: this.props.totalNecessary.necessaryCapital[i] === null ? null : this.props.totalNecessary.necessaryCapital[i],
                 }
                 console.log(monthRow);
                 newMonthsArray.push(monthRow)
