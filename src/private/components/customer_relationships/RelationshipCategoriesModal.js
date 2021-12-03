@@ -11,6 +11,25 @@ class RelationshipCategoriesModal extends Component {
             .then(
                 this.props.onOpen()
             );
+        if (item.title === "Word of Mouth") {
+            const postObj = {
+                "item_id": null,
+                "business_plan_id": this.props.businessPlan.id,
+                "channels": ['-'],
+                "category_id": "2fc70a56-27b6-442b-938c-9c13fb36e316",
+                "group": 1,
+            };
+            const reducerObj = {
+                "channels": ['-'],
+                "category": this.props.categories.categories[0],
+                "comment": null,
+                "group": 1,
+            };
+            this.props.saveCustomerRelationship(postObj, reducerObj);
+            this.props.onClose();
+        } else {
+            return;
+        }
     }
 
     onCancel = () => {
