@@ -37,8 +37,8 @@ import PersonalCharacteristics from './containers/PersonalCharacteristics'
 class PrivateApp extends React.Component {
     constructor(props) {
         super(props);
-        if (window.location.pathname === '/login') {
-            window.location.replace("/");
+        if (window.location.hash === '#/login') {
+            window.location.replace("#/personal-business-plans");
         }
     }
 
