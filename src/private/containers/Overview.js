@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { discardChanges, saveChanges } from "../../appStore/actions/swotAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { updateStatus, getMembers, deleteMember, getSelectedPlanOverview, getSelectedPlanDetails, getImage, removePlan } from "../../appStore/actions/planActions";
+import { updateStatus, getMembers, deleteMember, getSelectedPlanOverview, getSelectedPlanDetails, getImage, removePlan, downloadDOC } from "../../appStore/actions/planActions";
 import { getSurvivalRate } from '../../appStore/actions/eurostat/eurostatSurvivalRateAction';
 import { withRouter } from 'react-router-dom';
 import InviteMemberModal from '../components/overview/InviteMemberModal';
@@ -126,6 +126,10 @@ class Overview extends React.Component {
         const email = this.props.userInf.email.split('@');
         return email[0]
     }
+    downloadDOCFile = () => {
+        console.log('ok')
+        this.props.downloadDOC(this.props.businessPlan.id, this.props.businessPlan.name);
+    }
 
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
@@ -167,6 +171,9 @@ class Overview extends React.Component {
                     >
                         <a href="#">Delete</a>
                     </Popconfirm>
+                </Menu.Item>
+                <Menu.Item key="2" onClick={this.downloadDOCFile}>
+                    Download PDF
                 </Menu.Item>
             </Menu>
         );
@@ -482,4 +489,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getImage, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, removePlan, getSurvivalRate, getCountryShortCodeV2 })(withRouter(Overview))
+export default connect(mapStateToProps, { getImage, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, removePlan, getSurvivalRate, getCountryShortCodeV2, downloadDOC })(withRouter(Overview))
