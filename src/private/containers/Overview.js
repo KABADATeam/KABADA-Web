@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { discardChanges, saveChanges } from "../../appStore/actions/swotAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { updateStatus, getMembers, deleteMember, getSelectedPlanOverview, getSelectedPlanDetails, getImage, removePlan, downloadDOC } from "../../appStore/actions/planActions";
+import { updateStatus, getMembers, deleteMember, getSelectedPlanOverview, getSelectedPlanDetails, getImage, removePlan, downloadDOCFile, downloadPDFFile } from "../../appStore/actions/planActions";
 import { getSurvivalRate } from '../../appStore/actions/eurostat/eurostatSurvivalRateAction';
 import { withRouter } from 'react-router-dom';
 import InviteMemberModal from '../components/overview/InviteMemberModal';
@@ -128,7 +128,11 @@ class Overview extends React.Component {
     }
     downloadDOCFile = () => {
         console.log('ok')
-        this.props.downloadDOC(this.props.businessPlan.id, this.props.businessPlan.name);
+        this.props.downloadDOCFile(this.props.businessPlan.id, this.props.businessPlan.name);
+    }
+    downloadPDFFile = () => {
+        console.log('ok')
+        this.props.downloadPDFFile(this.props.businessPlan.id, this.props.businessPlan.name);
     }
 
     componentDidMount() {
@@ -173,7 +177,10 @@ class Overview extends React.Component {
                     </Popconfirm>
                 </Menu.Item>
                 <Menu.Item key="2" onClick={this.downloadDOCFile}>
-                    Download PDF
+                    Download DOC file
+                </Menu.Item>
+                <Menu.Item key="3" onClick={this.downloadPDFFile}>
+                    Download PDF file
                 </Menu.Item>
             </Menu>
         );
@@ -489,4 +496,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getImage, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, removePlan, getSurvivalRate, getCountryShortCodeV2, downloadDOC })(withRouter(Overview))
+export default connect(mapStateToProps, { getImage, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, removePlan, getSurvivalRate, getCountryShortCodeV2, downloadDOCFile, downloadPDFFile })(withRouter(Overview))
