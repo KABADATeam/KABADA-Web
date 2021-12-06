@@ -149,7 +149,7 @@ class IndustryRisks extends Component {
                         expandedRowRender: record => (
                             <>
                                 <p style={{ margin: 0 }}>{record.comments}</p>
-                                <Alert message={"Possible country-specific deviations: " + record.countryDeviationScore} type="info" showIcon />
+                                <Alert message={"Possible country-specific deviations: " + record.countryDeviationScore + ' - ' + record.countryDeviationComment} type="info" showIcon />
                             </>
                         ),
                         rowExpandable: record => record.name !== 'Not Expandable',
@@ -170,7 +170,7 @@ class IndustryRisks extends Component {
                         expandedRowRender: record => (
                             <>
                                 <p style={{ margin: 0 }}>{record.comments}</p>
-                                <Alert message={"Possible country-specific deviations: " + record.countryDeviationScore} type="info" showIcon />
+                                <Alert message={"Possible country-specific deviations: " + record.countryDeviationScore + ' - ' + record.countryDeviationComment} type="info" showIcon />
                             </>
                         ),
                         rowExpandable: record => record.name !== 'Not Expandable',
@@ -190,7 +190,7 @@ class IndustryRisks extends Component {
                         expandedRowRender: record => (
                             <>
                                 <p style={{ margin: 0 }}>{record.comments}</p>
-                                <Alert message={"Possible country-specific deviations: " + record.countryDeviationScore} type="info" showIcon />
+                                <Alert message={"Possible country-specific deviations: " + record.countryDeviationScore + ' - ' + record.countryDeviationComment} type="info" showIcon />
                             </>
                         ),
                         rowExpandable: record => record.name !== 'Not Expandable',
