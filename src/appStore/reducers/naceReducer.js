@@ -28,11 +28,12 @@ export const naceReducer = (state = [], action) => {
                             ...cact2, title: cact2.code + " " + cact2.title, key: cact2.id, value: cact2.id, children: (cact2.activities || []).map(cact3 =>
                             ({
                                 ...cact3, title: cact3.code + " " + cact3.title, key: cact3.id, value: cact3.id,
-                            }))
-                        }))
-                    }))
+                            })).sort((a, b) => (a.code > b.code ? 1 : -1))
+                        })).sort((a, b) => (a.code > b.code ? 1 : -1))
+                    })).sort((a, b) => (a.code > b.code ? 1 : -1))
                 })
             );
+            console.log(allNace)
             return allNace;
         default:
             return state;

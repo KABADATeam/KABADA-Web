@@ -71,7 +71,7 @@ class CashFlow extends React.Component {
             const obj = {
                 children: <p style={{ marginBottom: 0 }}>{value}</p>,
                 props: {
-                    style: { fontWeight: 600, fontSize: '14px', background: (parseInt(value) <= 0) ? "#FFCCC7" : '', marginBottom: 0 },
+                    style: { fontWeight: 600, fontSize: '14px', background: (parseInt(value) < 0) ? "#FFCCC7" : '', marginBottom: 0 },
                 }
             }
             if (row.tag === "title" || row.tag === "section") {
@@ -116,7 +116,7 @@ class CashFlow extends React.Component {
                         return {
                             children: <h3 style={{ marginBottom: 0 }}>{text}</h3>,
                             props: {
-                                style: { background: (parseInt(text) <= 0) ? "#FFCCC7" : '#FAFAFA', marginBottom: 0 }
+                                style: { background: (parseInt(text) < 0) ? "#FFCCC7" : '#FAFAFA', marginBottom: 0 }
                             },
                         };
                     }

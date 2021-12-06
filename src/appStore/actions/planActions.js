@@ -228,3 +228,50 @@ export const updateImage = (plan) => {
         }
     }
 }
+
+export const downloadDOCFile = (planId, planName) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true });
+        try {
+            console.log('OK ', planId);
+            const token = getState().user.access_token;
+            const response = await kabadaAPI.get("api/plans/doc/" + planId, { headers: { Authorization: `Bearer ${token}` }, responseType: 'blob' });
+            console.log(response);
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            console.log(url);
+            const link = document.createElement('a');
+            console.log(link);
+            link.href = url;
+            link.setAttribute('download', planName+' plan.doc');
+            document.body.appendChild(link);
+            link.click();
+            //dispatch({ type: "UPDATING_IMAGE_SUCCESS", payload: getURL(response.data) });
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
+        }
+    }
+}
+
+export const downloadPDFFile = (planId, planName) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true });
+        try {
+            console.log('OK ', planId);
+            const token = getState().user.access_token;
+            const response = await kabadaAPI.get("api/plans/pdf/" + planId, { headers: { Authorization: `Bearer ${token}` }, responseType: 'blob' });
+            console.log(response);
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            console.log(url);
+            const link = document.createElement('a');
+            console.log(link);
+            link.href = url;
+            link.setAttribute('download', planName+' plan.pdf');
+            document.body.appendChild(link);
+            link.click();
+            //dispatch({ type: "UPDATING_IMAGE_SUCCESS", payload: getURL(response.data) });
+        } finally {
+            dispatch({ type: "LOADING", payload: false });
+        }
+    }
+}
+
