@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Select, Switch, Button, Breadcrumb, Row, Col, Typography, Radio, Card, Space, Tooltip, Tabs } from 'antd';
+import { Select, Switch, Button, Breadcrumb, Row, Col, Typography, Radio, Card, Space, Tooltip, Tabs, Checkbox } from 'antd';
 import { ArrowLeftOutlined, CloseOutlined, InfoCircleFilled, InfoCircleOutlined } from '@ant-design/icons';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
 import { refreshPlan } from "../../appStore/actions/refreshAction";
@@ -137,7 +137,7 @@ const questions = [
     {
         questionText: 'Reasons for starting business?',
         set_code: '5',
-        selection_code: null,
+        selection_code: [],
         answerOptions: [
             { answerText: 'Autonomy and independence', optionCode: '51' },
             { answerText: 'To make a difference in the world', optionCode: '52' },
@@ -317,9 +317,27 @@ class PersonalCharacteristics extends React.Component {
             questions: [],
             visibleHeader: 'hidden',
             visiblePopUp: false,
-            importCardVisibility: true
+            importCardVisibility: true,
+            checked: []
         }
     }
+
+    //everytime you check checkbox it will add id of income source to checked array ['7878787','898954654654654']
+    onChange = checkedValues => {
+        this.setState(() => {
+            return {
+                checked: checkedValues
+            };
+        }, () => {
+            this.onDataChange(checkedValues, true)
+        });
+    };
+    isDisabled(id) {
+        return (
+            this.state.checked.length > 1 && this.state.checked.indexOf(id) === -1
+        );
+    };
+
     onBackClick = () => {
         this.props.history.push('/overview')
     }
@@ -356,28 +374,51 @@ class PersonalCharacteristics extends React.Component {
         // if original choices were null. then set choices array to modifiedChoices state
         if (originalChoices === null || originalChoices === undefined) {
             modifiedChoices.map((element, index) => {
-                const objektas = {
-                    "set_code": element.set_code, //code of question
-                    "selection_code": element.selection_code,  //code of answer
-                    "extraText": "text"        // brief answer text if needed
+                if (element.set_code !== '5') {
+                    const objektas = {
+                        "set_code": element.set_code, //code of question
+                        "selection_code": element.selection_code,  //code of answer
+                        "extraText": "text"        // brief answer text if needed
+                    }
+                    choices.push(objektas);
+                } else {
+                    var newArray = element.selection_code.join();
+                    const objektas = {
+                        "set_code": element.set_code, //code of question
+                        "selection_code": newArray,  //code of answer
+                        "extraText": "text"        // brief answer text if needed
+                    }
+                    choices.push(objektas);
                 }
-                choices.push(objektas);
+
+                // choices.push(objektas);
             });
         } else {
             for (var i = 0; i < modifiedChoices.length; i++) {
-                const objektas = {
-                    "set_code": modifiedChoices[i].set_code, //code of question
-                    "selection_code": modifiedChoices[i].selection_code,  //code of answer
-                    "extraText": "text"        // brief answer text if needed
+                if (modifiedChoices[i].set_code !== '5') {
+                    const objektas = {
+                        "set_code": modifiedChoices[i].set_code, //code of question
+                        "selection_code": modifiedChoices[i].selection_code,  //code of answer
+                        "extraText": "text"        // brief answer text if needed
+                    }
+                    choices.push(objektas)
+                } else {
+                    var newArray = modifiedChoices[i].selection_code.join();
+                    const objektas = {
+                        "set_code": modifiedChoices[i].set_code, //code of question
+                        "selection_code": newArray,  //code of answer
+                        "extraText": "text"        // brief answer text if needed
+                    }
+                    choices.push(objektas)
                 }
-                choices.push(objektas)
+
             }
         }
         const postObject = {
             "plan_id": this.props.businessPlan.id,
             "choices": choices
         }
-
+        console.log('Post obj:' + JSON.stringify(postObject))
         this.props.savePersonalCharacteristics(postObject, () => {
             this.props.getPersonalCharacteristics(this.props.businessPlan.id, () => {
                 this.setQuestionsAnswers();
@@ -427,15 +468,24 @@ class PersonalCharacteristics extends React.Component {
 
     }
 
-    onDataChange = (e) => {
+    onDataChange = (e, isArray) => {
         const questionsClone = JSON.parse(JSON.stringify(this.state.questions))
-        questionsClone.map((element, index) => {
-            element.answerOptions.map((element2, index1) => {
-                if (element2.optionCode === e) {
+        if (isArray === false) {
+            questionsClone.map((element, index) => {
+                element.answerOptions.map((element2, index1) => {
+                    if (element2.optionCode === e) {
+                        element.selection_code = e;
+                    }
+                })
+            });
+        } else {
+            questionsClone.map((element, index) => {
+                if (element.set_code == '5') {
                     element.selection_code = e;
                 }
-            })
-        });
+            });
+        }
+
         this.setState({
             questions: questionsClone
         }, () => {
@@ -461,7 +511,17 @@ class PersonalCharacteristics extends React.Component {
             choicesClone.map((obj, index) => {
                 questionsArray.map((element, index1) => {
                     if (obj.set_code === element.set_code) {
-                        element.selection_code = obj.selection_code;
+                        if (obj.set_code !== '5') {
+                            element.selection_code = obj.selection_code;
+                        } else {
+                            var oldString = obj.selection_code;
+                            var mynewarray = oldString.split(',')
+                            element.selection_code = mynewarray;
+                            this.setState({
+                                checked: mynewarray
+                            })
+                        }
+
                     }
                 });
             });
@@ -509,9 +569,9 @@ class PersonalCharacteristics extends React.Component {
         });
 
     }
-    onCompletedChange = (state)=>{
+    onCompletedChange = (state) => {
         // this.props.saveState(this.props.businessPlan.id, state, () => {
-            
+
         // });
     }
     componentDidMount() {
@@ -602,18 +662,19 @@ class PersonalCharacteristics extends React.Component {
                     </Row> : null}
 
                 {questions.map((element, index) => {
-                    return (<Row align={'middle'} style={{ marginTop: 10 }}>
+                    return (<Row align={'middle'} key={index} style={{ marginTop: 10 }}>
                         <Col span={16} offset={4}>
                             <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                                 <p style={aboutTitleTextStyle}>{(index + 1) + ' ' + element.questionText}</p>
                                 {element.set_code < 3 ?
-                                    <Radio.Group onChange={(e) => this.onDataChange(e.target.value)} value={element.selection_code}>
+                                    <Radio.Group onChange={(e) => this.onDataChange(e.target.value, false)} value={element.selection_code}>
                                         <Space direction={'vertical'}>
                                             {element.answerOptions.map((element2, index2) => {
                                                 return (
                                                     <Radio
                                                         name={element2.answerText}
                                                         value={element2.optionCode}
+                                                        key={element2.optionCode}
                                                     // checked={element2.optionCode === element.selection_code}
                                                     >{element2.answerText}</Radio>
                                                 )
@@ -625,7 +686,7 @@ class PersonalCharacteristics extends React.Component {
                                             style={{ width: '320px' }}
                                             placeholder="Pasirinkite šalį"
                                             optionFilterProp="children"
-                                            onChange={(e) => this.onDataChange(e)}
+                                            onChange={(e) => this.onDataChange(e, false)}
                                             defaultValue={element.selection_code}
                                             value={element.selection_code}
                                         >
@@ -633,8 +694,8 @@ class PersonalCharacteristics extends React.Component {
                                                 return (<Option key={element2.optionCode} name={element2.answerText}
                                                     value={element2.optionCode}>{element2.answerText}</Option>)
                                             })}
-                                        </Select> : element.set_code > 3 && element.set_code < 18 ?
-                                            <Radio.Group onChange={(e) => this.onDataChange(e.target.value)} value={element.selection_code}>
+                                        </Select> : element.set_code > 3 && element.set_code < 5 ?
+                                            <Radio.Group onChange={(e) => this.onDataChange(e.target.value, false)} value={element.selection_code}>
                                                 <Space direction={'vertical'}>
                                                     {element.answerOptions.map((element2, index2) => {
                                                         return (
@@ -646,19 +707,48 @@ class PersonalCharacteristics extends React.Component {
                                                         )
                                                     })}
                                                 </Space>
-                                            </Radio.Group> : element.set_code >= 18 ?
-                                                <Radio.Group style={{ width: "100%" }} compact onChange={(e) => this.onDataChange(e.target.value)} value={element.selection_code} buttonStyle="solid">
-                                                    {element.answerOptions.map((element2, index2) => {
-                                                        return (
-                                                            <Radio.Button
-                                                                name={element2.answerText}
-                                                                value={element2.optionCode}
-                                                                style={{ width: '20%', height: '40px', textAlign: 'center' }}
-                                                            // checked={element2.optionCode === element.selection_code}
-                                                            >{element2.answerText}</Radio.Button>
-                                                        )
-                                                    })}
-                                                </Radio.Group> : null
+                                            </Radio.Group> : element.set_code == 5 ?
+                                                <Checkbox.Group onChange={this.onChange} value={element.selection_code}>
+                                                    <Space direction={'vertical'}>
+                                                        {element.answerOptions.map((element2, index2) => {
+                                                            return (
+                                                                <Checkbox
+                                                                    name={element2.answerText}
+                                                                    value={element2.optionCode}
+                                                                    disabled={this.isDisabled(element2.optionCode)}
+                                                                // checked={element2.optionCode === element.selection_code}
+                                                                >{element2.answerText}</Checkbox>
+                                                            )
+                                                        })}
+                                                    </Space>
+                                                </Checkbox.Group>
+                                                : element.set_code > 5 && element.set_code < 18 ?
+                                                    <Radio.Group onChange={(e) => this.onDataChange(e.target.value, false)} value={element.selection_code}>
+                                                        <Space direction={'vertical'}>
+                                                            {element.answerOptions.map((element2, index2) => {
+                                                                return (
+                                                                    <Radio
+                                                                        name={element2.answerText}
+                                                                        value={element2.optionCode}
+                                                                    // checked={element2.optionCode === element.selection_code}
+                                                                    >{element2.answerText}</Radio>
+                                                                )
+                                                            })}
+                                                        </Space>
+                                                    </Radio.Group>
+                                                    : element.set_code >= 18 ?
+                                                        <Radio.Group style={{ width: "100%" }} compact onChange={(e) => this.onDataChange(e.target.value, false)} value={element.selection_code} buttonStyle="solid">
+                                                            {element.answerOptions.map((element2, index2) => {
+                                                                return (
+                                                                    <Radio.Button
+                                                                        name={element2.answerText}
+                                                                        value={element2.optionCode}
+                                                                        style={{ width: '20%', height: '40px', textAlign: 'center' }}
+                                                                    // checked={element2.optionCode === element.selection_code}
+                                                                    >{element2.answerText}</Radio.Button>
+                                                                )
+                                                            })}
+                                                        </Radio.Group> : null
 
                                 }
 
