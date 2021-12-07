@@ -54,6 +54,17 @@ const titleButtonStyle = {
 
 
 class NewProduct extends React.Component {
+    state = {
+        title: '',
+        product_type: '',
+        description: '',
+        price_level: '',
+        selected_additional_income_sources: [],
+        product_features: [],
+        differentiation_level: '',
+        innovative_level: '',
+        quality_level: ''
+    }
 
     onBackClick() {
         this.props.history.push(`/value-propositions`);
@@ -80,7 +91,59 @@ class NewProduct extends React.Component {
         });
     };
 
+    arraysEqual = (array1, array2) => {
+        let a = JSON.parse(JSON.stringify(array1));
+        let b = JSON.parse(JSON.stringify(array2));
+
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length !== b.length) return false;
+
+        a = a.sort();
+        b = b.sort();
+        for (var i = 0; i < a.length; ++i) {
+            if (a[i] !== b[i]) return false;
+        }
+        return true;
+    }
+
     getUpdatesWindowState() {
+        const original = this.state;
+        console.log(original);
+        const modified = this.props.product;
+        console.log(modified);
+
+        if (original === null) {
+            return 'hidden';
+        }
+
+        if (original.title !== modified.title) {
+            console.log(original)
+            console.log(modified)
+            console.log('visible')
+            return 'visible';
+        }
+
+        if (original.description !== modified.description) {
+            return 'visible';
+        }
+
+        if (original.product_type !== modified.product_type) {
+            return 'visible';
+        }
+
+        if (original.price_level !== modified.price_level) {
+            return 'visible';
+        }
+
+        if (this.arraysEqual(original.selected_additional_income_sources, modified.selected_additional_income_sources) === false) {
+            return 'visible';
+        }
+
+        if (this.arraysEqual(original.product_features, modified.product_features) === false) {
+            return 'visible';
+        }
+
         return 'hidden';
     }
 
@@ -211,18 +274,6 @@ class NewProduct extends React.Component {
                             <Text style={categoryTextStyle}>Differentiation</Text>
                             <Slider marks={differentiationMarks} included={true} step={null} disabled={true} defaultValue={0}></Slider>
                         </Card>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={16} offset={4}>
-                        <Divider />
-                        <Space style={{ display: 'flex', float: 'right' }}>
-                            <Button size="large" style={{ ...buttonStyle }}
-                                onClick={this.discardChanges.bind(this)}>
-                                Discard
-                            </Button>
-                            <Button size="large" type={'primary'} style={{ ...buttonStyle }} onClick={this.saveChanges.bind(this)}>Save</Button>
-                        </Space>
                     </Col>
                 </Row>
             </>

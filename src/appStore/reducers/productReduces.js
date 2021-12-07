@@ -64,9 +64,21 @@ export const productFeaturesReducer = (state = [], action) => {
     }
 };
 
-export const productReducer = (state = {}, action) => {
+export const productReducer = (
+    state = {
+        title: '',
+        product_type: '',
+        description: '',
+        price_level: '',
+        selected_additional_income_sources: [],
+        product_features: [],
+        differentiation_level: '',
+        innovative_level: '',
+        quality_level: ''
+    }, action) => {
     switch (action.type) {
         case "SETTING_PRODUCT_TITLE_SUCCESS":
+            console.log(action.payload);
             return { ...state, "title": action.payload };
         case "SETTING_PRODUCT_TYPE_SUCCESS":
             return { ...state, "product_type": action.payload };
@@ -79,9 +91,32 @@ export const productReducer = (state = {}, action) => {
         case "SETTING_PRODUCT_FEATURES_SUCCESS":
             return { ...state, "product_features": action.payload };
         case "FETCHING_PRODUCT_SUCCESS":
-            return action.payload;
+            return {
+                ...state,
+                "title": action.payload.title,
+                "product_type": action.payload.product_type,
+                "description": action.payload.description,
+                "price_level": action.payload.price_level,
+                "selected_additional_income_sources": action.payload.selected_additional_income_sources,
+                "product_features": action.payload.product_features,
+                "differentiation_level": action.payload.differentiation_level,
+                "innovative_level": action.payload.innovative_level,
+                "quality_level": action.payload.quality_level
+            }
         case "DISCARDING_PRODUCT_SUCCESS":
             return action.payload;
+        case "RESET_PRODUCT_STATE":
+            return {
+                title: '',
+                product_type: '',
+                description: '',
+                price_level: '',
+                selected_additional_income_sources: [],
+                product_features: [],
+                differentiation_level: '',
+                innovative_level: '',
+                quality_level: ''
+            }
         default:
             return state;
     }

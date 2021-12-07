@@ -257,18 +257,6 @@ class EditProduct extends React.Component {
                         </Card>
                     </Col>
                 </Row>
-                <Row>
-                    <Col span={16} offset={4}>
-                        <Divider />
-                        <Space style={{ display: 'flex', float: 'right' }}>
-                            <Button size="large" style={{ ...buttonStyle }}
-                                onClick={this.discardChanges.bind(this)}>
-                                Discard
-                            </Button>
-                            <Button size="large" type={'primary'} style={{ ...buttonStyle }} onClick={this.saveChanges.bind(this)}>Save</Button>
-                        </Space>
-                    </Col>
-                </Row>
             </>
         );
     }

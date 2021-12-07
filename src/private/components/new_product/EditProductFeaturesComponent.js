@@ -59,7 +59,6 @@ class EditProductFeaturesComponent extends Component {
                     <Space direction="vertical">
                         <Text style={infoTextStyle}>Product features</Text>
                         <Text style={descriptionTextStyle}>Up to 9 of mixed characteristics</Text>
-                        {console.log(this.state)}
                         <Checkbox.Group onChange={this.onChange} value={this.props.product.product_features}>
                             <Space direction="vertical">
                                 {this.props.features.map((obj) =>(
