@@ -4,6 +4,7 @@ import { errorHandler } from './errorHandler';
 export const getProductTypes = () => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
+        dispatch({ type: "RESET_PRODUCT_STATE" });
         try {
             const response = await kabadaAPI.get('api/products/types');
             dispatch({ type: "FETCHING_PRODUCT_TYPES_SUCCESS", payload: response.data });
