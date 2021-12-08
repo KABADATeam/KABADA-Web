@@ -378,7 +378,7 @@ class CustomerRelationships extends React.Component {
 
                 {
                     this.state.group !== null ?
-                        <RelationshipCategoriesModal visibility={true} onClose={this.onCloseRelationshipCategoriesModal} onOpen={this.openAddRelationshipCategoriesModal} />
+                        <RelationshipCategoriesModal visibility={true} group={this.state.relationshipCategory} onClose={this.onCloseRelationshipCategoriesModal} onOpen={this.openAddRelationshipCategoriesModal} />
                         : null
                 }
                 {
