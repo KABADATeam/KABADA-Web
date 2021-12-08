@@ -160,6 +160,11 @@ class CustomerSegments extends React.Component {
     render() {
         const consumersSegmentsColumns = [
             {
+                title: "Name",
+                dataIndex: "segment_name",
+                width: '35%'
+            },
+            {
                 title: 'Age group',
                 dataIndex: 'age_titles',
                 key: 'age_titles',
@@ -169,19 +174,13 @@ class CustomerSegments extends React.Component {
                 title: 'Gender',
                 dataIndex: 'gender_titles',
                 key: 'gender_titles',
-                width: '20%',
-            },
-            {
-                title: 'Geographic Location',
-                dataIndex: 'location_titles',
-                key: 'location_titles',
-                width: '45%',
+                width: '25%',
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '15%',
                 render: (obj, record) => (
                     <Space size={0}>
                         <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditConsumerSegment.bind(this, record)} >Edit</Button>
@@ -193,6 +192,11 @@ class CustomerSegments extends React.Component {
 
         const businessSegmentsColumns = [
             {
+                title: "Name",
+                dataIndex: "segment_name",
+                width: '35%'
+            },
+            {
                 title: 'Type',
                 dataIndex: 'business_type_titles',
                 key: 'business_type_titles',
@@ -202,19 +206,13 @@ class CustomerSegments extends React.Component {
                 title: 'Size',
                 dataIndex: 'company_size_titles',
                 key: 'company_size_titles',
-                width: '20%',
-            },
-            {
-                title: 'Geographic Location',
-                dataIndex: 'location_titles',
-                key: 'location_titles',
-                width: '45%',
+                width: '25%',
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '15%',
                 render: (obj, record) => (
                     <Space size={0}>
                         <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditBusinessSegment.bind(this, record)} >Edit</Button>
@@ -226,10 +224,15 @@ class CustomerSegments extends React.Component {
 
         const publicBodiesNgoSegmentsColumns = [
             {
+                title: "Name",
+                dataIndex: "segment_name",
+                width: '30%'
+            },
+            {
                 title: 'Type',
                 dataIndex: 'ngo_types_titles',
                 key: 'ngo_types_titles',
-                width: '90%',
+                width: '60%',
             },
             {
                 title: '',
@@ -244,7 +247,6 @@ class CustomerSegments extends React.Component {
                 ),
             }
         ];
-
         return (
             <>
                 <Col span={16} offset={4}>
@@ -338,7 +340,7 @@ class CustomerSegments extends React.Component {
                                     pagination={false}
                                     footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddBusinessSegment.bind(this)}><PlusOutlined />Add segment</Button>)}
                                 />
-                            </Card >
+                            </Card>
                         </Col>
                     </Row>
                     <Divider />
@@ -367,7 +369,7 @@ class CustomerSegments extends React.Component {
                                     pagination={false}
                                     footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddPublicBodiesSegment.bind(this)}><PlusOutlined />Add segment</Button>)}
                                 />
-                            </Card >
+                            </Card>
                         </Col>
                     </Row>
                 </Col>
