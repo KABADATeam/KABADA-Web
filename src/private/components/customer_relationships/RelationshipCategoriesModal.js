@@ -17,13 +17,13 @@ class RelationshipCategoriesModal extends Component {
                 "business_plan_id": this.props.businessPlan.id,
                 "channels": ['-'],
                 "category_id": "2fc70a56-27b6-442b-938c-9c13fb36e316",
-                "group": 1,
+                "group": this.props.group,
             };
             const reducerObj = {
                 "channels": ['-'],
                 "category": this.props.categories.categories[0],
                 "comment": null,
-                "group": 1,
+                "group": this.props.group,
             };
             this.props.saveCustomerRelationship(postObj, reducerObj);
             this.props.onClose();
