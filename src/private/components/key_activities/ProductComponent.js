@@ -5,6 +5,7 @@ import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCa
 import { connect } from 'react-redux';
 //import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { deleteActivity } from "../../../appStore/actions/keyActivitiesAction"
+import {getProduct} from '../../../appStore/actions/productActions'
 
 const aboutTitleTextStyle = {
     fontStyle: 'normal',
@@ -30,7 +31,12 @@ const tableTitleStyle = {
 }
 
 class ProductComponent extends React.Component {
-
+    constructor(props){
+        super(props)
+        this.state = {
+            description: ""
+        }
+    }
     openCategoriesModal = (item) => {
         this.props.getProductID(item.id)
         this.props.onOpen()
@@ -41,6 +47,14 @@ class ProductComponent extends React.Component {
     }
     onDeleteActivity = (item) => {
         this.props.deleteActivity({ "id": item.id, "product_id": this.props.data.id });
+    }
+    componentDidMount(){
+        this.props.getProduct(this.props.data.id, () =>{
+            this.setState({
+                description: this.props.product.description
+            })
+        });
+
     }
     render() {
         const activitiesColumns = [
@@ -75,6 +89,8 @@ class ProductComponent extends React.Component {
                 ),
             }
         ];
+
+        console.log('Data:'+JSON.stringify('Data:'+JSON.stringify(this.props.data)))
         return (
             <>
                 <Col offset={4} span={16}>
@@ -83,7 +99,7 @@ class ProductComponent extends React.Component {
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>{this.props.data.title}</Typography.Title>
                                 <Typography.Text style={{ ...textStyle }}>
-                                    Description
+                                    {this.state.description}
                                 </Typography.Text>
                             </div>
                         </Col>
@@ -115,7 +131,8 @@ const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
         activities: state.keyActivities,
+        product: state.product
     };
 }
 
-export default connect(mapStateToProps, {deleteActivity})(ProductComponent);
+export default connect(mapStateToProps, {deleteActivity, getProduct})(ProductComponent);
