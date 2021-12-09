@@ -6,6 +6,13 @@ import {RightOutlined} from '@ant-design/icons';
 import { selectActivityCategory } from '../../../appStore/actions/keyActivitiesAction'
 
 class KeyActivityTypesModal extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            dataSource: []
+        }
+
+    }
     onCancel = () => {
         this.props.onClose()
     } 
@@ -14,6 +21,32 @@ class KeyActivityTypesModal extends Component {
             this.props.onOpen()
         });
         console.log(item);
+    }
+
+    setDataSource = () =>{
+        const newArray = [];
+        const array = this.props.categories.activity_categories;
+        array.forEach((element,index)=>{
+            if(element.title === "Production"){
+                newArray[0] = element;
+            }
+            else if(element.title === "Problem solving"){
+                newArray[1] = element;
+            }
+            else if(element.title === "Platform/Network"){
+                newArray[2] = element;
+            }else{
+                newArray.push(element)
+            }
+
+        })
+        this.setState({
+            dataSource: newArray
+        })
+    }
+
+    componentDidMount(){
+        this.setDataSource();
     }
     
     render() {
@@ -31,7 +64,7 @@ class KeyActivityTypesModal extends Component {
                 >
                     <List
                         itemLayout='horizontal'
-                        dataSource={dataSource}
+                        dataSource={this.state.dataSource}
                         renderItem={item => (
                             <List.Item
                                 key={item.id}
@@ -44,7 +77,7 @@ class KeyActivityTypesModal extends Component {
                             </List.Item>
                         )}
                     /> 
-                </Modal >
+                </Modal>
             </>
         )
     }
