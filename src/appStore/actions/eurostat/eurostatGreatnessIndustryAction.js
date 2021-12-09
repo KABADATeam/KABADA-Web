@@ -4,6 +4,7 @@ import { dataSetGreatnessIndustry } from './dataSetsGreatnessIndustry';
 export const getGreatnessIndustry = () => {
     return async(dispatch, getState) => {
         dispatch({ type: 'RESET_GREATNESS_DATA', payload: null });
+        dispatch({ type: 'RESET_LOADING' });
         const nace_code = getState().selectedBusinessPlan.overview.nace.activity_code;
         const geo = getState().selectedBusinessPlan.countryShortCode;
         const geoTitle = getState().selectedBusinessPlan.countryTitle;
@@ -28,7 +29,8 @@ export const getGreatnessIndustry = () => {
                     } catch (error){
                         //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                     }
-                }    
+                }
+                dispatch({ type: 'GREATNESS_INDUSTRY_LOADING', payload: true})    
             }
         }
         
