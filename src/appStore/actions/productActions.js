@@ -79,6 +79,7 @@ export const getProductFeatures = () => {
         dispatch({ type: "LOADING", payload: true });
         try {
             const response = await kabadaAPI.get('api/products/features');
+            console.log(response.data);
             dispatch({ type: "FETCHING_PRODUCT_FEATURES_SUCCESS", payload: response.data });
         } finally {
             dispatch({ type: "LOADING", payload: false });
@@ -104,6 +105,7 @@ export const getProduct = (productId, callback) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/products/product/' + productId, { headers: { Authorization: `Bearer ${token}` } });
+            console.log(response.data)
             dispatch({ type: 'FETCHING_PRODUCT_SUCCESS', payload: response.data });
             if (callback !== null) {
                 callback(response.data);
@@ -204,6 +206,7 @@ export const deleteProduct = (id) => {
         try {
             const token = getState().user.access_token;
             await kabadaAPI.delete("api/products/" + id, { headers: { Authorization: `Bearer ${token}` } });
+            console.log(id)
             dispatch({ type: "REMOVING_PRODUCT_SUCCESS", payload: id });
         } catch (error) {
             dispatch({ type: 'ERROR', payload: errorHandler(error) });

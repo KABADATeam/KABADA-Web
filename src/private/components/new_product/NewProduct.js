@@ -80,12 +80,12 @@ class NewProduct extends React.Component {
     saveChanges = () => {
         const postObj = {
             ...this.props.product,
-            "innovative_level": this.props.productFeatures.innovative[0].id,
-            "quality_level": this.props.productFeatures.quality[0].id,
-            "differentiation_level": this.props.productFeatures.differentiation[0].id,
+            "innovative_level": this.props.productFeatures.innovative[this.props.product.innovative_level_index].id,
+            "quality_level": this.props.productFeatures.quality[this.props.product.quality_level_index].id,
+            "differentiation_level": this.props.productFeatures.differentiation[this.props.product.differentiation_level_index].id,
             "business_plan_id": this.props.businessPlan.id
         };
-
+        console.log(postObj)
         this.props.saveProduct(postObj, () => {
             this.props.history.push(`/value-propositions`);
         });
@@ -109,9 +109,7 @@ class NewProduct extends React.Component {
 
     getUpdatesWindowState() {
         const original = this.state;
-        console.log(original);
         const modified = this.props.product;
-        console.log(modified);
 
         if (original === null) {
             return 'hidden';
@@ -169,6 +167,21 @@ class NewProduct extends React.Component {
     getPriceSliderDefaultValue() {
         const index = this.props.productFeatures.priceLevels.findIndex(x => x.id === this.props.product.price_level);
         const k = 100 / (this.props.productFeatures.priceLevels.length - 1);
+        return index * k;
+    }
+    getInnovativeSliderDefaultValue() {
+        const index = this.props.product.innovative_level_index;
+        const k = 100 / (this.props.productFeatures.innovative.length - 1);
+        return index * k;
+    }
+    getQualitySliderDefaultValue() {
+        const index = this.props.product.quality_level_index;
+        const k = 100 / (this.props.productFeatures.quality.length - 1);
+        return index * k;
+    }
+    getDifferentiationSliderDefaultValue() {
+        const index = this.props.product.differentiation_level_index;
+        const k = 100 / (this.props.productFeatures.differentiation.length - 1);
         return index * k;
     }
 
@@ -268,12 +281,24 @@ class NewProduct extends React.Component {
                             <Text style={categoryTextStyle}>Price</Text>
                             <Slider marks={priceMarks} disabled={true} included={true} step={null} value={this.getPriceSliderDefaultValue()}></Slider>
                             <Text style={categoryTextStyle}>Innovative</Text>
-                            <Slider marks={innovativeMarks} disabled={true} included={true} step={null} defaultValue={0}></Slider>
+                            <Slider marks={innovativeMarks} disabled={true} included={true} step={null} value={this.getInnovativeSliderDefaultValue()}></Slider>
                             <Text style={categoryTextStyle}>Quality</Text>
-                            <Slider marks={qualityMarks} disabled={true} included={true} step={null} defaultValue={0}></Slider>
+                            <Slider marks={qualityMarks} disabled={true} included={true} step={null} value={this.getQualitySliderDefaultValue()}></Slider>
                             <Text style={categoryTextStyle}>Differentiation</Text>
-                            <Slider marks={differentiationMarks} included={true} step={null} disabled={true} defaultValue={0}></Slider>
+                            <Slider marks={differentiationMarks} included={true} step={null} disabled={true} value={this.getDifferentiationSliderDefaultValue()}></Slider>
                         </Card>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={16} offset={4}>
+                        <Divider />
+                        <Space style={{ display: 'flex', float: 'right' }}>
+                            <Button size="large" style={{ ...buttonStyle }}
+                                onClick={this.discardChanges.bind(this)}>
+                                Discard
+                            </Button>
+                            <Button size="large" type={'primary'} style={{ ...buttonStyle }} onClick={this.saveChanges.bind(this)}>Save</Button>
+                        </Space>
                     </Col>
                 </Row>
             </>
