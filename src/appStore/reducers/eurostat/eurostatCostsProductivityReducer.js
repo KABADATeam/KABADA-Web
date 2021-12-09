@@ -13,18 +13,12 @@ const getVariableShortTitle = (variable) => {
 
 const getUnitMeasurePercentage = (variable, penultimateValue, lastValue) => {
     if (variable === 'V91110') {
-        console.log(Math.round(penultimateValue-lastValue))
-        console.log(((penultimateValue-lastValue)/penultimateValue)*100)
-        console.log(Math.round(((penultimateValue-lastValue)/penultimateValue)*100))
         let percentage = Math.abs(Math.round(((penultimateValue-lastValue)/penultimateValue)*100));
         return percentage
     } else if (variable === 'V91170') {
         let percentage = Math.abs(Math.round(lastValue - penultimateValue));
         return percentage
     } else if (variable === 'V91210') {
-        console.log(Math.round(penultimateValue-lastValue))
-        console.log(((penultimateValue-lastValue)/penultimateValue)*100)
-        console.log(Math.round(((penultimateValue-lastValue)/penultimateValue)*100))
         let percentage = Math.abs(Math.round(((penultimateValue-lastValue)/penultimateValue)*100));
         return percentage
     } 
@@ -83,7 +77,6 @@ export const eurostatCostProductivityReducer = (
                 activityValues: activityValuesObjValues,
                 totalActivitiesValues: totalActivitiesValuesObjValues,
             }
-            console.log(viewObj)
             return {
                 ...state,
                 costs_productivity_data: [...state.costs_productivity_data, viewObj]

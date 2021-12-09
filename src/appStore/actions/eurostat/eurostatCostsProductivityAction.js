@@ -4,6 +4,7 @@ import { dataSetCostsProductivity } from './dataSetsCostsProductivity';
 export const getCostsProductivity = () => {
     return async(dispatch, getState) => {
         dispatch({ type: 'RESET_COSTS_PRODUCTIVITY_DATA', payload: null });
+        dispatch({ type: 'RESET_LOADING' });
         const nace_code = getState().selectedBusinessPlan.overview.nace.activity_code;
         const geo = getState().selectedBusinessPlan.countryShortCode;
         const geoTitle = getState().selectedBusinessPlan.countryTitle;
@@ -30,6 +31,6 @@ export const getCostsProductivity = () => {
                 }    
             }
         }
-        
+        dispatch({ type: 'COSTS_PRODUCTIVITY_INDUSTRY_LOADING', payload: true});
     }
 }

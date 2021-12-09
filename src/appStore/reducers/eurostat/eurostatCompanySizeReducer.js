@@ -68,7 +68,6 @@ export const eurostatCompanySizeReducer = (
                 activityValues: activityValuesObjValues,
                 totalActivitiesValues: totalActivitiesValuesObjValues,
             }
-            console.log(viewObj)
             return {
                 ...state,
                 company_size_data: [...state.company_size_data, viewObj]
