@@ -601,13 +601,22 @@ class SalesForecast extends React.Component {
     }
 
     saveChanges = () => {
-        //const product_id = this.state.update.map(x => x.product_id)
-        //const product_id = this.state.update.map(x => x.product_id)
+        const sales = this.state.update.map((x) => x.sales_forecast_eu)
+        sales.map((element, index) => {
+            element.map((x, index) => {
+                if (index < this.state.readyMonth - 1) {
+                    x.price = 0;
+                    x.qty = 0;
+                    x.total = 0;
+                }
+            })
+        })
+
         const obj = {
             "products": this.state.update
         }
-        console.log(JSON.stringify(this.state.update) + "this is what we have");
-        // console.log(product_id + "this is what we have");
+        console.log(this.state.update.map((x) => x.sales_forecast_eu))
+        console.log(obj)
         this.props.updateSalesForecast(obj);
         this.setState({
             isVisibleHeader: 'hidden'
@@ -1021,19 +1030,6 @@ class SalesForecast extends React.Component {
                 name: '12th mo.',
                 value: 12
             },
-
-        ];
-
-        const dataSourceExport = [
-            {
-                key: '1',
-                name: 'Yes',
-                value: true
-            }, {
-                key: '2',
-                name: 'No',
-                value: false,
-            }
 
         ];
         return (
