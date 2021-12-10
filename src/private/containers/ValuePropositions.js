@@ -63,6 +63,7 @@ class ValuePropositions extends React.Component {
     }
 
     deleteItem = (item) => {
+        console.log(item);
         this.props.deleteProduct(item.id);
     }
 

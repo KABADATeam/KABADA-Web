@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import languageReducer from './languageReducer';
 import authenticationReducer from './authenticationReducer';
-import loadingReducer, { imageLoadingReducer } from './loadingReducer';
+import loadingReducer, { imageLoadingReducer, chartsLoadingReducer } from './loadingReducer';
 import messageReducer from './messageReducer';
 import { privatePlansReducer, selectedplanFetchReducer, updatePlanReducer, allPublicPlansFetchReducer } from './planReducer';
 import { industriesReducer, activitiesReducer, industrySelectedReducer, activitySelectedReducer, naceReducer } from './naceReducer';
@@ -101,5 +101,6 @@ export default combineReducers({
     vat: countryVATReducer,
     nace: naceReducer,
     personalCharacteristics: personalCharacteristicsReducer,
-    industryRisk: industryRiskReducer
+    industryRisk: industryRiskReducer,
+    chartsLoading: chartsLoadingReducer
 });

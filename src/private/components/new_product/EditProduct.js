@@ -80,7 +80,6 @@ class EditProduct extends React.Component {
                 "differentiation_level": this.props.productFeatures.differentiation[0].id,
                 "business_plan_id": this.props.businessPlan.id
             };
-
             this.props.updateProduct(postObj, () => {
                 this.props.onClose();
             });
@@ -162,6 +161,21 @@ class EditProduct extends React.Component {
         const k = 100 / (this.props.productFeatures.priceLevels.length - 1);
         return index * k;
     }
+    getInnovativeSliderDefaultValue() {
+        const index = this.props.product.innovative_level_index;
+        const k = 100 / (this.props.productFeatures.innovative.length - 1);
+        return index * k;
+    }
+    getQualitySliderDefaultValue() {
+        const index = this.props.product.quality_level_index;
+        const k = 100 / (this.props.productFeatures.quality.length - 1);
+        return index * k;
+    }
+    getDifferentiationSliderDefaultValue() {
+        const index = this.props.product.differentiation_level_index;
+        const k = 100 / (this.props.productFeatures.differentiation.length - 1);
+        return index * k;
+    }
 
     componentDidMount() {
         this.props.getProduct(this.props.productId, (data) => {
@@ -226,17 +240,17 @@ class EditProduct extends React.Component {
                     <Col span={11} offset={4}>
                         <Row style={{ marginBottom: "20px" }}>
                             <Col span={23} >
-                                <EditProductInfoComponent/>
+                                <EditProductInfoComponent />
                             </Col>
                         </Row>
                         <Row style={{ marginBottom: "20px" }}>
                             <Col span={23} >
-                                <EditPriceLevelComponent productId={this.props.productId}/>
+                                <EditPriceLevelComponent productId={this.props.productId} />
                             </Col>
                         </Row>
                         <Row style={{ marginBottom: "20px" }}>
                             <Col span={23} >
-                                <EditProductFeaturesComponent productId={this.props.productId}/>
+                                <EditProductFeaturesComponent productId={this.props.productId} />
                             </Col>
                         </Row>
                     </Col >
@@ -249,12 +263,24 @@ class EditProduct extends React.Component {
                             <Text style={categoryTextStyle}>Price</Text>
                             <Slider marks={priceMarks} disabled={true} included={true} step={null} value={this.getPriceSliderDefaultValue()}></Slider>
                             <Text style={categoryTextStyle}>Innovative</Text>
-                            <Slider marks={innovativeMarks} disabled={true} included={true} step={null} defaultValue={0}></Slider>
+                            <Slider marks={innovativeMarks} disabled={true} included={true} step={null} value={this.getInnovativeSliderDefaultValue()}></Slider>
                             <Text style={categoryTextStyle}>Quality</Text>
-                            <Slider marks={qualityMarks} disabled={true} included={true} step={null} defaultValue={0}></Slider>
+                            <Slider marks={qualityMarks} disabled={true} included={true} step={null} value={this.getQualitySliderDefaultValue()}></Slider>
                             <Text style={categoryTextStyle}>Differentiation</Text>
-                            <Slider marks={differentiationMarks} included={true} step={null} disabled={true} defaultValue={0}></Slider>
+                            <Slider marks={differentiationMarks} included={true} step={null} disabled={true} value={this.getDifferentiationSliderDefaultValue()}></Slider>
                         </Card>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={16} offset={4}>
+                        <Divider />
+                        <Space style={{ display: 'flex', float: 'right' }}>
+                            <Button size="large" style={{ ...buttonStyle }}
+                                onClick={this.discardChanges.bind(this)}>
+                                Discard
+                            </Button>
+                            <Button size="large" type={'primary'} style={{ ...buttonStyle }} onClick={this.saveChanges.bind(this)}>Save</Button>
+                        </Space>
                     </Col>
                 </Row>
             </>

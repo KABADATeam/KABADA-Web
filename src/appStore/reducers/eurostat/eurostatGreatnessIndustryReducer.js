@@ -16,27 +16,15 @@ const getVariableShortTitle = (variable) => {
 
 const getUnitMeasurePercentage = (variable, penultimateValue, lastValue) => {
     if (variable === 'V11110') {
-        console.log(Math.round(penultimateValue-lastValue))
-        console.log(((penultimateValue-lastValue)/penultimateValue)*100)
-        console.log(Math.round(((penultimateValue-lastValue)/penultimateValue)*100))
         let percentage = Math.abs(Math.round(((penultimateValue-lastValue)/penultimateValue)*100));
         return percentage
     } else if (variable === 'V12110') {
-        console.log(Math.round(penultimateValue-lastValue))
-        console.log(((penultimateValue-lastValue)/penultimateValue)*100)
-        console.log(Math.round(((penultimateValue-lastValue)/penultimateValue)*100))
         let percentage = Math.abs(Math.round(((penultimateValue-lastValue)/penultimateValue)*100));
         return percentage
     } else if (variable === 'V15110') {
-        console.log(Math.round(penultimateValue-lastValue))
-        console.log(((penultimateValue-lastValue)/penultimateValue)*100)
-        console.log(Math.round(((penultimateValue-lastValue)/penultimateValue)*100))
         let percentage = Math.abs(Math.round(((penultimateValue-lastValue)/penultimateValue)*100));
         return percentage
     } else if (variable === 'V16140') {
-        console.log(Math.round(penultimateValue-lastValue))
-        console.log(((penultimateValue-lastValue)/penultimateValue)*100)
-        console.log(Math.round(((penultimateValue-lastValue)/penultimateValue)*100))
         let percentage = Math.abs(Math.round(((penultimateValue-lastValue)/penultimateValue)*100));
         return percentage
     }
@@ -76,8 +64,6 @@ export const eurostatGreatnessIndustryReducer = (
             const totalActivitiesLastTwoValues = totalActivitiesValuesObjValues.slice(-2);
             const euActivitiesValuesObjValues = euActivitiesValuesObj !== null ? Object.values(euActivitiesValuesObj) : [];
             const euActivitiesLastTwoValues = euActivitiesValuesObjValues.length > 0 ? euActivitiesValuesObjValues.slice(-2) : [];
-            console.log(activityValuesObjValues);
-            console.log(totalActivitiesValuesObjValues);
             const activityTimeLabels = (activityTimeLabelObjValues.slice(- activityValuesObjValues.length));
             const variableTitle = getVariableShortTitle(action.payload.variable);
             const unitOfMeasure = getUnitOfMeasurement(action.payload.variable);
@@ -100,7 +86,6 @@ export const eurostatGreatnessIndustryReducer = (
                 activityValues: activityValuesObjValues,
                 totalActivitiesValues: totalActivitiesValuesObjValues,
             }
-            console.log(viewObj)
             return {
                 ...state,
                 greatness_industry_data: [...state.greatness_industry_data, viewObj]

@@ -119,6 +119,7 @@ class KeyResources extends React.Component {
 
     render() {
         const data = this.props.resources.key_resources.map(obj => ({ ...obj, type: obj.category.description }));
+        console.log('Data is:'+JSON.stringify(data))
         const columns = [
             {
                 title: 'Type',
@@ -137,6 +138,12 @@ class KeyResources extends React.Component {
                 dataIndex: 'ownership',
                 key: 'ownership',
                 width: '30%',
+                render: (text,record,index)=>(
+                    <div>
+                        {record.selections[0].options[0].selected === true?
+                        <p>{text}</p>:""}
+                    </div>
+                )
             },
             {
                 title: '',

@@ -370,16 +370,21 @@ class PersonalCharacteristics extends React.Component {
     saveChanges = () => {
         const modifiedChoices = JSON.parse(JSON.stringify(this.state.questions));
         const originalChoices = JSON.parse(JSON.stringify(this.props.personalCharacteristics.choices));
+        let answeredQuestions = 0;
+        let isCompleted = false;
         let choices = [];
         // if original choices were null. then set choices array to modifiedChoices state
         if (originalChoices === null || originalChoices === undefined) {
             modifiedChoices.map((element, index) => {
                 if (element.set_code !== '5') {
+                    
                     const objektas = {
                         "set_code": element.set_code, //code of question
                         "selection_code": element.selection_code,  //code of answer
                         "extraText": "text"        // brief answer text if needed
                     }
+                    if(element.selection_code !== null)
+                        answeredQuestions++;
                     choices.push(objektas);
                 } else {
                     var newArray = element.selection_code.join();
@@ -388,6 +393,8 @@ class PersonalCharacteristics extends React.Component {
                         "selection_code": newArray,  //code of answer
                         "extraText": "text"        // brief answer text if needed
                     }
+                    if(element.selection_code.length > 0)
+                        answeredQuestions++;
                     choices.push(objektas);
                 }
 
@@ -401,9 +408,13 @@ class PersonalCharacteristics extends React.Component {
                         "selection_code": modifiedChoices[i].selection_code,  //code of answer
                         "extraText": "text"        // brief answer text if needed
                     }
+                    if(modifiedChoices[i].selection_code !== null)
+                        answeredQuestions++;
                     choices.push(objektas)
                 } else {
                     var newArray = modifiedChoices[i].selection_code.join();
+                    if(modifiedChoices[i].selection_code !== null)
+                        answeredQuestions++;
                     const objektas = {
                         "set_code": modifiedChoices[i].set_code, //code of question
                         "selection_code": newArray,  //code of answer
@@ -414,9 +425,13 @@ class PersonalCharacteristics extends React.Component {
 
             }
         }
+        if(answeredQuestions === 20)
+            isCompleted = true;
+
         const postObject = {
             "plan_id": this.props.businessPlan.id,
-            "choices": choices
+            "choices": choices,
+            "is_personal_characteristics_completed":isCompleted
         }
         console.log('Post obj:' + JSON.stringify(postObject))
         this.props.savePersonalCharacteristics(postObject, () => {
@@ -626,7 +641,7 @@ class PersonalCharacteristics extends React.Component {
                     </Col>
                     <Col span={4}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={false} onClick={this.onCompletedChange.bind(this)} />
+                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.personalCharacteristics.is_personal_characteristics_completed} onClick={this.onCompletedChange.bind(this)} />
                         </div>
                     </Col>
                 </Row>

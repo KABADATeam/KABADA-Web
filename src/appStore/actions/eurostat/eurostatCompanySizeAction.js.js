@@ -4,6 +4,7 @@ import { dataSetsCompanySize } from './dataSetsCompanySizeInTheIndustry';
 export const getCompanySize = () => {
     return async(dispatch, getState) => {
         dispatch({ type: 'RESET_COMPANY_SIZE_DATA', payload: null });
+        dispatch({ type: 'RESET_LOADING', payload: null });
         const nace_code = getState().selectedBusinessPlan.overview.nace.activity_code;
         const geo = getState().selectedBusinessPlan.countryShortCode;
         const geoTitle = getState().selectedBusinessPlan.countryTitle;
@@ -30,6 +31,6 @@ export const getCompanySize = () => {
                 }    
             }
         }
-        
+        dispatch({ type: 'COMPANY_SIZE_LOADING', payload: true});
     }
 }

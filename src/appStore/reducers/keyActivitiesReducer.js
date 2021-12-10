@@ -8,12 +8,23 @@ export const keyActivitiesReducer = (
                 const products = action.payload.products.map(obj => ({...obj, "key": obj.id}))  
                 return {...action.payload, "products": products};
             case "SAVE_KEY_ACTIVITY_SUCCESS":
+                // console.log('action payload:'+JSON.stringify(action.payload))
                 const product = state.products.find(obj => obj.id === action.payload.product_id);
                 console.log(product);
                 const activity_object = { ...action.payload, "sub_type_name": action.payload.sub_type_title, "type_name": action.payload.category_title, "type_id": action.payload.category_id };
-                const activities = [ ...product.activities, { ...activity_object } ];
+                console.log('obj:'+JSON.stringify(activity_object))
+                var activities = []
+                if(product.activities === null || product.activities === undefined){
+                    activities = [ ...activities, { ...activity_object } ];
+                }else{
+                    activities = [ ...product.activities, { ...activity_object } ];
+                }
+                
+                console.log('activities:'+JSON.stringify(activities))
                 const product_activities = {...product, "activities": activities};
+                console.log('productactivities:'+JSON.stringify(product_activities))
                 const products_ = state.products.map(x => x.id === product.id ? product_activities: x);
+                console.log('updated products:'+JSON.stringify(products_))
                 return {...state, "products": products_};
             case "REMOVING_ACTIVITY_SUCCESS":
                 const product_ = state.products.find(obj => obj.id === action.payload.product_id);
