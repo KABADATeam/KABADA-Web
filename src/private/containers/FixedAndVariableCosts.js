@@ -320,6 +320,7 @@ class FixedAndVariableCosts extends React.Component {
         } if (updateFrom === 1) {
             this.setState({ variable: arrayOfVariable }, () => {
                 this.saveChanges();
+                
             });
         }
 

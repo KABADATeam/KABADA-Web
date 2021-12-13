@@ -91,12 +91,10 @@ class VariableCostPopUp extends React.Component {
         this.setState({
             data: array
         });
-        console.log('State set to:' + JSON.stringify(this.state.data))
     }
 
     loadData = (selectedPeriod) => {
         const duom = []
-        console.log('Selected period is: '+this.props.financialProjections.period)
 
         // if selected period is null then it can be 12 by deefault
         if(selectedPeriod === null || selectedPeriod === 12){
@@ -108,7 +106,7 @@ class VariableCostPopUp extends React.Component {
             }else if(this.props.monthly_expenses.length === 12 || this.props.monthly_expenses.length === 24){
                 //this.props.monthly_expenses.length
                 for (var i = 0; i < 12; i++) {
-                    console.log('Monthly expenses at index' + i + ' ,and element is:' + this.props.monthly_expenses[i])
+                    // console.log('Monthly expenses at index' + i + ' ,and element is:' + this.props.monthly_expenses[i])
                     duom.push({ id: i+1, month: i+1, price: this.props.monthly_expenses[i] })
                 }
             }
@@ -121,7 +119,6 @@ class VariableCostPopUp extends React.Component {
             }else if(this.props.monthly_expenses.length === 12){
                 //add twelve items that exist in monthly_expenses array. then add
                 for (var i = 0; i < 24; i++) {
-                    console.log('Monthly expenses at index' + i + ' ,and element is:' + this.props.monthly_expenses[i])
                     if(i < 12){
                         duom.push({ id: i+1, month: i+1, price: this.props.monthly_expenses[i]});
                     }else if(i >= 12){
@@ -130,7 +127,6 @@ class VariableCostPopUp extends React.Component {
                 }
             }else if(this.props.monthly_expenses.length === 24){
                 for (var i = 0; i < 24; i++) {
-                    console.log('Monthly expenses at index' + i + ' ,and element is:' + this.props.monthly_expenses[i])
                     duom.push({ id: i+1, month: i+1, price: this.props.monthly_expenses[i] })
                 }
             }
@@ -141,9 +137,14 @@ class VariableCostPopUp extends React.Component {
     }
 
     componentDidMount() {
-        console.log('Business plan Id is: '+this.props.businessPlanId);
         this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlanId,()=>{
-            this.setState({monthsChecked: this.props.financialProjections.period});
+            if(this.props.financialProjections.period === null || this.props.financialProjections.period === undefined){
+                this.setState({
+                    monthsChecked: 12
+                })
+            }else{
+                this.setState({monthsChecked: this.props.financialProjections.period});
+            }
             this.loadData(this.props.financialProjections.period);
         });
     }
