@@ -28,11 +28,14 @@ class AddKeyPartnerModal extends Component {
             "name": this.state.companyName,
             "is_priority": this.state.priority === 1 ? false : true,
             "website": this.state.website,
-            "comment":  this.state.comment
+            "comment": this.state.comment
         }
+        console.log(postObj)
+        console.log(this.props.type.title)
 
         if (this.props.type.category_title === "distributor") {
             this.props.saveDistributor(postObj, this.props.type.title);
+            console.log(this.props.type.title)
         } else if (this.props.type.category_title === "supplier") {
             this.props.saveSupplier(postObj, this.props.type.title);
         } else if (this.props.type.category_title === "other") {
@@ -46,7 +49,7 @@ class AddKeyPartnerModal extends Component {
             website: '',
             comment: ''
         });
-        
+
         this.props.onClose();
     }
 
@@ -111,7 +114,7 @@ class AddKeyPartnerModal extends Component {
                         </Form.Item>
 
                         <Form.Item label="Is it Priority?" key="priority" name="priority" initialValue={1}>
-                            <Radio.Group onChange={this.onChangePriority}  value={this.state.priority}>
+                            <Radio.Group onChange={this.onChangePriority} value={this.state.priority}>
                                 <Space direction="vertical">
                                     <Radio value={1}>No</Radio>
                                     <Radio value={2}>Yes</Radio>

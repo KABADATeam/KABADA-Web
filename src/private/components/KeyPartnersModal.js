@@ -4,6 +4,7 @@ import { Modal, List, Button } from 'antd';
 import '../../css/customModal.css';
 import { RightOutlined } from '@ant-design/icons';
 import { selectCategoryType } from "../../appStore/actions/partnersAction";
+import { saveDistributor } from "../../appStore/actions/partnersAction";
 
 class KeyPartnersModal extends Component {
 
@@ -13,10 +14,25 @@ class KeyPartnersModal extends Component {
 
     onAddNewPartner = (item) => {
         this.props.selectCategoryType(this.props.category.title, item, () => {
-            this.props.onClose();
-            this.props.onForward();
+            if (item.title === "Self distribution" || item.title === "Highly diversified distributors") {
+                const postObj = {
+                    "id": null,
+                    "business_plan_id": this.props.businessPlan.id,
+                    "type_id": item.type_id,
+                    "name": '-',
+                    "is_priority": false,
+                    "website": "-",
+                    "comment": "-"
+                }
+                this.props.saveDistributor(postObj, item.title);
+                this.props.onClose();
+            } else {
+                this.props.onClose();
+                this.props.onForward();
+            }
+
         });
-        
+
     }
 
     closeNewKeyPartnerModal = () => {
@@ -60,9 +76,10 @@ class KeyPartnersModal extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        category: state.selectedPartnersCategory
+        category: state.selectedPartnersCategory,
+        businessPlan: state.selectedBusinessPlan
     };
 }
 
-export default connect(mapStateToProps, { selectCategoryType })(KeyPartnersModal);
+export default connect(mapStateToProps, { selectCategoryType, saveDistributor })(KeyPartnersModal);
 
