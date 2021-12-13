@@ -141,7 +141,8 @@ class KeyResources extends React.Component {
                 render: (text,record,index)=>(
                     <div>
                         {record.selections[0].options[0].selected === true?
-                        <p>{text}</p>:""}
+                        <p>{text}</p>:record.selections[0].options[1].selected === true?<p>Buy</p>:
+                        record.selections[0].options[2].selected === true?<p>Own</p>:""}
                     </div>
                 )
             },
