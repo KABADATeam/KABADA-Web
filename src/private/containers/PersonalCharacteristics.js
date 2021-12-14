@@ -633,7 +633,7 @@ class PersonalCharacteristics extends React.Component {
                     <Col span={12} offset={4}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
-                            <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Personal characteristics template</Text>
+                            <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Personal characteristics</Text>
                             <Tooltip title="Tooltip text">
                                 <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
                             </Tooltip>
