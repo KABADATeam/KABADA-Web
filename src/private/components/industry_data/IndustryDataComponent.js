@@ -58,7 +58,15 @@ class IndustryDataComponent extends PureComponent {
         return (
             <>
                 {spinner === false ?
-                    <Spin size='large' /> :
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                    >
+                        <Spin size='large' /> 
+                    </div>
+                    :
                     <div>
                         <Row style={{ marginTop: "40px" }}>
                             <div>

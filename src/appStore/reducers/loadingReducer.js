@@ -49,7 +49,13 @@ export const chartsLoadingReducer = (
                 'company_size': action.payload
             }
         case 'RESET_LOADING':
-            return state
+            return {
+                ...state,
+                survival_rate: false,
+                greatness_industry: false,
+                costs_productivity: false,
+                company_size: false
+            }
         default:
             return state;
     }
