@@ -15,6 +15,7 @@ import { UserOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
 import IndustryRisks from '../components/Industry_Risks/IndustryRisks'
 import { getCountryShortCodeV2 } from '../../appStore/actions/countriesActions'
 import IndustryDataComponent from '../components/industry_data/IndustryDataComponent';
+import html2canvas from 'html2canvas';
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
@@ -55,10 +56,12 @@ const avatarStyle = {
 }
 
 class Overview extends React.Component {
-
-    state = {
-        showInviteModal: false,
-        showEditBusinessPlanModal: false
+    constructor(props) {
+        super(props);
+        this.state = {
+            showInviteModal: false,
+            showEditBusinessPlanModal: false
+        }
     }
 
     onBackClick() {
@@ -134,7 +137,6 @@ class Overview extends React.Component {
         console.log('ok')
         this.props.downloadPDFFile(this.props.businessPlan.id, this.props.businessPlan.name);
     }
-
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
             if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
