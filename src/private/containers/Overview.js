@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { discardChanges, saveChanges } from "../../appStore/actions/swotAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { updateStatus, getMembers, deleteMember, getSelectedPlanOverview, getSelectedPlanDetails, getImage, removePlan, downloadDOCFile, downloadPDFFile } from "../../appStore/actions/planActions";
+import { updateStatus, getMembers, deleteMember, getSelectedPlanOverview, getSelectedPlanDetails, getImage, removePlan, downloadDOCFile, downloadPDFFile, downloadCashFlow } from "../../appStore/actions/planActions";
 import { getSurvivalRate } from '../../appStore/actions/eurostat/eurostatSurvivalRateAction';
 import { withRouter } from 'react-router-dom';
 import InviteMemberModal from '../components/overview/InviteMemberModal';
@@ -137,6 +137,10 @@ class Overview extends React.Component {
         console.log('ok')
         this.props.downloadPDFFile(this.props.businessPlan.id, this.props.businessPlan.name);
     }
+    downloadCashFlow = () => {
+        console.log('ok')
+        this.props.downloadCashFlow(this.props.businessPlan.id, this.props.businessPlan.name);
+    }
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
             if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
@@ -161,9 +165,17 @@ class Overview extends React.Component {
         const overview = this.props.businessPlan.overview;
         console.log(overview);
         console.log(membersList);
-        const viewMenu = (
+        const exportAsMenu = (
             <Menu>
-                <Menu.Item key="1">View</Menu.Item>
+                <Menu.Item key="1" onClick={this.downloadDOCFile}>
+                    Download DOC file
+                </Menu.Item>
+                <Menu.Item key="2" onClick={this.downloadPDFFile}>
+                    Download PDF file
+                </Menu.Item>
+                <Menu.Item key="3" onClick={this.downloadCashFlow}>
+                    Download Cash Flow
+                </Menu.Item>
             </Menu>
         );
         const moreActionsMenu = (
@@ -177,12 +189,6 @@ class Overview extends React.Component {
                     >
                         <a href="#">Delete</a>
                     </Popconfirm>
-                </Menu.Item>
-                <Menu.Item key="2" onClick={this.downloadDOCFile}>
-                    Download DOC file
-                </Menu.Item>
-                <Menu.Item key="3" onClick={this.downloadPDFFile}>
-                    Download PDF file
                 </Menu.Item>
             </Menu>
         );
@@ -218,17 +224,17 @@ class Overview extends React.Component {
                                 <Tag color="#BAE7FF" style={{ borderRadius: 50, color: "#262626", marginLeft: '10px' }}> {this.props.businessPlan.percentage}% Completed</Tag>
                             </div>
                         </Col>
-                        <Col span={4}>
+                        <Col span={6}>
                             <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                                 <Space wrap>
-                                    <Dropdown overlay={viewMenu}>
-                                        <a className="ant-dropdown-link">
-                                            View <DownOutlined />
-                                        </a>
-                                    </Dropdown>
                                     <Dropdown overlay={moreActionsMenu}>
                                         <a className="ant-dropdown-link">
                                             More Actions <DownOutlined />
+                                        </a>
+                                    </Dropdown>
+                                    <Dropdown overlay={exportAsMenu}>
+                                        <a className="ant-dropdown-link">
+                                            Export As <DownOutlined />
                                         </a>
                                     </Dropdown>
                                 </Space>
@@ -498,4 +504,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getImage, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, removePlan, getSurvivalRate, getCountryShortCodeV2, downloadDOCFile, downloadPDFFile })(withRouter(Overview))
+export default connect(mapStateToProps, { getImage, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, removePlan, getSurvivalRate, getCountryShortCodeV2, downloadDOCFile, downloadPDFFile, downloadCashFlow })(withRouter(Overview))
