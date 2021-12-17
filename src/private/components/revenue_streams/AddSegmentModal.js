@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Button, Form, Space, Select } from 'antd';
 import '../../../css/customModal.css';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
 import { saveRevenue } from "../../../appStore/actions/revenueStreamActions";
 
 const { Option } = Select;
@@ -77,21 +77,21 @@ class AddSegmentModal extends Component {
             "stream_type_name": this.props.types.stream_types.find(x => x.id === this.state.revenue).title,
             "segment": this.props.number
         }
-        console.log('POST OBJECT ON CREATE IS: '+JSON.stringify(postObj))
+        console.log('POST OBJECT ON CREATE IS: ' + JSON.stringify(postObj))
         this.props.saveRevenue(postObj, reducerObj);
 
         this.props.onClose();
     }
 
-    onNameChange (id) {
-        console.log('Revenue stream name id:'+id)
+    onNameChange(id) {
+        console.log('Revenue stream name id:' + id)
         this.setState({
             revenue: id
         });
     }
 
     onPriceChange(id) {
-        console.log('Price id:'+id)
+        console.log('Price id:' + id)
         this.setState({
             price: id,
             priceType: null
@@ -99,7 +99,7 @@ class AddSegmentModal extends Component {
     }
 
     onPriceTypeChange(id) {
-        console.log('Price type id:'+id)
+        console.log('Price type id:' + id)
         this.setState({
             priceType: id
         });
@@ -117,15 +117,15 @@ class AddSegmentModal extends Component {
 
         const priceTypeOptions = this.state.price === null ? [] :
             this.props.types.prices.find(x => x.id === this.state.price).types.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
-        );
+                <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+            );
 
         return (
             <>
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
-                    title={<Space><ArrowLeftOutlined onClick={this.onBack}/>Add revenue stream {additionalTitle}</Space>}
+                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />Add revenue stream {additionalTitle}</Space>}
                     visible={this.props.visibility}
                     onCancel={this.onCancel}
                     footer={
@@ -152,11 +152,18 @@ class AddSegmentModal extends Component {
 
                         <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingLeft: "10px" }} key="type" name="type" label="Types of pricing"
                             validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
-                            <Select style={{ width: '100%' }} placeholder="Choose type" disabled={this.state.price === null ? true: false} onChange={this.onPriceTypeChange.bind(this)} >
+                            <Select style={{ width: '100%' }} placeholder="Choose type" disabled={this.state.price === null ? true : false} onChange={this.onPriceTypeChange.bind(this)} >
                                 {priceTypeOptions}
                             </Select>
                         </Form.Item>
 
+
+                        <Form.Item key="type" name="type" label="Consumers"
+                            validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
+                            <Select style={{ width: '100%' }} placeholder="Choose consumers" >
+                            </Select>
+                        </Form.Item>
+                        <Button style={{ margin: '15px', borderRadius: '5px' }} size="large"><PlusOutlined />Add Item</Button>
                     </Form>
                 </Modal >
             </>

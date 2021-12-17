@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Button, Form, Space, Select } from 'antd';
 import '../../../css/customModal.css';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
 import { updateRevenue, getStreamTypes, getRevenues } from "../../../appStore/actions/revenueStreamActions";
 
 const { Option } = Select;
@@ -12,7 +12,7 @@ class EditSegmentModal extends Component {
         super(props);
         this.state = {
             revenue: { id: this.props.item.stream_type_id, title: this.props.item.stream_type_name },
-            price: {id: this.props.item.price_category_id, title: this.props.item.price_category_name},
+            price: { id: this.props.item.price_category_id, title: this.props.item.price_category_name },
             priceType: { id: this.props.item.price_type_id, title: this.props.item.price_type_name },
             priceTypeError: ''
         }
@@ -48,8 +48,8 @@ class EditSegmentModal extends Component {
             "price_type_id": this.state.priceType.id
         };
 
-        console.log('Price type id:'+this.state.priceType.id)
-        console.log('Revenue id:'+this.state.revenue.id)
+        console.log('Price type id:' + this.state.priceType.id)
+        console.log('Revenue id:' + this.state.revenue.id)
         const reducerObj = {
             "id": this.props.item.id,
             "key": this.props.item.id,
@@ -62,8 +62,8 @@ class EditSegmentModal extends Component {
             "segment": this.props.item.segment
         }
 
-        console.log('POST obj:'+ JSON.stringify(postObj))
-        console.log('Reducer obj:'+ JSON.stringify(reducerObj))
+        console.log('POST obj:' + JSON.stringify(postObj))
+        console.log('Reducer obj:' + JSON.stringify(reducerObj))
 
         this.props.updateRevenue(postObj, reducerObj);
         this.props.onClose();
@@ -84,7 +84,7 @@ class EditSegmentModal extends Component {
             id: id,
             title: this.props.item.price_title
         }
-        console.log('Price id:'+id)
+        console.log('Price id:' + id)
         this.setState({
             price: obj
         });
@@ -105,9 +105,9 @@ class EditSegmentModal extends Component {
         this.props.getStreamTypes();
         this.setState({
             revenue: { id: this.props.item.stream_type_id, title: this.props.item.stream_type_name },
-            price: {id: this.props.item.price_category_id, title: this.props.item.price_category_name},
+            price: { id: this.props.item.price_category_id, title: this.props.item.price_category_name },
             priceType: { id: this.props.item.price_type_id, title: this.props.item.price_type_name },
-        },()=> console.log('Revenue:'+JSON.stringify(this.state.revenue)))
+        }, () => console.log('Revenue:' + JSON.stringify(this.state.revenue)))
     }
 
     render() {
@@ -158,6 +158,13 @@ class EditSegmentModal extends Component {
                                 {priceTypeOptions}
                             </Select>
                         </Form.Item>
+
+                        <Form.Item key="type" name="type" label="Consumers"
+                            validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
+                            <Select style={{ width: '100%' }} placeholder="Choose consumers" >
+                            </Select>
+                        </Form.Item>
+                        <Button style={{ margin: '15px', borderRadius: '5px' }} size="large"><PlusOutlined />Add Item</Button>
 
                     </Form>
                 </Modal >
