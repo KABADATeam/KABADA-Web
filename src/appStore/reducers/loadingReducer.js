@@ -16,6 +16,15 @@ export const imageLoadingReducer = (state = false, action) => {
     }
 }
 
+export const downloadLoadingReducer = (state = false, action) => {
+    switch (action.type) {
+        case 'DOWNLOAD_LOADING': 
+            return action.payload;
+        default: 
+            return state;
+    }
+}
+
 export const chartsLoadingReducer = (
     state = {
         survival_rate: false,
