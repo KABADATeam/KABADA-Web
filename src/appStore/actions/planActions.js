@@ -245,7 +245,7 @@ export const downloadDOCFile = (planId, planName) => {
             const link = document.createElement('a');
             console.log(link);
             link.href = url;
-            link.setAttribute('download', planName+' plan.doc');
+            link.setAttribute('download', 'Kabada_export_'+planName+'.docx');
             document.body.appendChild(link);
             link.click();
         } finally {
@@ -269,7 +269,7 @@ export const downloadPDFFile = (planId, planName) => {
             const link = document.createElement('a');
             console.log(link);
             link.href = url;
-            link.setAttribute('download', planName+' plan.pdf');
+            link.setAttribute('download', 'Kabada_export_'+planName+'.pdf');
             document.body.appendChild(link);
             link.click();
         } finally {
@@ -293,7 +293,7 @@ export const downloadCashFlow = (planId, planName) => {
             const link = document.createElement('a');
             console.log(link);
             link.href = url;
-            link.setAttribute('download', planName+' cash flow.xlsx');
+            link.setAttribute('download', 'Kabada_export_Cashflow_'+planName+'.xlsx');
             document.body.appendChild(link);
             link.click();
         } finally {
