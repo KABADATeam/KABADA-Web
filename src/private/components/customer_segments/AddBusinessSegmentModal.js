@@ -138,7 +138,10 @@ class AddBusinessSegmentModal extends Component {
                     }
                 >
                     <Form hideRequiredMark layout="vertical" id="addBusinessSegmentForm" name="addBusinessSegmentForm" onFinish={this.onOK.bind(this)}>
-                        <Form.Item key="name" name="name" label="Segment name">
+                        <Form.Item key="name" name="name" label="Segment name"
+                        rules={
+                            [{ required: true, message: 'Type segment name' }]
+                        }>
                             <Input style={{width: '100%'}} placeholder="Add segment name" onChange={(e) => this.onNameChange(e.target.value)}/>
                         </Form.Item>
                         <Form.Item key="type" name="type" label="Type"
