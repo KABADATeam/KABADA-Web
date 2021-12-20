@@ -398,17 +398,6 @@ class Overview extends React.Component {
                                                     </List.Item>
                                                 </List>
                                             </Card>
-                                            <Card style={{ marginTop: '10px' }}>
-                                                <List >
-                                                    <List.Item key='17' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title="Team and competencies"
-                                                            description="Description goes here" />
-                                                        <div>...</div>
-                                                    </List.Item>
-                                                </List>
-                                            </Card>
                                         </div>
                                     </Col>
                                     <Col span={6}>
