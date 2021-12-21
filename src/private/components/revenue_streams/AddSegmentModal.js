@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Button, Form, Space, Select } from 'antd';
 import '../../../css/customModal.css';
-import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { saveRevenue } from "../../../appStore/actions/revenueStreamActions";
+import { getCustomerSegments } from "../../../appStore/actions/customerSegmentAction";
 
 const { Option } = Select;
 
@@ -14,7 +15,9 @@ class AddSegmentModal extends Component {
         priceType: null,
         revenueError: '',
         priceError: '',
-        priceTypeError: ''
+        priceTypeError: '',
+        segment_names: [],
+        names: []
     }
 
     onCancel = () => {
@@ -64,7 +67,8 @@ class AddSegmentModal extends Component {
             "business_plan_id": this.props.businessPlan.id,
             "segment": this.props.number,
             "stream_type_id": this.state.revenue,
-            "price_type_id": this.state.priceType
+            "price_type_id": this.state.priceType,
+            "segments": this.state.names
         };
 
         const price = this.props.types.prices.find(x => x.id === this.state.price);
@@ -75,7 +79,8 @@ class AddSegmentModal extends Component {
             "price_type_name": price.types.find(x => x.id === this.state.priceType).title,
             "stream_type_id": this.state.revenue,
             "stream_type_name": this.props.types.stream_types.find(x => x.id === this.state.revenue).title,
-            "segment": this.props.number
+            "segment": this.props.number,
+            "segments": this.state.names
         }
         console.log('POST OBJECT ON CREATE IS: ' + JSON.stringify(postObj))
         this.props.saveRevenue(postObj, reducerObj);
@@ -105,6 +110,20 @@ class AddSegmentModal extends Component {
         });
     }
 
+    componentDidMount() {
+        this.props.getCustomerSegments(this.props.businessPlan.id);
+        this.setState({
+            segment_name: this.props.customerSegments.consumers.filter((x, index) => x.segment_name != null)
+        }, () => console.log(this.state.segment_name))
+
+        console.log(this.props.customerSegments.consumers)
+
+    }
+    onNgoTypeChange(value) {
+        this.setState({
+            names: value
+        });
+    }
     render() {
         const additionalTitle = this.props.number === 3 ? '(other)' : '(segment ' + this.props.number + ')';
         const streamOptions = this.props.types.stream_types.map((obj) =>
@@ -119,7 +138,9 @@ class AddSegmentModal extends Component {
             this.props.types.prices.find(x => x.id === this.state.price).types.map((obj) =>
                 <Option key={obj.id} value={obj.id}>{obj.title}</Option>
             );
-
+        const consumersNames = this.props.customerSegments.consumers.map((obj) =>
+            <Option key={obj.id} value={obj.segment_name}>{obj.segment_name}</Option>
+        )
         return (
             <>
                 <Modal
@@ -158,12 +179,16 @@ class AddSegmentModal extends Component {
                         </Form.Item>
 
 
-                        <Form.Item key="type" name="type" label="Consumers"
-                            validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
-                            <Select style={{ width: '100%' }} placeholder="Choose consumers" >
+                        <Form.Item key="names" name="names" label="Consumers"
+                        //validateStatus={this.state.segment_name !== null ? 'error' : 'success'}
+                        >
+                            <Select style={{ width: '100%' }}
+                                placeholder="Choose consumer"
+                                mode="multiple"
+                                onChange={this.onNgoTypeChange.bind(this)} >
+                                {consumersNames}
                             </Select>
                         </Form.Item>
-                        <Button style={{ margin: '15px', borderRadius: '5px' }} size="large"><PlusOutlined />Add Item</Button>
                     </Form>
                 </Modal >
             </>
@@ -174,9 +199,10 @@ class AddSegmentModal extends Component {
 const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
-        types: state.revenueTypes
+        types: state.revenueTypes,
+        customerSegments: state.customerSegments,
     };
 }
 
-export default connect(mapStateToProps, { saveRevenue })(AddSegmentModal);
+export default connect(mapStateToProps, { saveRevenue, getCustomerSegments })(AddSegmentModal);
 
