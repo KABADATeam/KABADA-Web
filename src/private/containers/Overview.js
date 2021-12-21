@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar, Dropdown, Menu, message, Popconfirm, Collapse } from 'antd';
+import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar, Dropdown, Menu, message, Popconfirm, Collapse, Spin } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled, PlusSquareOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
@@ -11,6 +11,7 @@ import { getSurvivalRate } from '../../appStore/actions/eurostat/eurostatSurviva
 import { withRouter } from 'react-router-dom';
 import InviteMemberModal from '../components/overview/InviteMemberModal';
 import EditBusinessPlanModal from '../components/overview/EditBusinessPlanModal';
+import FullPageLoader from '../components/overview/FullPageLoader';
 import { UserOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
 import IndustryRisks from '../components/Industry_Risks/IndustryRisks'
 import { getCountryShortCodeV2 } from '../../appStore/actions/countriesActions'
@@ -165,6 +166,7 @@ class Overview extends React.Component {
         const overview = this.props.businessPlan.overview;
         console.log(overview);
         console.log(membersList);
+        console.log(this.props.downloadLoading);
         const exportAsMenu = (
             <Menu>
                 <Menu.Item key="1" onClick={this.downloadDOCFile}>
@@ -204,7 +206,7 @@ class Overview extends React.Component {
                         visibility={isVisibleHeader}
                         discardChanges={this.discardChanges}
                         saveChanges={this.saveChanges}
-                    />
+                    />  
                     <Col span={20} offset={2}>
                         <Breadcrumb style={{ marginTop: "40px" }}>
                             <Breadcrumb.Item>
@@ -215,7 +217,6 @@ class Overview extends React.Component {
                             </Breadcrumb.Item>
                         </Breadcrumb>
                     </Col>
-
                     <Row align="middle" style={{ marginTop: "9px", marginBottom: "25px" }}>
                         <Col span={12} offset={2}>
                             <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
@@ -241,9 +242,8 @@ class Overview extends React.Component {
                             </div>
                         </Col>
                     </Row>
-
                     <Col span={20} offset={2}>
-                        <Tabs defaultActiveKey="1" >
+                        <Tabs defaultActiveKey="1">
                             <TabPane tab="My business plan" key="1">
                                 <Row style={{ marginBottom: "50px" }}>
                                     <Col span={18}>
@@ -398,17 +398,6 @@ class Overview extends React.Component {
                                                     </List.Item>
                                                 </List>
                                             </Card>
-                                            <Card style={{ marginTop: '10px' }}>
-                                                <List >
-                                                    <List.Item key='17' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title="Team and competencies"
-                                                            description="Description goes here" />
-                                                        <div>...</div>
-                                                    </List.Item>
-                                                </List>
-                                            </Card>
                                         </div>
                                     </Col>
                                     <Col span={6}>
@@ -480,7 +469,6 @@ class Overview extends React.Component {
                             </TabPane>
                         </Tabs>
                     </Col>
-
                     {
                         this.state.showInviteModal === false ? null :
                             <InviteMemberModal visible={true} onClose={this.onInviteClose.bind(this)} />
@@ -489,6 +477,7 @@ class Overview extends React.Component {
                         this.state.showEditBusinessPlanModal === false ? null :
                             <EditBusinessPlanModal updatingPlan={this.props.businessPlan} onClose={this.onEditBusinessPlanClose.bind(this)} />
                     }
+                    
                 </>
             );
         }
@@ -500,7 +489,8 @@ const mapStateToProps = (state) => {
         businessPlan: state.selectedBusinessPlan,
         uploadedFile: state.uploadedFile,
         survivalRate: state.survivalRate,
-        userInf: state.user
+        userInf: state.user,
+        downloadLoading: state.downloadLoading
     };
 }
 

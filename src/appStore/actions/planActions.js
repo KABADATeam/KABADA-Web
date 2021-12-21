@@ -85,6 +85,7 @@ export const getPlansOverview = (planId) => {
 export const getSelectedPlanOverview = (planId) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
+        dispatch({ type: "DOWNLOAD_LOADING", payload: false})
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get("api/plans/overview/" + planId, { headers: { Authorization: `Bearer ${token}` } });
@@ -203,8 +204,8 @@ export const getSelectedPlanDetails = (planId) => {
         dispatch({ type: "LOADING", payload: true });
         try {
             const token = getState().user.access_token;
+            console.log(planId);
             const response = await kabadaAPI.post("api/plans/fetch", { "Id": planId }, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response.data.activityID)
             dispatch({ type: "FETCHING_SELECTED_PLAN_DETAILS_SUCCESS", payload: response.data });
         } finally {
             dispatch({ type: "LOADING", payload: false });
@@ -232,17 +233,19 @@ export const updateImage = (plan) => {
 export const downloadDOCFile = (planId, planName) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
+        dispatch({ type: "DOWNLOAD_LOADING", payload: true})
         try {
             console.log('OK ', planId);
             const token = getState().user.access_token;
             const response = await kabadaAPI.get("api/plans/doc/" + planId, { headers: { Authorization: `Bearer ${token}` }, responseType: 'blob' });
             console.log(response);
+            dispatch({ type: "DOWNLOAD_LOADING", payload: false})
             const url = window.URL.createObjectURL(new Blob([response.data]));
             console.log(url);
             const link = document.createElement('a');
             console.log(link);
             link.href = url;
-            link.setAttribute('download', planName+' plan.doc');
+            link.setAttribute('download', 'Kabada_export_'+planName+'.docx');
             document.body.appendChild(link);
             link.click();
         } finally {
@@ -254,17 +257,19 @@ export const downloadDOCFile = (planId, planName) => {
 export const downloadPDFFile = (planId, planName) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
+        dispatch({ type: "DOWNLOAD_LOADING", payload: true})
         try {
             console.log('OK ', planId);
             const token = getState().user.access_token;
             const response = await kabadaAPI.get("api/plans/pdf/" + planId, { headers: { Authorization: `Bearer ${token}` }, responseType: 'blob' });
             console.log(response);
+            dispatch({ type: "DOWNLOAD_LOADING", payload: false})
             const url = window.URL.createObjectURL(new Blob([response.data]));
             console.log(url);
             const link = document.createElement('a');
             console.log(link);
             link.href = url;
-            link.setAttribute('download', planName+' plan.pdf');
+            link.setAttribute('download', 'Kabada_export_'+planName+'.pdf');
             document.body.appendChild(link);
             link.click();
         } finally {
@@ -276,17 +281,19 @@ export const downloadPDFFile = (planId, planName) => {
 export const downloadCashFlow = (planId, planName) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
+        dispatch({ type: "DOWNLOAD_LOADING", payload: true})
         try {
             console.log('OK ', planId);
             const token = getState().user.access_token;
             const response = await kabadaAPI.get("api/plans/xlsx/" + planId, { headers: { Authorization: `Bearer ${token}` }, responseType: 'blob' });
             console.log(response);
+            dispatch({ type: "DOWNLOAD_LOADING", payload: false})
             const url = window.URL.createObjectURL(new Blob([response.data]));
             console.log(url);
             const link = document.createElement('a');
             console.log(link);
             link.href = url;
-            link.setAttribute('download', planName+' cash flow.xlsx');
+            link.setAttribute('download', 'Kabada_export_Cashflow_'+planName+'.xlsx');
             document.body.appendChild(link);
             link.click();
         } finally {

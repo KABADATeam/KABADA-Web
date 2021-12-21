@@ -147,7 +147,10 @@ class EditBusinessSegmentModal extends Component {
                             geographicLocation: this.props.item.geographic_location.map(e => e.id),
                         }}>
 
-                        <Form.Item key="name" name="name" label="Segment name">
+                        <Form.Item key="name" name="name" label="Segment name"
+                        rules={
+                            [{ required: true, message: 'Type segment name' }]
+                        }>
                             <Input style={{width: '100%'}} placeholder="Edit segment name" defaultValue={this.state.segmentName}
                             value={this.state.segmentName} onChange={(e) => this.onNameChange(e.target.value)}/>
                         </Form.Item>

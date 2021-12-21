@@ -135,7 +135,10 @@ class AddConsumerSegmentModal extends Component {
                     }
                 >
                     <Form hideRequiredMark layout="vertical" id="addConsumerForm" name="addConsumerForm" onFinish={this.onOK}>
-                        <Form.Item key="name" name="name" label="Segment Name">
+                        <Form.Item key="name" name="name" label="Segment Name"
+                        rules={
+                            [{ required: true, message: 'Type segment name' }]
+                        }>
                            <Input style={{width: '100%'}} placeholder="Add segment name" onChange={(e) =>this.onNameChange(e.target.value)}/>
                         </Form.Item>
                         <Form.Item key="age" name="age" label="Age group (years)"

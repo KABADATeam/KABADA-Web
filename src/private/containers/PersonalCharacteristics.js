@@ -584,11 +584,6 @@ class PersonalCharacteristics extends React.Component {
         });
 
     }
-    onCompletedChange = (state) => {
-        // this.props.saveState(this.props.businessPlan.id, state, () => {
-
-        // });
-    }
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
             if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
@@ -637,11 +632,6 @@ class PersonalCharacteristics extends React.Component {
                             <Tooltip title="Tooltip text">
                                 <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
                             </Tooltip>
-                        </div>
-                    </Col>
-                    <Col span={4}>
-                        <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.personalCharacteristics.is_personal_characteristics_completed} onClick={this.onCompletedChange.bind(this)} />
                         </div>
                     </Col>
                 </Row>
