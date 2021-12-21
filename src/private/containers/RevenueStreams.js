@@ -134,6 +134,8 @@ class RevenueStreams extends React.Component {
                     this.props.getRevenues(this.props.businessPlan.id);
                     this.props.getStreamTypes();
                     this.props.getPrices();
+                    console.log(this.props.revenues.segment_1);
+
                 });
             }
         } else {
@@ -158,10 +160,13 @@ class RevenueStreams extends React.Component {
                 width: '20%',
             },
             {
-                title: 'Types of pricing',
-                dataIndex: 'price_type_name',
-                key: 'price_type_name',
+                title: 'Consumers',
+                dataIndex: 'segments',
+                key: 'segments',
                 width: '45%',
+                render: (obj, record) => (
+                    <p>{record.segments + ' '}</p>
+                ),
             },
             {
                 title: '',
@@ -186,15 +191,18 @@ class RevenueStreams extends React.Component {
             },
             {
                 title: 'Prices',
-                dataIndex: 'price_category_name',
-                key: 'price_category_name',
+                dataIndex: 'segments',
+                key: 'segments',
                 width: '20%',
             },
             {
-                title: 'Types of pricing',
+                title: 'Business',
                 dataIndex: 'price_type_name',
                 key: 'price_type_name',
                 width: '45%',
+                render: (obj, record) => (
+                    <p>{record.segments + ' '}</p>
+                ),
             },
             {
                 title: '',
@@ -225,9 +233,12 @@ class RevenueStreams extends React.Component {
             },
             {
                 title: 'Type of pricing',
-                dataIndex: 'price_type_name',
-                key: 'price_type_name',
+                dataIndex: 'segments',
+                key: 'segments',
                 width: '45%',
+                render: (obj, record) => (
+                    <p>{record.segments + ' '}</p>
+                ),
             },
             {
                 title: '',
@@ -285,7 +296,7 @@ class RevenueStreams extends React.Component {
                     <Row style={{ marginBottom: "50px" }}>
                         <Col span={7}>
                             <div style={{ marginRight: '40px' }}>
-                                <Typography.Title style={{ ...aboutTitleTextStyle }}>Customer segment 1</Typography.Title>
+                                <Typography.Title style={{ ...aboutTitleTextStyle }}>Consumers</Typography.Title>
                                 <Typography.Text style={{ ...textStyle }}>
                                     Plan a separate Revenue Streams for each Customer Segment as each of them may have different pricing requirements.  You can, actually  have several Revenue streams for each Segment.
                                 </Typography.Text>
@@ -293,12 +304,17 @@ class RevenueStreams extends React.Component {
                         </Col>
                         <Col span={17}>
                             <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Table
-                                    dataSource={this.props.revenues.segment_1}
-                                    columns={firstSegmentColumns}
-                                    pagination={false}
-                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddFirstRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button></Space>)}
-                                />
+                                {this.props.revenues.segment_1.length === 0 ?
+                                    <Button size="large" style={{ ...buttonStyle, marginBottom: '10px', marginTop: '10px' }} onClick={this.onAddFirstRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button>
+                                    :
+                                    <Table
+                                        dataSource={this.props.revenues.segment_1}
+                                        columns={firstSegmentColumns}
+                                        pagination={false}
+                                        footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddFirstRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button></Space>)}
+                                    />
+                                }
+
                             </Card >
                         </Col>
                     </Row>
@@ -306,7 +322,7 @@ class RevenueStreams extends React.Component {
                     <Row style={{ marginBottom: "50px" }}>
                         <Col span={7}>
                             <div style={{ marginRight: '40px' }}>
-                                <Typography.Title style={{ ...aboutTitleTextStyle }}>Customer segment 2</Typography.Title>
+                                <Typography.Title style={{ ...aboutTitleTextStyle }}>Business</Typography.Title>
                                 <Typography.Text style={{ ...textStyle }}>
                                     Plan a separate Revenue Streams for each Customer Segment as each of them may have different pricing requirements.  You can, actually  have several Revenue streams for each Segment.
                                 </Typography.Text>
@@ -314,12 +330,17 @@ class RevenueStreams extends React.Component {
                         </Col>
                         <Col span={17}>
                             <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Table
-                                    dataSource={this.props.revenues.segment_2}
-                                    columns={secondSegmentColumns}
-                                    pagination={false}
-                                    footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddSecondRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button>)}
-                                />
+                                {this.props.revenues.segment_2.length === 0 ?
+                                    <Button size="large" style={{ ...buttonStyle, marginBottom: '10px', marginTop: '10px' }} onClick={this.onAddSecondRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button>
+                                    :
+                                    <Table
+                                        dataSource={this.props.revenues.segment_2}
+                                        columns={secondSegmentColumns}
+                                        pagination={false}
+                                        footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddSecondRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button>)}
+                                    />
+                                }
+
                             </Card >
                         </Col>
                     </Row>
@@ -327,7 +348,7 @@ class RevenueStreams extends React.Component {
                     <Row style={{ marginBottom: "50px" }}>
                         <Col span={7}>
                             <div style={{ marginRight: '40px' }}>
-                                <Typography.Title style={{ ...aboutTitleTextStyle }}>Other</Typography.Title>
+                                <Typography.Title style={{ ...aboutTitleTextStyle }}>Public bodies & NGO</Typography.Title>
                                 <Typography.Text style={{ ...textStyle }}>
                                     Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.
                                 </Typography.Text>
@@ -335,25 +356,30 @@ class RevenueStreams extends React.Component {
                         </Col>
                         <Col span={17}>
                             <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Table
-                                    dataSource={this.props.revenues.other}
-                                    columns={otherColumns}
-                                    pagination={false}
-                                    footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddNewOther.bind(this)}><PlusOutlined />Add Other Revenue Stream</Button>)}
-                                />
+                                {this.props.revenues.other.length === 0 ?
+                                    <Button size="large" style={{ ...buttonStyle, marginBottom: '10px', marginTop: '10px' }} onClick={this.onAddNewOther.bind(this)}><PlusOutlined />Add Other Revenue Stream</Button>
+                                    :
+                                    <Table
+                                        dataSource={this.props.revenues.other}
+                                        columns={otherColumns}
+                                        pagination={false}
+                                        footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddNewOther.bind(this)}><PlusOutlined />Add Other Revenue Stream</Button>)}
+                                    />
+                                }
+
                             </Card >
                         </Col>
                     </Row>
                 </Col>
-                
+
                 {
                     this.state.segmentNumber !== null ?
                         <AddSegmentModal visibility={true} number={this.state.segmentNumber} onClose={this.onCloseAddSegmentModal} />
                         : null
                 }
-                
+
                 {
-                    this.state.item !== null ? 
+                    this.state.item !== null ?
                         <EditSegmentModal visibility={true} item={this.state.item} businessPlanId={this.props.businessPlan.id} onClose={this.onCloseEditSegmentModal} />
                         : null
                 }
