@@ -4,6 +4,7 @@ import { Modal, Button, Form, Space, Select } from 'antd';
 import '../../../css/customModal.css';
 import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
 import { updateRevenue, getStreamTypes, getRevenues } from "../../../appStore/actions/revenueStreamActions";
+import { getCustomerSegments } from "../../../appStore/actions/customerSegmentAction";
 
 const { Option } = Select;
 
@@ -14,7 +15,8 @@ class EditSegmentModal extends Component {
             revenue: { id: this.props.item.stream_type_id, title: this.props.item.stream_type_name },
             price: { id: this.props.item.price_category_id, title: this.props.item.price_category_name },
             priceType: { id: this.props.item.price_type_id, title: this.props.item.price_type_name },
-            priceTypeError: ''
+            priceTypeError: '',
+            names: this.props.item.segments
         }
     }
 
@@ -44,12 +46,13 @@ class EditSegmentModal extends Component {
             "id": this.props.item.id,
             "business_plan_id": this.props.businessPlanId,
             "segment": this.props.number,
-            "stream_type_id": this.state.revenue.id,
-            "price_type_id": this.state.priceType.id
+            "stream_type_id": this.props.item.stream_type_id,
+            "price_type_id": this.state.priceType.id,
+            "segments": this.state.names
         };
 
         console.log('Price type id:' + this.state.priceType.id)
-        console.log('Revenue id:' + this.state.revenue.id)
+        console.log('Revenue id:' + this.props.item.stream_type_id)
         const reducerObj = {
             "id": this.props.item.id,
             "key": this.props.item.id,
@@ -59,13 +62,15 @@ class EditSegmentModal extends Component {
             "price_type_name": price.types.find(x => x.id === this.state.priceType.id).title,
             "stream_type_id": this.state.revenue.id,
             "stream_type_name": this.props.types.stream_types.find(x => x.id === this.state.revenue.id).title,
-            "segment": this.props.item.segment
+            "segment": this.props.item.segment,
+            "segments": this.state.names
         }
 
-        console.log('POST obj:' + JSON.stringify(postObj))
-        console.log('Reducer obj:' + JSON.stringify(reducerObj))
+        //console.log('POST obj:' + JSON.stringify(postObj))
+        const tt = price.types.find(x => x.id === this.state.priceType.id)
+        console.log(tt.title)
 
-        this.props.updateRevenue(postObj, reducerObj);
+        this.props.updateRevenue(postObj, reducerObj)
         this.props.onClose();
     }
 
@@ -99,6 +104,11 @@ class EditSegmentModal extends Component {
             priceType: obj
         });
     }
+    onNgoTypeChange(value) {
+        this.setState({
+            names: value
+        });
+    }
 
     componentDidMount() {
         this.props.getRevenues(this.props.businessPlanId);
@@ -107,7 +117,14 @@ class EditSegmentModal extends Component {
             revenue: { id: this.props.item.stream_type_id, title: this.props.item.stream_type_name },
             price: { id: this.props.item.price_category_id, title: this.props.item.price_category_name },
             priceType: { id: this.props.item.price_type_id, title: this.props.item.price_type_name },
+            //names: this.props.item.segments
         }, () => console.log('Revenue:' + JSON.stringify(this.state.revenue)))
+        console.log(this.props.item);
+
+        this.props.getCustomerSegments(this.props.businessPlan.id);
+        this.setState({
+            segment_name: this.props.customerSegments.consumers.filter((x, index) => x.segment_name != null)
+        }, () => console.log(this.state.segment_name))
     }
 
     render() {
@@ -123,6 +140,9 @@ class EditSegmentModal extends Component {
             this.props.types.prices.find(x => x.id === this.state.price.id).types.map((obj) =>
                 <Option key={obj.id} value={obj.id}>{obj.title}</Option>
             );
+        const consumersNames = this.props.customerSegments.consumers.map((obj) =>
+            <Option key={obj.id} value={obj.segment_name}>{obj.segment_name}</Option>
+        )
 
         return (
             <>
@@ -161,10 +181,15 @@ class EditSegmentModal extends Component {
 
                         <Form.Item key="type" name="type" label="Consumers"
                             validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
-                            <Select style={{ width: '100%' }} placeholder="Choose consumers" >
+                            <Select style={{ width: '100%' }} placeholder="Choose consumer"
+                                onChange={this.onNgoTypeChange.bind(this)}
+                                mode="multiple"
+                                defaultValue={this.state.names}
+                                value={this.state.names}
+                            >
+                                {consumersNames}
                             </Select>
                         </Form.Item>
-                        <Button style={{ margin: '15px', borderRadius: '5px' }} size="large"><PlusOutlined />Add Item</Button>
 
                     </Form>
                 </Modal >
@@ -176,9 +201,11 @@ class EditSegmentModal extends Component {
 const mapStateToProps = (state) => {
     return {
         revenues: state.revenues,
-        types: state.revenueTypes
+        types: state.revenueTypes,
+        customerSegments: state.customerSegments,
+        businessPlan: state.selectedBusinessPlan
     };
 }
 
-export default connect(mapStateToProps, { updateRevenue, getStreamTypes, getRevenues })(EditSegmentModal);
+export default connect(mapStateToProps, { updateRevenue, getStreamTypes, getRevenues, getCustomerSegments })(EditSegmentModal);
 

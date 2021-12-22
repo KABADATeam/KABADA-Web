@@ -139,7 +139,7 @@ class AddSegmentModal extends Component {
                 <Option key={obj.id} value={obj.id}>{obj.title}</Option>
             );
         const consumersNames = this.props.customerSegments.consumers.map((obj) =>
-            <Option key={obj.id} value={obj.segment_name}>{obj.segment_name}</Option>
+            <Option key={obj.segment_name} value={obj.segment_name}>{obj.segment_name}</Option>
         )
         return (
             <>
