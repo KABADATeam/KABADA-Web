@@ -27,7 +27,7 @@ class EditKeyPartnerModal extends Component {
             "name": this.state.companyName === '' ? this.props.item.name : this.state.companyName,
             "is_priority": priority === 1 ? false : true,
             "website": this.state.website === '' ? this.props.item.website : this.state.website,
-            "comment":  this.state.comment === '' ? this.props.item.comment : this.state.comment
+            "comment": this.state.comment === '' ? this.props.item.comment : this.state.comment
         }
 
         if (this.props.item.category === "distributor") {
@@ -85,7 +85,7 @@ class EditKeyPartnerModal extends Component {
                     }
                 >
                     <Form layout="vertical" id="myForm" name="myForm" onFinish={this.onOK}>
-                        <Form.Item key="name" name="name" label="Company Name" initialValue={this.props.item.name}
+                        <Form.Item key="name" name="name" label="Company Name1" initialValue={this.props.item.name}
                             rules={[
                                 {
                                     validator: async (_, value) => {
@@ -95,7 +95,9 @@ class EditKeyPartnerModal extends Component {
                                     },
                                 },
                             ]}>
-                            <Input size="large" style={inputStyle} value={this.state.companyName} onChange={this.onCompanyNameChange} />
+                            {this.props.item.type_title === 'Self distribution' ? <Input size="large" style={inputStyle} value={this.state.companyName} disabled onChange={this.onCompanyNameChange} /> :
+                                <Input size="large" style={inputStyle} value={this.state.companyName} onChange={this.onCompanyNameChange} />}
+
                         </Form.Item>
 
                         <Form.Item label="Is it Priority?" key="priority" name="priority" initialValue={this.props.item.is_priority === false ? 1 : 2}>
@@ -108,11 +110,15 @@ class EditKeyPartnerModal extends Component {
                         </Form.Item>
 
                         <Form.Item key="website" name="website" label="Company website (optional)" initialValue={this.props.item.website}>
-                            <Input size="large" style={inputStyle} onChange={this.onWebsiteChange} />
+                            {this.props.item.type_title === 'Self distribution' ? <Input size="large" style={inputStyle} disabled onChange={this.onWebsiteChange} /> :
+                                <Input size="large" style={inputStyle} onChange={this.onWebsiteChange} />}
+
                         </Form.Item>
 
                         <Form.Item key="comment" name="comment" label="Comment (optional)" initialValue={this.props.item.comment}>
-                            <Input size="large" style={inputStyle} onChange={this.onCommentChange} />
+                            {this.props.item.type_title === 'Self distribution' ? <Input size="large" disabled style={inputStyle} onChange={this.onCommentChange} /> :
+                                <Input size="large" style={inputStyle} onChange={this.onCommentChange} />}
+
                         </Form.Item>
                     </Form>
                 </Modal >
@@ -127,5 +133,5 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { updateDistributor, updateSupplier, updateOther  })(EditKeyPartnerModal);
+export default connect(mapStateToProps, { updateDistributor, updateSupplier, updateOther })(EditKeyPartnerModal);
 

@@ -59,7 +59,7 @@ class KeyPartnersModal extends Component {
                         renderItem={item => (
                             <List.Item
                                 key={item.type_id}
-                                extra={<Button type="text" onClick={this.onAddNewPartner.bind(this, item)}><RightOutlined /></Button>} >
+                                extra={<Button type="text" onClick={this.onAddNewPartner.bind(this, item)}>{item.title !== "Self distribution" && item.title !== "Highly diversified distributors" && <RightOutlined />}</Button>} >
 
                                 <List.Item.Meta onClick={this.onAddNewPartner.bind(this, item)} style={{ cursor: "pointer" }}
                                     title={item.title}
