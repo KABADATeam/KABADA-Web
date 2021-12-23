@@ -57,7 +57,7 @@ class RelationshipCategoriesModal extends Component {
                         renderItem={item => (
                             <List.Item
                                 key={item.key}
-                                extra={<Button type="text" onClick={this.addNewRelationship.bind(this, item)}><RightOutlined /></Button>} >
+                                extra={<Button type="text" onClick={this.addNewRelationship.bind(this, item)}>{item.title !== "Word of Mouth" && <RightOutlined />}</Button>} >
                                 <List.Item.Meta style={{ cursor: "pointer" }}
                                     onClick={this.addNewRelationship.bind(this, item)}
                                     title={item.title}

@@ -200,8 +200,16 @@ class CustomerRelationships extends React.Component {
                 width: '10%',
                 render: (value, row) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditHowToGetNew.bind(this, row)} >Edit</Button>
-                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteHowToGetNew.bind(this, row)} ><DeleteOutlined /></Button>
+                        {row.category.title === "Word of Mouth" ?
+                            <>
+                                <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteHowToGetNew.bind(this, row)} ><DeleteOutlined /></Button>
+                            </>
+                            :
+                            <>
+                                <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditHowToGetNew.bind(this, row)} >Edit</Button>
+                                <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteHowToGetNew.bind(this, row)} ><DeleteOutlined /></Button>
+                            </>
+                        }
                     </Space>
                 ),
             }
@@ -231,8 +239,14 @@ class CustomerRelationships extends React.Component {
                 width: '10%',
                 render: (value, row) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditHowToKeepExisting.bind(this, row)} >Edit</Button>
-                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteHowToKeepExisting.bind(this, row)} ><DeleteOutlined /></Button>
+                        {row.category.title === "Word of Mouth" ?
+                            <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteHowToKeepExisting.bind(this, row)} ><DeleteOutlined /></Button>
+                            :
+                            <>
+                                <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditHowToKeepExisting.bind(this, row)} >Edit</Button>
+                                <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteHowToKeepExisting.bind(this, row)} ><DeleteOutlined /></Button>
+                            </>
+                        }
                     </Space>
                 ),
             }
@@ -262,8 +276,14 @@ class CustomerRelationships extends React.Component {
                 width: '10%',
                 render: (value, row) => (
                     <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditHowToMakeSpend.bind(this, row)} >Edit</Button>
-                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteHowToMakeSpend.bind(this, row)} ><DeleteOutlined /></Button>
+                        {row.category.title === "Word of Mouth" ?
+                            <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteHowToMakeSpend.bind(this, row)} ><DeleteOutlined /></Button>
+                            :
+                            <>
+                                <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditHowToMakeSpend.bind(this, row)} >Edit</Button>
+
+                            </>
+                        }
                     </Space>
                 ),
             }
