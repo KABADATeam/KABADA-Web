@@ -166,7 +166,6 @@ class Overview extends React.Component {
         const overview = this.props.businessPlan.overview;
         console.log(overview);
         console.log(membersList);
-        console.log(this.props.downloadLoading);
         const exportAsMenu = (
             <Menu>
                 <Menu.Item key="1" onClick={this.downloadDOCFile}>
@@ -429,7 +428,7 @@ class Overview extends React.Component {
                                                 <List.Item actions={[<Button type="link" onClick={this.onDeleteMember.bind(this, item)}><DeleteOutlined /></Button>]}>
                                                     <List.Item.Meta
                                                         avatar={<Avatar size="small" icon={<UserOutlined />} src={item.photo ? "data:image/png;base64," + item.photo : ""} />}
-                                                        title={item.name && item.surname !== '' ? item.name + " " + item.surname : this.getuseremail()}
+                                                        title={item.name && item.surname !== '' ? item.name + " " + item.surname : item.email}
 
                                                     />
 
