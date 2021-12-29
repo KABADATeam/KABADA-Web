@@ -125,7 +125,8 @@ class AddSegmentModal extends Component {
         });
     }
     render() {
-        const additionalTitle = this.props.number === 3 ? '(other)' : '(segment ' + this.props.number + ')';
+        const additionalTitle = this.props.number === 3 ? 'Public bodies & NGO' : this.props.number === 2 ? 'Business' : 'Consumers';
+
         const streamOptions = this.props.types.stream_types.map((obj) =>
             <Option key={obj.id} value={obj.id}>{obj.title}</Option>
         );
@@ -187,14 +188,14 @@ class AddSegmentModal extends Component {
                         </Form.Item>
 
 
-                        <Form.Item key="names" name="names" label="Consumers"
+                        <Form.Item key="names" name="names" label={additionalTitle}
                         //validateStatus={this.state.segment_name !== null ? 'error' : 'success'}
                         >
                             <Select style={{ width: '100%' }}
                                 placeholder="Choose consumer"
                                 mode="multiple"
                                 onChange={this.onNgoTypeChange.bind(this)} >
-                                {additionalTitle === "(segment 1)" ? consumersNames : additionalTitle === "(segment 2)" ? businessNames : additionalTitle === "(other)" && publicsNames}
+                                {additionalTitle === "Consumers" ? consumersNames : additionalTitle === "Business" ? businessNames : additionalTitle === "Public bodies & NGO" && publicsNames}
                             </Select>
                         </Form.Item>
                     </Form>
