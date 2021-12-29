@@ -111,15 +111,17 @@ export const businessStartUpInvestmentReducer = (
                 grace_period_short: action.payload.grace_period_short === null ? 0 : action.payload.grace_period_short,
                 working_capital: action.payload.working_capital
             }
+            const cloneObject = JSON.parse(JSON.stringify(obj));
+            const originalObject = JSON.parse(JSON.stringify(temporary_obj));
             return {
                 ...state,
                 is_business_investments_completed: action.payload.is_business_investments_completed,
                 total_investments: action.payload.total_investments,
                 own_assets: action.payload.own_assets,
                 investment_amount: action.payload.investment_amount,
-                original: obj,
-                updates: obj,
-                temporary: temporary_obj,
+                original: cloneObject,
+                updates: cloneObject,
+                temporary: originalObject,
             }
         case 'RESET_INVESTMENT_SUCCESS':
             return {

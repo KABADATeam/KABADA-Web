@@ -50,7 +50,7 @@ class BusinessStartUpInvestments extends React.Component {
     
     render() {
         const gracePeriodSelectionArray = []
-        for (let i = 0; i < (this.props.data.original.period - 5); i++) {
+        for (let i = 0; i < (this.props.investments.original.period - 5); i++) {
             gracePeriodSelectionArray[i] = {
                 value: i,
                 label: i + ' mo.'
@@ -61,19 +61,19 @@ class BusinessStartUpInvestments extends React.Component {
         ))
         const loanLongDataSource = [
             {
-                loan_amount: this.props.data.updates.loan_amount === null ? this.props.data.investment_amount: this.props.data.updates.loan_amount ,
-                payment_period: this.props.data.original.payment_period,
-                interest_rate: this.props.data.original.interest_rate,
-                grace_period: this.props.data.original.grace_period,
+                loan_amount: this.props.investments.updates.loan_amount === null ? this.props.investments.investment_amount: this.props.investments.updates.loan_amount ,
+                payment_period: this.props.investments.original.payment_period,
+                interest_rate: this.props.investments.original.interest_rate,
+                grace_period: this.props.investments.original.grace_period,
             },
         ]
 
         const loanShortDataSource = [
             {
-                loan_amount_short: this.props.data.updates.loan_amount_short,
-                payment_period_short: this.props.data.updates.payment_period_short,
-                interest_rate_short: this.props.data.updates.interest_rate_short,
-                grace_period_short: this.props.data.updates.grace_period_short,
+                loan_amount_short: this.props.investments.updates.loan_amount_short,
+                payment_period_short: this.props.investments.updates.payment_period_short,
+                interest_rate_short: this.props.investments.updates.interest_rate_short,
+                grace_period_short: this.props.investments.updates.grace_period_short,
             },
         ]
 
@@ -123,7 +123,7 @@ class BusinessStartUpInvestments extends React.Component {
                 render: (text, obj, record) => (
                     <InputNumber
                         size="large"
-                        defaultValue={this.props.data.original.interest_rate === null ? 0 + ' %' : this.props.data.original.interest_rate + ' %'}
+                        defaultValue={this.props.investments.original.interest_rate === null ? 0 + ' %' : this.props.investments.original.interest_rate + ' %'}
                         formatter={value => `${value} %`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                         onChange={e => this.props.changeInterestRate(e)}
                     />
@@ -135,7 +135,7 @@ class BusinessStartUpInvestments extends React.Component {
                 key: 'grace_period',
                 width: '20%',
                 render: (text, obj, record) => (
-                    <Select defaultValue={this.props.data.original.grace_period === null ? 0 : this.props.data.original.grace_period}
+                    <Select defaultValue={this.props.investments.original.grace_period === null ? 0 : this.props.investments.original.grace_period}
                         suffixIcon={<CaretDownFilled />}
                         onChange={e => this.props.changeGracePeriod(e)}
                     >
@@ -197,7 +197,7 @@ class BusinessStartUpInvestments extends React.Component {
                 render: (text, obj, record) => (
                     <InputNumber
                         size="large"
-                        defaultValue={this.props.data.original.interest_rate_short === null ? 0 + ' %' : this.props.data.original.interest_rate_short + ' %'}
+                        defaultValue={this.props.investments.original.interest_rate_short === null ? 0 + ' %' : this.props.investments.original.interest_rate_short + ' %'}
                         formatter={value => `${value} %`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                         onChange={e => this.props.changeInterestRateShort(e)}
                     />
@@ -209,7 +209,7 @@ class BusinessStartUpInvestments extends React.Component {
                 key: 'grace_period',
                 width: '20%',
                 render: (text, obj, record) => (
-                    <Select defaultValue={this.props.data.original.grace_period_short === null ? 0 : this.props.data.original.grace_period_short}
+                    <Select defaultValue={this.props.investments.original.grace_period_short === null ? 0 : this.props.investments.original.grace_period_short}
                         suffixIcon={<CaretDownFilled />}
                         onChange={e => this.props.changeGracePeriodShort(e)}
                     >

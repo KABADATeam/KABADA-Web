@@ -50,13 +50,6 @@ const titleButtonStyle = {
 
 class BusinessInvestmentsWindow extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            visibleHeader: this.props.investments.visibility
-        }
-    }
-
     onBackClick() {
         this.props.history.push(`/overview`);
     }
@@ -159,10 +152,10 @@ class BusinessInvestmentsWindow extends React.Component {
                 <Col span={16} offset={4}>
                     <Tabs defaultActiveKey="1"  >
                         <TabPane tab="Working capital" key="1">
-                            <WorkingCapital data={this.props.investments} totalNecessary={this.props.totalNecessary} updateWindowState={this.getUpdatesWindowState.bind(this)} />
+                            <WorkingCapital/>
                         </TabPane>
                         <TabPane tab="Business Financing" key="2">
-                            <BusinessFinancing data={this.props.investments} />
+                            <BusinessFinancing/>
                         </TabPane>
                     </Tabs>
                 </Col>

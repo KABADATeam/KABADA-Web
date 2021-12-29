@@ -4,7 +4,7 @@ import { Divider, Row, Col, Typography, Card, Select, Input, Table, Tooltip, Spa
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
 import { connect } from 'react-redux';
 import { changeVisibility, changePeriod, changeVatPrayer, changeOwnMoney, changeWorkingCapitalAmount, changeOwnMoneyShort, changeWorkingCapital } from "../../../appStore/actions/businessInvestmentAction";
-import { CaretDownFilled, UserOutlined, InfoCircleFilled, ImportOutlined } from '@ant-design/icons';
+import { CaretDownFilled } from '@ant-design/icons';
 import WorkingCapitalScenario1 from './WorkingCapitalScenario1';
 import WorkingCapitalScenario2 from './WorkingCapitalScenario2';
 
@@ -45,153 +45,12 @@ const titleButtonStyle = {
 }
 
 class WorkingCapital extends React.Component {
-    state = {
-        working_capital_for_table: [], //used in table
-    }
 
-    setWorkingCapital = (data) => {
-        const newMonthsArray = []
-        if (data.original.grace_period_short === null) {
-            const objUnique = {
-                month: 'Startup',
-                own_amount: data.updates.own_money_short,
-                loan_amount: data.updates.loan_amount_short,
-                total_necessary: null,
-            }
-            newMonthsArray.push(objUnique);
-        } else if (data.original.grace_period_short === 0) {
-            const objUnique = {
-                month: 'Startup',
-                own_amount: data.updates.own_money_short,
-                loan_amount: data.updates.loan_amount_short,
-                total_necessary: null,
-            }
-            newMonthsArray.push(objUnique);
-        } else if (data.original.grace_period_short > 0 && data.original.working_capital === null) {
-            const objUnique = {
-                month: 'Startup',
-                own_amount: data.original.own_money_short,
-                loan_amount: data.original.loan_amount_short,
-                total_necessary: null,
-            }
-            newMonthsArray.push(objUnique)
-            for (var i = 1; i < data.grace_period_short + 1; i++) {
-                const monthRow = {
-                    month: i,
-                    own_amount: null,
-                    loan_amount: null,
-                    total_necessary: this.props.totalNecessary.necessaryCapital[i] === null ? null : this.props.totalNecessary.necessaryCapital[i],
-                }
-                console.log(monthRow);
-                newMonthsArray.push(monthRow)
-            }
-            console.log(newMonthsArray);
-        } else if (data.grace_period_short > 0 && data.working_capital.length === null) {
-            const objUnique = {
-                month: 'Startup',
-                own_amount: data.own_money_short,
-                loan_amount: data.loan_amount_short
-            }
-            newMonthsArray.push(objUnique)
-            console.log(newMonthsArray);
-            for (var i = 1; i < data.grace_period_short + 1; i++) {
-                const monthRow = {
-                    month: i,
-                    own_amount: null,
-                    loan_amount: null,
-                    total_necessary: this.props.totalNecessary.necessaryCapital[i]
-                }
-                newMonthsArray.push(monthRow)
-            }
-            console.log(newMonthsArray);
-        }
-        this.setState({
-            working_capital_for_table: newMonthsArray
-        })
-    }
-    componentDidMount() {
-        this.setWorkingCapital(this.props.data);
-    }
+
     render() {
-        const workingCapitalColumnsV2 = [
-            {
-                title: 'Month',
-                dataIndex: 'month',
-                key: 'month',
-                width: '32.5%',
-                render: (text, obj, record) => (
-                    record === 0 ? <Text>Startup</Text> : <Text>{text} month</Text>
-                )
-            },
-            {
-                title: () => (
-                    <Space>
-                        <Text>My money</Text>
-                        <Tooltip title="Tooltip text">
-                            <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF' }} />
-                        </Tooltip>
-                    </Space>
-                ),
-                dataIndex: 'own_amount',
-                key: 'own_amount',
-                width: '20%',
-                align: 'center',
-                render: (text, obj, record) => (
-                    <div style={{ float: 'right' }}>
-                        <Input style={{ width: 103 }}
-                            prefix="€"
-                            size="large"
-                            defaultValue={text === null ? '' : text}
-                            onChange={e => this.props.changeOwnMoneyShort(e.target.value)}
-                        />
-                    </div>
-
-                )
-            },
-            {
-                title: () => (
-                    <Space>
-                        <Text>Loan Amount</Text>
-                        <Tooltip title="Tooltip text">
-                            <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF' }} />
-                        </Tooltip>
-                    </Space>
-                ),
-                dataIndex: 'loan_amount',
-                key: 'loan_amount',
-                width: '22.5%',
-                align: 'right',
-                render: (text, obj, record) => (
-                    record === 0 ? <Text>{text}</Text> :
-                        <div style={{ float: 'right' }}>
-                            <Input style={{ width: 103 }}
-                                prefix="€"
-                                size="large"
-                                defaultValue={text === null ? '' : text}
-                                onChange={e => this.updateWorkingItemsProperties(e.target.value, 'loan_amount', record)}
-                            />
-                        </div>
-                )
-            },
-
-            {
-                title: () => (
-                    <Space>
-                        <Text>Total Necessary</Text>
-                        <Tooltip title="Tooltip text">
-                            <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF' }} />
-                        </Tooltip>
-                    </Space>
-                ),
-                dataIndex: 'total_necessary',
-                key: 'total_necessary',
-                width: '25%',
-                align: 'right',
-                render: (text, obj, record) => (
-                    text === null ? <Text style={{ color: '#CF1322' }}>-</Text> : <Text style={{ color: '#CF1322' }}>{text}</Text>
-                )
-            },
-        ];
+        console.log(this.props.investments);
+        const periodDefaultValue = this.props.investments.original.period === null ? 12 : this.props.investments.original.period;
+        console.log(periodDefaultValue);
         return (
             <>
                 <Col span={24} >
@@ -215,7 +74,7 @@ class WorkingCapital extends React.Component {
                                         </Col>
                                         <Col span={12}>
                                             <div style={{ float: "right", marginTop: 16, marginRight: 16 }}>
-                                                <Select defaultValue={this.props.investments.original.period === null ? 12 : this.props.investments.original.period} suffixIcon={<CaretDownFilled />} size='default' onSelect={value => this.props.changePeriod(value)}>
+                                                <Select defaultValue={periodDefaultValue} suffixIcon={<CaretDownFilled />} size='default' onSelect={value => this.props.changePeriod(value)}>
                                                     <Option value={12}>12 mo.</Option>
                                                     <Option value={24}>24 mo.</Option>
                                                 </Select>

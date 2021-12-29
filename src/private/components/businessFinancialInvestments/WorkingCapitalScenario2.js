@@ -34,7 +34,6 @@ class WorkingCapitalScenario2 extends React.Component {
                     loan_amount: null,
                     total_necessary: this.props.totalNecessary.necessaryCapital[i]
                 }
-                console.log(monthRow)
                 newMonthsArray.push(monthRow)
             }
         } else if(data.original.grace_period_short > 0 && data.original.working_capital !== null) {
@@ -52,7 +51,6 @@ class WorkingCapitalScenario2 extends React.Component {
                     loan_amount: data.original.working_capital[i-1].loan_amount,
                     total_necessary: this.props.totalNecessary.necessaryCapital === null ? null : this.props.totalNecessary.necessaryCapital[i]
                 }
-                console.log(monthRow)
                 newMonthsArray.push(monthRow)
             }
         }
@@ -93,7 +91,8 @@ class WorkingCapitalScenario2 extends React.Component {
                 key: 'own_amount',
                 width: '20%',
                 align: 'center',
-                render: (text, obj, record) => (
+                render: (text, obj, record) => 
+                (
                     record === 0 ?
                         <div style={{ float: 'right' }}>
                             <Input style={{ width: 103 }}
