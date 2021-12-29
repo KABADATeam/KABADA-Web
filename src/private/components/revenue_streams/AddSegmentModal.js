@@ -141,6 +141,14 @@ class AddSegmentModal extends Component {
         const consumersNames = this.props.customerSegments.consumers.map((obj) =>
             <Option key={obj.segment_name} value={obj.segment_name}>{obj.segment_name}</Option>
         )
+
+        const businessNames = this.props.customerSegments.business.map((obj) =>
+            <Option key={obj.segment_name} value={obj.segment_name}>{obj.segment_name}</Option>
+        )
+
+        const publicsNames = this.props.customerSegments.public_bodies_ngo.map((obj) =>
+            <Option key={obj.segment_name} value={obj.segment_name}>{obj.segment_name}</Option>
+        )
         return (
             <>
                 <Modal
@@ -186,7 +194,7 @@ class AddSegmentModal extends Component {
                                 placeholder="Choose consumer"
                                 mode="multiple"
                                 onChange={this.onNgoTypeChange.bind(this)} >
-                                {consumersNames}
+                                {additionalTitle === "(segment 1)" ? consumersNames : additionalTitle === "(segment 2)" ? businessNames : additionalTitle === "(other)" && publicsNames}
                             </Select>
                         </Form.Item>
                     </Form>
