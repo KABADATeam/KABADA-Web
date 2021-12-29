@@ -44,7 +44,6 @@ export const getNace = () => {
         dispatch({ type: 'LOADING', payload: true });
         try {
             const response = await kabadaAPI.get('/api/nace/wood');
-            console.log("nace {0}", response.data)
             dispatch({ type: 'FETCHING_NACE_SUCCESS', payload: response.data });
         } catch (error) {
             if (error.response === undefined) {

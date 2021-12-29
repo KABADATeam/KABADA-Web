@@ -31,7 +31,6 @@ export const privatePlansReducer = (state = [], action) => {
         case 'SAVING_PLAN_SUCCESS':
             return [...state, action.payload];
         case 'FETCHING_IMAGE_SUCCESS':
-            console.log(action.payload)
             const plan_ = state.filter(x => x.id === action.payload.id)[0];
             return state.map(x => x.id === action.payload.id ? { ...plan_, "coverImage": action.payload.coverImage } : x);
         case "REMOVING_PLAN_SUCCESS":
@@ -61,7 +60,6 @@ export const selectedplanFetchReducer = (state = {
     }, action) => {
     switch (action.type) {
         case "FETCHING_SELECTED_PLAN_SUCCESS":
-            console.log(action.payload);
             return {...state, 
                 "id": action.payload.id, 
                 "name": action.payload.name, 
