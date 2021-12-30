@@ -64,7 +64,7 @@ class AssetsWindow extends React.Component {
             return 'visible'
         }
     }
-    
+
     onCompletedChange(state) {
         this.props.saveState(this.props.businessPlan.id, state, () => {
             this.props.getSelectedPlanOverview(this.props.businessPlan.id);
@@ -86,7 +86,6 @@ class AssetsWindow extends React.Component {
                 this.props.refreshPlan(localStorage.getItem("plan"), () => {
                     const obj = { id: this.props.businessPlan.id }
                     this.props.getCountryShortCode(obj, (data) => {
-                        console.log(this.props.countryCode.countryShortCode)
                         this.props.getCountryVats(this.props.countryCode.countryShortCode);
                     });
                     this.props.getAssets(this.props.businessPlan.id);
@@ -97,7 +96,6 @@ class AssetsWindow extends React.Component {
         } else {
             const obj = { id: this.props.businessPlan.id }
             this.props.getCountryShortCode(obj, (data) => {
-                console.log(this.props.countryCode.countryShortCode)
                 this.props.getCountryVats(this.props.countryCode.countryShortCode);
             });
             this.props.getAssets(this.props.businessPlan.id)
@@ -108,7 +106,7 @@ class AssetsWindow extends React.Component {
         const data = this.props.assets.physical_assets;
         const isVisibleHeader = this.getUpdatesWindowState();
         const vatOptions = this.props.vat.vat.map((v, index) => (
-            <Option value={v.vatValue}>{v.vatValue + "%"}</Option>
+            <Option value={v.vatValue} key={index}>{v.vatValue + "%"}</Option>
         ))
         const assetsColumns = [
             {
@@ -185,104 +183,110 @@ class AssetsWindow extends React.Component {
                     discardChanges={this.discardChanges}
                     saveChanges={this.saveChanges}
                 />
-                <Col span={16} offset={4}>
-                    <Breadcrumb style={{ marginTop: "40px" }}>
-                        <Breadcrumb.Item>
-                            <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Item>
-                            <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Item>
-                            Financial projections
-                        </Breadcrumb.Item>
-                    </Breadcrumb>
-                </Col>
+                {this.props.vat.defaultVAT === null ?
+                    <div></div>
+                    :
+                    <div>
+                        <Col span={16} offset={4}>
+                            <Breadcrumb style={{ marginTop: "40px" }}>
+                                <Breadcrumb.Item>
+                                    <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
+                                </Breadcrumb.Item>
+                                <Breadcrumb.Item>
+                                    <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
+                                </Breadcrumb.Item>
+                                <Breadcrumb.Item>
+                                    Financial projections
+                                </Breadcrumb.Item>
+                            </Breadcrumb>
+                        </Col>
 
-                <Row align="middle" style={{ marginTop: "9px", marginBottom: "25px" }}>
-                    <Col span={12} offset={4}>
-                        <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
-                            <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
-                            <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Assets</Text>
-                        </div>
-                    </Col>
-                    <Col span={4}>
-                        <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.assets.is_assets_completed} onClick={this.onCompletedChange.bind(this)} />
-                        </div>
-                    </Col>
-                </Row>
-                <Col span={16} offset={4}>
-                    <Col span={24} >
-                        <Row style={{ marginBottom: "50px" }}>
-                            <Col span={8}>
-                                <div style={{ marginRight: '40px' }}>
-                                    <Typography.Title style={{ ...aboutTitleTextStyle }}>Assets</Typography.Title>
-                                    <Typography.Text style={{ ...textStyle }}>
-                                        Explanation … Before you start selling your product or service, you need to  understand what investments are needed to start your business. Bellow in this section are most  usuall investment categories for start-up business
-                                    </Typography.Text>
+                        <Row align="middle" style={{ marginTop: "9px", marginBottom: "25px" }}>
+                            <Col span={12} offset={4}>
+                                <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
+                                    <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
+                                    <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Assets</Text>
                                 </div>
                             </Col>
-                            <Col span={16}>
-                                <div>
-                                    <Table
-                                        title={() => (
-                                            <div>
-                                                <Row>
-                                                    <div>
-                                                        <Text style={{ ...titleTextStyle }}>Physical and Intellectual assets</Text>
-                                                    </div>
-                                                </Row>
-                                            </div>
-                                        )}
-                                        rowKey="resource_id"
-                                        dataSource={[...this.props.assets.physical_assets]}
-                                        columns={assetsColumns}
-                                        pagination={false}
-                                        footer={() => (
-                                            <>
-                                                <div style={{ marginTop: 16, marginBottom: 16 }}>
-                                                    <Row style={{ marginBottom: 8 }}>
-
-                                                        <Col span={16}>
-                                                            <Text>Investments</Text>
-                                                        </Col>
-                                                        <Col span={8}>
-                                                            <div style={{ float: 'right' }}>
-                                                                <Text>{this.props.assets.total_investments === null ? 0 : this.props.assets.total_investments}</Text>
-                                                            </div>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row style={{ marginBottom: 8 }}>
-                                                        <Col span={16}>
-                                                            <Text>Own Assets (physical & intellectual)</Text>
-                                                        </Col>
-                                                        <Col span={8}>
-                                                            <div style={{ float: 'right' }}>
-                                                                <Text>{this.props.assets.own_assets === null ? 0 : this.props.assets.own_assets}</Text>
-                                                            </div>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row style={{ marginBottom: 8 }}>
-                                                        <Col span={16}>
-                                                            <Text>Additional necessary funds for investments in assets</Text>
-                                                        </Col>
-                                                        <Col span={8}>
-                                                            <div style={{ float: 'right' }}>
-                                                                <Text>{this.props.assets.investment_amount === null ? 0 : this.props.assets.investment_amount}</Text>
-                                                            </div>
-                                                        </Col>
-                                                    </Row>
-                                                </div>
-                                            </>
-                                        )
-                                        }
-                                    />
+                            <Col span={4}>
+                                <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
+                                    <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.assets.is_assets_completed} onClick={this.onCompletedChange.bind(this)} />
                                 </div>
                             </Col>
                         </Row>
-                    </Col>
-                </Col>
+                        <Col span={16} offset={4}>
+                            <Col span={24} >
+                                <Row style={{ marginBottom: "50px" }}>
+                                    <Col span={8}>
+                                        <div style={{ marginRight: '40px' }}>
+                                            <Typography.Title style={{ ...aboutTitleTextStyle }}>Assets</Typography.Title>
+                                            <Typography.Text style={{ ...textStyle }}>
+                                                Explanation … Before you start selling your product or service, you need to  understand what investments are needed to start your business. Bellow in this section are most  usuall investment categories for start-up business
+                                            </Typography.Text>
+                                        </div>
+                                    </Col>
+                                    <Col span={16}>
+                                        <div>
+                                            <Table
+                                                title={() => (
+                                                    <div>
+                                                        <Row>
+                                                            <div>
+                                                                <Text style={{ ...titleTextStyle }}>Physical and Intellectual assets</Text>
+                                                            </div>
+                                                        </Row>
+                                                    </div>
+                                                )}
+                                                rowKey="resource_id"
+                                                dataSource={[...this.props.assets.physical_assets]}
+                                                columns={assetsColumns}
+                                                pagination={false}
+                                                footer={() => (
+                                                    <>
+                                                        <div style={{ marginTop: 16, marginBottom: 16 }}>
+                                                            <Row style={{ marginBottom: 8 }}>
+
+                                                                <Col span={16}>
+                                                                    <Text>Investments</Text>
+                                                                </Col>
+                                                                <Col span={8}>
+                                                                    <div style={{ float: 'right' }}>
+                                                                        <Text>{this.props.assets.total_investments === null ? 0 : this.props.assets.total_investments}</Text>
+                                                                    </div>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row style={{ marginBottom: 8 }}>
+                                                                <Col span={16}>
+                                                                    <Text>Own Assets (physical & intellectual)</Text>
+                                                                </Col>
+                                                                <Col span={8}>
+                                                                    <div style={{ float: 'right' }}>
+                                                                        <Text>{this.props.assets.own_assets === null ? 0 : this.props.assets.own_assets}</Text>
+                                                                    </div>
+                                                                </Col>
+                                                            </Row>
+                                                            <Row style={{ marginBottom: 8 }}>
+                                                                <Col span={16}>
+                                                                    <Text>Additional necessary funds for investments in assets</Text>
+                                                                </Col>
+                                                                <Col span={8}>
+                                                                    <div style={{ float: 'right' }}>
+                                                                        <Text>{this.props.assets.investment_amount === null ? 0 : this.props.assets.investment_amount}</Text>
+                                                                    </div>
+                                                                </Col>
+                                                            </Row>
+                                                        </div>
+                                                    </>
+                                                )
+                                                }
+                                            />
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </Col>
+                        </Col>
+                    </div>
+                }
             </>
         );
     }
