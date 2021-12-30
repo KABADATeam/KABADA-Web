@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Divider, Row, Col, Typography, Card, Select, Input, Table, Tooltip, Space } from 'antd';
-import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
+import { Divider, Row, Col, Typography, Card, Select, Input} from 'antd';
+import { tableCardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
 import { connect } from 'react-redux';
 import { changeVisibility, changePeriod, changeVatPrayer, changeOwnMoney, changeWorkingCapitalAmount, changeOwnMoneyShort, changeWorkingCapital } from "../../../appStore/actions/businessInvestmentAction";
 import { CaretDownFilled } from '@ant-design/icons';
@@ -34,25 +34,15 @@ const textStyle = {
     marginRight: '40px',
 }
 
-const titleButtonStyle = {
-    width: "40px",
-    height: "40px",
-    border: "1px solid #BFBFBF",
-    boxSizing: "border-box",
-    filter: "drop-shadow(0px 1px 0px rgba(0, 0, 0, 0.05))",
-    borderRadius: "4px",
-    backgroundColor: "transparent",
-}
-
 class WorkingCapital extends React.Component {
 
-
     render() {
-        console.log(this.props.investments);
         const periodDefaultValue = this.props.investments.original.period === null ? 12 : this.props.investments.original.period;
-        console.log(periodDefaultValue);
         return (
-            <>
+            <>  {
+                periodDefaultValue === undefined ?
+                <div></div>
+                :
                 <Col span={24} >
                     <Row style={{ marginBottom: "50px" }}>
                         <Col span={8}>
@@ -185,7 +175,7 @@ class WorkingCapital extends React.Component {
                         </Col>
                     </Row>
                 </Col>
-
+    }
             </>
         );
     }

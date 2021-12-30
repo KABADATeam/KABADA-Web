@@ -47,7 +47,7 @@ const loanAmountText = {
 }
 
 class BusinessStartUpInvestments extends React.Component {
-    
+
     render() {
         const gracePeriodSelectionArray = []
         for (let i = 0; i < (this.props.investments.original.period - 5); i++) {
@@ -61,7 +61,7 @@ class BusinessStartUpInvestments extends React.Component {
         ))
         const loanLongDataSource = [
             {
-                loan_amount: this.props.investments.updates.loan_amount === null ? this.props.investments.investment_amount: this.props.investments.updates.loan_amount ,
+                loan_amount: this.props.investments.updates.loan_amount === null ? this.props.investments.investment_amount : this.props.investments.updates.loan_amount,
                 payment_period: this.props.investments.original.payment_period,
                 interest_rate: this.props.investments.original.interest_rate,
                 grace_period: this.props.investments.original.grace_period,
@@ -231,30 +231,37 @@ class BusinessStartUpInvestments extends React.Component {
                             </div>
                         </Col>
                         <Col span={16}>
-
-                            <div style={{ marginTop: 24 }}>
-                                <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                    <div style={{ marginTop: 20, marginLeft: 16, marginBottom: 20 }}>
-                                        <Text style={{ ...titleTextStyle }}>Loan (Long term)</Text>
-                                    </div>
-                                    <Table
-                                        dataSource={loanLongDataSource}
-                                        columns={loanLongTermColumn}
-                                        pagination={false}
-                                    />
-                                </Card >
+                            <div>
+                                <Table
+                                    title={() => (
+                                        <div>
+                                            <Row>
+                                                <div>
+                                                    <Text>Loan (Long term)</Text>
+                                                </div>
+                                            </Row>
+                                        </div>
+                                    )}
+                                    dataSource={loanLongDataSource}
+                                    columns={loanLongTermColumn}
+                                    pagination={false}
+                                />
                             </div>
                             <div style={{ marginTop: 24 }}>
-                                <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                    <div style={{ marginTop: 20, marginLeft: 16, marginBottom: 20 }}>
-                                        <Text style={{ ...titleTextStyle }}>Loan (Short term)</Text>
-                                    </div>
-                                    <Table
-                                        dataSource={loanShortDataSource}
-                                        columns={loanShortTermColumn}
-                                        pagination={false}
-                                    />
-                                </Card >
+                                <Table
+                                    title={() => (
+                                        <div>
+                                            <Row>
+                                                <div>
+                                                    <Text>Loan (Short term)</Text>
+                                                </div>
+                                            </Row>
+                                        </div>
+                                    )}
+                                    dataSource={loanShortDataSource}
+                                    columns={loanShortTermColumn}
+                                    pagination={false}
+                                />
                             </div>
                         </Col>
                     </Row>
@@ -272,4 +279,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, {changeVisibility, changePaymentPeriod, changePaymentPeriodShort, changeInterestRate, changeInterestRateShort, changeGracePeriod, changeGracePeriodShort})(BusinessStartUpInvestments);
+export default connect(mapStateToProps, { changeVisibility, changePaymentPeriod, changePaymentPeriodShort, changeInterestRate, changeInterestRateShort, changeGracePeriod, changeGracePeriodShort })(BusinessStartUpInvestments);
