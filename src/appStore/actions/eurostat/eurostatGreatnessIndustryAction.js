@@ -4,19 +4,16 @@ import { dataSetGreatnessIndustry } from './dataSetsGreatnessIndustry';
 export const getGreatnessIndustry = () => {
     return async(dispatch, getState) => {
         dispatch({ type: 'RESET_GREATNESS_DATA', payload: null });
-        dispatch({ type: 'RESET_LOADING' });
         const nace_code = getState().selectedBusinessPlan.overview.nace.activity_code;
         const geo = getState().selectedBusinessPlan.countryShortCode;
         const geoTitle = getState().selectedBusinessPlan.countryTitle;
         const split_nace_code = nace_code.split('.');
         const industry = split_nace_code[0];
         const activityCode = industry.concat('', split_nace_code[1]);
-        
         console.log(dataSetGreatnessIndustry[industry]);
-        if (dataSetGreatnessIndustry[industry] === undefined){
-            return 
-        } else {
-            let queryData = dataSetGreatnessIndustry[industry].dataSets;
+        try {
+            if (dataSetGreatnessIndustry[industry] !== undefined) {
+                let queryData = dataSetGreatnessIndustry[industry].dataSets;
             if (queryData[0].industries.includes(activityCode)) {
                 const tableCode = queryData[0].tableCode;
                 for (var variable of queryData[0].variables) {
@@ -29,10 +26,14 @@ export const getGreatnessIndustry = () => {
                     } catch (error){
                         //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                     }
-                }
-                dispatch({ type: 'GREATNESS_INDUSTRY_LOADING', payload: true})    
+                }    
             }
-        }
-        
+            dispatch({ type: 'GREATNESS_INDUSTRY_LOADING', payload: true})
+            } throw "Don't find industry in dataset"
+        } catch(err) {
+            console.log(err);
+            console.log('greatness')
+            dispatch({ type: 'GREATNESS_INDUSTRY_ERROR', payload: { state: true, error: 'No data' }})
+        }        
     }
 }

@@ -4,16 +4,17 @@ import { dataSetCostsProductivity } from './dataSetsCostsProductivity';
 export const getCostsProductivity = () => {
     return async(dispatch, getState) => {
         dispatch({ type: 'RESET_COSTS_PRODUCTIVITY_DATA', payload: null });
-        dispatch({ type: 'RESET_LOADING' });
         const nace_code = getState().selectedBusinessPlan.overview.nace.activity_code;
         const geo = getState().selectedBusinessPlan.countryShortCode;
         const geoTitle = getState().selectedBusinessPlan.countryTitle;
         const split_nace_code = nace_code.split('.');
         const industry = split_nace_code[0];
         const activityCode = industry.concat('', split_nace_code[1]);
-        
+        const test = dataSetCostsProductivity[industry];
+        console.log(test);
         if (dataSetCostsProductivity[industry] === undefined){
-            return 
+            console.log('productivity')
+            dispatch({ type: 'COSTS_PRODUCTIVITY_INDUSTRY_LOADING', payload: true})
         } else {
             let queryData = dataSetCostsProductivity[industry].dataSets;
             if (queryData[0].industries.includes(activityCode)) {
@@ -30,7 +31,7 @@ export const getCostsProductivity = () => {
                     }
                 }    
             }
+            dispatch({ type: 'COSTS_PRODUCTIVITY_INDUSTRY_LOADING', payload: true});
         }
-        dispatch({ type: 'COSTS_PRODUCTIVITY_INDUSTRY_LOADING', payload: true});
     }
 }

@@ -115,16 +115,23 @@ class IndustryDataComponent extends PureComponent {
         }
         pdf.save('Print.pdf')    
     }
-    componentDidMount() {
+    getChartsData () {
         this.props.getSurvivalRate();
         this.props.getGreatnessIndustry();
         this.props.getCostsProductivity();
         this.props.getCompanySize();
     }
+    componentDidMount() {
+        this.getChartsData();
+    }
     render() {
         console.log(this.props.loading);
         const spinner = this.props.loading.survival_rate === true && this.props.loading.greatness_industry === true && this.props.loading.costs_productivity === true && this.props.loading.company_size === true ? true : false;
-        console.log(spinner);
+        //const spinnerTest = true;
+        console.log(this.props.survival.survival_rate_data);
+        const defaultEmptyText = {
+            emptyText: 'Not all the data could be taken from the Eurostat'
+        }
         return (
             <>
                 {spinner === false ?
@@ -153,6 +160,7 @@ class IndustryDataComponent extends PureComponent {
                                         grid={{ gutter: 16 }}
                                         dataSource={this.props.survival.survival_rate_data}
                                         itemLayout='vertical'
+                                        locale={defaultEmptyText}
                                         renderItem={item => (
                                             <List.Item >
                                                 <Card style={{ width: '384px', height: '110px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
@@ -202,6 +210,7 @@ class IndustryDataComponent extends PureComponent {
                                         grid={{ gutter: 16 }}
                                         dataSource={this.props.greatnessIndustry.greatness_industry_data}
                                         itemLayout='vertical'
+                                        locale={defaultEmptyText}
                                         renderItem={item => {
                                             const data = {
                                                 labels: item.timeLabels,
@@ -380,6 +389,7 @@ class IndustryDataComponent extends PureComponent {
                                     grid={{ gutter: 16 }}
                                     dataSource={this.props.costsProductivity.costs_productivity_data}
                                     itemLayout='vertical'
+                                    locale={defaultEmptyText}
                                     renderItem={item => {
                                         const data = {
                                             labels: item.timeLabels,
@@ -558,6 +568,7 @@ class IndustryDataComponent extends PureComponent {
                                     grid={{ gutter: 16 }}
                                     dataSource={this.props.companySize.company_size_data}
                                     itemLayout='vertical'
+                                    locale={defaultEmptyText}
                                     renderItem={item => {
                                         const data = {
                                             labels: item.timeLabels,
