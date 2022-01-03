@@ -13,8 +13,10 @@ export const getSurvivalRate = () => {
         const split_nace_code = nace_code.split('.');
         const industry = split_nace_code[0];
         const activityCode = industry.concat('', split_nace_code[1]);
-        let queryData = dataSetForSurvivalRate[industry].dataSets;
+        console.log(dataSetForSurvivalRate[industry]);
         
+        if (dataSetForSurvivalRate[industry] !== undefined) {
+            let queryData = dataSetForSurvivalRate[industry].dataSets;
         if (queryData[0].industries.includes(activityCode)) {
             const tableCode = queryData[0].tableCode;
             const variable = queryData[0].variable[0];
@@ -308,6 +310,10 @@ export const getSurvivalRate = () => {
                 }
             }
         }*/
+    } else {
+        console.log('Survival')
+        dispatch({ type: 'SURVIVAL_RATE_ERROR', payload: {state: true, error: 'No data'}});
+    }
         dispatch({ type: 'LOADING', payload: false });
     }
 }
