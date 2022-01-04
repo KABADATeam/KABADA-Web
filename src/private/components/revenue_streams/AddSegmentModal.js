@@ -155,7 +155,7 @@ class AddSegmentModal extends Component {
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
-                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />Add revenue stream {additionalTitle}</Space>}
+                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />Add revenue stream </Space>}
                     visible={this.props.visibility}
                     onCancel={this.onCancel}
                     footer={
