@@ -191,8 +191,8 @@ class RevenueStreams extends React.Component {
             },
             {
                 title: 'Prices',
-                dataIndex: 'segments',
-                key: 'segments',
+                dataIndex: 'price_category_name',
+                key: 'price_category_name',
                 width: '20%',
             },
             {
@@ -232,7 +232,7 @@ class RevenueStreams extends React.Component {
                 width: '20%',
             },
             {
-                title: 'Type of pricing',
+                title: 'Public bodies & NGO',
                 dataIndex: 'segments',
                 key: 'segments',
                 width: '45%',
