@@ -66,14 +66,48 @@ class SwotWindow extends React.Component {
 
     saveChanges = () => {
         this.props.saveChanges(this.props.businessPlan.id, () => {
-            this.props.getSwotList(this.props.businessPlan.id);
+            this.props.getSwotList(this.props.businessPlan.id, () => {
+
+            });
         });
     };
 
+    arrayEqual = (array1, array2) => {
+        let a = JSON.parse(JSON.stringify(array1));
+        let b = JSON.parse(JSON.stringify(array2));
+
+        let original = array1;
+        let modified = array2;
+
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length !== b.length) return false;
+
+        a = a.sort();
+        b = b.sort();
+
+        for (var i = 0; i < original.length; i++) {
+            if (original[i].value !== modified[i].value
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     getUpdatesWindowState() {
-        if (this.props.swot.updates.strengths.length > 0) {
+        // if (this.props.swot.updates.strengths.length > 0) {
+        //     return 'visible';
+        // }
+        const originalStrengths = JSON.stringify(this.props.swot.original_updates.strengths)
+        const modifiedStrengths = JSON.stringify(this.props.swot.updates.strengths)
+        if (originalStrengths !== modifiedStrengths) {
             return 'visible';
         }
+        if (this.arrayEqual(originalStrengths, modifiedStrengths) === false) {
+            return 'visible';
+        }
+        //compare original updates strengths with updates strengths
 
         if (this.props.swot.updates.opportunities.length > 0) {
             return 'visible';
@@ -88,11 +122,15 @@ class SwotWindow extends React.Component {
                 this.props.history.push(`/`);
             } else {
                 this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getSwotList(this.props.businessPlan.id);
+                    this.props.getSwotList(this.props.businessPlan.id, () => {
+
+                    });
                 });
             }
         } else {
-            this.props.getSwotList(this.props.businessPlan.id);
+            this.props.getSwotList(this.props.businessPlan.id, () => {
+
+            });
         }
     }
 
@@ -127,7 +165,7 @@ class SwotWindow extends React.Component {
                             <Tooltip title="Tooltip text">
                                 <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
                             </Tooltip>
-                            
+
                         </div>
                     </Col>
                     <Col span={4}>
@@ -147,13 +185,13 @@ class SwotWindow extends React.Component {
                                         <Typography.Text style={{ ...textStyle }}>
                                             Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
                                             Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                                        <br />
+                                            <br />
                                             <Typography.Link underline style={{ ...textStyle }}>Read more about SWOT</Typography.Link>
                                         </Typography.Text>
                                     </div>
                                 </Col>
                                 <Col span={16}>
-                                    <StrengthsWeaknesses />
+                                    <StrengthsWeaknesses planId={this.props.businessPlan.id} />
                                 </Col>
                             </Row>
                             <Row style={{ marginBottom: "50px" }}>
@@ -163,7 +201,7 @@ class SwotWindow extends React.Component {
                                         <Typography.Text style={textStyle}>
                                             Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
                                             Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                                        <br />
+                                            <br />
                                             <Typography.Link underline style={{ ...textStyle }}>Read more about SWOT</Typography.Link>
                                         </Typography.Text>
                                     </div>
@@ -181,7 +219,7 @@ class SwotWindow extends React.Component {
                                         <Typography.Text style={{ ...textStyle }}>
                                             Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
                                             Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                                        <br />
+                                            <br />
                                             <Typography.Link underline style={{ ...textStyle }}>Read more about SWOT</Typography.Link>
                                         </Typography.Text>
                                     </div>
@@ -199,7 +237,7 @@ class SwotWindow extends React.Component {
                                         <Typography.Text style={textStyle}>
                                             Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
                                             Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                                        <br />
+                                            <br />
                                             <Typography.Link underline style={{ ...textStyle }}>Read more about SWOT</Typography.Link>
                                         </Typography.Text>
                                     </div>
