@@ -1,12 +1,13 @@
 import kabadaAPI from './kabadaAPI';
 import { errorHandler } from './errorHandler';
 
-export const getSwotList = (planId) => {
+export const getSwotList = (planId,callback) => {
     return async (dispatch, getState) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/swot/' + planId, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: "FETCHING_SWOT_SUCCESS", payload: response.data });
+            callback();
         } catch (error) {
             if (error.response === undefined) {
                 dispatch({
@@ -32,6 +33,17 @@ export const updateSwotList = (type, item) => {
         }
     }
 };
+
+export const updateCheckedStrenghtsAndWeaknessList = (type, item) => {
+    return async (dispatch,getState)=>{
+        try {
+            dispatch({ type: 'UPDATE_CHECKED_STRENGHTS_WEAKNESS_SUCCESS', payload: { "type": type, "item": item } });
+        } catch (error) {
+            dispatch({ type: 'ERROR', payload: errorHandler(error) });
+        } finally {
+        }
+    }
+}
 
 export const createNewItem = (type, item) => {
     return async (dispatch, getState) => {
