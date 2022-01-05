@@ -5,17 +5,20 @@ const computeTotalInvestments = (array) => {
         const obj = {
             amount: item.amount
         }
-        console.log(obj);
         const value = parseInt(Object.values(obj))
-        console.log(value);
         total_investments_values_list.push(value);
     })
-    console.log(total_investments_values_list)
-    const total_investments_value = total_investments_values_list.reduce(function (total_investments_value, value) {
-        const updated_total_investments_value = total_investments_value + value;
-        return updated_total_investments_value;
-    })
-    return total_investments_value
+    if (total_investments_values_list.length !== 0) {
+        const total_investments_value = total_investments_values_list.reduce(function (total_investments_value, value) {
+            const updated_total_investments_value = total_investments_value + value;
+            return updated_total_investments_value;
+        })
+        return total_investments_value
+    } else {
+        var total_investments_value = 0;
+        return total_investments_value;
+    }
+    
 }
 const computeOwnAssets = (array) => {
     const own_assets_values_list = [];
@@ -24,17 +27,20 @@ const computeOwnAssets = (array) => {
         const obj = {
             amount: item.amount
         }
-        console.log(obj);
         const value = parseInt(Object.values(obj))
-        console.log(value);
         own_assets_values_list.push(value);
     })
-    console.log(own_assets_values_list)
-    const own_assets_value = own_assets_values_list.reduce(function (own_assets_value, value) {
-        const updated_own_assets_value = own_assets_value + value;
-        return updated_own_assets_value;
-    })
-    return own_assets_value
+    if (own_assets_values_list.length !== 0) {
+        const own_assets_value = own_assets_values_list.reduce(function (own_assets_value, value) {
+            const updated_own_assets_value = own_assets_value + value;
+            return updated_own_assets_value;
+        })
+        return own_assets_value;
+    } else {
+        var own_assets_value = 0;
+        return  own_assets_value;
+    }
+    
 }
 
 export const assetsReducer = (
