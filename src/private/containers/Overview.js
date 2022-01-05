@@ -390,7 +390,7 @@ class Overview extends React.Component {
                                                 <List>
                                                     <List.Item key='16' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
-                                                            avatar={false === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                            avatar={overview.personal_characteristics.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                             title={<Space><Link to='/personal-characteristics'>Personal characteristics</Link></Space>}
                                                             description="description" />
                                                         <div>...</div>
