@@ -33,11 +33,7 @@ class IndustryRisks extends Component {
                     this.setState({
                         riskscol: this.props.industryRisk.risks.risks
                     })
-                    console.log(this.state.riskscol)
                     this.filterriskMacro();
-                    //console.log(JSON.stringify(this.props.industryRisk.risks))
-                    console.log('master ' + this.props.industryRisk.activeKey)
-                    console.log('master ' + this.props.businessPlan.id)
                 })
 
             }
@@ -47,11 +43,6 @@ class IndustryRisks extends Component {
                     this.setState({
                         riskscol: this.props.industryRisk.risks.risks
                     })
-                    console.log(this.state.riskscol)
-
-                    //console.log(JSON.stringify(this.props.industryRisk.risks))
-                    console.log('master ' + this.props.industryRisk.activeKey)
-                    console.log('master ' + this.props.businessPlan.id)
                 })
             })
 
@@ -114,7 +105,7 @@ class IndustryRisks extends Component {
                         {record.likelihood === 3 && record.severity === 2 ?
                             <span className='high'>High medium</span> :
                             record.likelihood === 2 && record.severity === 3 ?
-                                <span className='medium'>Medium high</span> :
+                                <span className='high'>Medium high</span> :
                                 record.likelihood === 1 && record.severity === 2 ?
                                     <span className='low'>Low medium</span> :
                                     record.likelihood && record.severity === 2 ?
