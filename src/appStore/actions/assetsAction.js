@@ -4,12 +4,11 @@ import { errorHandler } from './errorHandler';
 export const getAssets = (planId) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
+        dispatch({ type: "RESET_VAT", payload: null})
         try {
             const token = getState().user.access_token;
             const defaultVATValue = getState().vat.defaultVAT;
-            console.log(defaultVATValue)
             const response = await kabadaAPI.get('api/kres/assets/' + planId, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response.data);
             dispatch({ type: "FETCHING_ASSETS_SUCCESS", payload: {data: response.data, defaultVAT: defaultVATValue} });
             
         } catch (error) {
@@ -32,7 +31,6 @@ export const saveChanges = (planId, callback) => {
         try {
             const token = getState().user.access_token;
             const updates = getState().assets
-            console.log(updates)
             const postObject = {
                 business_plan_id: planId,
                 total_investments: updates.total_investments,
@@ -40,7 +38,6 @@ export const saveChanges = (planId, callback) => {
                 investment_amount: updates.investment_amount,
                 physical_assets: updates.physical_assets_updated
             }
-            console.log(postObject)
             await kabadaAPI.post('/api/kres/assets/save', postObject, { headers: { Authorization: `Bearer ${token}` } })
             if (callback !== null) {
                 callback();
@@ -55,7 +52,6 @@ export const saveChanges = (planId, callback) => {
 export const discardChanges = () => {
     return async (dispatch, getState) => {
         try {
-            console.log('test');
             dispatch({ type: 'DISCARD_CHANGES_SUCCESS', payload: {} });
         } catch (error) {
             dispatch({ type: 'ERROR', payload: errorHandler(error) });
@@ -90,7 +86,6 @@ export const saveState = (planId, is_completed, callback) => {
         try {
             const token = getState().user.access_token;
             await kabadaAPI.post('api/plans/changeAssetsCompleted', { "business_plan_id": planId, "is_assets_completed": is_completed }, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(is_completed);
             dispatch({ type: 'SAVE_STATE_SUCCESS', payload: is_completed });
             callback();
         } finally {

@@ -25,8 +25,13 @@ export const countryVATReducer = (
             })
             const sortedVATArray = vatArray.sort((a,b) => { return b.vatValue - a.vatValue})
             const defaultVAT = objectValues[0];
-            console.log(defaultVAT);
             return { ...state, vat: sortedVATArray, defaultVAT: defaultVAT };
+        case 'RESET_VAT':
+            return {
+                ...state,
+                vat: [],
+                defaultVAT: null
+            }
         default:
             return state;
     }
