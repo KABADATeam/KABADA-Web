@@ -601,14 +601,20 @@ class SalesForecast extends React.Component {
     }
 
     saveChanges = () => {
+
         const sales = this.state.update.map((x) => x.sales_forecast_eu)
         sales.map((element, index) => {
             element.map((x, index) => {
-                if (index < this.state.readyMonth - 1) {
-                    x.price = 0;
-                    x.qty = 0;
-                    x.total = 0;
-                }
+                this.state.update.map((x) => {
+                    if (x.product_id === this.state.tabKey) {
+                        if (index < this.state.readyMonth - 1) {
+                            x.price = 0;
+                            x.qty = 0;
+                            x.total = 0;
+                        }
+                    }
+
+                })
             })
         })
 
@@ -621,6 +627,7 @@ class SalesForecast extends React.Component {
         this.setState({
             isVisibleHeader: 'hidden'
         })
+
     }
 
     getKey = (e) => {
@@ -868,6 +875,7 @@ class SalesForecast extends React.Component {
                 render: (text, record, index) => {
                     return (
                         <InputNumber
+                            key={record.id}
                             className={"numInput"}
                             disabled={this.isDisabled(record.month)}
                             defaultValue={text === null ? 0 : text}
@@ -883,7 +891,7 @@ class SalesForecast extends React.Component {
                 key: 'qty',
                 width: '5%',
                 render: (text, record, index) =>
-                    <InputNumber disabled={this.isDisabled(record.month)} defaultValue={text === null ? 0 : text} value={text} onChange={(e) => this.inEuChange(e, record, 'qty')} />,
+                    <InputNumber key={record.id} disabled={this.isDisabled(record.month)} defaultValue={text === null ? 0 : text} value={text} onChange={(e) => this.inEuChange(e, record, 'qty')} />,
             },
             {
                 title: 'Total',
@@ -1099,7 +1107,7 @@ class SalesForecast extends React.Component {
                                                                         <Col span={4} offset={12} >
 
                                                                             <Input.Group compact >
-                                                                                <SalesForecastSelect defaultValue={element.when_ready === 0 ? this.state.readyMonth + "st mo." : element.when_ready + "th mo."} onChange={this.onMonthChange} dataSource={dataSourceMonth} />
+                                                                                <SalesForecastSelect defaultValue={element.when_ready === 0 ? 1 + "st mo." : element.when_ready + "th mo."} onChange={this.onMonthChange} dataSource={dataSourceMonth} />
                                                                             </Input.Group>
 
                                                                         </Col>
