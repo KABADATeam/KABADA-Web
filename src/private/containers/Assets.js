@@ -72,6 +72,10 @@ class AssetsWindow extends React.Component {
     }
     saveChanges = () => {
         this.props.saveChanges(this.props.businessPlan.id, () => {
+            const obj = { id: this.props.businessPlan.id }
+            this.props.getCountryShortCode(obj, (data) => {
+                this.props.getCountryVats(this.props.countryCode.countryShortCode);
+            });
             this.props.getAssets(this.props.businessPlan.id);
         });
     }
