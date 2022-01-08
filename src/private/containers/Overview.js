@@ -38,6 +38,25 @@ const titleTextStyle = {
     lineHeight: "38px"
 }
 
+const membersListStyle = {
+    fontStyle: "normal",
+    fontWeight: "400",
+    fontSize: "14px",
+    lineHeight: "22px"
+}
+const descriptionTextStyle = {
+    fontStyle: "normal",
+    fontWeight: "400",
+    fontSize: "14px",
+    lineHeight: "22px"
+}
+const pageTitleTextStyle = {
+    fontStyle: "normal",
+    fontWeight: "600",
+    fontSize: "16px",
+    lineHeight: "24px"
+}
+
 const titleButtonStyle = {
     width: "40px",
     height: "40px",
@@ -194,6 +213,8 @@ class Overview extends React.Component {
             </Menu>
         );
 
+        console.log(this.props.businessPlan.coverImage);
+        console.log(this.props.businessPlan);
 
 
         if (this.props.businessPlan.overview === undefined) {
@@ -205,7 +226,7 @@ class Overview extends React.Component {
                         visibility={isVisibleHeader}
                         discardChanges={this.discardChanges}
                         saveChanges={this.saveChanges}
-                    />  
+                    />
                     <Col span={20} offset={2}>
                         <Breadcrumb style={{ marginTop: "40px" }}>
                             <Breadcrumb.Item>
@@ -215,54 +236,60 @@ class Overview extends React.Component {
                                 <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
                             </Breadcrumb.Item>
                         </Breadcrumb>
+
+                        <Row align="middle" style={{ marginTop: "9px", marginBottom: "25px" }}>
+                            <Col span={14}>
+                                <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
+                                    <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
+                                    <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>{this.props.businessPlan.name}</Text>
+                                    <Tag color="#BAE7FF" style={{ borderRadius: 50, color: "#262626", marginLeft: '10px' }}> {this.props.businessPlan.percentage}% Completed</Tag>
+                                </div>
+                            </Col>
+                            <Col span={10}>
+                                <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
+                                    <Space wrap>
+                                        <Dropdown overlay={moreActionsMenu}>
+                                            <a className="ant-dropdown-link">
+                                                More Actions <DownOutlined />
+                                            </a>
+                                        </Dropdown>
+                                        <Dropdown overlay={exportAsMenu}>
+                                            <a className="ant-dropdown-link">
+                                                Export As <DownOutlined />
+                                            </a>
+                                        </Dropdown>
+                                    </Space>
+                                </div>
+                            </Col>
+                        </Row>
                     </Col>
-                    <Row align="middle" style={{ marginTop: "9px", marginBottom: "25px" }}>
-                        <Col span={12} offset={2}>
-                            <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
-                                <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
-                                <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>{this.props.businessPlan.name}</Text>
-                                <Tag color="#BAE7FF" style={{ borderRadius: 50, color: "#262626", marginLeft: '10px' }}> {this.props.businessPlan.percentage}% Completed</Tag>
-                            </div>
-                        </Col>
-                        <Col span={6}>
-                            <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                                <Space wrap>
-                                    <Dropdown overlay={moreActionsMenu}>
-                                        <a className="ant-dropdown-link">
-                                            More Actions <DownOutlined />
-                                        </a>
-                                    </Dropdown>
-                                    <Dropdown overlay={exportAsMenu}>
-                                        <a className="ant-dropdown-link">
-                                            Export As <DownOutlined />
-                                        </a>
-                                    </Dropdown>
-                                </Space>
-                            </div>
-                        </Col>
-                    </Row>
                     <Col span={20} offset={2}>
                         <Tabs defaultActiveKey="1">
                             <TabPane tab="My business plan" key="1">
-                                <Row style={{ marginBottom: "50px" }}>
+                                <Row style={{marginTop: "40px" }} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
                                     <Col span={18}>
-                                        <div style={{ marginRight: '40px' }}>
-                                            <Card style={{ marginTop: '10px' }}>
-                                                <List>
-                                                    <List.Item key='11' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                <List itemLayout='horizontal' style={{ height: '78px', borderRadius: '8px', backgroundColor: '#FFFFFF'}}>
+                                                    <List.Item key='11'>
                                                         <List.Item.Meta
+                                                            style={{padding:'0px 20px 16px'}}
                                                             avatar={<Avatar src="complete.png" style={avatarStyle} />}
-                                                            title={<Button style={{ paddingLeft: '0px' }} type="text" onClick={this.onEditBusinessPlan.bind(this)}>Create Bussines Plan</Button>}
-                                                            description={overview.nace === "" || overview.nace === null ? "NACE: " : "NACE: " + overview.nace.activity_code}
+                                                            title={
+                                                                <div>
+                                                                    <Row>
+                                                                        <Button style={{ paddingLeft: '0px', ...pageTitleTextStyle}} type="text" onClick={this.onEditBusinessPlan.bind(this)}>Create Bussines Plan</Button>
+                                                                    </Row>
+                                                                    <Row>
+                                                                        <Text style={descriptionTextStyle}>{overview.nace === "" || overview.nace === null ? "NACE: " : "NACE: " + overview.nace.activity_code}</Text>
+                                                                    </Row>
+                                                                </div> 
+                                                            }                                                            
                                                         />
-                                                        <div>...</div>
                                                     </List.Item>
-                                                </List>
-                                            </Card>
+                                                </List>                            
                                             <Card
 
                                                 title={<><span> Business canvas</span> <InfoCircleFilled style={{ color: '#BFBFBF' }} /></>}
-                                                style={{ marginTop: '10px' }}>
+                                                style={{ marginTop: '16px', borderRadius: '8px' }}>
                                                 <List>
                                                     <List.Item key='1' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
@@ -386,7 +413,7 @@ class Overview extends React.Component {
                                                     </List.Item>
                                                 </List>
                                             </Card>
-                                            <Card style={{ marginTop: '10px' }}>
+                                            <Card style={{ marginTop: '10px', height: '78px' }}>
                                                 <List>
                                                     <List.Item key='16' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
                                                         <List.Item.Meta
@@ -397,12 +424,12 @@ class Overview extends React.Component {
                                                     </List.Item>
                                                 </List>
                                             </Card>
-                                        </div>
+                                        
                                     </Col>
                                     <Col span={6}>
                                         <Card
                                             style={{
-                                                width: '282px', height: '246px', borderRadius: '8px', backgroundColor: '#FFFFFF',
+                                                height: '246px', borderRadius: '8px', backgroundColor: '#FFFFFF',
                                                 backgroundImage: 'linear-gradient(to bottom, rgba(255, 255, 252, 0) 62%, rgba(255, 255, 255, 1) 38%), ' + (this.props.businessPlan.coverImage ? `url(${this.props.businessPlan.coverImage})` : `url(businessPlan.webp)`),
                                                 objectFit: 'cover', backgroundSize: '100% auto', backgroundRepeat: 'no-repeat', backgroundPosition: 'center top',
                                             }}>
@@ -410,34 +437,39 @@ class Overview extends React.Component {
                                             <Button type="link" style={{ paddingLeft: '0px', fontWeight: 600, fontSize: '14px' }} onClick={this.onEditBusinessPlan.bind(this)}>Change</Button>
                                         </Card>
                                         <Card style={{
-                                            width: '282px', marginTop: "16px", borderRadius: '8px', backgroundColor: '#FFFFFF',
-                                            backgroundSize: '282px 152px', backgroundRepeat: "no-repeat"
+                                            marginTop: "16px", borderRadius: '8px', backgroundColor: '#FFFFFF'
                                         }}>
-                                            <h4>Business plan status</h4>
-                                            <Select style={{ width: '100%' }} value={this.props.businessPlan.public} onChange={this.onStatusChange.bind(this)}>
-                                                <Option key="1" value={false}>Private</Option>
-                                                <Option key="2" value={true}>Public</Option>
-                                            </Select>
+                                            <Meta
+                                                title="Business plan status"
+                                                description={
+                                                    <Select style={{ width: '100%' }} value={this.props.businessPlan.public} onChange={this.onStatusChange.bind(this)}>
+                                                        <Option key="1" value={false}>Private</Option>
+                                                        <Option key="2" value={true}>Public</Option>
+                                                    </Select>
+                                                }
+                                            />
                                         </Card>
                                         <Card style={{
-                                            width: '282px', marginTop: "16px", borderRadius: '8px', backgroundColor: '#FFFFFF',
-                                            backgroundSize: '282px 152px', backgroundRepeat: "no-repeat"
+                                            marginTop: "20px", borderRadius: '8px', backgroundColor: '#FFFFFF'
                                         }}>
-                                            <h4>Members</h4>
-                                            <List itemLayout="horizontal" dataSource={membersList} renderItem={item => (
-                                                <List.Item actions={[<Button type="link" onClick={this.onDeleteMember.bind(this, item)}><DeleteOutlined /></Button>]}>
-                                                    <List.Item.Meta
-                                                        avatar={<Avatar size="small" icon={<UserOutlined />} src={item.photo ? "data:image/png;base64," + item.photo : ""} />}
-                                                        title={item.name && item.surname !== '' ? item.name + " " + item.surname : item.email}
-
-                                                    />
-
-                                                </List.Item>
-                                            )}>
-                                                <List.Item key='2' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                    <List.Item.Meta title={<Space><Button type="link" style={{ padding: "0px" }} onClick={this.onInviteClick.bind(this)}>+ Invite members</Button></Space>} />
-                                                </List.Item>
-                                            </List>
+                                            <Meta
+                                                title="Members"
+                                                description={
+                                                    <List style={{marginTop: 20}} itemLayout="horizontal" dataSource={membersList} renderItem={item => (                
+                                                        <div>
+                                                            <Row align='middle' style={{marginBottom: "8px"}}>
+                                                                <Col>
+                                                                    <Avatar size={32} icon={<UserOutlined />} src={item.photo ? "data:image/png;base64," + item.photo : ""} />
+                                                                </Col>
+                                                                <Col>
+                                                                    <Text style={{membersListStyle, marginLeft: 8}}>{item.name && item.surname !== '' ? item.name + " " + item.surname : item.email.split('@')[0]}</Text>
+                                                                </Col>
+                                                            </Row>
+                                                        </div>
+                                                    )}/>                                                        
+                                                }
+                                            />
+                                            <Button type="link" style={{ padding: "0px", marginTop: "8px" }} onClick={this.onInviteClick.bind(this)}>+ Invite members</Button>
                                         </Card>
                                     </Col>
                                 </Row>
@@ -476,7 +508,7 @@ class Overview extends React.Component {
                         this.state.showEditBusinessPlanModal === false ? null :
                             <EditBusinessPlanModal updatingPlan={this.props.businessPlan} onClose={this.onEditBusinessPlanClose.bind(this)} />
                     }
-                    
+
                 </>
             );
         }
