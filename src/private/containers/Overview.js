@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar, Dropdown, Menu, message, Popconfirm, Collapse, Spin } from 'antd';
+import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar, Dropdown, Menu, message, Popconfirm, Collapse, Tooltip, Steps, Divider } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled, PlusSquareOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
@@ -23,6 +23,7 @@ const { Text } = Typography;
 const { Option } = Select;
 const { Meta } = Card;
 const { Panel } = Collapse;
+const { Step } = Steps;
 
 const aboutTitleTextStyle = {
     fontStyle: 'normal',
@@ -55,6 +56,13 @@ const pageTitleTextStyle = {
     fontWeight: "600",
     fontSize: "16px",
     lineHeight: "24px"
+}
+const canvasElementTextStyle = {
+    fontStyle: "normal",
+    fontWeight: "600",
+    fontSize: "14px",
+    lineHeight: "22px",
+    color: '#262626'
 }
 
 const titleButtonStyle = {
@@ -266,165 +274,298 @@ class Overview extends React.Component {
                     <Col span={20} offset={2}>
                         <Tabs defaultActiveKey="1">
                             <TabPane tab="My business plan" key="1">
-                                <Row style={{marginTop: "40px" }} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+                                <Row style={{ marginTop: "40px" }} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
                                     <Col span={18}>
-                                                <List itemLayout='horizontal' style={{ height: '78px', borderRadius: '8px', backgroundColor: '#FFFFFF'}}>
-                                                    <List.Item key='11'>
-                                                        <List.Item.Meta
-                                                            style={{padding:'0px 20px 16px'}}
-                                                            avatar={<Avatar src="complete.png" style={avatarStyle} />}
-                                                            title={
-                                                                <div>
-                                                                    <Row>
-                                                                        <Button style={{ paddingLeft: '0px', ...pageTitleTextStyle}} type="text" onClick={this.onEditBusinessPlan.bind(this)}>Create Bussines Plan</Button>
-                                                                    </Row>
-                                                                    <Row>
-                                                                        <Text style={descriptionTextStyle}>{overview.nace === "" || overview.nace === null ? "NACE: " : "NACE: " + overview.nace.activity_code}</Text>
-                                                                    </Row>
-                                                                </div> 
-                                                            }                                                            
-                                                        />
-                                                    </List.Item>
-                                                </List>                            
-                                            <Card
+                                        <List itemLayout='horizontal' style={{ height: '78px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
+                                            <List.Item key='1'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 16px' }}
+                                                    avatar={<Avatar src="complete.png" style={avatarStyle} />}
+                                                    title={
+                                                        <div>
+                                                            <Row>
+                                                                <Button style={{ paddingLeft: '0px', ...pageTitleTextStyle }} type="text" onClick={this.onEditBusinessPlan.bind(this)}>Create Bussines Plan</Button>
+                                                            </Row>
+                                                            <Row>
+                                                                <Text style={descriptionTextStyle}>{overview.nace === "" || overview.nace === null ? "NACE: " : "NACE: " + overview.nace.activity_code}</Text>
+                                                            </Row>
+                                                        </div>
+                                                    }
+                                                />
+                                            </List.Item>
+                                        </List>
+                                        <List
+                                            header={
+                                                <>
+                                                    <Text style={{ ...pageTitleTextStyle, marginLeft: '20px' }}>
+                                                        Business canvas
+                                                    </Text>
+                                                    <Tooltip title="Tooltip text">
+                                                        <InfoCircleFilled style={{ width: '17.5px', height: '17.5px', color: '#BFBFBF', marginLeft: '5.25px' }} />
+                                                    </Tooltip>
+                                                </>
+                                            }
+                                            style={{ marginTop: '16px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
+                                            <List.Item key='2'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    avatar={overview.value_proposition.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    title={
+                                                        <div>
+                                                            <Row>
+                                                                <Link to='/value-propositions' style={canvasElementTextStyle}>Value proposition</Link>
+                                                            </Row>
+                                                            <Row>
+                                                                <Text style={descriptionTextStyle}>
+                                                                    {overview.value_proposition.description === "" ? "Proposed products" : overview.value_proposition.description}
+                                                                </Text>
+                                                            </Row>
+                                                        </div>
+                                                    }
+                                                />
+                                                <div style={{ marginRight: '28px' }}>...</div>
+                                            </List.Item>
+                                            <List.Item key='3'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    avatar={overview.customer_segments.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    title={
+                                                        <div>
+                                                            <Row>
+                                                                <Link to='/customer-segments' style={canvasElementTextStyle}>Customer segments</Link>
+                                                            </Row>
+                                                            <Row>
+                                                                <Text style={descriptionTextStyle}>
+                                                                    {overview.customer_segments.description === "" ? "Customer segments" : overview.customer_segments.description}
+                                                                </Text>
+                                                            </Row>
+                                                        </div>
+                                                    }
+                                                />
+                                                <div style={{ marginRight: '28px' }}>...</div>
+                                            </List.Item>
+                                            <List.Item key='4'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    avatar={overview.channels.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    title={
+                                                        <div>
+                                                            <Row>
+                                                                <Link to='/channels' style={canvasElementTextStyle}>Channels</Link>
+                                                            </Row>
+                                                            <Row>
+                                                                <Text style={descriptionTextStyle}>
+                                                                    {overview.channels.description === "" ? "Customer segments" : overview.channels.description}
+                                                                </Text>
+                                                            </Row>
+                                                        </div>
+                                                    }
+                                                />
+                                                <div style={{ marginRight: '28px' }}>...</div>
+                                            </List.Item>
+                                            <List.Item key='5'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    avatar={overview.customer_relationship.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    title={
+                                                        <div>
+                                                            <Row>
+                                                                <Link to='/customer-relationships' style={canvasElementTextStyle}>Customer relationships</Link>
+                                                            </Row>
+                                                            <Row>
+                                                                <Text style={descriptionTextStyle}>
+                                                                    {overview.customer_relationship.description === "" ? "Customer relationships" : overview.customer_relationship.description}
+                                                                </Text>
+                                                            </Row>
+                                                        </div>
+                                                    }
+                                                />
+                                                <div style={{ marginRight: '28px' }}>...</div>
+                                            </List.Item>
+                                            <List.Item key='6'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    avatar={overview.revenue_streams.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    title={
+                                                        <div>
+                                                            <Row>
+                                                                <Link to='/revenue-streams' style={canvasElementTextStyle}>Revenue streams</Link>
+                                                            </Row>
+                                                            <Row>
+                                                                <Text style={descriptionTextStyle}>
+                                                                    {overview.revenue_streams.description === "" ? "Customer segments revenue streams" : overview.revenue_streams.description}
+                                                                </Text>
+                                                            </Row>
+                                                        </div>
+                                                    }
+                                                />
+                                                <div style={{ marginRight: '28px' }}>...</div>
+                                            </List.Item>
+                                            <List.Item key='7'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    avatar={overview.key_resources.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    title={
+                                                        <div>
+                                                            <Row>
+                                                                <Link to='/key-resources' style={canvasElementTextStyle}>Key resources</Link>
+                                                            </Row>
+                                                            <Row>
+                                                                <Text style={descriptionTextStyle}>
+                                                                    {overview.key_resources.description === "" ? "Key resources list" : overview.key_resources.description}
+                                                                </Text>
+                                                            </Row>
+                                                        </div>
+                                                    }
+                                                />
+                                                <div style={{ marginRight: '28px' }}>...</div>
+                                            </List.Item>
+                                            <List.Item key='8'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    avatar={overview.key_activities.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    title={
+                                                        <div>
+                                                            <Row>
+                                                                <Link to='/key-activities' style={canvasElementTextStyle}>Key activities</Link>
+                                                            </Row>
+                                                            <Row>
+                                                                <Text style={descriptionTextStyle}>
+                                                                    {overview.key_activities.description === "" ? "Key activities list" : overview.key_activities.description}
+                                                                </Text>
+                                                            </Row>
+                                                        </div>
+                                                    }
+                                                />
+                                                <div style={{ marginRight: '28px' }}>...</div>
+                                            </List.Item>
+                                            <List.Item key='9'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    avatar={overview.key_partners.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    title={
+                                                        <div>
+                                                            <Row>
+                                                                <Link to='/key-partners' style={canvasElementTextStyle}>Key partners</Link>
+                                                            </Row>
+                                                            <Row>
+                                                                <Text style={descriptionTextStyle}>
+                                                                    {overview.key_partners.description === "" ? "Key partners list" : overview.key_partners.description}
+                                                                </Text>
+                                                            </Row>
+                                                        </div>
+                                                    }
+                                                />
+                                                <div style={{ marginRight: '28px' }}>...</div>
+                                            </List.Item>
+                                            <List.Item key='10'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    avatar={overview.cost_structure.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    title={
+                                                        <div>
+                                                            <Row>
+                                                                <Link to='/cost-structure' style={canvasElementTextStyle}>Cost structure</Link>
+                                                            </Row>
+                                                            <Row>
+                                                                <Text style={descriptionTextStyle}>
+                                                                    {overview.cost_structure.description === "" ? "Fixed and variable costs" : overview.cost_structure.description}
+                                                                </Text>
+                                                            </Row>
+                                                        </div>
+                                                    }
+                                                />
+                                                <div style={{ marginRight: '28px' }}>...</div>
+                                            </List.Item>
+                                        </List>
+                                        <List
+                                            header={
+                                                <>
+                                                    <Text style={{ ...pageTitleTextStyle, marginLeft: '20px' }}>
+                                                        Financial projections
+                                                    </Text>
+                                                    <Tooltip title="Tooltip text">
+                                                        <InfoCircleFilled style={{ width: '17.5px', height: '17.5px', color: '#BFBFBF', marginLeft: '5.25px' }} />
+                                                    </Tooltip>
+                                                </>}
+                                            style={{ marginTop: '16px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
+                                            <List.Item key='11'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    avatar={overview.assets.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    title={
+                                                        <div>
+                                                            <Row>
+                                                                <Link to='/assets' style={canvasElementTextStyle}>Assets</Link>
+                                                            </Row>                                                
+                                                        </div>
+                                                    }
+                                                />
+                                                <div style={{ marginRight: '28px' }}>...</div>
+                                            </List.Item>
+                                            <List.Item key='12' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                <List.Item.Meta
+                                                    avatar={overview.assets.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    title={<Space><Link to='/assets'>Assets</Link></Space>}
+                                                />
+                                                <div>...</div>
+                                            </List.Item>
 
-                                                title={<><span> Business canvas</span> <InfoCircleFilled style={{ color: '#BFBFBF' }} /></>}
-                                                style={{ marginTop: '16px', borderRadius: '8px' }}>
-                                                <List>
-                                                    <List.Item key='1' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={overview.value_proposition.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/value-propositions'>Value proposition</Link></Space>}
-                                                            description={overview.value_proposition.description === "" ? "Proposed products" : overview.value_proposition.description} />
-                                                        <div>...</div>
-                                                    </List.Item>
-                                                    <List.Item key='2' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={overview.customer_segments.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/customer-segments'>Customer segments</Link></Space>}
-                                                            description={overview.customer_segments.description} />
-                                                        <div>...</div>
-                                                    </List.Item>
-                                                    <List.Item key='3' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={overview.channels.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/channels'>Channels</Link></Space>}
-                                                            description={overview.channels.description === "" || overview.channels.description === null ? "Distribution channels" : overview.channels.description} />
-                                                        <div>...</div>
-                                                    </List.Item>
-                                                    <List.Item key='4' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={overview.customer_relationship.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/customer-relationships'>Customer relationships</Link></Space>}
-                                                            description={overview.customer_relationship.description === "" || overview.customer_relationship.description === null ? "Customer relations management" : overview.customer_relationship.description} />
-                                                        <div>...</div>
-                                                    </List.Item>
-                                                    <List.Item key='5' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={overview.revenue_streams.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/revenue-streams'>Revenue streams</Link></Space>}
-                                                            description={overview.revenue_streams.description === "" || overview.revenue_streams.description === null ? "Customer segments revenue streams" : overview.revenue_streams.description} />
-                                                        <div>...</div>
-                                                    </List.Item>
-                                                    <List.Item key='6' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={overview.key_resources.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/key-resources'>Key resources</Link></Space>}
-                                                            description={overview.key_resources.description === "" || overview.key_resources.description === null ? "Key resources list" : overview.key_resources.description} />
-                                                        <div>...</div>
-                                                    </List.Item>
-                                                    <List.Item key='7' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={overview.key_activities.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/key-activities'>Key activities</Link></Space>}
-                                                            description={overview.key_activities.description === "" || overview.key_activities.description === null ? "Key activities list" : overview.key_activities.description} />
-                                                        <div>...</div>
-                                                    </List.Item>
-                                                    <List.Item key='8' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={overview.key_partners.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/key-partners'>Key partners</Link></Space>}
-                                                            description={overview.key_partners.description === "" || overview.key_partners.description === null ? "Key partners list" : overview.key_partners.description} />
-                                                        <div>...</div>
-                                                    </List.Item>
-                                                    <List.Item key='9' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={overview.cost_structure.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/cost-structure'>Cost structure</Link></Space>}
-                                                            description={overview.cost_structure.description === "" || overview.cost_structure.description === null ? "Fixed and variable costs" : overview.cost_structure.description} />
-                                                        <div>...</div>
-                                                    </List.Item>
-                                                </List>
-                                            </Card>
-                                            <Card
+                                            <List.Item key='13' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                <List.Item.Meta
+                                                    avatar={overview.fixed_and_variables_costs.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    title={<Space><Link to="/fixed-and-variable-costs">Fixed and Variable Costs</Link></Space>}
+                                                />
+                                                <div>...</div>
+                                            </List.Item>
 
-                                                title={<><span> Financial projections</span> <InfoCircleFilled style={{ color: '#BFBFBF' }} /></>}
+                                            <List.Item key='14' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                <List.Item.Meta
+                                                    avatar={overview.sales_forecast.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    title={<Space><Link to="/sales-forecast">Sales Forecast</Link></Space>}
+                                                />
+                                                <div>...</div>
+                                            </List.Item>
+                                            <List.Item key='15' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                <List.Item.Meta
+                                                    avatar={overview.business_start_up_investments.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    title={<Space><Link to='/business-start-up-investments'>Business start-up investments</Link></Space>}
+                                                />
+                                                <div>...</div>
+                                            </List.Item>
+                                            <List.Item key='16' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                <List.Item.Meta
+                                                    avatar={overview.assets.is_completed === true && overview.fixed_and_variables_costs.is_completed === true && overview.sales_forecast.is_completed === true && overview.business_start_up_investments.is_completed === true ?
+                                                        <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    title={<Space><Link to="/cash-flow">Cash Flow</Link></Space>}
+                                                />
+                                                <div>...</div>
+                                            </List.Item>
+                                        </List>
 
-                                                style={{ marginTop: '10px' }}>
-                                                <List>
-                                                    <List.Item key='10' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={overview.assets.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/assets'>Assets</Link></Space>}
-                                                        />
-                                                        <div>...</div>
-                                                    </List.Item>
+                                        <Card style={{ marginTop: '10px' }}>
+                                            <List>
+                                                <List.Item key='17' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                    <List.Item.Meta
+                                                        avatar={overview.swot.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                        title={<Space><Link to='/swot'>SWOT</Link></Space>}
+                                                        description={overview.swot.description === "" || overview.swot.description === null ? "Strengths/Weaknesses and Threats/Oportunities" : overview.swot.description} />
+                                                    <div>...</div>
+                                                </List.Item>
+                                            </List>
+                                        </Card>
+                                        <Card style={{ marginTop: '10px', height: '78px' }}>
+                                            <List>
+                                                <List.Item key='18' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                                                    <List.Item.Meta
+                                                        avatar={overview.personal_characteristics.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                        title={<Space><Link to='/personal-characteristics'>Personal characteristics</Link></Space>}
+                                                        description="description" />
+                                                    <div>...</div>
+                                                </List.Item>
+                                            </List>
+                                        </Card>
 
-                                                    <List.Item key='11' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={overview.fixed_and_variables_costs.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to="/fixed-and-variable-costs">Fixed and Variable Costs</Link></Space>}
-                                                        />
-                                                        <div>...</div>
-                                                    </List.Item>
-
-                                                    <List.Item key='12' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={overview.sales_forecast.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to="/sales-forecast">Sales Forecast</Link></Space>}
-                                                        />
-                                                        <div>...</div>
-                                                    </List.Item>
-                                                    <List.Item key='13' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={overview.business_start_up_investments.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/business-start-up-investments'>Business start-up investments</Link></Space>}
-                                                        />
-                                                        <div>...</div>
-                                                    </List.Item>
-                                                    <List.Item key='14' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={overview.assets.is_completed === true && overview.fixed_and_variables_costs.is_completed === true && overview.sales_forecast.is_completed === true && overview.business_start_up_investments.is_completed === true ?
-                                                                <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to="/cash-flow">Cash Flow</Link></Space>}
-                                                        />
-                                                        <div>...</div>
-                                                    </List.Item>
-                                                </List>
-                                            </Card>
-                                            <Card style={{ marginTop: '10px' }}>
-                                                <List>
-                                                    <List.Item key='15' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={overview.swot.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/swot'>SWOT</Link></Space>}
-                                                            description={overview.swot.description === "" || overview.swot.description === null ? "Strengths/Weaknesses and Threats/Oportunities" : overview.swot.description} />
-                                                        <div>...</div>
-                                                    </List.Item>
-                                                </List>
-                                            </Card>
-                                            <Card style={{ marginTop: '10px', height: '78px' }}>
-                                                <List>
-                                                    <List.Item key='16' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                        <List.Item.Meta
-                                                            avatar={overview.personal_characteristics.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                            title={<Space><Link to='/personal-characteristics'>Personal characteristics</Link></Space>}
-                                                            description="description" />
-                                                        <div>...</div>
-                                                    </List.Item>
-                                                </List>
-                                            </Card>
-                                        
                                     </Col>
                                     <Col span={6}>
                                         <Card
@@ -455,18 +596,18 @@ class Overview extends React.Component {
                                             <Meta
                                                 title="Members"
                                                 description={
-                                                    <List style={{marginTop: 20}} itemLayout="horizontal" dataSource={membersList} renderItem={item => (                
+                                                    <List style={{ marginTop: 20 }} itemLayout="horizontal" dataSource={membersList} renderItem={item => (
                                                         <div>
-                                                            <Row align='middle' style={{marginBottom: "8px"}}>
+                                                            <Row align='middle' style={{ marginBottom: "8px" }}>
                                                                 <Col>
                                                                     <Avatar size={32} icon={<UserOutlined />} src={item.photo ? "data:image/png;base64," + item.photo : ""} />
                                                                 </Col>
                                                                 <Col>
-                                                                    <Text style={{membersListStyle, marginLeft: 8}}>{item.name && item.surname !== '' ? item.name + " " + item.surname : item.email.split('@')[0]}</Text>
+                                                                    <Text style={{ membersListStyle, marginLeft: 8 }}>{item.name && item.surname !== '' ? item.name + " " + item.surname : item.email.split('@')[0]}</Text>
                                                                 </Col>
                                                             </Row>
                                                         </div>
-                                                    )}/>                                                        
+                                                    )} />
                                                 }
                                             />
                                             <Button type="link" style={{ padding: "0px", marginTop: "8px" }} onClick={this.onInviteClick.bind(this)}>+ Invite members</Button>
