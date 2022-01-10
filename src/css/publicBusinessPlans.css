@@ -38,9 +38,13 @@ width: 100%;
 }
 
 .ant-dropdown-link{
+    font-style: normal;
     font-weight: 600;
     border-style: none;
     padding: 0 0;
+    font-size: 14px;
+    line-height: 22px;
+    color: #262626;
 }
 
 .ant-table-pagination.ant-pagination {
