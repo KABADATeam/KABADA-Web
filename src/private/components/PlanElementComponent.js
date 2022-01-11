@@ -53,6 +53,7 @@ class PlanElementComponent extends Component {
         return (
             <>
                 <List
+                    style={{marginTop: '40px'}}
                     grid={{ gutter: 16 }}
                     dataSource={dataSource}
                     renderItem={item => (

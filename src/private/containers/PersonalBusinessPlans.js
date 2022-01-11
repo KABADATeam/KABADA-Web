@@ -54,7 +54,7 @@ class PersonalBusinessPlans extends Component {
         const isVisible = this.state.isVisible;
         return (
             <Layout style={{ backgroundColor: '#F5F5F5'}}>
-                <Content style={{ marginTop: "40px"}}>
+                <Content>
                     <Row wrap={false} justify="center" align="middle">
                         <Col span={20}>
                             <div style={{display: "flex"}}>

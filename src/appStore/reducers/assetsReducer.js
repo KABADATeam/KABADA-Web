@@ -18,7 +18,7 @@ const computeTotalInvestments = (array) => {
         var total_investments_value = 0;
         return total_investments_value;
     }
-    
+
 }
 const computeOwnAssets = (array) => {
     const own_assets_values_list = [];
@@ -38,9 +38,9 @@ const computeOwnAssets = (array) => {
         return own_assets_value;
     } else {
         var own_assets_value = 0;
-        return  own_assets_value;
+        return own_assets_value;
     }
-    
+
 }
 
 export const assetsReducer = (
@@ -68,7 +68,7 @@ export const assetsReducer = (
                     'vat': item.vat === null ? action.payload.defaultVAT : item.vat,
                 }
                 new_physical_assets_list.push(obj);
-            })            
+            })
             const is_completed = action.payload.data.is_assets_completed;
             const total_investments = action.payload.data.total_investments;
             const own_assets = action.payload.data.own_assets;
@@ -126,6 +126,17 @@ export const assetsReducer = (
         case "DISCARD_CHANGES_SUCCESS":
             const discardObj = JSON.parse(JSON.stringify(state.physical_assets_original))
             return { ...state, 'physical_assets': discardObj, 'physical_assets_updated': state.physical_assets_original };
+        case "RESET_ASSETS":
+            return {
+                ...state,
+                is_assets_completed: false,
+                total_investments: null,
+                own_assets: null,
+                investment_amount: null,
+                physical_assets: [],
+                physical_assets_original: [],
+                physical_assets_updated: []
+            }
         default:
             return state
     }
