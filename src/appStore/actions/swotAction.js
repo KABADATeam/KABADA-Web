@@ -34,10 +34,11 @@ export const updateSwotList = (type, item) => {
     }
 };
 
-export const updateCheckedStrenghtsAndWeaknessList = (type, item) => {
+export const updateCheckedStrenghsAndOportunities = (type, item) => {
     return async (dispatch,getState)=>{
         try {
-            dispatch({ type: 'UPDATE_CHECKED_STRENGHTS_WEAKNESS_SUCCESS', payload: { "type": type, "item": item } });
+            console.log('type:'+type+" item"+JSON.stringify(item))
+            dispatch({ type: 'UPDATE_CHECKED_STRENGHTS_OPORTUNITIES_SUCCESS', payload: { "type": type, "item": item } });
         } catch (error) {
             dispatch({ type: 'ERROR', payload: errorHandler(error) });
         } finally {

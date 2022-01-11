@@ -49,7 +49,12 @@ const titleButtonStyle = {
 }
 
 class SwotWindow extends React.Component {
-
+    constructor(props) {
+        super(props)
+        this.state = {
+            isVisibleHeader: 'hidden'
+        }
+    }
     onBackClick() {
         this.props.history.push(`/overview`);
     }
@@ -82,38 +87,87 @@ class SwotWindow extends React.Component {
         if (a === b) return true;
         if (a == null || b == null) return false;
         if (a.length !== b.length) return false;
+        if(a !== b) return false;
+        
+        // a = a.sort();
+        // b = b.sort();
+        // if(original.length !== 0 && original !== undefined && original !== null){
+        // var equals = modified.length === original.length && modified.every((e, i) => e.id === original[i].id && e.value === original[i].value);
 
-        a = a.sort();
-        b = b.sort();
+        // }
 
-        for (var i = 0; i < original.length; i++) {
-            if (original[i].value !== modified[i].value
-            ) {
-                return false;
-            }
-        }
+        // console.log('are equal or not:'+equals)
+        // for (var i = 0; i < modified.length; i++) {
+        //     console.log('fuck')
+        //     if (original[i].value !== modified[i].value) {
+        //         console.log('original item value NOT equals' + JSON.stringify(original[i]))
+        //         console.log('modified item value NOT equals' + JSON.stringify(modified[i]))
+        //         return false;
+                
+        //     } 
+        // }
         return true;
     }
 
     getUpdatesWindowState() {
-        // if (this.props.swot.updates.strengths.length > 0) {
+        // console.log('get updates windows state')
+        // console.log('YE YEYEY YE'+JSON.stringify(this.props.swot))
+
+        if (this.props.swot.original.strengths_weakness_items.length > 0 ||
+            this.props.swot.original.oportunities_threats > 0) {
+            // console.log('YE NOTOTOT NULLL YE' + JSON.stringify(this.props.swot))
+            const originalStrengths = JSON.stringify(this.props.swot.original_updates.strengths)
+            const modifiedStrengths = JSON.stringify(this.props.swot.updates.strengths)
+            const originalOpportunities = JSON.stringify(this.props.swot.original_updates.opportunities)
+            const modifiedOpportunities = JSON.stringify(this.props.swot.updates.opportunities)
+            console.log('original strengths'+JSON.stringify(originalStrengths))
+            console.log('modified strengths'+modifiedStrengths.length)
+
+            if (this.arrayEqual(originalStrengths, modifiedStrengths) === false) {
+                return 'visible';
+            }
+            if (this.arrayEqual(originalOpportunities, modifiedOpportunities) === false) {
+                return 'visible'
+            }
+        }
+        // console.log(JSON.stringify(this.props.swot.original_updates.strengths))
+        // console.log(JSON.stringify(this.props.swot.updates.strengths))
+        // const originalStrengths = JSON.stringify(this.props.swot.original_updates.strengths)
+        // const modifiedStrengths = JSON.stringify(this.props.swot.updates.strengths)
+        // const originalOpportunities = JSON.stringify(this.props.swot.original_updates.opportunities)
+        // const modifiedOpportunities = JSON.stringify(this.props.swot.updates.opportunities)
+        // if (originalStrengths !== modifiedStrengths) {
+        //     this.setState({
+        //         isVisibleHeader: 'visible'
+        //     })
+        // }else if(originalStrengths.length !== modifiedStrengths.length){
+        //     this.setState({
+        //         isVisibleHeader: 'visible'
+        //     })
+        // }
+
+
+        // else if (this.arrayEqual(originalStrengths, modifiedStrengths) === false) {
         //     return 'visible';
         // }
-        const originalStrengths = JSON.stringify(this.props.swot.original_updates.strengths)
-        const modifiedStrengths = JSON.stringify(this.props.swot.updates.strengths)
-        if (originalStrengths !== modifiedStrengths) {
-            return 'visible';
-        }
-        if (this.arrayEqual(originalStrengths, modifiedStrengths) === false) {
-            return 'visible';
-        }
-        //compare original updates strengths with updates strengths
+        // if (originalOpportunities.length !== modifiedOpportunities.length) {
+        //     return 'visible'
+        // } else if (this.arrayEqual(originalOpportunities, modifiedOpportunities) === false) {
+        //     return 'visible'
+        // }
+        // if(originalStrengths !== modifiedOpportunities){
+        //     return 'visible'
+        // }
+        // if(this.arrayEqual(originalOpportunities, modifiedOpportunities) === false){
+        //     return 'visible'
+        // }
 
-        if (this.props.swot.updates.opportunities.length > 0) {
-            return 'visible';
-        }
 
-        return 'hidden';
+        // if (this.props.swot.updates.opportunities.length > 0) {
+        //     return 'visible';
+        // }
+
+        return 'hidden'
     }
 
     componentDidMount() {
@@ -191,7 +245,7 @@ class SwotWindow extends React.Component {
                                     </div>
                                 </Col>
                                 <Col span={16}>
-                                    <StrengthsWeaknesses planId={this.props.businessPlan.id} />
+                                    <StrengthsWeaknesses planId={this.props.businessPlan.id} getUpdatesWindowState={this.getUpdatesWindowState} />
                                 </Col>
                             </Row>
                             <Row style={{ marginBottom: "50px" }}>
@@ -207,7 +261,7 @@ class SwotWindow extends React.Component {
                                     </div>
                                 </Col>
                                 <Col span={16}>
-                                    <OpportunitiesThreats />
+                                    <OpportunitiesThreats getUpdatesWindowState={this.getUpdatesWindowState} />
                                 </Col>
                             </Row>
                         </TabPane>
@@ -225,7 +279,7 @@ class SwotWindow extends React.Component {
                                     </div>
                                 </Col>
                                 <Col span={16}>
-                                    <StrengthsWeaknesses />
+                                    <StrengthsWeaknesses getUpdatesWindowState={this.getUpdatesWindowState} />
                                 </Col>
                             </Row>
                         </TabPane>
@@ -243,7 +297,7 @@ class SwotWindow extends React.Component {
                                     </div>
                                 </Col>
                                 <Col span={16}>
-                                    <OpportunitiesThreats />
+                                    <OpportunitiesThreats getUpdatesWindowState={this.getUpdatesWindowState} />
                                 </Col>
                             </Row>
                         </TabPane>

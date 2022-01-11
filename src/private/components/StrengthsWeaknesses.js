@@ -4,7 +4,7 @@ import { PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icon
 import { buttonStyle, inputStyle, tableCardBodyStyle, tableCardStyle, tableTitleStyle, tableDescriptionStyle } from '../../styles/customStyles';
 import '../../css/swotStyle.css';
 import { connect } from 'react-redux';
-import { updateSwotList, createNewItem, deleteItem, updateItem, updateCheckedStrenghtsAndWeaknessList } from "../../appStore/actions/swotAction";
+import { createNewItem, deleteItem, updateItem, updateCheckedStrenghsAndOportunities } from "../../appStore/actions/swotAction";
 
 class StrengthsWeaknesses extends Component {
 
@@ -43,7 +43,8 @@ class StrengthsWeaknesses extends Component {
             item.value = event.target.checked === true ? 2 : 0;
         }
         // this.props.updateSwotList(1, item);
-        this.props.updateCheckedStrenghtsAndWeaknessList(1, item)
+        this.props.updateCheckedStrenghsAndOportunities(1, item)
+        // this.props.getUpdatesWindowState();
     };
 
     onTitleChange = (item) => event => {
@@ -65,19 +66,15 @@ class StrengthsWeaknesses extends Component {
         // console.log(JSON.stringify(this.props.list.checked_weakness))
         const index = this.props.list.checked_weakness.findIndex(w => w.id === id)
         const strengthIndex = this.props.list.checked_strengths.findIndex(s => s.id === id )
-        // console.log('YEYEYE index:'+index)
         //if index is -1 that means there is no item with that id in array 
         return (
             this.props.list.checked_weakness.length > 5 && index === -1 || strengthIndex !== -1
         )
-        //this.props.list.checked_weakness.indexOf(id).id === -1
     }
 
     isStrengthDisabled = (id)=>{
         const index = this.props.list.checked_strengths.findIndex(w => w.id === id)
         const weaknessIndex = this.props.list.checked_weakness.findIndex(s => s.id === id)
-        console.log('weaknesses:'+JSON.stringify(this.props.list.checked_weakness))
-        // console.log('YEYEYE index:'+index)
         //if index is -1 that means there is no item with that id in array 
         return (
             this.props.list.checked_strengths.length > 5 && index === -1 || weaknessIndex !== -1
@@ -165,5 +162,5 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { updateSwotList, createNewItem, deleteItem, updateItem, updateCheckedStrenghtsAndWeaknessList })(StrengthsWeaknesses);
+export default connect(mapStateToProps, { createNewItem, deleteItem, updateItem,updateCheckedStrenghsAndOportunities })(StrengthsWeaknesses);
 
