@@ -4,7 +4,7 @@ import { PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icon
 import { buttonStyle, inputStyle, tableTitleStyle, tableDescriptionStyle, tableCardBodyStyle, tableCardStyle } from '../../styles/customStyles';
 import '../../css/swotStyle.css';
 import { connect } from 'react-redux';
-import { updateSwotList, createNewItem, updateItem, deleteItem } from "../../appStore/actions/swotAction";
+import { createNewItem, updateItem, deleteItem, updateCheckedStrenghsAndOportunities } from "../../appStore/actions/swotAction";
 
 class OpportunitiesThreats extends Component {
 
@@ -28,7 +28,8 @@ class OpportunitiesThreats extends Component {
         } else {    // threat
             item.value = event.target.checked === true ? 4 : 0;
         }
-        this.props.updateSwotList(2, item);
+        this.props.updateCheckedStrenghsAndOportunities(2, item);
+        // this.props.getUpdatesWindowState();
     };
 
     onDeleteItem = (item) => {
@@ -69,9 +70,9 @@ class OpportunitiesThreats extends Component {
         const updateItem = {
             "business_plan_id": this.props.businessPlan.id,
             "swot": {
-                  "id": item.id,
-                  "name": event.target.value,
-                  "operation": item.value
+                "id": item.id,
+                "name": event.target.value,
+                "operation": item.value
             },
             "kind": 1
         };
@@ -80,6 +81,24 @@ class OpportunitiesThreats extends Component {
         }
     }
 
+    isOpportunityDisabled = (id) => {
+        const index = this.props.list.checked_oportunities.findIndex(w => w.id === id)
+        const threatIndex = this.props.list.checked_threats.findIndex(s => s.id === id)
+        //if index is -1 that means there is no item with that id in array 
+        return (
+            this.props.list.checked_oportunities.length > 5 && index === -1 || threatIndex !== -1
+        )
+    }
+
+    isThreatDisabled = (id) => {
+        const index = this.props.list.checked_threats.findIndex(w => w.id === id)
+        const oportunityIndex = this.props.list.checked_oportunities.findIndex(s => s.id === id)
+        //if index is -1 that means there is no item with that id in array 
+        return (
+            this.props.list.checked_threats.length > 5 && index === -1 || oportunityIndex !== -1
+        )
+    }
+// 
     render() {
         const data = this.props.list.original.oportunities_threats.concat(this.props.list.updates.opportunities.filter(x => isNaN(x.id) === false));
 
@@ -112,7 +131,7 @@ class OpportunitiesThreats extends Component {
                 render: (value, record, rowIndex) => (
                     <Checkbox
                         checked={record.value === 0 ? false : record.value === 3 ? true : false}
-                        disabled={record.value === 4 ? true : false}
+                        disabled={this.isOpportunityDisabled(record.id)}
                         onChange={this.handleState(record, 3)}
                     />
                 ),
@@ -125,7 +144,7 @@ class OpportunitiesThreats extends Component {
                 render: (value, record, rowIndex) => (
                     <Checkbox
                         checked={record.value === 0 ? false : record.value === 4 ? true : false}
-                        disabled={record.value === 3 ? true : false}
+                        disabled={this.isThreatDisabled(record.id)}
                         onChange={this.handleState(record, 4)}
                     />
                 ),
@@ -161,5 +180,5 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { updateSwotList, createNewItem, updateItem, deleteItem })(OpportunitiesThreats);
+export default connect(mapStateToProps, { createNewItem, updateItem, deleteItem, updateCheckedStrenghsAndOportunities })(OpportunitiesThreats);
 

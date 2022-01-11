@@ -3,6 +3,8 @@ export const swotReducer = (
         is_swot_completed: false,
         checked_strengths: [],
         checked_weakness: [],
+        checked_oportunities: [],
+        checked_threats: [],
         _t: {
             strengths_weakness_items: [],
             oportunities_threats: []
@@ -34,6 +36,10 @@ export const swotReducer = (
             const checked_strengths = []
             const checked_weakness = []
             const updated_strenghts = []
+
+            const checked_oportunities = []
+            const checked_threats = []
+            const updated_oportunities = []
             originalObject.strengths_weakness_items.forEach(item => {
                 if (item.value === 1) {
                     checked_strengths.push(item)
@@ -42,14 +48,22 @@ export const swotReducer = (
                     checked_weakness.push(item)
                     updated_strenghts.push(item)
                 }
+            });
+            originalObject.oportunities_threats.forEach(item =>{
+                if(item.value === 3){
+                    checked_oportunities.push(item)
+                    updated_oportunities.push(item)
+                }else if(item.value === 4){
+                    checked_threats.push(item)
+                    updated_oportunities.push(item)
+                }
             })
             const original_updates_strength = JSON.parse(JSON.stringify(updated_strenghts))
-            console.log('checked strengths were: ' + JSON.stringify(checked_strengths))
-            console.log('checked weakness were: ' + JSON.stringify(checked_weakness))
+            const original_updates_oportunities = JSON.parse(JSON.stringify(updated_oportunities))
 
             const cloneObject = JSON.parse(JSON.stringify(originalObject));
-            return { ...state, original: originalObject, _t: cloneObject, original_updates: {"strengths":original_updates_strength, "opportunities": []}, updates: { "strengths": updated_strenghts, "opportunities": [] }, checked_strengths: checked_strengths, checked_weakness: checked_weakness, "is_swot_completed": is_completed };
-        case "UPDATE_CHECKED_STRENGHTS_WEAKNESS_SUCCESS":
+            return { ...state, original: originalObject, _t: cloneObject, original_updates: {"strengths":original_updates_strength, "opportunities": original_updates_oportunities}, updates: { "strengths": updated_strenghts, "opportunities": updated_oportunities}, checked_strengths: checked_strengths, checked_weakness: checked_weakness, checked_oportunities: checked_oportunities, checked_threats: checked_threats, "is_swot_completed": is_completed };
+        case "UPDATE_CHECKED_STRENGHTS_OPORTUNITIES_SUCCESS":
             //if checked are strenghts and weakness
             if (action.payload.type === 1) {
                 const strengthIndex = state.checked_strengths.findIndex(x => x.id === action.payload.item.id);
@@ -116,33 +130,69 @@ export const swotReducer = (
 
             } else if (action.payload.type === 2) {
                 //if checked are opportunities
-            }
-            return { ...state }
-        case "UPDATE_SWOT_LIST_SUCCESS":
-             if (action.payload.type === 2) {
-                console.log('Opportunities are checked')
+
+                const oportunityIndex = state.checked_oportunities.findIndex(x => x.id === action.payload.item.id);
+                const threatIndex = state.checked_threats.findIndex(x => x.id === action.payload.id);
+                const checkedOportunities = state.checked_oportunities;
+                const checkedThreats = state.checked_threats;
+
+                const oportunities = state.updates.opportunities;
                 const index = state.updates.opportunities.findIndex(x => x.id === action.payload.item.id);
-                const opportunities = state.updates.opportunities;
-                if (index === -1) {
-                    const updated = [...opportunities, action.payload.item];
-                    const obj = { ...state.updates, opportunities: updated };
-                    return { ...state, original: state.original, updates: obj };
-                } else {
-                    if (isNaN(action.payload.item.id) === false) {
-                        const updated = opportunities.map(x => x.id === action.payload.item.id ? action.payload.item : x);
-                        const obj = { ...state.updates, opportunities: updated };
-                        return { ...state, original: state.original, updates: obj };
-                    } else {
-                        const originalItem = state.original.oportunities_threats.find(x => x.id === action.payload.item.id);
-                        if (originalItem.title === action.payload.item.title && originalItem.value === action.payload.item.value) {
-                            const updated = opportunities.filter(x => x.id !== action.payload.item.id);
+
+                //add oportunity
+                if (action.payload.item.value === 3) {
+                    //if there is no item in checked_oportunities with that id, add one
+                    if (oportunityIndex === -1) {
+                        // if updates.opportunities already has that item dont add new one
+                        if(index === -1){
+                            //add to checked_oportunities and updates.opportunities add too
+                            const checked_oportunities = [...checkedOportunities, { ...action.payload.item }]
+                            const updated = [...oportunities, { ...action.payload.item }];
+                            // setting updates opportunities to updated. keeping whats already in opportunities
                             const obj = { ...state.updates, opportunities: updated };
-                            return { ...state, original: state.original, updates: obj };
-                        } else {
-                            const updated = opportunities.map(x => x.id === action.payload.item.id ? action.payload.item : x);
+                            return { ...state, checked_oportunities: checked_oportunities,original: state.original, updates: obj }
+                        }else{
+                            //if updates.opportunities have item with this id then update it. and add item to checked_oportunities becouse there isnt one there
+                            const checked_oportunities = [...checkedOportunities, { ...action.payload.item }]
+                            //change the item 
+                            const updated = oportunities.map(x => x.id === action.payload.item.id? action.payload.item: x);
+                            // setting updates opportunities to updated. keeping whats already in opportunities
                             const obj = { ...state.updates, opportunities: updated };
-                            return { ...state, original: state.original, updates: obj };
+                            return { ...state, checked_oportunities: checked_oportunities,original: state.original, updates: obj }
                         }
+                        
+                    }
+                    //if its threat
+                } else if (action.payload.item.value === 4) {
+                    //if there isnt item in checked_threats
+                    if (threatIndex === -1) {
+                        // if updates.opportunities already has that item dont add new one
+                        if(index === -1){
+                            //add to checked_threats and updates.opportunities add too 
+                            const checked_threats = [...checkedThreats, { ...action.payload.item }]
+                            const updated = [...oportunities, { ...action.payload.item }];
+                            // setting updates opportunities to updated. keeping whats already in opportunities
+                            const obj = { ...state.updates, opportunities: updated };
+                            return { ...state, checked_threats: checked_threats,original: state.original, updates: obj }
+                        }else{
+                            //if updates.opportunities have item with this id then update it. and add item to checked_threats becouse there isnt one there
+                            const checked_threats = [...checkedThreats, { ...action.payload.item }]
+                            const updated = oportunities.map(x => x.id === action.payload.item.id? action.payload.item : x);
+                            // setting updates opportunities to updated. keeping whats already in opportunities
+                            const obj = { ...state.updates, opportunities: updated };
+                            return { ...state, checked_threats: checked_threats,original: state.original, updates: obj }
+                        }
+                        
+                    }
+                } else if (action.payload.item.value === 0) {
+                    //it can be 0 too
+                    //if its unchecked then delete checked_oportunities and threats to 
+                    const checked_oportunities = checkedOportunities.filter(x => x.id !== action.payload.item.id);
+                    const checked_threats = checkedThreats.filter(x => x.id !== action.payload.item.id)
+                    //update item not delete it. its value just gonna change to 0
+                    const updated = oportunities.map(x => x.id === action.payload.item.id? action.payload.item : x);
+                    const obj = { ...state.updates, opportunities: updated };
+                    return { ...state,original: state.original, checked_oportunities: checked_oportunities, checked_threats: checked_threats, updates: obj
                     }
                 }
             }
