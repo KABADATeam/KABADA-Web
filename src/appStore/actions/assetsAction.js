@@ -5,6 +5,7 @@ export const getAssets = (planId) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
         dispatch({ type: "RESET_VAT", payload: null})
+        dispatch({ type: "RESET_ASSETS", payload: null})
         try {
             const token = getState().user.access_token;
             const defaultVATValue = getState().vat.defaultVAT;
