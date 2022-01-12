@@ -17,6 +17,7 @@ import IndustryRisks from '../components/Industry_Risks/IndustryRisks'
 import { getCountryShortCodeV2 } from '../../appStore/actions/countriesActions'
 import IndustryDataComponent from '../components/industry_data/IndustryDataComponent';
 import html2canvas from 'html2canvas';
+import TooltipComponent from '../components/Tooltip';
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
@@ -315,9 +316,7 @@ class Overview extends React.Component {
                                                     <Text style={{ ...pageTitleTextStyle, marginLeft: '20px' }}>
                                                         Business canvas
                                                     </Text>
-                                                    <Tooltip title="Tooltip text">
-                                                        <InfoCircleFilled style={{ width: '17.5px', height: '17.5px', color: '#BFBFBF', marginLeft: '5.25px' }} />
-                                                    </Tooltip>
+                                                    <TooltipComponent tooltipCode="ovmbp1" />
                                                 </>
                                             }
                                             style={{ marginTop: '16px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
@@ -500,8 +499,13 @@ class Overview extends React.Component {
                                                     avatar={overview.swot.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                     title={
                                                         <div>
-                                                            <Row>
-                                                                <Link to='/swot' style={canvasElementTextStyle}>SWOT</Link>
+                                                            <Row >
+                                                                <Col>
+                                                                    <Link to='/swot' style={canvasElementTextStyle}>SWOT</Link>
+                                                                </Col>
+                                                                <Col>
+                                                                    <TooltipComponent tooltipCode="ovmbp3" />
+                                                                </Col>
                                                             </Row>
                                                             <Row>
                                                                 <Text style={descriptionTextStyle}>{overview.swot.description === "" || overview.swot.description === null ? "Strengths/Weaknesses and Threats/Oportunities" : overview.swot.description}</Text>
@@ -518,9 +522,7 @@ class Overview extends React.Component {
                                                     <Text style={{ ...pageTitleTextStyle, marginLeft: '20px' }}>
                                                         Financial projections
                                                     </Text>
-                                                    <Tooltip title="Tooltip text">
-                                                        <InfoCircleFilled style={{ width: '17.5px', height: '17.5px', color: '#BFBFBF', marginLeft: '5.25px' }} />
-                                                    </Tooltip>
+                                                    <TooltipComponent tooltipCode="ovmbp2" />
                                                 </>}
                                             style={{ marginTop: '16px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
                                             <List.Item key='12'>
@@ -622,7 +624,7 @@ class Overview extends React.Component {
                                                         <div>
                                                             <Row>
                                                                 <Col span={1}>
-                                                                {overview.assets.is_completed === true && overview.fixed_and_variables_costs.is_completed === true && overview.sales_forecast.is_completed === true && overview.business_start_up_investments.is_completed === true ?<Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
+                                                                    {overview.assets.is_completed === true && overview.fixed_and_variables_costs.is_completed === true && overview.sales_forecast.is_completed === true && overview.business_start_up_investments.is_completed === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
                                                                 </Col>
                                                                 <Col span={11}>
                                                                     <div style={{ ...financialTitlePositionStyle }}>
@@ -631,7 +633,7 @@ class Overview extends React.Component {
                                                                 </Col>
                                                                 <Col span={12}>
                                                                     <div style={{ ...financialTitleButtonPositionStyle, marginRight: '0px' }}>
-                                                                        <Button style={{borderRadius: '4px'}}><Link to="/cash-flow" style={canvasElementTextStyle}>See cash flow</Link></Button>                                                                        
+                                                                        <Button style={{ borderRadius: '4px' }}><Link to="/cash-flow" style={canvasElementTextStyle}>See cash flow</Link></Button>
                                                                     </div>
                                                                 </Col>
                                                             </Row>
@@ -647,7 +649,12 @@ class Overview extends React.Component {
                                                     title={
                                                         <div>
                                                             <Row>
-                                                                <Link to='/personal-characteristics' style={canvasElementTextStyle}>Personal-characteristics</Link>
+                                                                <Col>
+                                                                    <Link to='/personal-characteristics' style={canvasElementTextStyle}>Personal-characteristics</Link>
+                                                                </Col>
+                                                                <Col>
+                                                                    <TooltipComponent tooltipCode="ovmbp4"/>
+                                                                </Col>
                                                             </Row>
                                                             <Row>
                                                                 <Text style={descriptionTextStyle}>{overview.personal_characteristics.description === "" || overview.personal_characteristics.description === null ? "Descriptions" : overview.personal_characteristics.description}</Text>
@@ -696,14 +703,14 @@ class Overview extends React.Component {
                                                                     <Avatar size={32} icon={<UserOutlined />} src={item.photo ? "data:image/png;base64," + item.photo : ""} />
                                                                 </Col>
                                                                 <Col span={19}>
-                                    
-                                                                    <div style={{ ...financialTitlePositionStyle}}>
-                                                                    <Text style={{ ...membersListStyle, marginLeft: 8 }}>{item.name && item.surname !== '' ? item.name + " " + item.surname : item.email.split('@')[0]}</Text>
+
+                                                                    <div style={{ ...financialTitlePositionStyle }}>
+                                                                        <Text style={{ ...membersListStyle, marginLeft: 8 }}>{item.name && item.surname !== '' ? item.name + " " + item.surname : item.email.split('@')[0]}</Text>
                                                                     </div>
                                                                 </Col>
                                                                 <Col span={2}>
-                                                                    <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}><Avatar size='small' onClick={this.onDeleteMember.bind(this, item)} icon={<DeleteOutlined/>} /></div>
-                                                                    
+                                                                    <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}><Avatar size='small' onClick={this.onDeleteMember.bind(this, item)} icon={<DeleteOutlined />} /></div>
+
                                                                 </Col>
                                                             </Row>
                                                         </div>

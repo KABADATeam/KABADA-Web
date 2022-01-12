@@ -1,9 +1,10 @@
-export const tooltipsReducer = ( state = [], action ) => {
+export const tooltipsReducer = ( state = {tooltips: []}, action ) => {
     switch (action.type) {
         case 'FETCHING_TOOLTIPS_SUCCESS':
             console.log(action.payload);
             return {
-                state: action.payload
+                ...state,
+                tooltips: action.payload
             }
         default: 
             return state
