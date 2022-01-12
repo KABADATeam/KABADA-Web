@@ -9,7 +9,6 @@ class TooltipComponent extends Component {
     render() {
         const { tooltipCode } = this.props;
         const title = this.props.tooltips.tooltips.find((element, index) => element.code === tooltipCode).tooltip;
-        console.log(title);
         return (
             <>
                 <Tooltip title={title}>
