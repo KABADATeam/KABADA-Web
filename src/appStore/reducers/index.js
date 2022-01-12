@@ -34,6 +34,7 @@ import { assetsReducer } from './assetsReducer';
 import { countryVATReducer } from './vatReducer'
 import { personalCharacteristicsReducer } from './personalCharacteristicsReducer';
 import { industryRiskReducer } from './industryRiskReducer';
+import { tooltipsReducer } from './tooltipsReducer';
 
 
 export default combineReducers({
@@ -103,5 +104,6 @@ export default combineReducers({
     nace: naceReducer,
     personalCharacteristics: personalCharacteristicsReducer,
     industryRisk: industryRiskReducer,
-    chartsLoading: chartsLoadingReducer
+    chartsLoading: chartsLoadingReducer,
+    tooltips: tooltipsReducer,
 });
