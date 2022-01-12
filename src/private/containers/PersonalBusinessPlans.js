@@ -6,6 +6,7 @@ import { buttonStyle, pageHeaderStyle } from '../../styles/customStyles';
 import PlanElementComponent from '../components/PlanElementComponent';
 import NewBusinessPlanModal from "../components/NewBusinessPlanModal";
 import { getPlans, getSelectedPlan, getImage, getPlansOverview } from "../../appStore/actions/planActions";
+import { getTooltips } from '../../appStore/actions/tooltipsAction';
 
 const { Title } = Typography;
 const { TabPane } = Tabs;
@@ -48,6 +49,7 @@ class PersonalBusinessPlans extends Component {
                     this.props.getPlansOverview(plan.id);
                 });
             });
+        this.props.getTooltips();
     }
 
     render() {
@@ -112,4 +114,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getPlans, getSelectedPlan, getImage, getPlansOverview })(withRouter(PersonalBusinessPlans));
+export default connect(mapStateToProps, { getPlans, getSelectedPlan, getImage, getPlansOverview, getTooltips })(withRouter(PersonalBusinessPlans));
