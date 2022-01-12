@@ -128,6 +128,8 @@ class EditSegmentModal extends Component {
     }
 
     render() {
+        console.log(this.props.number)
+        const additionalTitle = this.props.item.segment === 3 ? 'Public bodies & NGO' : this.props.item.segment === 2 ? 'Business' : 'Consumers';
         const streamOptions = this.props.types.stream_types.map((obj) =>
             <Option key={obj.id} value={obj.id}>{obj.title}</Option>
         );
@@ -144,12 +146,20 @@ class EditSegmentModal extends Component {
             <Option key={obj.id} value={obj.segment_name}>{obj.segment_name}</Option>
         )
 
+        const businessNames = this.props.customerSegments.business.map((obj) =>
+            <Option key={obj.segment_name} value={obj.segment_name}>{obj.segment_name}</Option>
+        )
+
+        const publicsNames = this.props.customerSegments.public_bodies_ngo.map((obj) =>
+            <Option key={obj.segment_name} value={obj.segment_name}>{obj.segment_name}</Option>
+        )
+
         return (
             <>
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
-                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />Edit revenue stream</Space>}
+                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />Edit revenue stream {additionalTitle}</Space>}
                     visible={this.props.visibility}
                     onCancel={this.onCancel}
                     footer={
@@ -179,15 +189,15 @@ class EditSegmentModal extends Component {
                             </Select>
                         </Form.Item>
 
-                        <Form.Item key="type" name="type" label="Consumers"
+                        <Form.Item key="type" name="type" label={additionalTitle}
                             validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
-                            <Select style={{ width: '100%' }} placeholder="Choose consumer"
+                            <Select style={{ width: '100%' }} placeholder="Choose segment"
                                 onChange={this.onNgoTypeChange.bind(this)}
                                 mode="multiple"
                                 defaultValue={this.state.names}
                                 value={this.state.names}
                             >
-                                {consumersNames}
+                                {additionalTitle === "Consumers" ? consumersNames : additionalTitle === "Business" ? businessNames : additionalTitle === "Public bodies & NGO" && publicsNames}
                             </Select>
                         </Form.Item>
 

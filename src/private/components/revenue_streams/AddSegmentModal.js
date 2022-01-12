@@ -192,7 +192,7 @@ class AddSegmentModal extends Component {
                         //validateStatus={this.state.segment_name !== null ? 'error' : 'success'}
                         >
                             <Select style={{ width: '100%' }}
-                                placeholder="Choose segments"
+                                placeholder="Choose segment"
                                 mode="multiple"
                                 onChange={this.onNgoTypeChange.bind(this)} >
                                 {additionalTitle === "Consumers" ? consumersNames : additionalTitle === "Business" ? businessNames : additionalTitle === "Public bodies & NGO" && publicsNames}
