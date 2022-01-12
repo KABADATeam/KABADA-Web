@@ -208,8 +208,8 @@ class Overview extends React.Component {
         const isVisibleHeader = this.getUpdatesWindowState();
         const membersList = this.props.businessPlan.members === null ? [] : this.props.businessPlan.members;
         const overview = this.props.businessPlan.overview;
-        const isCashFlowAvatarState = overview.assets.is_completed === true && overview.fixed_and_variables_costs.is_completed === true && overview.sales_forecast.is_completed === true && overview.business_start_up_investments.is_completed === true;
-        console.log(isCashFlowAvatarState);
+        // const isCashFlowAvatarState = overview.assets.is_completed === true && overview.fixed_and_variables_costs.is_completed === true && overview.sales_forecast.is_completed === true && overview.business_start_up_investments.is_completed === true;
+        // console.log(isCashFlowAvatarState);
         console.log(overview);
         console.log(membersList);
         const exportAsMenu = (
@@ -239,10 +239,6 @@ class Overview extends React.Component {
                 </Menu.Item>
             </Menu>
         );
-
-        console.log(this.props.businessPlan.coverImage);
-        console.log(this.props.businessPlan);
-
 
         if (this.props.businessPlan.overview === undefined) {
             return (<div></div>)
@@ -626,7 +622,7 @@ class Overview extends React.Component {
                                                         <div>
                                                             <Row>
                                                                 <Col span={1}>
-                                                                {isCashFlowAvatarState === true ?<Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
+                                                                {overview.assets.is_completed === true && overview.fixed_and_variables_costs.is_completed === true && overview.sales_forecast.is_completed === true && overview.business_start_up_investments.is_completed === true ?<Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
                                                                 </Col>
                                                                 <Col span={11}>
                                                                     <div style={{ ...financialTitlePositionStyle }}>
@@ -706,7 +702,7 @@ class Overview extends React.Component {
                                                                     </div>
                                                                 </Col>
                                                                 <Col span={2}>
-                                                                    <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}><Avatar size='small' icon={<DeleteOutlined/>} /></div>
+                                                                    <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}><Avatar size='small' onClick={this.onDeleteMember.bind(this, item)} icon={<DeleteOutlined/>} /></div>
                                                                     
                                                                 </Col>
                                                             </Row>
