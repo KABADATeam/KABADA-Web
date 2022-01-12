@@ -94,33 +94,33 @@ class ValuePropositions extends React.Component {
                 title: 'Product name',
                 dataIndex: 'name',
                 key: 'name',
-                width: '20%',
+                width: '16.67%',
             },
             {
                 title: 'Product type',
                 dataIndex: 'product_type',
                 key: 'product_type',
-                width: '20%',
+                width: '16.67%',
             },
             {
                 title: 'Price',
                 dataIndex: 'price',
                 key: 'price',
-                width: '20%',
+                width: '16.67%',
             },
             {
                 title: 'Value',
                 dataIndex: 'value',
                 key: 'value',
-                width: '20%',
+                width: '16.67%',
             },
             {
                 title: "",
                 dataIndex: 'action',
                 key: 'action',
-                width: '20%',
+                width: '33,33%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditItem.bind(this, record)} >Edit</Button>
                         <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.deleteItem.bind(this, record)} ><DeleteOutlined /></Button>
                     </Space>
@@ -138,7 +138,7 @@ class ValuePropositions extends React.Component {
         } else {
             return (
                 <>
-                    <Col span={16} offset={4}>
+                    <Col span={20} offset={2}>
                         <Breadcrumb style={{ marginTop: "40px" }}>
                             <Breadcrumb.Item>
                                 <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
@@ -153,7 +153,7 @@ class ValuePropositions extends React.Component {
                     </Col>
 
                     <Row align="middle" style={{ marginTop: "9px", marginBottom: "25px" }}>
-                        <Col span={10} offset={4}>
+                        <Col span={14} offset={2}>
                             <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                                 <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                                 <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Value propositions</Text>
@@ -170,7 +170,7 @@ class ValuePropositions extends React.Component {
                         </Col>
                     </Row>
 
-                    <Col span={16} offset={4}>
+                    <Col span={20} offset={2}>
                         {keyProductsCount === 0 ?
                             (
                                 <Row style={{ marginBottom: "50px" }} justify="center">
