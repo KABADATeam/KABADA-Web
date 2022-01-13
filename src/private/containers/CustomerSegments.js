@@ -162,27 +162,27 @@ class CustomerSegments extends React.Component {
             {
                 title: "Name",
                 dataIndex: "segment_name",
-                width: '35%'
+                width: '28.5%'
             },
             {
                 title: 'Age group',
                 dataIndex: 'age_titles',
                 key: 'age_titles',
-                width: '25%',
+                width: '24.5%',
             },
             {
                 title: 'Gender',
                 dataIndex: 'gender_titles',
                 key: 'gender_titles',
-                width: '25%',
+                width: '24.5%',
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '15%',
+                width: '22.5%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditConsumerSegment.bind(this, record)} >Edit</Button>
                         <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteConsumerSegment.bind(this, record)} ><DeleteOutlined /></Button>
                     </Space>
@@ -194,27 +194,27 @@ class CustomerSegments extends React.Component {
             {
                 title: "Name",
                 dataIndex: "segment_name",
-                width: '35%'
+                width: '28.5%'
             },
             {
                 title: 'Type',
                 dataIndex: 'business_type_titles',
                 key: 'business_type_titles',
-                width: '25%',
+                width: '24.5%',
             },
             {
                 title: 'Size',
                 dataIndex: 'company_size_titles',
                 key: 'company_size_titles',
-                width: '25%',
+                width: '24.5%',
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '15%',
+                width: '22.5%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditBusinessSegment.bind(this, record)} >Edit</Button>
                         <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteBusinessSegment.bind(this, record)} ><DeleteOutlined /></Button>
                     </Space>
@@ -226,21 +226,21 @@ class CustomerSegments extends React.Component {
             {
                 title: "Name",
                 dataIndex: "segment_name",
-                width: '30%'
+                width: '28.5%'
             },
             {
                 title: 'Type',
                 dataIndex: 'ngo_types_titles',
                 key: 'ngo_types_titles',
-                width: '60%',
+                width: '24.5%',
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '47%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditPublicBodiesSegment.bind(this, record)} >Edit</Button>
                         <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeletePublicBodiesSegment.bind(this, record)} ><DeleteOutlined /></Button>
                     </Space>
@@ -249,7 +249,7 @@ class CustomerSegments extends React.Component {
         ];
         return (
             <>
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
                             <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
@@ -264,7 +264,7 @@ class CustomerSegments extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col span={12} offset={4}>
+                    <Col span={14} offset={2}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Customer segments</Text>
@@ -273,7 +273,7 @@ class CustomerSegments extends React.Component {
                             </Tooltip>
                         </div>
                     </Col>
-                    <Col span={4}>
+                    <Col span={6}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                             <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.customerSegments.is_customer_segments_completed} onClick={this.onCompletedChange.bind(this)} />
                         </div>
@@ -281,11 +281,11 @@ class CustomerSegments extends React.Component {
                 </Row>
 
 
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Divider />
                 </Col>
 
-                <Col offset={4} span={16}>
+                <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
                         <Col span={7}>
                             <div style={{ marginRight: '40px' }}>
@@ -298,20 +298,20 @@ class CustomerSegments extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Table
-                                    title={() => <>
-                                        <Typography style={{ ...tableTitleStyle }}>Consumers segments</Typography>
-                                        <Typography style={{ ...tableDescriptionStyle }}>
-                                            You are creating several customer segments.
-                                        </Typography>
-                                    </>}
-                                    dataSource={this.props.customerSegments.consumers}
-                                    columns={consumersSegmentsColumns}
-                                    pagination={false}
-                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddConsumerSegment.bind(this)}><PlusOutlined />Add segment</Button></Space>)}
-                                />
-                            </Card>
+
+                            <Table
+                                title={() => <>
+                                    <Typography style={{ ...tableTitleStyle }}>Consumers segments</Typography>
+                                    <Typography style={{ ...tableDescriptionStyle }}>
+                                        You are creating several customer segments.
+                                    </Typography>
+                                </>}
+                                dataSource={this.props.customerSegments.consumers}
+                                columns={consumersSegmentsColumns}
+                                pagination={false}
+                                footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddConsumerSegment.bind(this)}><PlusOutlined />Add segment</Button></Space>)}
+                            />
+
                         </Col>
                     </Row>
                     <Divider />
@@ -327,20 +327,19 @@ class CustomerSegments extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Table
-                                    title={() => <>
-                                        <Typography style={{ ...tableTitleStyle }}>Business segments</Typography>
-                                        <Typography style={{ ...tableDescriptionStyle }}>
-                                            You are creating several customer segments.
-                                        </Typography>
-                                    </>}
-                                    dataSource={this.props.customerSegments.business}
-                                    columns={businessSegmentsColumns}
-                                    pagination={false}
-                                    footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddBusinessSegment.bind(this)}><PlusOutlined />Add segment</Button>)}
-                                />
-                            </Card>
+                            <Table
+                                title={() => <>
+                                    <Typography style={{ ...tableTitleStyle }}>Business segments</Typography>
+                                    <Typography style={{ ...tableDescriptionStyle }}>
+                                        You are creating several customer segments.
+                                    </Typography>
+                                </>}
+                                dataSource={this.props.customerSegments.business}
+                                columns={businessSegmentsColumns}
+                                pagination={false}
+                                footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddBusinessSegment.bind(this)}><PlusOutlined />Add segment</Button>)}
+                            />
+
                         </Col>
                     </Row>
                     <Divider />
@@ -356,20 +355,18 @@ class CustomerSegments extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Table
-                                    title={() => <>
-                                        <Typography style={{ ...tableTitleStyle }}>Public bodies & NGO segments</Typography>
-                                        <Typography style={{ ...tableDescriptionStyle }}>
-                                            You are creating several customer segments.
-                                        </Typography>
-                                    </>}
-                                    dataSource={this.props.customerSegments.public_bodies_ngo}
-                                    columns={publicBodiesNgoSegmentsColumns}
-                                    pagination={false}
-                                    footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddPublicBodiesSegment.bind(this)}><PlusOutlined />Add segment</Button>)}
-                                />
-                            </Card>
+                            <Table
+                                title={() => <>
+                                    <Typography style={{ ...tableTitleStyle }}>Public bodies & NGO segments</Typography>
+                                    <Typography style={{ ...tableDescriptionStyle }}>
+                                        You are creating several customer segments.
+                                    </Typography>
+                                </>}
+                                dataSource={this.props.customerSegments.public_bodies_ngo}
+                                columns={publicBodiesNgoSegmentsColumns}
+                                pagination={false}
+                                footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddPublicBodiesSegment.bind(this)}><PlusOutlined />Add segment</Button>)}
+                            />
                         </Col>
                     </Row>
                 </Col>

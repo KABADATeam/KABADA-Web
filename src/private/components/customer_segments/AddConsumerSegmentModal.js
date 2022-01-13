@@ -7,6 +7,12 @@ import { saveConsumerSegment } from "../../../appStore/actions/customerSegmentAc
 
 const { Option } = Select;
 
+const inputStyle = {
+    height: '40px', 
+    borderRadius: '4px',
+    borderColor: '#BFBFBF',
+}
+
 class AddConsumerSegmentModal extends Component {
     state = {
         segmentName: null,
@@ -139,39 +145,39 @@ class AddConsumerSegmentModal extends Component {
                         rules={
                             [{ required: true, message: 'Type segment name' }]
                         }>
-                           <Input style={{width: '100%'}} placeholder="Add segment name" onChange={(e) =>this.onNameChange(e.target.value)}/>
+                           <Input style={{width: '100%', ...inputStyle}} placeholder="Add segment name" onChange={(e) =>this.onNameChange(e.target.value)}/>
                         </Form.Item>
                         <Form.Item key="age" name="age" label="Age group (years)"
                             rules={[{ required: true, message: 'Select age group (years)' }]}>
-                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Select age group (years)" onChange={this.onAgeGroupChange.bind(this)} >
+                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Select age group (years)" onChange={this.onAgeGroupChange.bind(this)} >
                                 {ageGroupOptions}
                             </Select>
                         </Form.Item>
 
                         <Form.Item key="gender" name="gender" label="Gender"
                             rules={[{ required: true, message: 'Select gender' }]}>
-                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Select gender" onChange={this.onGenderTypeChange.bind(this)} >
+                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Select gender" onChange={this.onGenderTypeChange.bind(this)} >
                                 {genderOptions}
                             </Select>
                         </Form.Item>
 
                         <Form.Item key="education" name="education" label="Education"
                             rules={[{ required: true, message: 'Select education' }]}>
-                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Choose education" onChange={this.onEducationTypeChange.bind(this)} >
+                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose education" onChange={this.onEducationTypeChange.bind(this)} >
                                 {educationOptions}
                             </Select>
                         </Form.Item>
 
                         <Form.Item key="income" name="income" label="Income"
                             rules={[{ required: true, message: 'Select income' }]}>
-                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Choose income" onChange={this.onIncomeTypeChange.bind(this)} >
+                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose income" onChange={this.onIncomeTypeChange.bind(this)} >
                                 {incomeOptions}
                             </Select>
                         </Form.Item>
 
                         <Form.Item key="geographicLocation" name="geographicLocation" label="Geographic Location"
                             rules={[{ required: true, message: 'Select geographic location' }]}>
-                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Choose geographic location" onChange={this.onLocationTypeChange.bind(this)} >
+                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose geographic location" onChange={this.onLocationTypeChange.bind(this)} >
                                 {locationOptions}
                             </Select>
                         </Form.Item>

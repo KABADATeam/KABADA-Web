@@ -7,13 +7,10 @@ import { withRouter } from 'react-router-dom';
 class TooltipComponent extends Component {
     title = (tooltip, tooltipCode) => {
         if (tooltip === undefined) {
-            console.log(tooltip);
             const title = undefined;
-            console.log(title);
             return title
         } else if (tooltip !== undefined) {
             const title = tooltip.find((element, index) => element.code === tooltipCode);
-            console.log(title);
             return title
         }
     }

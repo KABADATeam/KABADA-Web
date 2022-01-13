@@ -7,6 +7,12 @@ import { saveNgoSegment } from "../../../appStore/actions/customerSegmentAction"
 
 const { Option } = Select;
 
+const inputStyle = {
+    height: '40px', 
+    borderRadius: '4px',
+    borderColor: '#BFBFBF',
+}
+
 class AddPublicBodiesSegmentModal extends Component {
     state = {
         segmentName: null,
@@ -83,11 +89,11 @@ class AddPublicBodiesSegmentModal extends Component {
                         rules={
                             [{ required: true, message: 'Type segment name' }]
                         }>
-                            <Input style={{width: '100%'}} placeholder="Add segment name" onChange={(e) => this.onNameChange(e.target.value)}/>
+                            <Input style={{width: '100%', ...inputStyle }} placeholder="Add segment name" onChange={(e) => this.onNameChange(e.target.value)}/>
                         </Form.Item>
                         <Form.Item key="type" name="type" label="Type"
                             rules={[{ required: true, message: 'Select type' }]}>
-                            <Select style={{ width: '100%' }} mode="multiple" allowClear placeholder="Select type" onChange={this.onNgoTypeChange.bind(this)} >
+                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" allowClear placeholder="Select type" onChange={this.onNgoTypeChange.bind(this)} >
                                 {typeOptions}
                             </Select>
                         </Form.Item>

@@ -8,12 +8,10 @@ import { saveBusinessSegment } from "../../../appStore/actions/customerSegmentAc
 const { Option } = Select;
 
 const inputStyle = {
+    height: '40px', 
     borderRadius: '4px',
-    width: '100%',
-    marginBottom: '0px',
-    textAlign: 'center',
-    fontSize: '14px'
-};
+    borderColor: '#BFBFBF',
+}
 
 class AddBusinessSegmentModal extends Component {
     state = {
@@ -142,18 +140,18 @@ class AddBusinessSegmentModal extends Component {
                         rules={
                             [{ required: true, message: 'Type segment name' }]
                         }>
-                            <Input style={{width: '100%'}} placeholder="Add segment name" onChange={(e) => this.onNameChange(e.target.value)}/>
+                            <Input style={{width: '100%', ...inputStyle}} placeholder="Add segment name" onChange={(e) => this.onNameChange(e.target.value)}/>
                         </Form.Item>
                         <Form.Item key="type" name="type" label="Type"
                             rules={[{ required: true, message: 'Select business type' }]}>
-                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Select type" onChange={this.onTypeChange.bind(this)} >
+                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Select type" onChange={this.onTypeChange.bind(this)} >
                                 {typeOptions}
                             </Select>
                         </Form.Item>
 
                         <Form.Item key="size" name="size" label="Company size"
                             rules={[{ required: true, message: 'Select company size' }]}>
-                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Select company size" onChange={this.onCompanySizeChange.bind(this)} >
+                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Select company size" onChange={this.onCompanySizeChange.bind(this)} >
                                 {companySizeOptions}
                             </Select>
                         </Form.Item>
@@ -171,7 +169,7 @@ class AddBusinessSegmentModal extends Component {
 
                         <Form.Item key="geographicLocation" name="geographicLocation" label="Geographic Location"
                             rules={[{ required: true, message: 'Choose geographic location' }]}>
-                            <Select style={{ width: '100%' }} mode="multiple" placeholder="Choose geographic location" onChange={this.onLocationTypeChange.bind(this)} >
+                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose geographic location" onChange={this.onLocationTypeChange.bind(this)} >
                                 {locationOptions}
                             </Select>
                         </Form.Item>
