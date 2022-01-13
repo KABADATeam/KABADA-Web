@@ -141,27 +141,27 @@ class Channels extends React.Component {
                 title: 'Channels',
                 dataIndex: 'channel_name',
                 key: 'channel_name',
-                width: '25%',
+                width: '24,5%',
             },
             {
                 title: 'Distribution channel',
                 dataIndex: 'distribution_name',
                 key: 'distribution_name',
-                width: '30%',
+                width: '25,2%',
             },
             {
                 title: 'Product',
                 dataIndex: 'product_name',
                 key: 'product_name',
-                width: '35%',
+                width: '31%',
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19,3%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditChannel.bind(this, record)} >Edit</Button>
                         <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteChannel.bind(this, record)} ><DeleteOutlined /></Button>
                     </Space>
@@ -171,7 +171,7 @@ class Channels extends React.Component {
 
         return (
             <>
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
                             <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
@@ -186,7 +186,7 @@ class Channels extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col span={12} offset={4}>
+                    <Col span={14} offset={2}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Channels</Text>
@@ -195,7 +195,7 @@ class Channels extends React.Component {
                             </Tooltip>
                         </div>
                     </Col>
-                    <Col span={4}>
+                    <Col span={6}>
                         <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                             <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.channels.is_channels_completed} onClick={this.onCompletedChange.bind(this)} />
                         </div>
@@ -203,11 +203,11 @@ class Channels extends React.Component {
                 </Row>
 
 
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Divider />
                 </Col>
 
-                <Col offset={4} span={16}>
+                <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
                         <Col span={7}>
                             <div style={{ marginRight: '40px' }}>
@@ -218,7 +218,6 @@ class Channels extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                                 <Table
                                     title={() =>
                                         <>
@@ -229,7 +228,6 @@ class Channels extends React.Component {
                                     pagination={false}
                                     footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddChannel.bind(this)}><PlusOutlined />Add Channel</Button></Space>)}
                                 />
-                            </Card >
                         </Col>
                     </Row>
                 </Col>
