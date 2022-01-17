@@ -369,7 +369,7 @@ class Overview extends React.Component {
                                                             </Row>
                                                             <Row>
                                                                 <Text style={descriptionTextStyle}>
-                                                                    {overview.channels.description === "" ? "Customer segments" : overview.channels.description}
+                                                                    {overview.channels.description === null ? "Channels list" : overview.channels.description}
                                                                 </Text>
                                                             </Row>
                                                         </div>
@@ -464,7 +464,7 @@ class Overview extends React.Component {
                                                             </Row>
                                                             <Row>
                                                                 <Text style={descriptionTextStyle}>
-                                                                    {overview.key_partners.description === "" ? "Key partners list" : overview.key_partners.description}
+                                                                    {overview.key_partners.description === null ? "Key partners list" : overview.key_partners.description}
                                                                 </Text>
                                                             </Row>
                                                         </div>
