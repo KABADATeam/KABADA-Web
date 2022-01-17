@@ -13,6 +13,7 @@ import EditPublicBodiesSegmentModal from '../components/customer_segments/EditPu
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getCustomerSegmentProperties, getCustomerSegments, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState } from "../../appStore/actions/customerSegmentAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import TooltipComponent from "../components/Tooltip";
 
 const { Text } = Typography;
 
@@ -268,9 +269,7 @@ class CustomerSegments extends React.Component {
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Customer segments</Text>
-                            <Tooltip title="Tooltip text">
-                                <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
-                            </Tooltip>
+                            <TooltipComponent code="custsegm" type="title" />
                         </div>
                     </Col>
                     <Col span={6}>
