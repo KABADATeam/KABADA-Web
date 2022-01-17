@@ -9,6 +9,7 @@ import { getProducts, deleteProduct, saveState } from "../../appStore/actions/pr
 import EditProduct from "../components/new_product/EditProduct";
 import '../../css/customTable.css';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import TooltipComponent from "../components/Tooltip";
 
 const { Text } = Typography;
 
@@ -157,9 +158,7 @@ class ValuePropositions extends React.Component {
                             <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                                 <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                                 <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Value propositions</Text>
-                                <Tooltip title="Tooltip text">
-                                    <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
-                                </Tooltip>
+                                <TooltipComponent code="vp1" type="title"/>
                             </div>
                         </Col>
                         <Col span={6}>
@@ -200,7 +199,7 @@ class ValuePropositions extends React.Component {
                                             dataSource={data}
                                             columns={valuePropositionsColumns}
                                             pagination={false}
-                                            footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Text>Maximum products: {keyProductsCount}/3 <Tooltip title="Tooltip text"><InfoCircleFilled style={{ fontSize: '16px', color: '#BFBFBF', marginLeft: '5px' }} /></Tooltip></Text></Space>)}
+                                            footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Text>Maximum products: {keyProductsCount}/3 <TooltipComponent code="vp2" type="text"/></Text></Space>)}
                                         />
                                     </Col>
                                 </Row>
