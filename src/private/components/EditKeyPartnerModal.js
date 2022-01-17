@@ -85,7 +85,7 @@ class EditKeyPartnerModal extends Component {
                     }
                 >
                     <Form layout="vertical" id="myForm" name="myForm" onFinish={this.onOK}>
-                        <Form.Item key="name" name="name" label="Company Name1" initialValue={this.props.item.name}
+                        <Form.Item key="name" name="name" label="Company name" initialValue={this.props.item.name}
                             rules={[
                                 {
                                     validator: async (_, value) => {
@@ -95,7 +95,7 @@ class EditKeyPartnerModal extends Component {
                                     },
                                 },
                             ]}>
-                            {this.props.item.type_title === 'Self distribution' || 'Highly diversified distributors' ? <Input size="large" style={inputStyle} value={this.state.companyName} disabled onChange={this.onCompanyNameChange} /> :
+                            {this.props.item.type_title === 'Self distribution' || 'Highly diversified distributors' ? <Input size="large" style={inputStyle} value={this.state.companyName} onChange={this.onCompanyNameChange} /> :
                                 <Input size="large" style={inputStyle} value={this.state.companyName} onChange={this.onCompanyNameChange} />}
 
                         </Form.Item>
