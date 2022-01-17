@@ -10,6 +10,7 @@ import ProductComponent from "../components/key_activities/ProductComponent";
 import KeyActivityTypesModal from "../components/key_activities/KeyActivityTypesModal";
 import AddKeyActivityModal from "../components/key_activities/AddKeyActivityModal";
 import EditKeyActivityModal from "../components/key_activities/EditKeyActivityModal"
+import TooltipComponent from "../components/Tooltip";
 
 const { Text } = Typography;
 
@@ -108,7 +109,7 @@ class KeyActivities extends React.Component {
 
         return (
             <>
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
                             <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
@@ -123,10 +124,11 @@ class KeyActivities extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col span={12} offset={4}>
+                    <Col span={16} offset={2}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Key Activities</Text>
+                            <TooltipComponent code="keyactive1" type="title"/>
                         </div>
                     </Col>
                     <Col span={4}>
@@ -135,7 +137,7 @@ class KeyActivities extends React.Component {
                         </div>
                     </Col>
                 </Row>
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Divider />
                 </Col>
                 <List
