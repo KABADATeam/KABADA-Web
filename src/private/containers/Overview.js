@@ -316,7 +316,7 @@ class Overview extends React.Component {
                                                     <Text style={{ ...pageTitleTextStyle, marginLeft: '20px' }}>
                                                         Business canvas
                                                     </Text>
-                                                    <TooltipComponent tooltipCode="ovmbp1" />
+                                                    <TooltipComponent tooltipCode="ovmbp1" type="text"/>
                                                 </>
                                             }
                                             style={{ marginTop: '16px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
@@ -504,7 +504,7 @@ class Overview extends React.Component {
                                                                     <Link to='/swot' style={canvasElementTextStyle}>SWOT</Link>
                                                                 </Col>
                                                                 <Col>
-                                                                    <TooltipComponent tooltipCode="ovmbp3" />
+                                                                    <TooltipComponent tooltipCode="ovmbp3" type="text"/>
                                                                 </Col>
                                                             </Row>
                                                             <Row>
@@ -522,7 +522,7 @@ class Overview extends React.Component {
                                                     <Text style={{ ...pageTitleTextStyle, marginLeft: '20px' }}>
                                                         Financial projections
                                                     </Text>
-                                                    <TooltipComponent tooltipCode="ovmbp2" />
+                                                    <TooltipComponent tooltipCode="ovmbp2" type="text"/>
                                                 </>}
                                             style={{ marginTop: '16px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
                                             <List.Item key='12'>
@@ -653,7 +653,7 @@ class Overview extends React.Component {
                                                                     <Link to='/personal-characteristics' style={canvasElementTextStyle}>Personal-characteristics</Link>
                                                                 </Col>
                                                                 <Col>
-                                                                    <TooltipComponent tooltipCode="ovmbp4"/>
+                                                                    <TooltipComponent tooltipCode="ovmbp4" type="text"/>
                                                                 </Col>
                                                             </Row>
                                                             <Row>
