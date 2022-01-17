@@ -109,14 +109,14 @@ class EditKeyPartnerModal extends Component {
                             </Radio.Group>
                         </Form.Item>
 
-                        <Form.Item key="website" name="website" label="Company website (optional)" initialValue={this.props.item.website}>
-                            {this.props.item.type_title === 'Self distribution' || 'Highly diversified distributors' ? <Input size="large" style={inputStyle} disabled onChange={this.onWebsiteChange} /> :
+                        <Form.Item key="website" name="website" label="Company website (optional)"
+                            initialValue={this.props.item.website}>
+                            {this.props.item.type_title === 'Self distribution' || this.props.item.type_title === 'Highly diversified distributors' ? <Input size="large" disabled style={inputStyle} onChange={this.onWebsiteChange} /> :
                                 <Input size="large" style={inputStyle} onChange={this.onWebsiteChange} />}
-
                         </Form.Item>
 
                         <Form.Item key="comment" name="comment" label="Comment (optional)" initialValue={this.props.item.comment}>
-                            {this.props.item.type_title === 'Self distribution' || 'Highly diversified distributors' ? <Input size="large" disabled style={inputStyle} onChange={this.onCommentChange} /> :
+                            {this.props.item.type_title === 'Self distribution' || this.props.item.type_title === 'Highly diversified distributors' ? <Input size="large" disabled style={inputStyle} onChange={this.onCommentChange} /> :
                                 <Input size="large" style={inputStyle} onChange={this.onCommentChange} />}
 
                         </Form.Item>
