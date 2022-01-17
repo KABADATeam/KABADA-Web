@@ -4,6 +4,8 @@ import { Row, Col, Typography, Input, Table, Tooltip, Space } from 'antd';
 import { connect } from 'react-redux';
 import { changeWorkingCapitalAmount, changeOwnMoneyShort, changeWorkingCapital } from "../../../appStore/actions/businessInvestmentAction";
 import { InfoCircleFilled } from '@ant-design/icons';
+import TooltipComponent from '../Tooltip';
+import '../../../css/BusinessInvestment.css'
 
 const { Text } = Typography;
 
@@ -21,7 +23,7 @@ class WorkingCapitalScenario1 extends React.Component {
                 title: 'Month',
                 dataIndex: 'month',
                 key: 'month',
-                width: '32.5%',
+                width: '43.5%',
                 render: (text, obj, record) => (
                     <Text>Startup</Text> 
                 )
@@ -29,15 +31,12 @@ class WorkingCapitalScenario1 extends React.Component {
             {
                 title: () => (
                     <Space>
-                        <Text>My money</Text>
-                        <Tooltip title="Tooltip text">
-                            <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF' }} />
-                        </Tooltip>
+                        <Text>My money<TooltipComponent code="bstartinvestwc7" type="text"/></Text>
                     </Space>
                 ),
                 dataIndex: 'own_amount',
                 key: 'own_amount',
-                width: '20%',
+                width: '17%',
                 align: 'center',
                 render: (text, obj, record) => (
                     <div style={{ float: 'right' }}>
@@ -46,6 +45,7 @@ class WorkingCapitalScenario1 extends React.Component {
                             size="large"
                             defaultValue={text === null ? '' : text}
                             onChange={e => this.props.changeOwnMoneyShort(e.target.value)}
+                            className={"business-startup-input-style"}
                         />
                     </div>
 
@@ -54,15 +54,12 @@ class WorkingCapitalScenario1 extends React.Component {
             {
                 title: () => (
                     <Space>
-                        <Text>Loan Amount</Text>
-                        <Tooltip title="Tooltip text">
-                            <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF' }} />
-                        </Tooltip>
+                        <Text>Loan Amount<TooltipComponent code="bstartinvestwc8" type="text"/></Text>
                     </Space>
                 ),
                 dataIndex: 'loan_amount',
                 key: 'loan_amount',
-                width: '22.5%',
+                width: '19.5%',
                 align: 'right',
                 render: (text, obj, record) => (
                     <Text>{text}</Text> 
@@ -72,15 +69,12 @@ class WorkingCapitalScenario1 extends React.Component {
             {
                 title: () => (
                     <Space>
-                        <Text>Total Necessary</Text>
-                        <Tooltip title="Tooltip text">
-                            <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF' }} />
-                        </Tooltip>
+                        <Text>Total Necessary<TooltipComponent code="bstartinvestwc9" type="text"/></Text>
                     </Space>
                 ),
                 dataIndex: 'total_necessary',
                 key: 'total_necessary',
-                width: '25%',
+                width: '20%',
                 align: 'right',
                 render: (text, obj, record) => (
                     text === null ? <Text style={{ color: '#CF1322' }}>-</Text> : <Text style={{ color: '#CF1322' }}>{text}</Text>
@@ -98,14 +92,13 @@ class WorkingCapitalScenario1 extends React.Component {
                                         <Row style={{ marginBottom: 16 }}>
                                             <div>
                                                 <Text>Working capital</Text>
-                                                <Tooltip title="Tooltip text">
-                                                    <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF', marginLeft: '5.25px' }} />
-                                                </Tooltip>
+                                                <TooltipComponent code="bstartinvestwc5" type="text"/>
                                             </div>
                                         </Row>
                                         <Row style={{ marginBottom: 8 }}>
                                             <Col span={16} style={{ marginTop: 5 }}>
                                                 <Text style={{ fontWeight: 400, fontSize: 14 }}>My initial guess, how big Working Capital I need</Text>
+                                                <TooltipComponent code="bstartinvestwc6" type="text"/>
                                             </Col>
                                             <Col span={8}>
                                                 <div style={{ float: 'right' }}>
@@ -114,6 +107,7 @@ class WorkingCapitalScenario1 extends React.Component {
                                                         size="large"
                                                         defaultValue={this.props.investments.original.working_capital_amount === null ? 0 : this.props.investments.original.working_capital_amount}
                                                         onChange={e => this.props.changeWorkingCapitalAmount(e.target.value)}
+                                                        className={"business-startup-input-style"}
                                                     />
                                                 </div>
                                             </Col>

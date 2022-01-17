@@ -5,6 +5,8 @@ import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCa
 import { connect } from 'react-redux';
 import { CaretDownFilled } from '@ant-design/icons';
 import { changeVisibility, changePaymentPeriod, changePaymentPeriodShort, changeInterestRate, changeInterestRateShort, changeGracePeriod, changeGracePeriodShort } from "../../../appStore/actions/businessInvestmentAction";
+import TooltipComponent from '../Tooltip'
+import '../../../css/BusinessInvestment.css'
 
 const { Option } = Select;
 
@@ -92,18 +94,25 @@ class BusinessStartUpInvestments extends React.Component {
                 title: () => (<Text style={textStyleInTable}>Loan amount</Text>),
                 dataIndex: 'loan_amount',
                 key: 'loan_amount',
-                width: '40%',
+                width: '46%',
                 render: (text, obj, record) => (
                     text === null ? <Text style={loanAmountText}>€0</Text> : <Text style={loanAmountText}>€{text}</Text>
                 )
             },
             {
-                title: () => (<Text style={textStyleInTable}>Payment period</Text>),
+                title: () => (
+                    <>
+                        <Row>
+                            <Text style={textStyleInTable}>Payment period </Text>
+                            <TooltipComponent code="bstartinvestbf6" type="text"/>
+                        </Row>
+                    </>                
+                ),
                 dataIndex: 'payment_period',
                 key: 'payment_period',
-                width: '20%',
+                width: '18.5%',
                 render: (text, obj, record) => (
-                    <Select defaultValue={text === null ? 12 : text + " mo."} suffixIcon={<CaretDownFilled />} onChange={e => this.props.changePaymentPeriod(e)}>
+                    <Select defaultValue={text === null ? 12 : text + " mo."} suffixIcon={<CaretDownFilled />} onChange={e => this.props.changePaymentPeriod(e)} style={{width: 112}} className={"business-startup-selector-style"}>
                         <Option value={3}>3 mo.</Option>
                         <Option value={6}>6 mo.</Option>
                         <Option value={9}>9 mo.</Option>
@@ -126,28 +135,46 @@ class BusinessStartUpInvestments extends React.Component {
                 )
             },
             {
-                title: () => (<Text style={textStyleInTable}>Interest rate</Text>),
+                title: () => (
+                    <>
+                        <Row>
+                            <Text style={textStyleInTable}>Interest rate </Text>
+                            <TooltipComponent code="bstartinvestbf7" type="text"/>
+                        </Row>
+                    </>
+                ),
                 dataIndex: 'interest_rate',
                 key: 'interest_rate',
-                width: '20%',
+                width: '16.5%',
                 render: (text, obj, record) => (
                     <InputNumber
                         size="large"
                         defaultValue={this.props.investments.original.interest_rate === null ? 0 + ' %' : this.props.investments.original.interest_rate + ' %'}
                         formatter={value => `${value} %`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                         onChange={e => this.props.changeInterestRate(e)}
+                        style={{width: 96}}
+                        className={"business-startup-input-style"}
                     />
                 )
             },
             {
-                title: () => (<Text style={textStyleInTable}>Grace period (mo.)</Text>),
+                title: () => (
+                    <>
+                        <Row>
+                            <Text style={textStyleInTable}>Grace period (mo.) </Text>
+                            <TooltipComponent code="bstartinvestbf8" type="text"/>
+                        </Row>
+                    </>
+                ),
                 dataIndex: 'grace_period',
                 key: 'grace_period',
-                width: '20%',
+                width: '19%',
                 render: (text, obj, record) => (
                     <Select defaultValue={this.props.investments.original.grace_period === null ? 0 : this.props.investments.original.grace_period}
                         suffixIcon={<CaretDownFilled />}
                         onChange={e => this.props.changeGracePeriod(e)}
+                        style={{width: 128}}
+                        className={"business-startup-selector-style"}
                     >
                         {gracePeriodOptions}
                     </Select>
@@ -160,45 +187,55 @@ class BusinessStartUpInvestments extends React.Component {
                 title: () => (<Text style={textStyleInTable}>Loan amount</Text>),
                 dataIndex: 'loan_amount_short',
                 key: 'loan_amount',
-                width: '40%',
+                width: '46%',
                 render: (text, obj, record) => (
                     text === null ? <Text style={loanAmountText}>€0</Text> : <Text style={loanAmountText}>€{text}</Text>
                 )
             },
             {
-                title: () => (<Text style={textStyleInTable}>Payment period</Text>),
+                title: () => (<Text style={textStyleInTable}>Payment period<TooltipComponent code="bstartinvestbf2" type="text"/></Text>),
                 dataIndex: 'payment_period_short',
                 key: 'payment_period',
-                width: '20%',
+                width: '18.5%',
                 render: (text, obj, record) => (
-                    <Select defaultValue={this.props.investments.original.payment_period_short === null ? 1 : this.props.investments.original.payment_period_short} suffixIcon={<CaretDownFilled />} onChange={e => this.props.changePaymentPeriodShort(e)}>
+                    <Select 
+                        defaultValue={this.props.investments.original.payment_period_short === null ? 1 : this.props.investments.original.payment_period_short} 
+                        suffixIcon={<CaretDownFilled />} 
+                        onChange={e => this.props.changePaymentPeriodShort(e)} 
+                        style={{width: 112}}
+                        className={"business-startup-selector-style"}
+                    >
                         {shortLoanPaymentPeriodOptions}
                     </Select>
                 )
             },
             {
-                title: () => (<Text style={textStyleInTable}>Interest rate</Text>),
+                title: () => (<Text style={textStyleInTable}>Interest rate<TooltipComponent code="bstartinvestbf3" type="text"/></Text>),
                 dataIndex: 'interest_rate_short',
                 key: 'interest_rate',
-                width: '20%',
+                width: '16.5%',
                 render: (text, obj, record) => (
                     <InputNumber
                         size="large"
                         defaultValue={this.props.investments.original.interest_rate_short === null ? 0 + ' %' : this.props.investments.original.interest_rate_short + ' %'}
                         formatter={value => `${value} %`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                         onChange={e => this.props.changeInterestRateShort(e)}
+                        style={{width: 96}}
+                        className={"business-startup-input-style"}
                     />
                 )
             },
             {
-                title: () => (<Text style={textStyleInTable}>Grace period (mo.)</Text>),
+                title: () => (<Text style={textStyleInTable}>Grace period (mo.)<TooltipComponent code="bstartinvestbf4" type="text"/></Text>),
                 dataIndex: 'grace_period_short',
                 key: 'grace_period',
-                width: '20%',
+                width: '19%',
                 render: (text, obj, record) => (
                     <Select defaultValue={this.props.investments.original.grace_period_short === null ? 0 : this.props.investments.original.grace_period_short}
                         suffixIcon={<CaretDownFilled />}
                         onChange={e => this.props.changeGracePeriodShort(e)}
+                        style={{width: 128}}
+                        className={"business-startup-selector-style"}
                     >
                         {gracePeriodOptions}
                     </Select>
@@ -209,7 +246,7 @@ class BusinessStartUpInvestments extends React.Component {
             <>
                 <Col span={24} >
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={8}>
+                        <Col span={7}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Business Financing</Typography.Title>
                                 <Typography.Text style={{ ...textStyle }}>
@@ -217,14 +254,14 @@ class BusinessStartUpInvestments extends React.Component {
                                 </Typography.Text>
                             </div>
                         </Col>
-                        <Col span={16}>
+                        <Col span={17}>
                             <div>
                                 <Table
                                     title={() => (
                                         <div>
                                             <Row>
                                                 <div>
-                                                    <Text>Loan (Long term)</Text>
+                                                    <Text>Loan (Long term)<TooltipComponent code="bstartinvestbf1" type="text"/></Text>
                                                 </div>
                                             </Row>
                                         </div>
@@ -240,7 +277,7 @@ class BusinessStartUpInvestments extends React.Component {
                                         <div>
                                             <Row>
                                                 <div>
-                                                    <Text>Loan (Short term)</Text>
+                                                    <Text>Loan (Short term)<TooltipComponent code="bstartinvestbf5" type="text"/></Text>
                                                 </div>
                                             </Row>
                                         </div>
