@@ -11,6 +11,7 @@ import CostCategoriesModal from "../components/cost_structure/CostCategoriesModa
 import EditCostModal from "../components/cost_structure/EditCostModal"
 import AddCostModal from "../components/cost_structure/AddCostModal";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import TooltipComponent from "../components/Tooltip";
 
 const { Text } = Typography;
 
@@ -107,6 +108,7 @@ class CostStructure extends React.Component {
         this.props.deleteVariableCost({ "id": item.id, "number": 2 });
     }
     onEditFixedCost(item) {
+        console.log(item);
         this.setState({
             item: { ...item },
             fixedCostNumber: 1
@@ -154,27 +156,27 @@ class CostStructure extends React.Component {
                 title: 'Cost type',
                 dataIndex: 'category_title',
                 key: 'category_title',
-                width: '30%',
+                width: '31.5%',
             },
             {
                 title: 'Type',
                 dataIndex: 'type_title',
                 key: 'type_title',
-                width: '30%'
+                width: '26%'
             },
             {
                 title: 'Name',
                 dataIndex: 'name',
                 key: 'name',
-                width: '30%',
+                width: '23%',
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditFixedCost.bind(this, record)} >Edit</Button>
                         <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteFixedCost.bind(this, record)}><DeleteOutlined /></Button>
                     </Space>
@@ -186,27 +188,27 @@ class CostStructure extends React.Component {
                 title: 'Cost type',
                 dataIndex: 'category_title',
                 key: 'category_title',
-                width: '25%',
+                width: '31.5%',
             },
             {
                 title: 'Type',
                 dataIndex: 'type_title',
                 key: 'type_title',
-                width: '25%',
+                width: '26%',
             },
             {
                 title: 'Name',
                 dataIndex: 'name',
                 key: 'name',
-                width: '40%',
+                width: '23%',
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditVarCost.bind(this, record)} >Edit</Button>
                         <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteVariableCost.bind(this, record)} ><DeleteOutlined /></Button>
                     </Space>
@@ -215,7 +217,7 @@ class CostStructure extends React.Component {
         ];
         return (
             <>
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
                             <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
@@ -230,10 +232,11 @@ class CostStructure extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col span={12} offset={4}>
+                    <Col span={16} offset={2}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Cost structure</Text>
+                            <TooltipComponent code="coststruct" type="title" />
                         </div>
                     </Col>
                     <Col span={4}>
@@ -242,12 +245,10 @@ class CostStructure extends React.Component {
                         </div>
                     </Col>
                 </Row>
-
-
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Divider />
                 </Col>
-                <Col offset={4} span={16}>
+                <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
                         <Col span={7}>
                             <div style={{ marginRight: '40px' }}>
@@ -258,14 +259,13 @@ class CostStructure extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Table
-                                    dataSource={this.props.costs.fixed_costs}
-                                    columns={fixedCostsColumns}
-                                    pagination={false}
-                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.openFixedCostCategories.bind(this)}><PlusOutlined />Add fixed cost</Button></Space>)}
-                                />
-                            </Card >
+                            <Table
+                                dataSource={this.props.costs.fixed_costs}
+                                columns={fixedCostsColumns}
+                                rowKey={record => record.id}
+                                pagination={false}
+                                footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.openFixedCostCategories.bind(this)}><PlusOutlined />Add fixed cost</Button></Space>)}
+                            />
                         </Col>
                     </Row>
                     <Divider />
@@ -279,14 +279,13 @@ class CostStructure extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Table
-                                    dataSource={this.props.costs.variable_costs}
-                                    columns={varCostsColumns}
-                                    pagination={false}
-                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.openVarCostCategories.bind(this)}><PlusOutlined />Add variable cost</Button></Space>)}
-                                />
-                            </Card >
+                            <Table
+                                dataSource={this.props.costs.variable_costs}
+                                columns={varCostsColumns}
+                                rowKey={record => record.id}
+                                pagination={false}
+                                footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.openVarCostCategories.bind(this)}><PlusOutlined />Add variable cost</Button></Space>)}
+                            />
                         </Col>
                     </Row>
                 </Col>
