@@ -49,14 +49,24 @@ const loanAmountText = {
 class BusinessStartUpInvestments extends React.Component {
 
     render() {
-        const gracePeriodSelectionArray = []
+        const gracePeriodSelectionArray = [];
         for (let i = 0; i < (this.props.investments.original.period - 5); i++) {
             gracePeriodSelectionArray[i] = {
                 value: i,
                 label: i + ' mo.'
             }
         }
+        const shortLoanPaymentPeriodSelectionArray = [];
+        for (let i = 1; i < (this.props.investments.original.period); i++) {
+            shortLoanPaymentPeriodSelectionArray[i] = {
+                value: i,
+                label: i + ' mo.'
+            }
+        }
         const gracePeriodOptions = gracePeriodSelectionArray.map((v, index) => (
+            <Option value={v.value} key={v.value}>{v.label}</Option>
+        ))
+        const shortLoanPaymentPeriodOptions = shortLoanPaymentPeriodSelectionArray.map((v, index) => (
             <Option value={v.value} key={v.value}>{v.label}</Option>
         ))
         const loanLongDataSource = [
@@ -161,31 +171,8 @@ class BusinessStartUpInvestments extends React.Component {
                 key: 'payment_period',
                 width: '20%',
                 render: (text, obj, record) => (
-                    <Select defaultValue={text === null ? 1 : text + " mo."} suffixIcon={<CaretDownFilled />} onChange={e => this.props.changePaymentPeriodShort(e)}>
-                        <Option value={1}>1 mo.</Option>
-                        <Option value={2}>2 mo.</Option>
-                        <Option value={3}>3 mo.</Option>
-                        <Option value={4}>4 mo.</Option>
-                        <Option value={5}>5 mo.</Option>
-                        <Option value={6}>6 mo.</Option>
-                        <Option value={7}>7 mo.</Option>
-                        <Option value={8}>8 mo.</Option>
-                        <Option value={9}>9 mo.</Option>
-                        <Option value={10}>10 mo.</Option>
-                        <Option value={11}>11 mo.</Option>
-                        <Option value={12}>12 mo.</Option>
-                        <Option value={13}>13 mo.</Option>
-                        <Option value={14}>14 mo.</Option>
-                        <Option value={15}>15 mo.</Option>
-                        <Option value={16}>16 mo.</Option>
-                        <Option value={17}>17 mo.</Option>
-                        <Option value={18}>18 mo.</Option>
-                        <Option value={19}>19 mo.</Option>
-                        <Option value={20}>20 mo.</Option>
-                        <Option value={21}>21 mo.</Option>
-                        <Option value={22}>22 mo.</Option>
-                        <Option value={23}>23 mo.</Option>
-                        <Option value={24}>24 mo.</Option>
+                    <Select defaultValue={this.props.investments.original.payment_period_short === null ? 1 : this.props.investments.original.payment_period_short} suffixIcon={<CaretDownFilled />} onChange={e => this.props.changePaymentPeriodShort(e)}>
+                        {shortLoanPaymentPeriodOptions}
                     </Select>
                 )
             },
