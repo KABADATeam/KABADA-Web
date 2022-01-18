@@ -317,7 +317,7 @@ class CustomerRelationships extends React.Component {
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Customer Relationships</Text>
-                            <TooltipComponent tooltipCode="ovmbp1" type="title" />
+                            <TooltipComponent code="ovmbp1" type="title" />
                         </div>
                     </Col>
                     <Col span={4}>

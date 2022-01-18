@@ -217,8 +217,6 @@ class Overview extends React.Component {
         const overview = this.props.businessPlan.overview;
         // const isCashFlowAvatarState = overview.assets.is_completed === true && overview.fixed_and_variables_costs.is_completed === true && overview.sales_forecast.is_completed === true && overview.business_start_up_investments.is_completed === true;
         // console.log(isCashFlowAvatarState);
-        console.log(overview);
-        console.log(membersList);
         const exportAsMenu = (
             <Menu>
                 <Menu.Item key="1" onClick={this.downloadDOCFile}>
@@ -322,7 +320,7 @@ class Overview extends React.Component {
                                                     <Text style={{ ...pageTitleTextStyle, marginLeft: '20px' }}>
                                                         Business canvas
                                                     </Text>
-                                                    <TooltipComponent tooltipCode="ovmbp1" type="text" />
+                                                    <TooltipComponent code="ovmbp1" type="text" />
                                                 </>
                                             }
                                             style={{ marginTop: '16px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
@@ -510,7 +508,7 @@ class Overview extends React.Component {
                                                                     <Link to='/swot' style={canvasElementTextStyle}>SWOT</Link>
                                                                 </Col>
                                                                 <Col>
-                                                                    <TooltipComponent tooltipCode="ovmbp3" type="text" />
+                                                                    <TooltipComponent code="ovmbp3" type="text" />
                                                                 </Col>
                                                             </Row>
                                                             <Row>
@@ -528,7 +526,7 @@ class Overview extends React.Component {
                                                     <Text style={{ ...pageTitleTextStyle, marginLeft: '20px' }}>
                                                         Financial projections
                                                     </Text>
-                                                    <TooltipComponent tooltipCode="ovmbp2" type="text" />
+                                                    <TooltipComponent code="ovmbp2" type="text" />
                                                 </>}
                                             style={{ marginTop: '16px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
                                             <List.Item key='12'>
@@ -659,7 +657,7 @@ class Overview extends React.Component {
                                                                     <Link to='/personal-characteristics' style={canvasElementTextStyle}>Personal-characteristics</Link>
                                                                 </Col>
                                                                 <Col>
-                                                                    <TooltipComponent tooltipCode="ovmbp4" type="text" />
+                                                                    <TooltipComponent code="ovmbp4" type="text" />
                                                                 </Col>
                                                             </Row>
                                                             <Row>
@@ -732,9 +730,9 @@ class Overview extends React.Component {
                                 <IndustryDataComponent />
                             </TabPane>
                             <TabPane tab="Industry risks" key="3">
-                                <Row style={{ marginBottom: "50px" }}>
-                                    <Col span={6}>
-                                        <div style={{ marginRight: '40px' }}>
+                                <Row style={{ marginBottom: "50px", marginTop: "40px" }}>
+                                    <Col span={8}>
+                                        <div>
                                             <Typography.Title style={aboutTitleTextStyle}>{overview.nace.activity_code} Industry risks</Typography.Title>
                                             <Typography.Text className="text-Style">
                                                 Product description Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
@@ -743,12 +741,8 @@ class Overview extends React.Component {
                                             </Typography.Text>
                                         </div>
                                     </Col>
-                                    <Col span={12}>
-                                        <IndustryRisks />
-
-                                    </Col>
                                     <Col span={16}>
-
+                                        <IndustryRisks />
                                     </Col>
                                 </Row>
                             </TabPane>

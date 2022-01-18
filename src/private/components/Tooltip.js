@@ -5,19 +5,19 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 class TooltipComponent extends Component {
-    title = (tooltip, tooltipCode) => {
+    title = (tooltip, code) => {
         if (tooltip === undefined) {
             const title = undefined;
             return title
         } else if (tooltip !== undefined) {
-            const title = tooltip.find((element, index) => element.code === tooltipCode);
+            const title = tooltip.find((element, index) => element.code === code);
             return title
         }
     }
     render() {
-        const { tooltipCode, type } = this.props;
-        const title = this.title(this.props.tooltips.tooltips, tooltipCode);
-        if (title !== undefined) {
+        const { code, type } = this.props;
+        const title = this.title(this.props.tooltips.tooltips, code);
+        if (title !== undefined ) {
             if (type === 'title') {
                 return (
                     <>
@@ -45,7 +45,6 @@ class TooltipComponent extends Component {
             }
         } else {
             if (type === 'title') {
-                console.log('test1')
                 return (
                     <>
                         <Tooltip title="Tooltip">
@@ -54,7 +53,6 @@ class TooltipComponent extends Component {
                     </>
                 )
             } else if (type === 'text') {
-                console.log('undefined code text')
                 return (
                     <>
                         <Tooltip title="Tooltip">

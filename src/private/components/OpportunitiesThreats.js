@@ -5,6 +5,7 @@ import { buttonStyle, inputStyle, tableTitleStyle, tableDescriptionStyle, tableC
 import '../../css/swotStyle.css';
 import { connect } from 'react-redux';
 import { createNewItem, updateItem, deleteItem, updateCheckedStrenghsAndOportunities } from "../../appStore/actions/swotAction";
+import TooltipComponent from '../components/Tooltip';
 
 class OpportunitiesThreats extends Component {
 
@@ -98,7 +99,7 @@ class OpportunitiesThreats extends Component {
             this.props.list.checked_threats.length > 5 && index === -1 || oportunityIndex !== -1
         )
     }
-// 
+    // 
     render() {
         const data = this.props.list.original.oportunities_threats.concat(this.props.list.updates.opportunities.filter(x => isNaN(x.id) === false));
 
@@ -119,7 +120,7 @@ class OpportunitiesThreats extends Component {
                             />
                             <Button size="large" style={{ ...buttonStyle }} onClick={this.onDeleteItem.bind(this, record)}><DeleteOutlined /></Button>
                         </Space>
-                    ) : ((record.title) ? (<Space><Typography>{record.title}</Typography> <Tooltip title="Tooltip text"><InfoCircleFilled style={{ color: '#BFBFBF' }} /></Tooltip></Space>) :
+                    ) : ((record.title) ? (<Space><Typography>{record.title}<TooltipComponent code={'swotot'+rowIndex} type='text'/></Typography></Space>) :
                         (<Space><Typography>{record.title}</Typography></Space>))
                 ),
                 width: '54%',
@@ -154,20 +155,18 @@ class OpportunitiesThreats extends Component {
 
         return (
             <>
-                <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                    <Table
-                        title={() => <>
-                            <Typography style={{ ...tableTitleStyle }}>Opportunities and threats</Typography>
-                            <Typography style={{ ...tableDescriptionStyle }}>
-                                List of predefined options for each part, where some of the items can be define for both sides,
-                                some can be simultaneously on both sides, some only for O or T part</Typography>
-                        </>}
-                        dataSource={data}
-                        columns={columns}
-                        pagination={false}
-                        footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddItem.bind(this)}><PlusOutlined />Add item</Button>)}
-                    />
-                </Card >
+                <Table
+                    title={() => <>
+                        <Typography style={{ ...tableTitleStyle }}>Opportunities and threats</Typography>
+                        <Typography style={{ ...tableDescriptionStyle }}>
+                            List of predefined options for each part, where some of the items can be define for both sides,
+                            some can be simultaneously on both sides, some only for O or T part</Typography>
+                    </>}
+                    dataSource={data}
+                    columns={columns}
+                    pagination={false}
+                    footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddItem.bind(this)}><PlusOutlined />Add item</Button>)}
+                />
             </>
         );
     };

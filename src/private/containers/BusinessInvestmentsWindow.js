@@ -14,9 +14,10 @@ import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import '../../css/BusinessInvestment.css';
 import Cookies from 'js-cookie';
 import { logout } from '../../appStore/actions/authenticationActions';
+import TooltipComponent from '../components/Tooltip';
 
 const { Text } = Typography;
-const { TabPane } = Tabs
+const { TabPane } = Tabs;
 
 const titleTextStyle = {
     fontStyle: "normal",
@@ -150,6 +151,7 @@ class BusinessInvestmentsWindow extends React.Component {
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Business start-up investments</Text>
+                            <TooltipComponent code="bstartinvest" type="title"/>
                         </div>
                     </Col>
                     <Col span={4}>

@@ -12,6 +12,7 @@ import { Tooltip as RechartsTooltip } from 'recharts';
 import { Line as ChartjsLine } from 'react-chartjs-2';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import TooltipComponent from '../Tooltip';
 
 const { Text } = Typography;
 
@@ -99,23 +100,23 @@ class IndustryDataComponent extends PureComponent {
                 console.log(0)
                 pdf.addImage(dataElement, 'PNG', 0, 0, imgWidth, imgHeight);
             } else if (i === 1) {
-                const previuosCanvas = await html2canvas(elements[i-1]);
+                const previuosCanvas = await html2canvas(elements[i - 1]);
                 const previuosImgHeight = previuosCanvas.height * imgWidth / previuosCanvas.width;
                 console.log(previuosImgHeight);
-                pdf.addImage(dataElement, 'PNG', 0, previuosImgHeight, imgWidth, imgHeight );
+                pdf.addImage(dataElement, 'PNG', 0, previuosImgHeight, imgWidth, imgHeight);
             } else if (i === 2) {
                 pdf.addPage();
                 pdf.addImage(dataElement, 'PNG', 0, 0, imgWidth, imgHeight)
             } else if (i === 3) {
-                const previuosCanvas = await html2canvas(elements[i-1]);
+                const previuosCanvas = await html2canvas(elements[i - 1]);
                 const previuosImgHeight = previuosCanvas.height * imgWidth / previuosCanvas.width;
-                pdf.addImage(dataElement, 'PNG', 0, previuosImgHeight, imgWidth, imgHeight );
+                pdf.addImage(dataElement, 'PNG', 0, previuosImgHeight, imgWidth, imgHeight);
             }
 
         }
-        pdf.save('Print.pdf')    
+        pdf.save('Print.pdf')
     }
-    getChartsData () {
+    getChartsData() {
         this.props.getSurvivalRate();
         this.props.getGreatnessIndustry();
         this.props.getCostsProductivity();
@@ -128,7 +129,7 @@ class IndustryDataComponent extends PureComponent {
         console.log(this.props.loading);
         const spinner = this.props.loading.survival_rate === true && this.props.loading.greatness_industry === true && this.props.loading.costs_productivity === true && this.props.loading.company_size === true ? true : false;
         //const spinnerTest = true;
-        console.log(this.props.survival.survival_rate_data);
+        console.log(this.props.costsProductivity);
         const defaultEmptyText = {
             emptyText: 'Not all the data could be taken from the Eurostat'
         }
@@ -167,9 +168,12 @@ class IndustryDataComponent extends PureComponent {
                                                     <Row>
                                                         <div>
                                                             <Text style={{ ...textStyle }}>{item.title}</Text>
-                                                            <Tooltip title="Tooltip text">
-                                                                <InfoCircleFilled style={{ color: '#BFBFBF', marginLeft: 5.5 }} />
-                                                            </Tooltip>
+                                                            {
+                                                                item.id === 1 ? <TooltipComponent code='ovidcsr1' type='text' />
+                                                                    : item.id === 2 ? <TooltipComponent code='ovidcsr2' type='text' />
+                                                                        : item.id === 3 ? <TooltipComponent code='ovidcsr3' type='text' />
+                                                                            : <></>
+                                                            }
                                                         </div>
                                                     </Row>
                                                     <Row style={{ marginTop: '8px' }}>
@@ -295,9 +299,13 @@ class IndustryDataComponent extends PureComponent {
                                                         <Row>
                                                             <div>
                                                                 <Text style={{ ...textStyle }}>{item.variableTitle} {item.industry}</Text>
-                                                                <Tooltip title="Tooltip text">
-                                                                    <InfoCircleFilled style={{ color: '#BFBFBF', marginLeft: 5.5 }} />
-                                                                </Tooltip>
+                                                                {
+                                                                    item.variableTitle === 'Enterprices' ? <TooltipComponent code='ovidbi1' type='text' />
+                                                                        : item.variableTitle === 'Turnover' ? <TooltipComponent code='ovidbi2' type='text' />
+                                                                            : item.variableTitle === 'Gross investment' ? <TooltipComponent code='ovidbi3' type='text' />
+                                                                                : item.variableTitle === 'Employees in full time' ? <TooltipComponent code='ovidbi4' type='text' />
+                                                                                    : <></>
+                                                                }
                                                             </div>
                                                         </Row>
                                                         <Row style={{ marginTop: '8px' }}>
@@ -379,361 +387,366 @@ class IndustryDataComponent extends PureComponent {
                             </div>
                             <Divider style={{ width: '1200px' }} />
                             <div ref={this.costsProductivityRef}>
-                            <Row>
-                                <div>
-                                    <Typography.Title style={{ ...aboutTitleTextStyle }}>How big is labor costs and productivity?</Typography.Title>
-                                </div>
-                            </Row>
-                            <Row style={{ marginTop: "14px" }}>
-                                <List
-                                    grid={{ gutter: 16 }}
-                                    dataSource={this.props.costsProductivity.costs_productivity_data}
-                                    itemLayout='vertical'
-                                    locale={defaultEmptyText}
-                                    renderItem={item => {
-                                        const data = {
-                                            labels: item.timeLabels,
-                                            datasets: [
-                                                {
-                                                    label: item.geoTitle,
-                                                    data: item.activityValues,
-                                                    fill: false,
-                                                    backgroundColor: '#1890FF',
-                                                    borderColor: '#1890FF',
-                                                    pointStyle: 'rectRounded',
-                                                    pointRadius: 0,
-                                                    yAxisID: 'y'
-                                                },
-                                                {
-                                                    label: item.geoTitle + '(Total)',
-                                                    data: item.totalActivitiesValues,
-                                                    fill: false,
-                                                    backgroundColor: '#BFBFBF',
-                                                    borderColor: '#BFBFBF',
-                                                    pointStyle: 'rectRounded',
-                                                    pointRadius: 0,
-                                                    yAxisID: 'y1'
-                                                }
-                                            ]
-                                        }
-                                        const options = {
-                                            responsive: true,
-                                            maintainAspectRatio: false,
-                                            scales: {
-                                                y: {
-                                                    beginAtZero: true,
-                                                    type: 'linear',
-                                                    display: true,
-                                                    position: 'left'
-                                                },
-                                                y1: {
-                                                    beginAtZero: true,
-                                                    type: 'linear',
-                                                    display: true,
-                                                    position: 'right',
-                                                    grid: {
-                                                        drawOnChartArea: false,
-                                                    }
-                                                }
-                                            },
-                                            tooltip: {
-                                                enabled: false
-                                            },
-                                            plugins: {
-                                                legend: {
-                                                    position: 'bottom',
-                                                    align: 'start',
-                                                    labels: {
-                                                        usePointStyle: true
-                                                    }
-                                                },
-                                                title: {
-                                                    display: true,
-                                                    text: item.variableTitle + ' over time',
-                                                    align: 'start',
-                                                    color: '#262626',
-                                                    padding: {
-                                                        bottom: 16
+                                <Row>
+                                    <div>
+                                        <Typography.Title style={{ ...aboutTitleTextStyle }}>How big is labor costs and productivity?</Typography.Title>
+                                    </div>
+                                </Row>
+                                <Row style={{ marginTop: "14px" }}>
+                                    <List
+                                        grid={{ gutter: 16 }}
+                                        dataSource={this.props.costsProductivity.costs_productivity_data}
+                                        itemLayout='vertical'
+                                        locale={defaultEmptyText}
+                                        renderItem={item => {
+                                            const data = {
+                                                labels: item.timeLabels,
+                                                datasets: [
+                                                    {
+                                                        label: item.geoTitle,
+                                                        data: item.activityValues,
+                                                        fill: false,
+                                                        backgroundColor: '#1890FF',
+                                                        borderColor: '#1890FF',
+                                                        pointStyle: 'rectRounded',
+                                                        pointRadius: 0,
+                                                        yAxisID: 'y'
                                                     },
-                                                    font: {
-                                                        weight: 600,
-                                                        size: 14
+                                                    {
+                                                        label: item.geoTitle + '(Total)',
+                                                        data: item.totalActivitiesValues,
+                                                        fill: false,
+                                                        backgroundColor: '#BFBFBF',
+                                                        borderColor: '#BFBFBF',
+                                                        pointStyle: 'rectRounded',
+                                                        pointRadius: 0,
+                                                        yAxisID: 'y1'
                                                     }
-                                                }
-                                            },
-                                            layout: {
-                                                padding: {
-                                                    bottom: 10,
-                                                }
-                                            },
-                                            color: '#262626'
-                                        };
-                                        return (
-                                            <List.Item >
-                                                <Card style={{ width: '384px', height: '581px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
-                                                    <Row>
-                                                        <div>
-                                                            <Text style={{ ...textStyle }}>{item.variableTitle} {item.industry}</Text>
-                                                            <Tooltip title="Tooltip text">
-                                                                <InfoCircleFilled style={{ color: '#BFBFBF', marginLeft: 5.5 }} />
-                                                            </Tooltip>
-                                                        </div>
-                                                    </Row>
-                                                    <Row style={{ marginTop: '8px' }}>
-                                                        <Col span={12}>
-                                                            <Text style={{ ...numberStyle }}>{item.activityValue[1]}{item.unitOfMeasure}</Text>
-                                                        </Col>
-                                                        <Col span={12}>
-                                                            <div style={{ float: 'right' }}>
-                                                                {item.activityValue[1] - item.activityValue[0] > 0 ?
-                                                                    <div style={{ ...numberStyle, color: '#389E0D' }}>
-                                                                        <ArrowUpOutlined />
-                                                                        <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.activityProgress}%</Text>
-                                                                    </div>
-                                                                    :
-                                                                    <div style={{ ...numberStyle, color: '#CF1322' }}>
-                                                                        <ArrowDownOutlined />
-                                                                        <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.activityProgress}%</Text>
-                                                                    </div>
+                                                ]
+                                            }
+                                            const options = {
+                                                responsive: true,
+                                                maintainAspectRatio: false,
+                                                scales: {
+                                                    y: {
+                                                        beginAtZero: true,
+                                                        type: 'linear',
+                                                        display: true,
+                                                        position: 'left'
+                                                    },
+                                                    y1: {
+                                                        beginAtZero: true,
+                                                        type: 'linear',
+                                                        display: true,
+                                                        position: 'right',
+                                                        grid: {
+                                                            drawOnChartArea: false,
+                                                        }
+                                                    }
+                                                },
+                                                tooltip: {
+                                                    enabled: false
+                                                },
+                                                plugins: {
+                                                    legend: {
+                                                        position: 'bottom',
+                                                        align: 'start',
+                                                        labels: {
+                                                            usePointStyle: true
+                                                        }
+                                                    },
+                                                    title: {
+                                                        display: true,
+                                                        text: item.variableTitle + ' over time',
+                                                        align: 'start',
+                                                        color: '#262626',
+                                                        padding: {
+                                                            bottom: 16
+                                                        },
+                                                        font: {
+                                                            weight: 600,
+                                                            size: 14
+                                                        }
+                                                    }
+                                                },
+                                                layout: {
+                                                    padding: {
+                                                        bottom: 10,
+                                                    }
+                                                },
+                                                color: '#262626'
+                                            };
+                                            return (
+                                                <List.Item >
+                                                    <Card style={{ width: '384px', height: '581px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
+                                                        <Row>
+                                                            <div>
+                                                                <Text style={{ ...textStyle }}>{item.variableTitle} {item.industry}</Text>
+                                                                {
+                                                                    item.variableTitle === 'Labour productivity' ? <TooltipComponent code='ovidlcp1' type='text' />
+                                                                        : item.variableTitle === 'Share of personnel costs' ? <TooltipComponent code='ovidlcp2' type='text' />
+                                                                            : item.variableTitle === 'Average personnel cost' ? <TooltipComponent code='ovidlcp3' type='text' />
+                                                                                : <></>
                                                                 }
                                                             </div>
-                                                        </Col>
-                                                    </Row>
-                                                    <Divider />
+                                                        </Row>
+                                                        <Row style={{ marginTop: '8px' }}>
+                                                            <Col span={12}>
+                                                                <Text style={{ ...numberStyle }}>{item.activityValue[1]}{item.unitOfMeasure}</Text>
+                                                            </Col>
+                                                            <Col span={12}>
+                                                                <div style={{ float: 'right' }}>
+                                                                    {item.activityValue[1] - item.activityValue[0] > 0 ?
+                                                                        <div style={{ ...numberStyle, color: '#389E0D' }}>
+                                                                            <ArrowUpOutlined />
+                                                                            <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.activityProgress}%</Text>
+                                                                        </div>
+                                                                        :
+                                                                        <div style={{ ...numberStyle, color: '#CF1322' }}>
+                                                                            <ArrowDownOutlined />
+                                                                            <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.activityProgress}%</Text>
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            </Col>
+                                                        </Row>
+                                                        <Divider />
 
-                                                    <Row>
-                                                        <Col span={13}>
-                                                            <Text style={{ ...textStyleForEUAndTotal }}>European Union</Text>
-                                                        </Col>
-                                                        <Col span={11}>
-                                                            <div style={{ float: 'right' }}>
-                                                                {item.totalActivitiesValue[1] - item.euActivitiesValue[0] > 0 ?
-                                                                    <div style={{ ...numberStyleForEUAndTotal, color: '#389E0D' }}>
-                                                                        <Text style={{ ...textStyleForEUAndTotal }}>{item.euActivitiesValue[1]}{item.unitOfMeasure}</Text>
-                                                                        <ArrowUpOutlined />
-                                                                        <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.euActivitiesProgress}%</Text>
-                                                                    </div>
-                                                                    :
-                                                                    <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
-                                                                        <Text style={{ ...textStyleForEUAndTotal }}>{item.euActivitiesValue[1]}{item.unitOfMeasure}</Text>
-                                                                        <ArrowDownOutlined />
-                                                                        <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.euActivitiesProgress}%</Text>
-                                                                    </div>
-                                                                }
-                                                            </div>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row style={{ marginTop: '8px' }}>
-                                                        <Col span={12}>
-                                                            <Text style={{ ...textStyleForEUAndTotal }}>{item.geo} (Total)</Text>
-                                                        </Col>
-                                                        <Col span={12}>
-                                                            <div style={{ float: 'right' }}>
-                                                                {item.totalActivitiesValue[1] - item.totalActivitiesValue[0] > 0 ?
-                                                                    <div style={{ ...numberStyleForEUAndTotal, color: '#389E0D' }}>
-                                                                        <Text style={{ ...textStyleForEUAndTotal }}>{item.totalActivitiesValue[1]}{item.unitOfMeasure}</Text>
-                                                                        <ArrowUpOutlined />
-                                                                        <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.totalActivitiesProgress}%</Text>
-                                                                    </div>
-                                                                    :
-                                                                    <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
-                                                                        <Text style={{ ...textStyleForEUAndTotal }}>{item.totalActivitiesValue[1]}{item.unitOfMeasure}</Text>
-                                                                        <ArrowDownOutlined />
-                                                                        <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.totalActivitiesProgress}%</Text>
-                                                                    </div>
-                                                                }
-                                                            </div>
-                                                        </Col>
-                                                    </Row>
-                                                    <Divider />
-                                                    <Row>
-                                                        <ChartjsLine data={data} options={options} style={{ width: 344, height: 331 }} />
-                                                    </Row>
-                                                </Card>
-                                            </List.Item>
-                                        )
-                                    }}
-                                />
-                            </Row>
+                                                        <Row>
+                                                            <Col span={13}>
+                                                                <Text style={{ ...textStyleForEUAndTotal }}>European Union</Text>
+                                                            </Col>
+                                                            <Col span={11}>
+                                                                <div style={{ float: 'right' }}>
+                                                                    {item.totalActivitiesValue[1] - item.euActivitiesValue[0] > 0 ?
+                                                                        <div style={{ ...numberStyleForEUAndTotal, color: '#389E0D' }}>
+                                                                            <Text style={{ ...textStyleForEUAndTotal }}>{item.euActivitiesValue[1]}{item.unitOfMeasure}</Text>
+                                                                            <ArrowUpOutlined />
+                                                                            <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.euActivitiesProgress}%</Text>
+                                                                        </div>
+                                                                        :
+                                                                        <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
+                                                                            <Text style={{ ...textStyleForEUAndTotal }}>{item.euActivitiesValue[1]}{item.unitOfMeasure}</Text>
+                                                                            <ArrowDownOutlined />
+                                                                            <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.euActivitiesProgress}%</Text>
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row style={{ marginTop: '8px' }}>
+                                                            <Col span={12}>
+                                                                <Text style={{ ...textStyleForEUAndTotal }}>{item.geo} (Total)</Text>
+                                                            </Col>
+                                                            <Col span={12}>
+                                                                <div style={{ float: 'right' }}>
+                                                                    {item.totalActivitiesValue[1] - item.totalActivitiesValue[0] > 0 ?
+                                                                        <div style={{ ...numberStyleForEUAndTotal, color: '#389E0D' }}>
+                                                                            <Text style={{ ...textStyleForEUAndTotal }}>{item.totalActivitiesValue[1]}{item.unitOfMeasure}</Text>
+                                                                            <ArrowUpOutlined />
+                                                                            <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.totalActivitiesProgress}%</Text>
+                                                                        </div>
+                                                                        :
+                                                                        <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
+                                                                            <Text style={{ ...textStyleForEUAndTotal }}>{item.totalActivitiesValue[1]}{item.unitOfMeasure}</Text>
+                                                                            <ArrowDownOutlined />
+                                                                            <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.totalActivitiesProgress}%</Text>
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            </Col>
+                                                        </Row>
+                                                        <Divider />
+                                                        <Row>
+                                                            <ChartjsLine data={data} options={options} style={{ width: 344, height: 331 }} />
+                                                        </Row>
+                                                    </Card>
+                                                </List.Item>
+                                            )
+                                        }}
+                                    />
+                                </Row>
                             </div>
                             <Divider style={{ width: '1200px' }} />
                             <div ref={this.companySizeRef}>
-                            <Row>
-                                <div>
-                                    <Typography.Title style={{ ...aboutTitleTextStyle }}>How big are the companies in the industry?</Typography.Title>
-                                </div>
-                            </Row>
-                            <Row style={{ marginTop: "14px" }}>
-                                <List
-                                    grid={{ gutter: 16 }}
-                                    dataSource={this.props.companySize.company_size_data}
-                                    itemLayout='vertical'
-                                    locale={defaultEmptyText}
-                                    renderItem={item => {
-                                        const data = {
-                                            labels: item.timeLabels,
-                                            datasets: [
-                                                {
-                                                    label: item.geoTitle,
-                                                    data: item.activityValues,
-                                                    fill: false,
-                                                    backgroundColor: '#1890FF',
-                                                    borderColor: '#1890FF',
-                                                    pointStyle: 'rectRounded',
-                                                    pointRadius: 0,
-                                                    yAxisID: 'y'
-                                                },
-                                                {
-                                                    label: item.geoTitle + '(Total)',
-                                                    data: item.totalActivitiesValues,
-                                                    fill: false,
-                                                    backgroundColor: '#BFBFBF',
-                                                    borderColor: '#BFBFBF',
-                                                    pointStyle: 'rectRounded',
-                                                    pointRadius: 0,
-                                                    yAxisID: 'y1'
-                                                }
-                                            ]
-                                        }
-                                        const options = {
-                                            responsive: true,
-                                            maintainAspectRatio: false,
-                                            scales: {
-                                                y: {
-                                                    beginAtZero: true,
-                                                    type: 'linear',
-                                                    display: true,
-                                                    position: 'left'
-                                                },
-                                                y1: {
-                                                    beginAtZero: true,
-                                                    type: 'linear',
-                                                    display: true,
-                                                    position: 'right',
-                                                    grid: {
-                                                        drawOnChartArea: false,
-                                                    }
-                                                }
-                                            },
-                                            tooltip: {
-                                                enabled: false
-                                            },
-                                            plugins: {
-                                                legend: {
-                                                    position: 'bottom',
-                                                    align: 'start',
-                                                    labels: {
-                                                        usePointStyle: true
-                                                    }
-                                                },
-                                                title: {
-                                                    display: true,
-                                                    text: item.variableTitle + ' over time',
-                                                    align: 'start',
-                                                    color: '#262626',
-                                                    padding: {
-                                                        bottom: 16
+                                <Row>
+                                    <div>
+                                        <Typography.Title style={{ ...aboutTitleTextStyle }}>How big are the companies in the industry?</Typography.Title>
+                                    </div>
+                                </Row>
+                                <Row style={{ marginTop: "14px" }}>
+                                    <List
+                                        grid={{ gutter: 16 }}
+                                        dataSource={this.props.companySize.company_size_data}
+                                        itemLayout='vertical'
+                                        locale={defaultEmptyText}
+                                        renderItem={item => {
+                                            const data = {
+                                                labels: item.timeLabels,
+                                                datasets: [
+                                                    {
+                                                        label: item.geoTitle,
+                                                        data: item.activityValues,
+                                                        fill: false,
+                                                        backgroundColor: '#1890FF',
+                                                        borderColor: '#1890FF',
+                                                        pointStyle: 'rectRounded',
+                                                        pointRadius: 0,
+                                                        yAxisID: 'y'
                                                     },
-                                                    font: {
-                                                        weight: 600,
-                                                        size: 14
+                                                    {
+                                                        label: item.geoTitle + '(Total)',
+                                                        data: item.totalActivitiesValues,
+                                                        fill: false,
+                                                        backgroundColor: '#BFBFBF',
+                                                        borderColor: '#BFBFBF',
+                                                        pointStyle: 'rectRounded',
+                                                        pointRadius: 0,
+                                                        yAxisID: 'y1'
                                                     }
-                                                }
-                                            },
-                                            layout: {
-                                                padding: {
-                                                    bottom: 10,
-                                                }
-                                            },
-                                            color: '#262626'
-                                        };
-                                        return (
-                                            <List.Item >
-                                                <Card style={{ width: '384px', height: '581px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
-                                                    <Row>
-                                                        <div>
-                                                            <Text style={{ ...textStyle }}>{item.variableTitle} {item.industry}</Text>
-                                                            <Tooltip title="Tooltip text">
-                                                                <InfoCircleFilled style={{ color: '#BFBFBF', marginLeft: 5.5 }} />
-                                                            </Tooltip>
-                                                        </div>
-                                                    </Row>
-                                                    <Row style={{ marginTop: '8px' }}>
-                                                        <Col span={12}>
-                                                            <Text style={{ ...numberStyle }}>{item.activityValue[1]}{item.unitOfMeasure}</Text>
-                                                        </Col>
-                                                        <Col span={12}>
-                                                            <div style={{ float: 'right' }}>
-                                                                {item.activityValue[1] - item.activityValue[0] > 0 ?
-                                                                    <div style={{ ...numberStyle, color: '#389E0D' }}>
-                                                                        <ArrowUpOutlined />
-                                                                        <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.activityProgress}%</Text>
-                                                                    </div>
-                                                                    :
-                                                                    <div style={{ ...numberStyle, color: '#CF1322' }}>
-                                                                        <ArrowDownOutlined />
-                                                                        <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.activityProgress}%</Text>
-                                                                    </div>
+                                                ]
+                                            }
+                                            const options = {
+                                                responsive: true,
+                                                maintainAspectRatio: false,
+                                                scales: {
+                                                    y: {
+                                                        beginAtZero: true,
+                                                        type: 'linear',
+                                                        display: true,
+                                                        position: 'left'
+                                                    },
+                                                    y1: {
+                                                        beginAtZero: true,
+                                                        type: 'linear',
+                                                        display: true,
+                                                        position: 'right',
+                                                        grid: {
+                                                            drawOnChartArea: false,
+                                                        }
+                                                    }
+                                                },
+                                                tooltip: {
+                                                    enabled: false
+                                                },
+                                                plugins: {
+                                                    legend: {
+                                                        position: 'bottom',
+                                                        align: 'start',
+                                                        labels: {
+                                                            usePointStyle: true
+                                                        }
+                                                    },
+                                                    title: {
+                                                        display: true,
+                                                        text: item.variableTitle + ' over time',
+                                                        align: 'start',
+                                                        color: '#262626',
+                                                        padding: {
+                                                            bottom: 16
+                                                        },
+                                                        font: {
+                                                            weight: 600,
+                                                            size: 14
+                                                        }
+                                                    }
+                                                },
+                                                layout: {
+                                                    padding: {
+                                                        bottom: 10,
+                                                    }
+                                                },
+                                                color: '#262626'
+                                            };
+                                            return (
+                                                <List.Item >
+                                                    <Card style={{ width: '384px', height: '581px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
+                                                        <Row>
+                                                            <div>
+                                                                <Text style={{ ...textStyle }}>{item.variableTitle} {item.industry}</Text>
+                                                                {
+                                                                    item.variableTitle === 'Persons employed' ? <TooltipComponent code='ovidbci1' type='text' />
+                                                                        : item.variableTitle === 'Gross operating turnover' ? <TooltipComponent code='ovidbci2' type='text' />
+                                                                            : <></>
                                                                 }
                                                             </div>
-                                                        </Col>
-                                                    </Row>
-                                                    <Divider />
+                                                        </Row>
+                                                        <Row style={{ marginTop: '8px' }}>
+                                                            <Col span={12}>
+                                                                <Text style={{ ...numberStyle }}>{item.activityValue[1]}{item.unitOfMeasure}</Text>
+                                                            </Col>
+                                                            <Col span={12}>
+                                                                <div style={{ float: 'right' }}>
+                                                                    {item.activityValue[1] - item.activityValue[0] > 0 ?
+                                                                        <div style={{ ...numberStyle, color: '#389E0D' }}>
+                                                                            <ArrowUpOutlined />
+                                                                            <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.activityProgress}%</Text>
+                                                                        </div>
+                                                                        :
+                                                                        <div style={{ ...numberStyle, color: '#CF1322' }}>
+                                                                            <ArrowDownOutlined />
+                                                                            <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.activityProgress}%</Text>
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            </Col>
+                                                        </Row>
+                                                        <Divider />
 
-                                                    <Row>
-                                                        <Col span={13}>
-                                                            <Text style={{ ...textStyleForEUAndTotal }}>European Union</Text>
-                                                        </Col>
-                                                        <Col span={11}>
-                                                            <div style={{ float: 'right' }}>
-                                                                {item.totalActivitiesValue[1] - item.euActivitiesValue[0] > 0 ?
-                                                                    <div style={{ ...numberStyleForEUAndTotal, color: '#389E0D' }}>
-                                                                        <Text style={{ ...textStyleForEUAndTotal }}>{item.euActivitiesValue[1]}{item.unitOfMeasure}</Text>
-                                                                        <ArrowUpOutlined />
-                                                                        <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.euActivitiesProgress}%</Text>
-                                                                    </div>
-                                                                    :
-                                                                    <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
-                                                                        <Text style={{ ...textStyleForEUAndTotal }}>{item.euActivitiesValue[1]}{item.unitOfMeasure}</Text>
-                                                                        <ArrowDownOutlined />
-                                                                        <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.euActivitiesProgress}%</Text>
-                                                                    </div>
-                                                                }
-                                                            </div>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row style={{ marginTop: '8px' }}>
-                                                        <Col span={12}>
-                                                            <Text style={{ ...textStyleForEUAndTotal }}>{item.geo} (Total)</Text>
-                                                        </Col>
-                                                        <Col span={12}>
-                                                            <div style={{ float: 'right' }}>
-                                                                {item.totalActivitiesValue[1] - item.totalActivitiesValue[0] > 0 ?
-                                                                    <div style={{ ...numberStyleForEUAndTotal, color: '#389E0D' }}>
-                                                                        <Text style={{ ...textStyleForEUAndTotal }}>{item.totalActivitiesValue[1]}{item.unitOfMeasure}</Text>
-                                                                        <ArrowUpOutlined />
-                                                                        <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.totalActivitiesProgress}%</Text>
-                                                                    </div>
-                                                                    :
-                                                                    <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
-                                                                        <Text style={{ ...textStyleForEUAndTotal }}>{item.totalActivitiesValue[1]}{item.unitOfMeasure}</Text>
-                                                                        <ArrowDownOutlined />
-                                                                        <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.totalActivitiesProgress}%</Text>
-                                                                    </div>
-                                                                }
-                                                            </div>
-                                                        </Col>
-                                                    </Row>
-                                                    <Divider />
-                                                    <Row>
-                                                        <ChartjsLine data={data} options={options} style={{ width: 344, height: 331 }} />
-                                                    </Row>
-                                                </Card>
-                                            </List.Item>
-                                        )
-                                    }}
-                                />
-                            </Row>
+                                                        <Row>
+                                                            <Col span={13}>
+                                                                <Text style={{ ...textStyleForEUAndTotal }}>European Union</Text>
+                                                            </Col>
+                                                            <Col span={11}>
+                                                                <div style={{ float: 'right' }}>
+                                                                    {item.totalActivitiesValue[1] - item.euActivitiesValue[0] > 0 ?
+                                                                        <div style={{ ...numberStyleForEUAndTotal, color: '#389E0D' }}>
+                                                                            <Text style={{ ...textStyleForEUAndTotal }}>{item.euActivitiesValue[1]}{item.unitOfMeasure}</Text>
+                                                                            <ArrowUpOutlined />
+                                                                            <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.euActivitiesProgress}%</Text>
+                                                                        </div>
+                                                                        :
+                                                                        <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
+                                                                            <Text style={{ ...textStyleForEUAndTotal }}>{item.euActivitiesValue[1]}{item.unitOfMeasure}</Text>
+                                                                            <ArrowDownOutlined />
+                                                                            <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.euActivitiesProgress}%</Text>
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row style={{ marginTop: '8px' }}>
+                                                            <Col span={12}>
+                                                                <Text style={{ ...textStyleForEUAndTotal }}>{item.geo} (Total)</Text>
+                                                            </Col>
+                                                            <Col span={12}>
+                                                                <div style={{ float: 'right' }}>
+                                                                    {item.totalActivitiesValue[1] - item.totalActivitiesValue[0] > 0 ?
+                                                                        <div style={{ ...numberStyleForEUAndTotal, color: '#389E0D' }}>
+                                                                            <Text style={{ ...textStyleForEUAndTotal }}>{item.totalActivitiesValue[1]}{item.unitOfMeasure}</Text>
+                                                                            <ArrowUpOutlined />
+                                                                            <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.totalActivitiesProgress}%</Text>
+                                                                        </div>
+                                                                        :
+                                                                        <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
+                                                                            <Text style={{ ...textStyleForEUAndTotal }}>{item.totalActivitiesValue[1]}{item.unitOfMeasure}</Text>
+                                                                            <ArrowDownOutlined />
+                                                                            <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.totalActivitiesProgress}%</Text>
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            </Col>
+                                                        </Row>
+                                                        <Divider />
+                                                        <Row>
+                                                            <ChartjsLine data={data} options={options} style={{ width: 344, height: 331 }} />
+                                                        </Row>
+                                                    </Card>
+                                                </List.Item>
+                                            )
+                                        }}
+                                    />
+                                </Row>
                             </div>
                         </div>
                     </div>

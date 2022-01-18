@@ -11,6 +11,7 @@ import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
 import Cookies from 'js-cookie';
+import TooltipComponent from '../components/Tooltip';
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
@@ -122,8 +123,6 @@ class SwotWindow extends React.Component {
             const modifiedStrengths = JSON.stringify(this.props.swot.updates.strengths)
             const originalOpportunities = JSON.stringify(this.props.swot.original_updates.opportunities)
             const modifiedOpportunities = JSON.stringify(this.props.swot.updates.opportunities)
-            console.log('original strengths'+JSON.stringify(originalStrengths))
-            console.log('modified strengths'+modifiedStrengths.length)
 
             if (this.arrayEqual(originalStrengths, modifiedStrengths) === false) {
                 return 'visible';
@@ -205,7 +204,7 @@ class SwotWindow extends React.Component {
                     discardChanges={this.discardChanges}
                     saveChanges={this.saveChanges}
                 />
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
                             <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
@@ -220,14 +219,11 @@ class SwotWindow extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px", marginBottom: "25px" }}>
-                    <Col span={12} offset={4}>
+                    <Col span={16} offset={2}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>SWOT</Text>
-                            <Tooltip title="Tooltip text">
-                                <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
-                            </Tooltip>
-
+                            <TooltipComponent code='swot' type='title'/>
                         </div>
                     </Col>
                     <Col span={4}>
@@ -237,7 +233,7 @@ class SwotWindow extends React.Component {
                     </Col>
                 </Row>
 
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Tabs defaultActiveKey="1" >
                         <TabPane tab="Overall" key="1">
                             <Row style={{ marginBottom: "50px" }}>

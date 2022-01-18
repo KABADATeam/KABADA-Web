@@ -5,6 +5,7 @@ import { buttonStyle, inputStyle, tableCardBodyStyle, tableCardStyle, tableTitle
 import '../../css/swotStyle.css';
 import { connect } from 'react-redux';
 import { createNewItem, deleteItem, updateItem, updateCheckedStrenghsAndOportunities } from "../../appStore/actions/swotAction";
+import TooltipComponent from '../components/Tooltip';
 
 class StrengthsWeaknesses extends Component {
 
@@ -51,9 +52,9 @@ class StrengthsWeaknesses extends Component {
         const updateItem = {
             "business_plan_id": this.props.businessPlan.id,
             "swot": {
-                  "id": item.id,
-                  "name": event.target.value,
-                  "operation": item.value
+                "id": item.id,
+                "name": event.target.value,
+                "operation": item.value
             },
             "kind": 0
         };
@@ -62,17 +63,17 @@ class StrengthsWeaknesses extends Component {
         }
     }
 
-    isWeaknessDisabled = (id)=>{
+    isWeaknessDisabled = (id) => {
         // console.log(JSON.stringify(this.props.list.checked_weakness))
         const index = this.props.list.checked_weakness.findIndex(w => w.id === id)
-        const strengthIndex = this.props.list.checked_strengths.findIndex(s => s.id === id )
+        const strengthIndex = this.props.list.checked_strengths.findIndex(s => s.id === id)
         //if index is -1 that means there is no item with that id in array 
         return (
             this.props.list.checked_weakness.length > 5 && index === -1 || strengthIndex !== -1
         )
     }
 
-    isStrengthDisabled = (id)=>{
+    isStrengthDisabled = (id) => {
         const index = this.props.list.checked_strengths.findIndex(w => w.id === id)
         const weaknessIndex = this.props.list.checked_weakness.findIndex(s => s.id === id)
         //if index is -1 that means there is no item with that id in array 
@@ -100,7 +101,7 @@ class StrengthsWeaknesses extends Component {
                             />
                             <Button size="large" style={{ ...buttonStyle }} onClick={this.onDeleteItem.bind(this, record)}><DeleteOutlined /></Button>
                         </Space>
-                    ) : ((record.title) ? (<Space><Typography>{record.title}</Typography><Tooltip title={record.description}><span><InfoCircleFilled style={{ color: '#BFBFBF' }} /></span></Tooltip></Space>) :
+                    ) : ((record.title) ? (<Space><Typography>{record.title}<TooltipComponent code={'swotsw'+rowIndex} type='text'/></Typography></Space>):
                         (<Space><Typography>{record.title}</Typography></Space>))
                 ),
                 width: '54%',
@@ -137,19 +138,17 @@ class StrengthsWeaknesses extends Component {
 
         return (
             <>
-                <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                    <Table
-                        title={() => <>
-                            <Typography style={{ ...tableTitleStyle }}>Strengths and weaknesses</Typography>
-                            <Typography style={{ ...tableDescriptionStyle }}>
-                                Select 3 - 6 items in each column. Each of the item can be selected only for one side – S or W</Typography>
-                        </>}
-                        dataSource={data}
-                        columns={columns}
-                        pagination={false}
-                        footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddItem.bind(this)}><PlusOutlined />Add item</Button>)}
-                    />
-                </Card>
+                <Table
+                    title={() => <>
+                        <Typography style={{ ...tableTitleStyle }}>Strengths and weaknesses</Typography>
+                        <Typography style={{ ...tableDescriptionStyle }}>
+                            Select 3 - 6 items in each column. Each of the item can be selected only for one side – S or W</Typography>
+                    </>}
+                    dataSource={data}
+                    columns={columns}
+                    pagination={false}
+                    footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddItem.bind(this)}><PlusOutlined />Add item</Button>)}
+                />
             </>
         )
     }
@@ -162,5 +161,5 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { createNewItem, deleteItem, updateItem,updateCheckedStrenghsAndOportunities })(StrengthsWeaknesses);
+export default connect(mapStateToProps, { createNewItem, deleteItem, updateItem, updateCheckedStrenghsAndOportunities })(StrengthsWeaknesses);
 
