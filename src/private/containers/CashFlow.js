@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getCashFlow } from "../../appStore/actions/cashFlowAction"
 import { tableTitleStyle } from '../../styles/customStyles';
+import TooltipComponent from '../components/Tooltip';
 
 const { Text } = Typography;
 const { Title } = Typography;
@@ -180,6 +181,7 @@ class CashFlow extends React.Component {
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Cash flow</Text>
+                            <TooltipComponent code="cashflow" type="title"/>
                         </div>
                     </Col>
                     <Col span={4}>
