@@ -32,7 +32,10 @@ class EditBusinessPlanModal extends Component {
         this.setState({
             fileList: [],
         });
+        console.log("mes cia")
+        console.log(this.props.personalPlans.map((x) => x.overview).map((y) => y.nace).map((z) => z.activity_code))
     }
+
 
     handleOk = (values) => {
 
@@ -54,6 +57,9 @@ class EditBusinessPlanModal extends Component {
             'countryId': values.country,
             'languageId': values.language,
         }
+        console.log(values)
+        console.log(postObject)
+        console.log(reducerObject)
 
         if (Array.isArray(fileList) && fileList.length !== 0 && fileList[0].fileList.length !== 0) {
             fileList.forEach(item => {
@@ -286,20 +292,24 @@ class EditBusinessPlanModal extends Component {
                         <Form.Item key="activity" name="activity" label="Select NACE Rev. 2 "
                             rules={[
                                 {
-                                    validator: async (_, NACEcode) => {
-                                        if (!NACEcode || NACEcode.length < 1) {
+                                    validator: async (_, value) => {
+                                        if (!value || value.length < 1) {
                                             return Promise.reject(new Error('Select NACE Rev. 2 '));
                                         }
                                     },
                                 },
-                            ]}>
+                            ]}
+                        >
                             <TreeSelect
                                 showSearch
                                 style={{ width: 655 }}
                                 dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                                 treeData={naceClass}
                                 allowClear
+
                                 treeLine={true}
+                                defaultValue={this.props.personalPlans.map((x) => x.overview).map((y) => y.nace).map((z) => z.activity_code)}
+                                value={this.props.personalPlans.map((x) => x.overview).map((y) => y.nace).map((z) => z.activity_code)}
                                 treeNodeFilterProp='title'
                                 placeholder="Select NACE Rev. 2"
                             >
@@ -308,13 +318,16 @@ class EditBusinessPlanModal extends Component {
 
 
                         <Space size={26}>
-                            <Form.Item key="country" name="country" label="Country of residence" rules={[{ required: true, message: 'Select country' }]}>
+                            <Form.Item key="country" name="country" label="Country of residence" rules={[{ required: true, message: 'Select country' }]}
+                            >
                                 <Select
                                     showSearch
                                     allowClear
                                     style={{ width: 315 }}
                                     placeholder="Select country"
                                     optionFilterProp="label"
+                                    defaultValue={this.props.updatingPlan.countryTitle}
+                                    value={this.props.updatingPlan.countryTitle}
                                     filterOption={(input, option) =>
                                         option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                     }>
@@ -328,8 +341,9 @@ class EditBusinessPlanModal extends Component {
                             <Form.Item key="language" name="language" label="Language of bussines plan?"
                                 rules={[
                                     {
-                                        validator: async (_, language) => {
-                                            if (!language || language.length < 1) {
+                                        validator: async (_, value) => {
+                                            if (!value || value.length < 1) {
+                                                console.log(value)
                                                 return Promise.reject(new Error('Select language of bussines plan'));
                                             }
                                         },
@@ -340,6 +354,8 @@ class EditBusinessPlanModal extends Component {
                                     style={{ width: 315 }}
                                     placeholder="Select language"
                                     optionFilterProp="children"
+                                    defaultValue={this.props.planLanguages.map((x) => x.title)}
+                                    value={this.props.planLanguages.map((x) => x.title)}
                                     filterOption={(input, option) =>
                                         option.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                     }
