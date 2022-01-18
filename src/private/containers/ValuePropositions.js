@@ -10,6 +10,8 @@ import EditProduct from "../components/new_product/EditProduct";
 import '../../css/customTable.css';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import TooltipComponent from "../components/Tooltip";
+import { logout } from '../../appStore/actions/authenticationActions';
+import Cookies from 'js-cookie';
 
 const { Text } = Typography;
 
@@ -75,18 +77,25 @@ class ValuePropositions extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
-                this.props.history.push(`/`);
+        
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                        this.props.getProducts(this.props.businessPlan.id);
+                    });
+    
+                }
             } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getProducts(this.props.businessPlan.id);
-                });
-
+                this.props.getProducts(this.props.businessPlan.id);
             }
-        } else {
-            this.props.getProducts(this.props.businessPlan.id);
+        }else{
+            this.props.logout()
+            this.props.history.push('/')
         }
+        
     }
 
     render() {
@@ -218,4 +227,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, refreshPlan, getProducts, deleteProduct, saveState })(ValuePropositions);
+export default connect(mapStateToProps, { getSelectedPlanOverview, refreshPlan, getProducts, deleteProduct, saveState,logout })(ValuePropositions);

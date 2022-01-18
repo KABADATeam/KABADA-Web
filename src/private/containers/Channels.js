@@ -10,7 +10,9 @@ import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getChannelTypes, getChannels, deleteChannel, saveState } from "../../appStore/actions/channelActions";
 import { getProducts } from "../../appStore/actions/productActions";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import { logout } from '../../appStore/actions/authenticationActions';
 import TooltipComponent from "../components/Tooltip";
+import Cookies from 'js-cookie';
 
 const { Text } = Typography;
 
@@ -102,20 +104,25 @@ class Channels extends React.Component {
         })
     }
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
-                this.props.history.push(`/`);
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                        this.props.getChannelTypes();
+                        this.props.getChannels(this.props.businessPlan.id);
+                        this.props.getProducts(this.props.businessPlan.id);
+                    });
+                }
             } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getChannelTypes();
-                    this.props.getChannels(this.props.businessPlan.id);
-                    this.props.getProducts(this.props.businessPlan.id);
-                });
+                this.props.getChannelTypes();
+                this.props.getChannels(this.props.businessPlan.id);
+                this.props.getProducts(this.props.businessPlan.id);
             }
         } else {
-            this.props.getChannelTypes();
-            this.props.getChannels(this.props.businessPlan.id);
-            this.props.getProducts(this.props.businessPlan.id);
+            this.props.logout()
+            this.props.history.push('/')
         }
     }
 
@@ -217,16 +224,16 @@ class Channels extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                                <Table
-                                    title={() =>
-                                        <>
-                                            <Typography style={{ ...tableTitleStyle }}>Channels</Typography>
-                                        </>}
-                                    dataSource={data}
-                                    columns={channelsColumns}
-                                    pagination={false}
-                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddChannel.bind(this)}><PlusOutlined />Add Channel</Button></Space>)}
-                                />
+                            <Table
+                                title={() =>
+                                    <>
+                                        <Typography style={{ ...tableTitleStyle }}>Channels</Typography>
+                                    </>}
+                                dataSource={data}
+                                columns={channelsColumns}
+                                pagination={false}
+                                footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddChannel.bind(this)}><PlusOutlined />Add Channel</Button></Space>)}
+                            />
                         </Col>
                     </Row>
                 </Col>
@@ -254,4 +261,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getChannelTypes, getProducts, getChannels, deleteChannel, saveState, refreshPlan, getSelectedPlanOverview })(withRouter(Channels));
+export default connect(mapStateToProps, { logout, getChannelTypes, getProducts, getChannels, deleteChannel, saveState, refreshPlan, getSelectedPlanOverview })(withRouter(Channels));

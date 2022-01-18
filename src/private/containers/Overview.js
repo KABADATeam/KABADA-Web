@@ -15,9 +15,11 @@ import FullPageLoader from '../components/overview/FullPageLoader';
 import { UserOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
 import IndustryRisks from '../components/Industry_Risks/IndustryRisks'
 import { getCountryShortCodeV2 } from '../../appStore/actions/countriesActions'
+import { logout } from '../../appStore/actions/authenticationActions';
 import IndustryDataComponent from '../components/industry_data/IndustryDataComponent';
 import html2canvas from 'html2canvas';
 import TooltipComponent from '../components/Tooltip';
+import Cookies from 'js-cookie';
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
@@ -188,20 +190,24 @@ class Overview extends React.Component {
         this.props.downloadCashFlow(this.props.businessPlan.id, this.props.businessPlan.name);
     }
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
-                this.props.history.push(`/`);
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                        this.props.getMembers(this.props.businessPlan.id);
+                        this.props.getSelectedPlanDetails(this.props.businessPlan.id);
+                        this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+                    });
+                }
             } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getMembers(this.props.businessPlan.id);
-                    this.props.getSelectedPlanDetails(this.props.businessPlan.id);
-                    this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-                });
+                this.props.getMembers(this.props.businessPlan.id);
+                this.props.getSelectedPlanDetails(this.props.businessPlan.id);
+                this.props.getSelectedPlanOverview(this.props.businessPlan.id);
             }
         } else {
-            this.props.getMembers(this.props.businessPlan.id);
-            this.props.getSelectedPlanDetails(this.props.businessPlan.id);
-            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+            this.props.history.push('/')
         }
     }
 
@@ -316,7 +322,7 @@ class Overview extends React.Component {
                                                     <Text style={{ ...pageTitleTextStyle, marginLeft: '20px' }}>
                                                         Business canvas
                                                     </Text>
-                                                    <TooltipComponent tooltipCode="ovmbp1" type="text"/>
+                                                    <TooltipComponent tooltipCode="ovmbp1" type="text" />
                                                 </>
                                             }
                                             style={{ marginTop: '16px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
@@ -504,7 +510,7 @@ class Overview extends React.Component {
                                                                     <Link to='/swot' style={canvasElementTextStyle}>SWOT</Link>
                                                                 </Col>
                                                                 <Col>
-                                                                    <TooltipComponent tooltipCode="ovmbp3" type="text"/>
+                                                                    <TooltipComponent tooltipCode="ovmbp3" type="text" />
                                                                 </Col>
                                                             </Row>
                                                             <Row>
@@ -522,7 +528,7 @@ class Overview extends React.Component {
                                                     <Text style={{ ...pageTitleTextStyle, marginLeft: '20px' }}>
                                                         Financial projections
                                                     </Text>
-                                                    <TooltipComponent tooltipCode="ovmbp2" type="text"/>
+                                                    <TooltipComponent tooltipCode="ovmbp2" type="text" />
                                                 </>}
                                             style={{ marginTop: '16px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
                                             <List.Item key='12'>
@@ -653,7 +659,7 @@ class Overview extends React.Component {
                                                                     <Link to='/personal-characteristics' style={canvasElementTextStyle}>Personal-characteristics</Link>
                                                                 </Col>
                                                                 <Col>
-                                                                    <TooltipComponent tooltipCode="ovmbp4" type="text"/>
+                                                                    <TooltipComponent tooltipCode="ovmbp4" type="text" />
                                                                 </Col>
                                                             </Row>
                                                             <Row>
@@ -769,8 +775,8 @@ const mapStateToProps = (state) => {
         uploadedFile: state.uploadedFile,
         survivalRate: state.survivalRate,
         userInf: state.user,
-        downloadLoading: state.downloadLoading
+        downloadLoading: state.downloadLoading,
     };
 }
 
-export default connect(mapStateToProps, { getImage, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, removePlan, getSurvivalRate, getCountryShortCodeV2, downloadDOCFile, downloadPDFFile, downloadCashFlow })(withRouter(Overview))
+export default connect(mapStateToProps, { getImage, logout, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, removePlan, getSurvivalRate, getCountryShortCodeV2, downloadDOCFile, downloadPDFFile, downloadCashFlow })(withRouter(Overview))

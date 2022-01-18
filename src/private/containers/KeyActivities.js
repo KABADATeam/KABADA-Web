@@ -6,11 +6,13 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getKeyActivitiesList, getCategories, saveState } from "../../appStore/actions/keyActivitiesAction";
+import { logout } from '../../appStore/actions/authenticationActions';
 import ProductComponent from "../components/key_activities/ProductComponent";
 import KeyActivityTypesModal from "../components/key_activities/KeyActivityTypesModal";
 import AddKeyActivityModal from "../components/key_activities/AddKeyActivityModal";
 import EditKeyActivityModal from "../components/key_activities/EditKeyActivityModal"
 import TooltipComponent from "../components/Tooltip";
+import Cookies from 'js-cookie';
 
 const { Text } = Typography;
 
@@ -88,21 +90,26 @@ class KeyActivities extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
-                this.props.history.push(`/`);
-            } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getKeyActivitiesList(this.props.businessPlan.id, () => {
-                        this.props.getCategories()
-                    })
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                        this.props.getKeyActivitiesList(this.props.businessPlan.id, () => {
+                            this.props.getCategories()
+                        })
 
-                });
+                    });
+                }
+            } else {
+                this.props.getKeyActivitiesList(this.props.businessPlan.id, () => {
+                    this.props.getCategories()
+                })
             }
         } else {
-            this.props.getKeyActivitiesList(this.props.businessPlan.id, () => {
-                this.props.getCategories()
-            })
+            this.props.logout()
+            this.props.history.push('/')
         }
     }
     render() {
@@ -128,7 +135,7 @@ class KeyActivities extends React.Component {
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Key Activities</Text>
-                            <TooltipComponent code="keyactive1" type="title"/>
+                            <TooltipComponent code="keyactive1" type="title" />
                         </div>
                     </Col>
                     <Col span={4}>
@@ -177,4 +184,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { refreshPlan, getCategories, getKeyActivitiesList, saveState })(KeyActivities);
+export default connect(mapStateToProps, { refreshPlan, getCategories, getKeyActivitiesList, saveState,logout })(KeyActivities);

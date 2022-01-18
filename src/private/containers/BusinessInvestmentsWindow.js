@@ -12,6 +12,8 @@ import { getCountryShortCode } from '../../appStore/actions/countriesActions';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import '../../css/BusinessInvestment.css';
+import Cookies from 'js-cookie';
+import { logout } from '../../appStore/actions/authenticationActions';
 
 const { Text } = Typography;
 const { TabPane } = Tabs
@@ -96,19 +98,25 @@ class BusinessInvestmentsWindow extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
-                this.props.history.push(`/`);
+        if(Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null){
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                        this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);
+                        this.props.getNecessaryCapitalInformation(this.props.businessPlan.id);
+                    });
+                }
             } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);
-                    this.props.getNecessaryCapitalInformation(this.props.businessPlan.id);
-                });
+                this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);
+                this.props.getNecessaryCapitalInformation(this.props.businessPlan.id);
             }
-        } else {
-            this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);
-            this.props.getNecessaryCapitalInformation(this.props.businessPlan.id);
+        }else{
+            this.props.history.push('/login')
+            this.props.logout()
         }
+        
     }
 
 
@@ -172,7 +180,7 @@ const mapStateToProps = (state) => {
         countryCode: state.countryShortCode,
         countryVats: state.countryVats,
         investments: state.businessInvestments,
-        totalNecessary: state.necessaryCapital
+        totalNecessary: state.necessaryCapital,
     };
 }
-export default connect(mapStateToProps, { refreshPlan, getBusinessStartUpInvestmentInformation, getCountryShortCode, changeVisibility, saveChanges, getNecessaryCapitalInformation, saveState, getSelectedPlanOverview, recalculateInvestment, discardChanges })(BusinessInvestmentsWindow);
+export default connect(mapStateToProps, { refreshPlan, logout,getBusinessStartUpInvestmentInformation, getCountryShortCode, changeVisibility, saveChanges, getNecessaryCapitalInformation, saveState, getSelectedPlanOverview, recalculateInvestment, discardChanges })(BusinessInvestmentsWindow);

@@ -10,7 +10,9 @@ import EditKeyPartnerModal from '../components/EditKeyPartnerModal';
 import { getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState } from "../../appStore/actions/partnersAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import { logout } from '../../appStore/actions/authenticationActions';
 import TooltipComponent from "../components/Tooltip";
+import Cookies from 'js-cookie';
 
 const { Text } = Typography;
 
@@ -166,18 +168,23 @@ class KeyPartners extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
-                this.props.history.push(`/`);
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                        this.props.getPartners(this.props.businessPlan.id);
+                        this.props.getPartnersCategories();
+                    });
+                }
             } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getPartners(this.props.businessPlan.id);
-                    this.props.getPartnersCategories();
-                });
+                this.props.getPartners(this.props.businessPlan.id);
+                this.props.getPartnersCategories();
             }
         } else {
-            this.props.getPartners(this.props.businessPlan.id);
-            this.props.getPartnersCategories();
+            this.props.logout()
+            this.props.history.push('/')
         }
     }
 
@@ -335,7 +342,7 @@ class KeyPartners extends React.Component {
                                 dataSource={this.props.partners.distributors}
                                 columns={distributorsColumns}
                                 pagination={false}
-                                footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} disabled={this.props.partners.distributors.length === 3 ? true : false} onClick={this.onAddNewDistributor.bind(this)}><PlusOutlined />Add Distributor</Button><Text>Maximum distributors: {this.props.partners.distributors.length}/3 <TooltipComponent code="keypartnerdistr" type="text"/> </Text></Space>)}
+                                footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} disabled={this.props.partners.distributors.length === 3 ? true : false} onClick={this.onAddNewDistributor.bind(this)}><PlusOutlined />Add Distributor</Button><Text>Maximum distributors: {this.props.partners.distributors.length}/3 <TooltipComponent code="keypartnerdistr" type="text" /> </Text></Space>)}
                             />
                         </Col>
                     </Row>
@@ -406,4 +413,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState, refreshPlan })(withRouter(KeyPartners));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState, refreshPlan, logout })(withRouter(KeyPartners));

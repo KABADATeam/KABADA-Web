@@ -6,6 +6,8 @@ import { getAllPublicPlans } from "../../appStore/actions/planActions";
 import { iconColor, pageHeaderStyle, filterStyle } from '../../styles/customStyles';
 import '../../css/publicBusinessPlans.css';
 import { getSelectedPlan, getSelectedPlanDetails, getSelectedPlanOverview, getPlansOverview } from "../../appStore/actions/planActions";
+import { logout } from "../../appStore/actions/authenticationActions";
+import Cookies from "js-cookie";
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -89,6 +91,13 @@ class PublicBusinessPlans extends React.Component {
         this.props.getSelectedPlan(plan)
         localStorage.setItem("public_plan", plan.id);
         this.props.history.push(`/public/overview`);
+    }
+
+    componentDidMount(){
+        if (Cookies.get('access_token') === undefined && Cookies.get('access_token') === null) {
+            this.props.logout();
+            this.props.history.push('/')
+        }
     }
 
     render() {
@@ -268,4 +277,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getAllPublicPlans, getSelectedPlan, getSelectedPlanDetails, getSelectedPlanOverview, getPlansOverview })(PublicBusinessPlans);
+export default connect(mapStateToProps, { getAllPublicPlans, getSelectedPlan, getSelectedPlanDetails, getSelectedPlanOverview, getPlansOverview,logout })(PublicBusinessPlans);

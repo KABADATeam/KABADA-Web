@@ -12,7 +12,9 @@ import SalesForecastSelect from '../components/sales_Forecast/SalesForecastSelec
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import '../../css/SalesForecast.css';
 import { tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
+import { logout } from '../../appStore/actions/authenticationActions';
 import TooltipComponent from '../components/Tooltip';
+import Cookies from 'js-cookie';
 
 const { Text } = Typography;
 const { TabPane } = Tabs;
@@ -417,84 +419,81 @@ class SalesForecast extends React.Component {
 
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
-                this.props.history.push(`/`);
-            } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getProducts(this.props.businessPlan.id)
-                    const obj = { id: this.props.businessPlan.id }
-                    this.props.getCountryShortCode(obj, (data) => {
-                        this.props.getCountryVat(this.props.country.countryShortCode);
-                        this.setState({
-                            vty: this.props.countryVats
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                        this.props.getProducts(this.props.businessPlan.id)
+                        const obj = { id: this.props.businessPlan.id }
+                        this.props.getCountryShortCode(obj, (data) => {
+                            this.props.getCountryVat(this.props.country.countryShortCode);
+                            this.setState({
+                                vty: this.props.countryVats
+                            });
+                        });
+
+
+                        this.props.getProductByID(this.props.businessPlan.id, () => {
+                            this.setTotal();
+                            this.createData();
+                            //console.log(JSON.stringify(this.props.salesForecast.products) + "ffdfdfdf")
+                            this.setState({
+                                inEuData: this.dataSourceTableInEu,
+                                outEuData: this.dataSourceTableOutEu,
+                            })
+                            this.getKey(this.state.update[0].product_id)
+                            console.log(this.state.update[0].product_id);
+                            this.state.update.map((x) => {
+                                if (x.product_id === this.state.tabKey) {
+                                    this.onMonthChange(x.when_ready)
+                                }
+                            })
                         });
                     });
-
-
-                    this.props.getProductByID(this.props.businessPlan.id, () => {
-                        this.setTotal();
-                        this.createData();
-                        //console.log(JSON.stringify(this.props.salesForecast.products) + "ffdfdfdf")
-                        this.setState({
-                            inEuData: this.dataSourceTableInEu,
-                            outEuData: this.dataSourceTableOutEu,
-                        })
-                        this.getKey(this.state.update[0].product_id)
-                        console.log(this.state.update[0].product_id);
-                        this.state.update.map((x) => {
-                            if (x.product_id === this.state.tabKey) {
-                                this.onMonthChange(x.when_ready)
-                            }
-                        })
+                }
+            } else {
+                this.props.getProducts(this.props.businessPlan.id);
+                const obj = { id: this.props.businessPlan.id }
+                this.props.getCountryShortCode(obj, (data) => {
+                    this.props.getCountryVat(this.props.country.countryShortCode);
+                    this.setState({
+                        vty: this.props.countryVats
                     });
+                });
+                console.log(this.props.businessPlan.id)
 
+                this.props.getProductByID(this.props.businessPlan.id, () => {
 
+                    this.setTotal();
+                    const array = this.props.salesForecast.products;
+                    array.map((element, index) => {
+                        if (element.sales_forecast_eu === null && element.sales_forecast_non_eu === null) {
+                            this.createData();
+                        }
+                    });
+                    //this.getKey(this.state.update[0].product_id)
+                    this.setState({
+                        inEuData: this.dataSourceTableInEu,
+                        outEuData: this.dataSourceTableOutEu,
+
+                    })
+                    this.getKey(this.state.update[0].product_id)
+                    //console.log(this.state.update[0].product_id);
+                    this.state.update.map((x) => {
+                        if (x.product_id === this.state.tabKey) {
+                            this.onMonthChange(x.when_ready)
+                        }
+                    })
 
                 });
             }
         } else {
-            this.props.getProducts(this.props.businessPlan.id);
-            const obj = { id: this.props.businessPlan.id }
-            this.props.getCountryShortCode(obj, (data) => {
-                this.props.getCountryVat(this.props.country.countryShortCode);
-                this.setState({
-                    vty: this.props.countryVats
-                });
-            });
-            console.log(this.props.businessPlan.id)
-
-            this.props.getProductByID(this.props.businessPlan.id, () => {
-
-                this.setTotal();
-                const array = this.props.salesForecast.products;
-                array.map((element, index) => {
-                    if (element.sales_forecast_eu === null && element.sales_forecast_non_eu === null) {
-                        this.createData();
-                    }
-                });
-                //this.getKey(this.state.update[0].product_id)
-
-
-
-                this.setState({
-                    inEuData: this.dataSourceTableInEu,
-                    outEuData: this.dataSourceTableOutEu,
-
-                })
-                this.getKey(this.state.update[0].product_id)
-                //console.log(this.state.update[0].product_id);
-                this.state.update.map((x) => {
-                    if (x.product_id === this.state.tabKey) {
-                        this.onMonthChange(x.when_ready)
-                    }
-                })
-
-            });
-
-
-
+            this.props.logout()
+            this.props.history.push('/')
         }
+
     }
 
     onBackClick = () => {
@@ -891,8 +890,8 @@ class SalesForecast extends React.Component {
                             disabled={this.isDisabled(record.month)}
                             defaultValue={text === null ? 0 : text}
                             value={text}
-                            onChange={(e) => this.inEuChange(e, record, 'price')} 
-                            style={{width: 87}}
+                            onChange={(e) => this.inEuChange(e, record, 'price')}
+                            style={{ width: 87 }}
                         />
 
                     )
@@ -905,7 +904,7 @@ class SalesForecast extends React.Component {
                 width: '10%',
                 align: 'right',
                 render: (text, record, index) =>
-                    <InputNumber style={{width: 49}} key={record.id} disabled={this.isDisabled(record.month)} defaultValue={text === null ? 0 : text} value={text} onChange={(e) => this.inEuChange(e, record, 'qty')} />,
+                    <InputNumber style={{ width: 49 }} key={record.id} disabled={this.isDisabled(record.month)} defaultValue={text === null ? 0 : text} value={text} onChange={(e) => this.inEuChange(e, record, 'qty')} />,
             },
             {
                 title: 'Total',
@@ -968,7 +967,7 @@ class SalesForecast extends React.Component {
                 width: '22.8%',
                 align: 'right',
                 render: (text, record, index) => (
-                    <InputNumber style={{width: 87}} disabled={this.isDisabled(record.month)} defaultValue={text === null ? 0 : text} onChange={(e) => this.outEuChange(e, record, 'price')} />
+                    <InputNumber style={{ width: 87 }} disabled={this.isDisabled(record.month)} defaultValue={text === null ? 0 : text} onChange={(e) => this.outEuChange(e, record, 'price')} />
                 ),
             },
             {
@@ -978,7 +977,7 @@ class SalesForecast extends React.Component {
                 width: '10%',
                 align: 'right',
                 render: (text, record, index) =>
-                    <InputNumber style={{width: 49}} disabled={this.isDisabled(record.month)} defaultValue={text === null ? 0 : text} onChange={(e) => this.outEuChange(e, record, 'qty')} />,
+                    <InputNumber style={{ width: 49 }} disabled={this.isDisabled(record.month)} defaultValue={text === null ? 0 : text} onChange={(e) => this.outEuChange(e, record, 'qty')} />,
             },
             {
                 title: 'Total',
@@ -1197,4 +1196,4 @@ const mapStateToProps = (state) => {
 
 }
 
-export default connect(mapStateToProps, { getCountryShortCode, getCountryVat, refreshPlan, changState, getProducts, getProductByID, updateSalesForecast, saveState })(withRouter(SalesForecast))
+export default connect(mapStateToProps, { getCountryShortCode, getCountryVat, refreshPlan, changState, getProducts, getProductByID, updateSalesForecast, saveState, logout})(withRouter(SalesForecast))

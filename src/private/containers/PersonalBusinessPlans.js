@@ -7,6 +7,8 @@ import PlanElementComponent from '../components/PlanElementComponent';
 import NewBusinessPlanModal from "../components/NewBusinessPlanModal";
 import { getPlans, getSelectedPlan, getImage, getPlansOverview } from "../../appStore/actions/planActions";
 import { getTooltips } from '../../appStore/actions/tooltipsAction';
+import { logout } from '../../appStore/actions/authenticationActions';
+import Cookies from 'js-cookie';
 
 const { Title } = Typography;
 const { TabPane } = Tabs;
@@ -42,29 +44,34 @@ class PersonalBusinessPlans extends Component {
     };
 
     componentDidMount() {
-        this.props.getPlans()
-            .then(() => {
-                this.props.personalPlans.forEach(plan => {
-                    this.props.getImage(plan);
-                    this.props.getPlansOverview(plan.id);
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            this.props.getPlans()
+                .then(() => {
+                    this.props.personalPlans.forEach(plan => {
+                        this.props.getImage(plan);
+                        this.props.getPlansOverview(plan.id);
+                    });
                 });
-            });
-        this.props.getTooltips();
+            this.props.getTooltips();
+        } else {
+            this.props.logout()
+            this.props.history.push('/')
+        }
     }
 
     render() {
         const isVisible = this.state.isVisible;
         return (
-            <Layout style={{ backgroundColor: '#F5F5F5'}}>
+            <Layout style={{ backgroundColor: '#F5F5F5' }}>
                 <Content>
                     <Row wrap={false} justify="center" align="middle">
                         <Col span={20}>
-                            <div style={{display: "flex"}}>
+                            <div style={{ display: "flex" }}>
                                 <Col span={12}>
-                                    <Title level={2} style={{ ...pageHeaderStyle}}>My business plans</Title>
+                                    <Title level={2} style={{ ...pageHeaderStyle }}>My business plans</Title>
                                 </Col>
                                 <Col span={12}>
-                                    <div style={{float: "right", marginTop: "40px"}}>
+                                    <div style={{ float: "right", marginTop: "40px" }}>
                                         <Button
                                             type="text"
                                             style={{ ...buttonStyle }}
@@ -82,7 +89,7 @@ class PersonalBusinessPlans extends Component {
                                         </Button>
                                     </div>
                                 </Col>
-                                
+
                             </div>
                             <Tabs activeKey={this.state.activeTab} onChange={this.changeTabKey}>
                                 <TabPane tab="All" key="1">
@@ -98,7 +105,7 @@ class PersonalBusinessPlans extends Component {
                                     <PlanElementComponent tabKey={this.state.activeTab} />
                                 </TabPane>
                             </Tabs>
-                            <NewBusinessPlanModal visibility={isVisible} handleClose={this.closeModal} />                       
+                            <NewBusinessPlanModal visibility={isVisible} handleClose={this.closeModal} />
                         </Col>
                     </Row>
                 </Content>
@@ -114,4 +121,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getPlans, getSelectedPlan, getImage, getPlansOverview, getTooltips })(withRouter(PersonalBusinessPlans));
+export default connect(mapStateToProps, { getPlans, getSelectedPlan, getImage, getPlansOverview, getTooltips,logout})(withRouter(PersonalBusinessPlans));

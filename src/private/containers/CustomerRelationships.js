@@ -10,8 +10,9 @@ import { getCustomerRelationshipsCategories, getCustomerRelationships, saveState
 import AddCustomerRelationshipModal from '../components/customer_relationships/AddCustomerRelationshipModal';
 import EditCustomerRelationshipModal from '../components/customer_relationships/EditCustomerRelationshipModal';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import { logout } from '../../appStore/actions/authenticationActions';
 import TooltipComponent from '../components/Tooltip';
-
+import Cookies from 'js-cookie';
 const { Text } = Typography;
 
 const titleTextStyle = {
@@ -160,18 +161,23 @@ class CustomerRelationships extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
-                this.props.history.push(`/`);
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                        this.props.getCustomerRelationshipsCategories();
+                        this.props.getCustomerRelationships(this.props.businessPlan.id);
+                    });
+                }
             } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getCustomerRelationshipsCategories();
-                    this.props.getCustomerRelationships(this.props.businessPlan.id);
-                });
+                this.props.getCustomerRelationshipsCategories();
+                this.props.getCustomerRelationships(this.props.businessPlan.id);
             }
         } else {
-            this.props.getCustomerRelationshipsCategories();
-            this.props.getCustomerRelationships(this.props.businessPlan.id);
+            this.props.logout()
+            this.props.history.push('/')
         }
     }
 
@@ -311,7 +317,7 @@ class CustomerRelationships extends React.Component {
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Customer Relationships</Text>
-                            <TooltipComponent tooltipCode="ovmbp1" type="title"/>
+                            <TooltipComponent tooltipCode="ovmbp1" type="title" />
                         </div>
                     </Col>
                     <Col span={4}>
@@ -417,4 +423,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getCustomerRelationshipsCategories, getCustomerRelationships, refreshPlan, saveState, selectRelationshipCategory, deleteCustomerRelationship })(withRouter(CustomerRelationships));
+export default connect(mapStateToProps, { getSelectedPlanOverview, logout, getCustomerRelationshipsCategories, getCustomerRelationships, refreshPlan, saveState, selectRelationshipCategory, deleteCustomerRelationship })(withRouter(CustomerRelationships));

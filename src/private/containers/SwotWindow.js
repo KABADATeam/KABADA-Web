@@ -9,6 +9,8 @@ import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { getSwotList, discardChanges, saveChanges, saveState } from "../../appStore/actions/swotAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import { logout } from '../../appStore/actions/authenticationActions';
+import Cookies from 'js-cookie';
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
@@ -171,20 +173,26 @@ class SwotWindow extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
-                this.props.history.push(`/`);
-            } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getSwotList(this.props.businessPlan.id, () => {
-
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                        this.props.getSwotList(this.props.businessPlan.id, () => {
+    
+                        });
                     });
+                }
+            } else {
+                this.props.getSwotList(this.props.businessPlan.id, () => {
+    
                 });
             }
-        } else {
-            this.props.getSwotList(this.props.businessPlan.id, () => {
-
-            });
+        }else{
+            this.props.logout()
+            this.props.history.push('/')
+            
         }
     }
 
@@ -315,4 +323,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getSwotList, discardChanges, saveChanges, saveState, refreshPlan })(withRouter(SwotWindow));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getSwotList, discardChanges, saveChanges, saveState, refreshPlan,logout })(withRouter(SwotWindow));

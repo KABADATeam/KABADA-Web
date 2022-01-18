@@ -6,11 +6,12 @@ import NotificationSettings from '../components/NotificationSettings';
 import EmailPasswordSettings from '../components/EmailPasswordSettings';
 import PersonalSettings from '../components/PersonalSettings';
 import { buttonStyle } from '../../styles/customStyles';
+import Cookies from 'js-cookie';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
-
 import { connect } from 'react-redux';
 import { getUserSettings, updateUserSettings, changeUserPassword } from "../../appStore/actions/settingsAction";
+import { logout } from '../../appStore/actions/authenticationActions';
 
 const { Text } = Typography;
 
@@ -52,19 +53,25 @@ class UserSettingsWindow extends React.Component {
     }
 
     componentDidMount() {
-        this.props.getUserSettings()
-            .then(
-                () => {
-                    this.setState({
-                        settings: this.props.userSettings
-                    });
-                },
-                (error) => {
-                    this.setState({
-                        settings: {}
-                    });
-                }
-            )
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            this.props.getUserSettings()
+                .then(
+                    () => {
+                        this.setState({
+                            settings: this.props.userSettings
+                        });
+                    },
+                    (error) => {
+                        this.setState({
+                            settings: {}
+                        });
+                    }
+                )
+        } else {
+            this.props.logout()
+            this.props.history.push('/')
+        }
+
     }
 
     onBackClick() {
@@ -290,4 +297,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getUserSettings, updateUserSettings, changeUserPassword })(UserSettingsWindow);
+export default connect(mapStateToProps, { getUserSettings, updateUserSettings, changeUserPassword, logout })(UserSettingsWindow);

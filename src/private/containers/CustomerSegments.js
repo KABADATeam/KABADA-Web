@@ -13,7 +13,9 @@ import EditPublicBodiesSegmentModal from '../components/customer_segments/EditPu
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getCustomerSegmentProperties, getCustomerSegments, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState } from "../../appStore/actions/customerSegmentAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import { logout } from '../../appStore/actions/authenticationActions';
 import TooltipComponent from "../components/Tooltip";
+import Cookies from 'js-cookie';
 
 const { Text } = Typography;
 
@@ -143,18 +145,23 @@ class CustomerSegments extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
-                this.props.history.push(`/`);
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                        this.props.getCustomerSegmentProperties();
+                        this.props.getCustomerSegments(this.props.businessPlan.id);
+                    });
+                }
             } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getCustomerSegmentProperties();
-                    this.props.getCustomerSegments(this.props.businessPlan.id);
-                });
+                this.props.getCustomerSegmentProperties();
+                this.props.getCustomerSegments(this.props.businessPlan.id);
             }
         } else {
-            this.props.getCustomerSegmentProperties();
-            this.props.getCustomerSegments(this.props.businessPlan.id);
+            this.props.logout()
+            this.props.history.push('/')
         }
     }
 
@@ -420,4 +427,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getCustomerSegmentProperties, getCustomerSegments, refreshPlan, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState })(withRouter(CustomerSegments));
+export default connect(mapStateToProps, { getSelectedPlanOverview, logout, getCustomerSegmentProperties, getCustomerSegments, refreshPlan, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState })(withRouter(CustomerSegments));

@@ -11,8 +11,10 @@ import { getFinancialProjectionsCosts, updateFixedAndVarCosts, saveState } from 
 import { getCountryVat } from '../../appStore/actions/vatsActions'
 import { getCountryShortCode } from '../../appStore/actions/countriesActions'
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import { logout } from '../../appStore/actions/authenticationActions';
 import '../../css/FixedAndVarStyles.css'
 import TooltipComponent from '../components/Tooltip';
+import Cookies from 'js-cookie';
 
 
 const { Option } = Select;
@@ -344,44 +346,49 @@ class FixedAndVariableCosts extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
-                this.props.history.push(`/`);
-            } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getFinancialProjectionsCosts(this.props.businessPlan.id, () => {
-                        // cloning what is in financialProjections fixed and variable state
-                        this.setFixedAndVarCosts();
-                        const obj = { id: this.props.businessPlan.id }
-                        this.props.getCountryShortCode(obj, (data) => {
-                            this.props.getCountryVat(this.props.country.countryShortCode, () => {
-                                this.setState({
-                                    vats: this.props.countryVats
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                        this.props.getFinancialProjectionsCosts(this.props.businessPlan.id, () => {
+                            // cloning what is in financialProjections fixed and variable state
+                            this.setFixedAndVarCosts();
+                            const obj = { id: this.props.businessPlan.id }
+                            this.props.getCountryShortCode(obj, (data) => {
+                                this.props.getCountryVat(this.props.country.countryShortCode, () => {
+                                    this.setState({
+                                        vats: this.props.countryVats
+                                    });
                                 });
+
                             });
 
+                            this.monthsSet();
                         });
 
-                        this.monthsSet();
+                    });
+                }
+            } else {
+                this.props.getFinancialProjectionsCosts(this.props.businessPlan.id, () => {
+                    // cloning what is in financialProjections fixed and variable state
+                    this.setFixedAndVarCosts();
+                    const obj = { id: this.props.businessPlan.id }
+                    this.props.getCountryShortCode(obj, (data) => {
+                        this.props.getCountryVat(this.props.country.countryShortCode, () => {
+                            this.setState({
+                                vats: this.props.countryVats
+                            });
+                        });
                     });
 
+                    this.monthsSet();
                 });
             }
         } else {
-            this.props.getFinancialProjectionsCosts(this.props.businessPlan.id, () => {
-                // cloning what is in financialProjections fixed and variable state
-                this.setFixedAndVarCosts();
-                const obj = { id: this.props.businessPlan.id }
-                this.props.getCountryShortCode(obj, (data) => {
-                    this.props.getCountryVat(this.props.country.countryShortCode, () => {
-                        this.setState({
-                            vats: this.props.countryVats
-                        });
-                    });
-                });
-
-                this.monthsSet();
-            });
+            this.props.logout()
+            this.props.history.push('/')
         }
     }
 
@@ -696,4 +703,4 @@ const mapStateToProps = (state) => {
 }
 //connect function connect react component to redux store
 //the functions it can use to dispatch actions to the store.
-export default connect(mapStateToProps, { getSelectedPlanOverview, getCountryShortCode, getFinancialProjectionsCosts, getCountryVat, updateFixedAndVarCosts, saveState, refreshPlan })(withRouter(FixedAndVariableCosts));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getCountryShortCode, getFinancialProjectionsCosts, getCountryVat, updateFixedAndVarCosts, saveState, refreshPlan, logout })(withRouter(FixedAndVariableCosts));

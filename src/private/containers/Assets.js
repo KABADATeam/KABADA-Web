@@ -11,9 +11,11 @@ import { getCountryVats } from '../../appStore/actions/vatAction';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 //import { getCountryVats } from '../../appStore/actions/vatAction';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import { logout } from '../../appStore/actions/authenticationActions';
 import { conditionalExpression } from '@babel/types';
 import TooltipComponent from '../components/Tooltip';
 import '../../css/Assets.css';
+import Cookies from 'js-cookie';
 
 const { Option } = Select;
 
@@ -85,27 +87,33 @@ class AssetsWindow extends React.Component {
         this.props.discardChanges();
     }
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
-                this.props.history.push(`/`);
-            } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    const obj = { id: this.props.businessPlan.id }
-                    this.props.getCountryShortCode(obj, (data) => {
-                        this.props.getCountryVats(this.props.countryCode.countryShortCode);
+        if(Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null){
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                        const obj = { id: this.props.businessPlan.id }
+                        this.props.getCountryShortCode(obj, (data) => {
+                            this.props.getCountryVats(this.props.countryCode.countryShortCode);
+                        });
+                        this.props.getAssets(this.props.businessPlan.id);
+    
                     });
-                    this.props.getAssets(this.props.businessPlan.id);
-
+    
+                }
+            } else {
+                const obj = { id: this.props.businessPlan.id }
+                this.props.getCountryShortCode(obj, (data) => {
+                    this.props.getCountryVats(this.props.countryCode.countryShortCode);
                 });
-
+                this.props.getAssets(this.props.businessPlan.id)
             }
-        } else {
-            const obj = { id: this.props.businessPlan.id }
-            this.props.getCountryShortCode(obj, (data) => {
-                this.props.getCountryVats(this.props.countryCode.countryShortCode);
-            });
-            this.props.getAssets(this.props.businessPlan.id)
+        }else{
+            this.props.logout()
+            this.props.history.push('/login')
         }
+        
     }
 
     render() {
@@ -309,7 +317,7 @@ const mapStateToProps = (state) => {
         businessPlan: state.selectedBusinessPlan,
         countryCode: state.countryShortCode,
         vat: state.vat,
-        assets: state.assets
+        assets: state.assets,
     };
 }
-export default connect(mapStateToProps, { refreshPlan, getAssets, saveChanges, discardChanges, getCountryShortCode, getCountryVats, saveState, getSelectedPlanOverview, updateAssetsItemVat, updateAssetsItemAmount })(AssetsWindow);
+export default connect(mapStateToProps, { refreshPlan,logout, getAssets, saveChanges, discardChanges, getCountryShortCode, getCountryVats, saveState, getSelectedPlanOverview, updateAssetsItemVat, updateAssetsItemAmount })(AssetsWindow);

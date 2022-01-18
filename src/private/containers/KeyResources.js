@@ -9,7 +9,9 @@ import EditKeyResourceModal from "../components/EditKeyResourceModal";
 import { getResourcesList, getResourcesCategoriesList, deleteItem, saveEditable, saveChanges } from "../../appStore/actions/resourcesAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import { logout } from '../../appStore/actions/authenticationActions';
 import TooltipComponent from "../components/Tooltip"
+import Cookies from 'js-cookie';
 
 const { Text } = Typography;
 
@@ -102,25 +104,29 @@ class KeyResources extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
-                this.props.history.push(`/`);
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                        this.props.getResourcesList(this.props.businessPlan.id);
+                        this.props.getResourcesCategoriesList();
+                    });
+                }
             } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getResourcesList(this.props.businessPlan.id);
-                    this.props.getResourcesCategoriesList();
-                });
+                this.props.getResourcesList(this.props.businessPlan.id);
+                this.props.getResourcesCategoriesList();
             }
         } else {
-            this.props.getResourcesList(this.props.businessPlan.id);
-            this.props.getResourcesCategoriesList();
+            this.props.logout()
+            this.props.history.push('/')
         }
-
     }
 
     render() {
         const data = this.props.resources.key_resources.map(obj => ({ ...obj, type: obj.category.description }));
-        console.log('Data is:'+JSON.stringify(data))
+        console.log('Data is:' + JSON.stringify(data))
         const columns = [
             {
                 title: 'Type',
@@ -139,11 +145,11 @@ class KeyResources extends React.Component {
                 dataIndex: 'ownership',
                 key: 'ownership',
                 width: '39%',
-                render: (text,record,index)=>(
+                render: (text, record, index) => (
                     <div>
-                        {record.selections[0].options[0].selected === true?
-                        <p>{text}</p>:record.selections[0].options[1].selected === true?<p>Buy</p>:
-                        record.selections[0].options[2].selected === true?<p>Own</p>:""}
+                        {record.selections[0].options[0].selected === true ?
+                            <p>{text}</p> : record.selections[0].options[1].selected === true ? <p>Buy</p> :
+                                record.selections[0].options[2].selected === true ? <p>Own</p> : ""}
                     </div>
                 )
             },
@@ -183,7 +189,7 @@ class KeyResources extends React.Component {
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Key Resource</Text>
-                            <TooltipComponent code="keyresources" type="title"/>
+                            <TooltipComponent code="keyresources" type="title" />
                         </div>
                     </Col>
                     <Col span={4}>
@@ -213,18 +219,18 @@ class KeyResources extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                                <Table
-                                    title={() => <>
-                                        <Typography style={{ ...tableTitleStyle }}>Key resources</Typography>
-                                        <Typography style={{ ...tableDescriptionStyle }}>
-                                            Only state those resources that make you unique compared to your competitors in the market.
-                                        </Typography>
-                                    </>}
-                                    dataSource={data}
-                                    columns={columns}
-                                    pagination={false}
-                                    footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddNewItem.bind(this)}><PlusOutlined />Add key resource</Button>)}
-                                />
+                            <Table
+                                title={() => <>
+                                    <Typography style={{ ...tableTitleStyle }}>Key resources</Typography>
+                                    <Typography style={{ ...tableDescriptionStyle }}>
+                                        Only state those resources that make you unique compared to your competitors in the market.
+                                    </Typography>
+                                </>}
+                                dataSource={data}
+                                columns={columns}
+                                pagination={false}
+                                footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddNewItem.bind(this)}><PlusOutlined />Add key resource</Button>)}
+                            />
                         </Col>
                         {this.state.is_categories_modal_visible !== false ?
                             <KeyResourcesCategoriesModal visibility={this.state.is_categories_modal_visible}
@@ -250,4 +256,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getResourcesList, getResourcesCategoriesList, deleteItem, saveChanges, saveEditable, refreshPlan })(withRouter(KeyResources));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getResourcesList, getResourcesCategoriesList, deleteItem, saveChanges, saveEditable, logout, refreshPlan })(withRouter(KeyResources));

@@ -9,7 +9,9 @@ import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { tableCardStyle } from '../../styles/customStyles'
 import KeyPartnersPopUp from '../components/personal_characteristics/KeyPartnersPopUp';
 import { getPersonalCharacteristics, savePersonalCharacteristics } from '../../appStore/actions/personalCharacteristicsActions';
+import { logout } from '../../appStore/actions/authenticationActions';
 import TooltipComponent from '../components/Tooltip';
+import Cookies from 'js-cookie';
 
 
 const { Option } = Select;
@@ -378,13 +380,13 @@ class PersonalCharacteristics extends React.Component {
         if (originalChoices === null || originalChoices === undefined) {
             modifiedChoices.map((element, index) => {
                 if (element.set_code !== '5') {
-                    
+
                     const objektas = {
                         "set_code": element.set_code, //code of question
                         "selection_code": element.selection_code,  //code of answer
                         "extraText": "text"        // brief answer text if needed
                     }
-                    if(element.selection_code !== null)
+                    if (element.selection_code !== null)
                         answeredQuestions++;
                     choices.push(objektas);
                 } else {
@@ -394,7 +396,7 @@ class PersonalCharacteristics extends React.Component {
                         "selection_code": newArray,  //code of answer
                         "extraText": "text"        // brief answer text if needed
                     }
-                    if(element.selection_code.length > 0)
+                    if (element.selection_code.length > 0)
                         answeredQuestions++;
                     choices.push(objektas);
                 }
@@ -409,12 +411,12 @@ class PersonalCharacteristics extends React.Component {
                         "selection_code": modifiedChoices[i].selection_code,  //code of answer
                         "extraText": "text"        // brief answer text if needed
                     }
-                    if(modifiedChoices[i].selection_code !== null)
+                    if (modifiedChoices[i].selection_code !== null)
                         answeredQuestions++;
                     choices.push(objektas)
                 } else {
                     var newArray = modifiedChoices[i].selection_code.join();
-                    if(modifiedChoices[i].selection_code !== null)
+                    if (modifiedChoices[i].selection_code !== null)
                         answeredQuestions++;
                     const objektas = {
                         "set_code": modifiedChoices[i].set_code, //code of question
@@ -426,13 +428,13 @@ class PersonalCharacteristics extends React.Component {
 
             }
         }
-        if(answeredQuestions === 20)
+        if (answeredQuestions === 20)
             isCompleted = true;
 
         const postObject = {
             "plan_id": this.props.businessPlan.id,
             "choices": choices,
-            "is_personal_characteristics_completed":isCompleted
+            "is_personal_characteristics_completed": isCompleted
         }
         console.log('Post obj:' + JSON.stringify(postObject))
         this.props.savePersonalCharacteristics(postObject, () => {
@@ -586,21 +588,26 @@ class PersonalCharacteristics extends React.Component {
 
     }
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
-                this.props.history.push(`/`);
-            } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    //all my actions that i need to dispatch to get data...
-                    this.props.getPersonalCharacteristics(this.props.businessPlan.id, () => {
-                        this.setQuestionsAnswers();
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                        //all my actions that i need to dispatch to get data...
+                        this.props.getPersonalCharacteristics(this.props.businessPlan.id, () => {
+                            this.setQuestionsAnswers();
+                        });
                     });
+                }
+            } else {
+                this.props.getPersonalCharacteristics(this.props.businessPlan.id, () => {
+                    this.setQuestionsAnswers();
                 });
             }
         } else {
-            this.props.getPersonalCharacteristics(this.props.businessPlan.id, () => {
-                this.setQuestionsAnswers();
-            });
+            this.props.logout();
+            this.props.history.push('/')
         }
     }
     render() {
@@ -630,7 +637,7 @@ class PersonalCharacteristics extends React.Component {
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Personal characteristics</Text>
-                            <TooltipComponent code="personcharact" type="title"/>
+                            <TooltipComponent code="personcharact" type="title" />
                         </div>
                     </Col>
                 </Row>
@@ -781,4 +788,4 @@ const mapStateToProps = (state) => {
     }
 }
 //to connect passing mapStateToProps and all actions that we will be dispatching
-export default connect(mapStateToProps, { getSelectedPlanOverview, getPersonalCharacteristics, savePersonalCharacteristics, refreshPlan })(withRouter(PersonalCharacteristics));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getPersonalCharacteristics, savePersonalCharacteristics, logout, refreshPlan })(withRouter(PersonalCharacteristics));

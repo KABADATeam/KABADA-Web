@@ -10,8 +10,10 @@ import { getCostStructureList, getCategories, deleteFixedCost, deleteVariableCos
 import CostCategoriesModal from "../components/cost_structure/CostCategoriesModal"
 import EditCostModal from "../components/cost_structure/EditCostModal"
 import AddCostModal from "../components/cost_structure/AddCostModal";
+import { logout } from '../../appStore/actions/authenticationActions';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import TooltipComponent from "../components/Tooltip";
+import Cookies from 'js-cookie';
 
 const { Text } = Typography;
 
@@ -134,20 +136,25 @@ class CostStructure extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
-                this.props.history.push(`/`);
-            } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getCostStructureList(this.props.businessPlan.id, () => {
-                        this.props.getCategories();
-                    });
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                        this.props.getCostStructureList(this.props.businessPlan.id, () => {
+                            this.props.getCategories();
+                        });
 
-                });
+                    });
+                }
+            } else {
+                this.props.getCostStructureList(this.props.businessPlan.id);
+                this.props.getCategories();
             }
         } else {
-            this.props.getCostStructureList(this.props.businessPlan.id);
-            this.props.getCategories();
+            this.props.logout()
+            this.props.history.push('/')
         }
     }
     render() {
@@ -320,4 +327,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, deleteFixedCost, deleteVariableCost, getCategories, getCostStructureList, refreshPlan, saveState, selectCostCategory })(CostStructure);
+export default connect(mapStateToProps, { getSelectedPlanOverview,logout, deleteFixedCost, deleteVariableCost, getCategories, getCostStructureList, refreshPlan, saveState, selectCostCategory })(CostStructure);

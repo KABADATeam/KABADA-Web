@@ -9,7 +9,9 @@ import EditSegmentModal from '../components/revenue_streams/EditSegmentModal';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getStreamTypes, getPrices, getRevenues, saveState, deleteRevenue } from "../../appStore/actions/revenueStreamActions";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import { logout } from '../../appStore/actions/authenticationActions';
 import TooltipComponent from "../components/Tooltip"
+import Cookies from 'js-cookie';
 
 const { Text } = Typography;
 
@@ -127,22 +129,27 @@ class RevenueStreams extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
-                this.props.history.push(`/`);
-            } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                    this.props.getRevenues(this.props.businessPlan.id);
-                    this.props.getStreamTypes();
-                    this.props.getPrices();
-                    console.log(this.props.revenues.segment_1);
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                        this.props.getRevenues(this.props.businessPlan.id);
+                        this.props.getStreamTypes();
+                        this.props.getPrices();
+                        console.log(this.props.revenues.segment_1);
 
-                });
+                    });
+                }
+            } else {
+                this.props.getRevenues(this.props.businessPlan.id);
+                this.props.getStreamTypes();
+                this.props.getPrices();
             }
         } else {
-            this.props.getRevenues(this.props.businessPlan.id);
-            this.props.getStreamTypes();
-            this.props.getPrices();
+            this.props.logout()
+            this.props.history.push('/')
         }
     }
 
@@ -276,7 +283,7 @@ class RevenueStreams extends React.Component {
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Revenue streams</Text>
-                            <TooltipComponent code="revstrem" type="title"/>
+                            <TooltipComponent code="revstrem" type="title" />
                         </div>
                     </Col>
                     <Col span={4}>
@@ -302,16 +309,16 @@ class RevenueStreams extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                                {this.props.revenues.segment_1.length === 0 ?
-                                    <Button size="large" style={{ ...buttonStyle, marginBottom: '10px', marginTop: '10px' }} onClick={this.onAddFirstRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button>
-                                    :
-                                    <Table
-                                        dataSource={this.props.revenues.segment_1}
-                                        columns={firstSegmentColumns}
-                                        pagination={false}
-                                        footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddFirstRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button></Space>)}
-                                    />
-                                }
+                            {this.props.revenues.segment_1.length === 0 ?
+                                <Button size="large" style={{ ...buttonStyle, marginBottom: '10px', marginTop: '10px' }} onClick={this.onAddFirstRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button>
+                                :
+                                <Table
+                                    dataSource={this.props.revenues.segment_1}
+                                    columns={firstSegmentColumns}
+                                    pagination={false}
+                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddFirstRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button></Space>)}
+                                />
+                            }
                         </Col>
                     </Row>
                     <Divider />
@@ -325,16 +332,16 @@ class RevenueStreams extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                                {this.props.revenues.segment_2.length === 0 ?
-                                    <Button size="large" style={{ ...buttonStyle, marginBottom: '10px', marginTop: '10px' }} onClick={this.onAddSecondRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button>
-                                    :
-                                    <Table
-                                        dataSource={this.props.revenues.segment_2}
-                                        columns={secondSegmentColumns}
-                                        pagination={false}
-                                        footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddSecondRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button>)}
-                                    />
-                                }
+                            {this.props.revenues.segment_2.length === 0 ?
+                                <Button size="large" style={{ ...buttonStyle, marginBottom: '10px', marginTop: '10px' }} onClick={this.onAddSecondRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button>
+                                :
+                                <Table
+                                    dataSource={this.props.revenues.segment_2}
+                                    columns={secondSegmentColumns}
+                                    pagination={false}
+                                    footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddSecondRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button>)}
+                                />
+                            }
                         </Col>
                     </Row>
                     <Divider />
@@ -348,16 +355,16 @@ class RevenueStreams extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                                {this.props.revenues.other.length === 0 ?
-                                    <Button size="large" style={{ ...buttonStyle, marginBottom: '10px', marginTop: '10px' }} onClick={this.onAddNewOther.bind(this)}><PlusOutlined />Add Other Revenue Stream</Button>
-                                    :
-                                    <Table
-                                        dataSource={this.props.revenues.other}
-                                        columns={otherColumns}
-                                        pagination={false}
-                                        footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddNewOther.bind(this)}><PlusOutlined />Add Other Revenue Stream</Button>)}
-                                    />
-                                }
+                            {this.props.revenues.other.length === 0 ?
+                                <Button size="large" style={{ ...buttonStyle, marginBottom: '10px', marginTop: '10px' }} onClick={this.onAddNewOther.bind(this)}><PlusOutlined />Add Other Revenue Stream</Button>
+                                :
+                                <Table
+                                    dataSource={this.props.revenues.other}
+                                    columns={otherColumns}
+                                    pagination={false}
+                                    footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddNewOther.bind(this)}><PlusOutlined />Add Other Revenue Stream</Button>)}
+                                />
+                            }
                         </Col>
                     </Row>
                 </Col>
@@ -386,4 +393,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPlan })(withRouter(RevenueStreams));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPlan,logout })(withRouter(RevenueStreams));
