@@ -3,9 +3,19 @@
 .numInput::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+  background: #FFFFFF;
+  border: 1px solid #BFBFBF;
+  box-sizing: border-box;
+  box-shadow: inset 0px 1px 0px rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
 }
 
 /* Firefox */
 .numInput[type=number] {
   -moz-appearance: textfield;
+  background: #FFFFFF;
+  border: 1px solid #BFBFBF;
+  box-sizing: border-box;
+  box-shadow: inset 0px 1px 0px rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
 }
