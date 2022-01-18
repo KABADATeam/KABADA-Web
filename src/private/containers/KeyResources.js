@@ -9,6 +9,7 @@ import EditKeyResourceModal from "../components/EditKeyResourceModal";
 import { getResourcesList, getResourcesCategoriesList, deleteItem, saveEditable, saveChanges } from "../../appStore/actions/resourcesAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import TooltipComponent from "../components/Tooltip"
 
 const { Text } = Typography;
 
@@ -125,19 +126,19 @@ class KeyResources extends React.Component {
                 title: 'Type',
                 dataIndex: 'type',
                 key: 'type',
-                width: '30%',
+                width: '16.5%',
             },
             {
                 title: 'Name',
                 dataIndex: 'name',
                 key: 'name',
-                width: '30%',
+                width: '25%',
             },
             {
                 title: 'Ownership',
                 dataIndex: 'ownership',
                 key: 'ownership',
-                width: '30%',
+                width: '39%',
                 render: (text,record,index)=>(
                     <div>
                         {record.selections[0].options[0].selected === true?
@@ -150,9 +151,9 @@ class KeyResources extends React.Component {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditItem.bind(this, record)} >Edit</Button>
                         <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteItem.bind(this, record)} ><DeleteOutlined /></Button>
                     </Space>
@@ -163,7 +164,7 @@ class KeyResources extends React.Component {
         return (
 
             <>
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
                             <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
@@ -178,13 +179,11 @@ class KeyResources extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col span={12} offset={4}>
+                    <Col span={16} offset={2}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Key Resource</Text>
-                            <Tooltip title="Tooltip text">
-                                <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
-                            </Tooltip>
+                            <TooltipComponent code="keyresources" type="title"/>
                         </div>
                     </Col>
                     <Col span={4}>
@@ -195,11 +194,11 @@ class KeyResources extends React.Component {
                 </Row>
 
 
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Divider />
                 </Col>
 
-                <Col offset={4} span={16}>
+                <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
                         <Col span={7}>
                             <div style={{ marginRight: '40px' }}>
@@ -214,7 +213,6 @@ class KeyResources extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                                 <Table
                                     title={() => <>
                                         <Typography style={{ ...tableTitleStyle }}>Key resources</Typography>
@@ -227,7 +225,6 @@ class KeyResources extends React.Component {
                                     pagination={false}
                                     footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddNewItem.bind(this)}><PlusOutlined />Add key resource</Button>)}
                                 />
-                            </Card>
                         </Col>
                         {this.state.is_categories_modal_visible !== false ?
                             <KeyResourcesCategoriesModal visibility={this.state.is_categories_modal_visible}

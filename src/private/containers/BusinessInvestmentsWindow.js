@@ -11,6 +11,7 @@ import { getBusinessStartUpInvestmentInformation, changeVisibility, saveChanges,
 import { getCountryShortCode } from '../../appStore/actions/countriesActions';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
+import '../../css/BusinessInvestment.css';
 
 const { Text } = Typography;
 const { TabPane } = Tabs
@@ -122,7 +123,7 @@ class BusinessInvestmentsWindow extends React.Component {
                     discardChanges={this.discardChanges}
                     saveChanges={this.saveChanges}
                 />
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
                             <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
@@ -137,7 +138,7 @@ class BusinessInvestmentsWindow extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px", marginBottom: "25px" }}>
-                    <Col span={12} offset={4}>
+                    <Col span={16} offset={2}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Business start-up investments</Text>
@@ -149,7 +150,7 @@ class BusinessInvestmentsWindow extends React.Component {
                         </div>
                     </Col>
                 </Row>
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Tabs defaultActiveKey="1"  >
                         <TabPane tab="Working capital" key="1">
                             <WorkingCapital/>

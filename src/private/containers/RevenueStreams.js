@@ -9,6 +9,7 @@ import EditSegmentModal from '../components/revenue_streams/EditSegmentModal';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getStreamTypes, getPrices, getRevenues, saveState, deleteRevenue } from "../../appStore/actions/revenueStreamActions";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import TooltipComponent from "../components/Tooltip"
 
 const { Text } = Typography;
 
@@ -151,19 +152,19 @@ class RevenueStreams extends React.Component {
                 title: 'Type',
                 dataIndex: 'stream_type_name',
                 key: 'stream_type_name',
-                width: '25%',
+                width: '23.5%',
             },
             {
                 title: 'Prices',
                 dataIndex: 'price_category_name',
                 key: 'price_category_name',
-                width: '20%',
+                width: '15%',
             },
             {
                 title: 'Consumers',
                 dataIndex: 'segments',
                 key: 'segments',
-                width: '45%',
+                width: '42%',
                 render: (obj, record) => (
                     <p>{record.segments + ' '}</p>
                 ),
@@ -172,9 +173,9 @@ class RevenueStreams extends React.Component {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditFirstSegment.bind(this, record)} >Edit</Button>
                         <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteFirstSegment.bind(this, record)} ><DeleteOutlined /></Button>
                     </Space>
@@ -187,19 +188,19 @@ class RevenueStreams extends React.Component {
                 title: 'Type',
                 dataIndex: 'stream_type_name',
                 key: 'stream_type_name',
-                width: '25%',
+                width: '23.5%',
             },
             {
                 title: 'Prices',
                 dataIndex: 'price_category_name',
                 key: 'price_category_name',
-                width: '20%',
+                width: '15%',
             },
             {
                 title: 'Business',
                 dataIndex: 'price_type_name',
                 key: 'price_type_name',
-                width: '45%',
+                width: '42%',
                 render: (obj, record) => (
                     <p>{record.segments + ' '}</p>
                 ),
@@ -208,9 +209,9 @@ class RevenueStreams extends React.Component {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditSecondSegment.bind(this, record)} >Edit</Button>
                         <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteSecondSegment.bind(this, record)} ><DeleteOutlined /></Button>
                     </Space>
@@ -223,19 +224,19 @@ class RevenueStreams extends React.Component {
                 title: 'Type',
                 dataIndex: 'stream_type_name',
                 key: 'stream_type_name',
-                width: '25%',
+                width: '23.5%',
             },
             {
                 title: 'Prices',
                 dataIndex: 'price_category_name',
                 key: 'price_category_name',
-                width: '20%',
+                width: '15%',
             },
             {
                 title: 'Public bodies & NGO',
                 dataIndex: 'segments',
                 key: 'segments',
-                width: '45%',
+                width: '42%',
                 render: (obj, record) => (
                     <p>{record.segments + ' '}</p>
                 ),
@@ -244,9 +245,9 @@ class RevenueStreams extends React.Component {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditOther.bind(this, record)} >Edit</Button>
                         <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteOtherSegment.bind(this, record)} ><DeleteOutlined /></Button>
                     </Space>
@@ -256,7 +257,7 @@ class RevenueStreams extends React.Component {
 
         return (
             <>
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
                             <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
@@ -271,13 +272,11 @@ class RevenueStreams extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col span={12} offset={4}>
+                    <Col span={16} offset={2}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Revenue streams</Text>
-                            <Tooltip title="Tooltip text">
-                                <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
-                            </Tooltip>
+                            <TooltipComponent code="revstrem" type="title"/>
                         </div>
                     </Col>
                     <Col span={4}>
@@ -288,11 +287,11 @@ class RevenueStreams extends React.Component {
                 </Row>
 
 
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Divider />
                 </Col>
 
-                <Col offset={4} span={16}>
+                <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
                         <Col span={7}>
                             <div style={{ marginRight: '40px' }}>
@@ -303,7 +302,6 @@ class RevenueStreams extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                                 {this.props.revenues.segment_1.length === 0 ?
                                     <Button size="large" style={{ ...buttonStyle, marginBottom: '10px', marginTop: '10px' }} onClick={this.onAddFirstRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button>
                                     :
@@ -314,8 +312,6 @@ class RevenueStreams extends React.Component {
                                         footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddFirstRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button></Space>)}
                                     />
                                 }
-
-                            </Card >
                         </Col>
                     </Row>
                     <Divider />
@@ -329,7 +325,6 @@ class RevenueStreams extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                                 {this.props.revenues.segment_2.length === 0 ?
                                     <Button size="large" style={{ ...buttonStyle, marginBottom: '10px', marginTop: '10px' }} onClick={this.onAddSecondRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button>
                                     :
@@ -340,8 +335,6 @@ class RevenueStreams extends React.Component {
                                         footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddSecondRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button>)}
                                     />
                                 }
-
-                            </Card >
                         </Col>
                     </Row>
                     <Divider />
@@ -355,7 +348,6 @@ class RevenueStreams extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                                 {this.props.revenues.other.length === 0 ?
                                     <Button size="large" style={{ ...buttonStyle, marginBottom: '10px', marginTop: '10px' }} onClick={this.onAddNewOther.bind(this)}><PlusOutlined />Add Other Revenue Stream</Button>
                                     :
@@ -366,8 +358,6 @@ class RevenueStreams extends React.Component {
                                         footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddNewOther.bind(this)}><PlusOutlined />Add Other Revenue Stream</Button>)}
                                     />
                                 }
-
-                            </Card >
                         </Col>
                     </Row>
                 </Col>

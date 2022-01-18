@@ -5,7 +5,7 @@ import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCa
 import { connect } from 'react-redux';
 //import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { deleteActivity } from "../../../appStore/actions/keyActivitiesAction"
-import {getProduct} from '../../../appStore/actions/productActions'
+import { getProduct } from '../../../appStore/actions/productActions'
 
 const aboutTitleTextStyle = {
     fontStyle: 'normal',
@@ -31,7 +31,7 @@ const tableTitleStyle = {
 }
 
 class ProductComponent extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state = {
             description: ""
@@ -48,8 +48,8 @@ class ProductComponent extends React.Component {
     onDeleteActivity = (item) => {
         this.props.deleteActivity({ "id": item.id, "product_id": this.props.data.id });
     }
-    componentDidMount(){
-        this.props.getProduct(this.props.data.id, () =>{
+    componentDidMount() {
+        this.props.getProduct(this.props.data.id, () => {
             this.setState({
                 description: this.props.product.description
             })
@@ -62,38 +62,38 @@ class ProductComponent extends React.Component {
                 title: 'Activity',
                 dataIndex: 'type_name',
                 key: 'type_name',
-                width: '30%',
+                width: '29.67%',
             },
             {
                 title: 'Sub Type',
                 dataIndex: 'sub_type_name',
                 key: 'sub_type_name',
-                width: '30%',
+                width: '28.53%',
             },
             {
                 title: 'Name',
                 dataIndex: 'name',
                 key: 'name',
-                width: '30%',
+                width: '22.27%',
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (obj, record) => (
-                    <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }}  onClick={this.openEditActivityModal.bind(this, record)}>Edit</Button>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
+                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.openEditActivityModal.bind(this, record)}>Edit</Button>
                         <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteActivity.bind(this, record)}><DeleteOutlined /></Button>
                     </Space>
                 ),
             }
         ];
 
-        console.log('Data:'+JSON.stringify('Data:'+JSON.stringify(this.props.data)))
+        console.log('Data:' + JSON.stringify('Data:' + JSON.stringify(this.props.data)))
         return (
             <>
-                <Col offset={4} span={16}>
+                <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
                         <Col span={7}>
                             <div style={{ marginRight: '40px' }}>
@@ -104,25 +104,23 @@ class ProductComponent extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Typography.Title style={{ ...tableTitleStyle, marginLeft: 20}}>
-                                    Key Activities
-                                </Typography.Title>
-                                <Typography.Text style={{ ...textStyle, marginLeft:20}}>
-                                    Description
-                                </Typography.Text>
-                                <Table
-                                    dataSource={this.props.data.activities}
-                                    style={{marginTop: 20}}
-                                    columns={activitiesColumns}
-                                    pagination={false}
-                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.openCategoriesModal.bind(this, this.props.data)}><PlusOutlined />Add Activity</Button></Space>)}
-                                />
-                            </Card >
+                            <Table
+                                title={() => <>
+                                    <Typography style={{ ...tableTitleStyle }}>Key Activities</Typography>
+                                    <Typography style={{ ...textStyle }}>
+                                        Description
+                                    </Typography>
+                                </>}
+                                dataSource={this.props.data.activities}
+                                style={{ marginTop: 20 }}
+                                columns={activitiesColumns}
+                                pagination={false}
+                                footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.openCategoriesModal.bind(this, this.props.data)}><PlusOutlined />Add Activity</Button></Space>)}
+                            />
                         </Col>
                     </Row>
                 </Col>
-                </>
+            </>
         )
     }
 }
@@ -135,4 +133,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, {deleteActivity, getProduct})(ProductComponent);
+export default connect(mapStateToProps, { deleteActivity, getProduct })(ProductComponent);

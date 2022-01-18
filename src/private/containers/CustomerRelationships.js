@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tooltip } from 'antd';
 import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined, InfoCircleFilled } from '@ant-design/icons';
-import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
+import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle, defaultButtonStyle } from '../../styles/customStyles';
 import { connect } from 'react-redux';
 import RelationshipCategoriesModal from '../components/customer_relationships/RelationshipCategoriesModal';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
@@ -10,6 +10,7 @@ import { getCustomerRelationshipsCategories, getCustomerRelationships, saveState
 import AddCustomerRelationshipModal from '../components/customer_relationships/AddCustomerRelationshipModal';
 import EditCustomerRelationshipModal from '../components/customer_relationships/EditCustomerRelationshipModal';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import TooltipComponent from '../components/Tooltip';
 
 const { Text } = Typography;
 
@@ -181,14 +182,14 @@ class CustomerRelationships extends React.Component {
                 title: 'Action',
                 dataIndex: 'category',
                 key: 'category',
-                width: '25%',
+                width: '26.5%',
                 render: (value, row) => value.title,
             },
             {
                 title: 'Channel',
                 dataIndex: 'channels',
                 key: 'channels',
-                width: '65%',
+                width: '44%',
                 render: (value, row) => value.map(function (item, index) {
                     return (index ? ', ' : '') + item;
                 }),
@@ -197,12 +198,12 @@ class CustomerRelationships extends React.Component {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (value, row) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         {row.category.title === "Word of Mouth" ?
                             <>
-                                <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteHowToGetNew.bind(this, row)} ><DeleteOutlined /></Button>
+                                <Button size="small" style={{ ...defaultButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteHowToGetNew.bind(this, row)} ><DeleteOutlined /></Button>
                             </>
                             :
                             <>
@@ -220,14 +221,14 @@ class CustomerRelationships extends React.Component {
                 title: 'Action',
                 dataIndex: 'category',
                 key: 'category',
-                width: '25%',
+                width: '26.5%',
                 render: (value, row) => (value.title)
             },
             {
                 title: 'Channel',
                 dataIndex: 'channels',
                 key: 'channels',
-                width: '65%',
+                width: '44%',
                 render: (value, row) => value.map(function (item, index) {
                     return (index ? ', ' : '') + item;
                 }),
@@ -236,11 +237,11 @@ class CustomerRelationships extends React.Component {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (value, row) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         {row.category.title === "Word of Mouth" ?
-                            <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteHowToKeepExisting.bind(this, row)} ><DeleteOutlined /></Button>
+                            <Button size="small" style={{ ...defaultButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteHowToKeepExisting.bind(this, row)} ><DeleteOutlined /></Button>
                             :
                             <>
                                 <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditHowToKeepExisting.bind(this, row)} >Edit</Button>
@@ -257,14 +258,14 @@ class CustomerRelationships extends React.Component {
                 title: 'Action',
                 dataIndex: 'category',
                 key: 'category',
-                width: '25%',
+                width: '26.5%',
                 render: (value, row) => (value.title),
             },
             {
                 title: 'Channel',
                 dataIndex: 'channels',
                 key: 'channels',
-                width: '65%',
+                width: '44%',
                 render: (value, row) => value.map(function (item, index) {
                     return (index ? ', ' : '') + item;
                 }),
@@ -273,11 +274,11 @@ class CustomerRelationships extends React.Component {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (value, row) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         {row.category.title === "Word of Mouth" ?
-                            <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteHowToMakeSpend.bind(this, row)} ><DeleteOutlined /></Button>
+                            <Button size="small" style={{ ...defaultButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteHowToMakeSpend.bind(this, row)} ><DeleteOutlined /></Button>
                             :
                             <>
                                 <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditHowToMakeSpend.bind(this, row)} >Edit</Button>
@@ -291,7 +292,7 @@ class CustomerRelationships extends React.Component {
 
         return (
             <>
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
                             <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
@@ -306,13 +307,11 @@ class CustomerRelationships extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col span={12} offset={4}>
+                    <Col span={16} offset={2}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Customer Relationships</Text>
-                            <Tooltip title="Tooltip text">
-                                <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
-                            </Tooltip>
+                            <TooltipComponent tooltipCode="ovmbp1" type="title"/>
                         </div>
                     </Col>
                     <Col span={4}>
@@ -323,11 +322,11 @@ class CustomerRelationships extends React.Component {
                 </Row>
 
 
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Divider />
                 </Col>
 
-                <Col offset={4} span={16}>
+                <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
                         <Col span={7}>
                             <div style={{ marginRight: '40px' }}>
@@ -340,14 +339,12 @@ class CustomerRelationships extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Table
-                                    dataSource={this.props.customerRelationships.how_to_get_new}
-                                    columns={howToGetNewColumns}
-                                    pagination={false}
-                                    footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddHowToGetNew.bind(this)}><PlusOutlined />Add action</Button></Space>)}
-                                />
-                            </Card >
+                            <Table
+                                dataSource={this.props.customerRelationships.how_to_get_new}
+                                columns={howToGetNewColumns}
+                                pagination={false}
+                                footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddHowToGetNew.bind(this)}><PlusOutlined />Add action</Button></Space>)}
+                            />
                         </Col>
                     </Row>
                     <Divider />
@@ -363,14 +360,12 @@ class CustomerRelationships extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Table
-                                    dataSource={this.props.customerRelationships.how_to_keep_existing}
-                                    columns={howToKeepExistingColumns}
-                                    pagination={false}
-                                    footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddHowToKeepExisting.bind(this)}><PlusOutlined />Add action</Button>)}
-                                />
-                            </Card >
+                            <Table
+                                dataSource={this.props.customerRelationships.how_to_keep_existing}
+                                columns={howToKeepExistingColumns}
+                                pagination={false}
+                                footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddHowToKeepExisting.bind(this)}><PlusOutlined />Add action</Button>)}
+                            />
                         </Col>
                     </Row>
                     <Divider />
@@ -384,14 +379,12 @@ class CustomerRelationships extends React.Component {
                             </div>
                         </Col>
                         <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Table
-                                    dataSource={this.props.customerRelationships.how_to_make_spend}
-                                    columns={howToMakeSpendColumns}
-                                    pagination={false}
-                                    footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddHowToMakeSpend.bind(this)}><PlusOutlined />Add action</Button>)}
-                                />
-                            </Card >
+                            <Table
+                                dataSource={this.props.customerRelationships.how_to_make_spend}
+                                columns={howToMakeSpendColumns}
+                                pagination={false}
+                                footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddHowToMakeSpend.bind(this)}><PlusOutlined />Add action</Button>)}
+                            />
                         </Col>
                     </Row>
                 </Col>

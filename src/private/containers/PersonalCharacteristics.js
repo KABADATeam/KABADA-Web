@@ -8,7 +8,8 @@ import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { tableCardStyle } from '../../styles/customStyles'
 import KeyPartnersPopUp from '../components/personal_characteristics/KeyPartnersPopUp';
-import { getPersonalCharacteristics, savePersonalCharacteristics } from '../../appStore/actions/personalCharacteristicsActions'
+import { getPersonalCharacteristics, savePersonalCharacteristics } from '../../appStore/actions/personalCharacteristicsActions';
+import TooltipComponent from '../components/Tooltip';
 
 
 const { Option } = Select;
@@ -25,7 +26,7 @@ const aboutTitleTextStyle = {
 const titleTextStyle = {
     fontStyle: "normal",
     fontWeight: "600",
-    fontSize: '20px',
+    fontSize: '30px',
     lineHeight: "38px"
 }
 
@@ -629,9 +630,7 @@ class PersonalCharacteristics extends React.Component {
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Personal characteristics</Text>
-                            <Tooltip title="Tooltip text">
-                                <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
-                            </Tooltip>
+                            <TooltipComponent code="personcharact" type="title"/>
                         </div>
                     </Col>
                 </Row>

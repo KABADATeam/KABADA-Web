@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom';
-import { Breadcrumb, Col, Space, Row, Button, Typography, Switch, Card, Tabs, Input, Select, InputNumber } from 'antd';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { Breadcrumb, Col, Space, Row, Button, Typography, Switch, Card, Tabs, Input, Select, InputNumber, Divider } from 'antd';
+import { ArrowLeftOutlined, CaretDownFilled } from '@ant-design/icons';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getProducts, changState, getProductByID, updateSalesForecast, saveState } from '../../appStore/actions/salesForecastActions';
 import { getCountryVat } from '../../appStore/actions/vatsActions'
@@ -10,10 +10,19 @@ import { getCountryShortCode } from '../../appStore/actions/countriesActions'
 import SalesForecastTable from '../components/sales_Forecast/SalesForecastTable';
 import SalesForecastSelect from '../components/sales_Forecast/SalesForecastSelect';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
-import '../../css/SalesForecast.css'
+import '../../css/SalesForecast.css';
+import { tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
+import TooltipComponent from '../components/Tooltip';
 
 const { Text } = Typography;
 const { TabPane } = Tabs;
+
+const titleTextStyle = {
+    fontStyle: "normal",
+    fontWeight: "600",
+    fontSize: "16px",
+    lineHeight: "24px"
+}
 
 const { Option } = Select;
 class SalesForecast extends React.Component {
@@ -863,6 +872,7 @@ class SalesForecast extends React.Component {
                 title: 'Month',
                 dataIndex: 'month',
                 key: 'month',
+                width: '23.7%',
                 render: (text, record, index) =>
                     <Text disabled={this.isDisabled(record.month)} >{record.month}</Text>
 
@@ -871,7 +881,8 @@ class SalesForecast extends React.Component {
                 title: 'Euro/pc without VAT',
                 dataIndex: 'price',
                 key: 'price',
-                width: '15%',
+                width: '22.7%',
+                align: 'right',
                 render: (text, record, index) => {
                     return (
                         <InputNumber
@@ -880,24 +891,28 @@ class SalesForecast extends React.Component {
                             disabled={this.isDisabled(record.month)}
                             defaultValue={text === null ? 0 : text}
                             value={text}
-                            onChange={(e) => this.inEuChange(e, record, 'price')} />
+                            onChange={(e) => this.inEuChange(e, record, 'price')} 
+                            style={{width: 87}}
+                        />
 
                     )
                 },
             },
             {
-                title: 'qty',
+                title: 'Qty',
                 dataIndex: 'qty',
                 key: 'qty',
-                width: '5%',
+                width: '10%',
+                align: 'right',
                 render: (text, record, index) =>
-                    <InputNumber key={record.id} disabled={this.isDisabled(record.month)} defaultValue={text === null ? 0 : text} value={text} onChange={(e) => this.inEuChange(e, record, 'qty')} />,
+                    <InputNumber style={{width: 49}} key={record.id} disabled={this.isDisabled(record.month)} defaultValue={text === null ? 0 : text} value={text} onChange={(e) => this.inEuChange(e, record, 'qty')} />,
             },
             {
                 title: 'Total',
                 dataIndex: 'total',
                 key: 'total',
-                width: '5%',
+                width: '12.2%',
+                align: 'center',
                 render: (text, record, index) =>
                     <Text disabled={this.isDisabled(record.month)} value={'€' + text} onChange={(e) => this.inEuChange(e, record, 'total')} >
                         {this.state.update.map(x => x.sales_forecast_eu) === null ? this.state.inEuData[index].total : '€' + text}
@@ -906,7 +921,8 @@ class SalesForecast extends React.Component {
             {
                 title: 'VAT Rate',
                 dataIndex: 'vat',
-                width: '10%',
+                width: '13.1%',
+                align: 'right',
                 render: (text, record, index) => (
                     <Select defaultValue={text === null ? 'Null' : text} value={text} onChange={e => this.inEuChange(e, record, "vat")} disabled={this.isDisabled(record.month)}>
                         <Option value={this.props.countryVats.standardRate}>{this.props.countryVats.standardRate + "%"}</Option>
@@ -920,7 +936,8 @@ class SalesForecast extends React.Component {
                 title: 'When paid',
                 dataIndex: 'paid',
                 key: 'paid',
-                width: '10%',
+                width: '18.3%',
+                align: 'right',
                 render: (text, record) => (
                     <Input.Group compact>
                         <Select defaultValue={text === null ? 0 : text} value={text} onChange={(e) => this.inEuChange(e, record, 'paid')} disabled={this.isDisabled(record.month)}>
@@ -939,6 +956,7 @@ class SalesForecast extends React.Component {
                 title: 'Month',
                 dataIndex: 'month',
                 key: 'month',
+                width: '36.7%',
                 render: (text, record, index) =>
                     <Text disabled={this.isDisabled(record.month)} >{record.month}</Text>
 
@@ -947,34 +965,38 @@ class SalesForecast extends React.Component {
                 title: 'Euro/pc without VAT',
                 dataIndex: 'price',
                 key: 'price',
-                width: '5%',
+                width: '22.8%',
+                align: 'right',
                 render: (text, record, index) => (
-                    <InputNumber disabled={this.isDisabled(record.month)} defaultValue={text === null ? 0 : text} onChange={(e) => this.outEuChange(e, record, 'price')} />
+                    <InputNumber style={{width: 87}} disabled={this.isDisabled(record.month)} defaultValue={text === null ? 0 : text} onChange={(e) => this.outEuChange(e, record, 'price')} />
                 ),
             },
             {
-                title: 'qty',
+                title: 'Qty',
                 dataIndex: 'qty',
                 key: 'qty',
-                width: '5%',
+                width: '10%',
+                align: 'right',
                 render: (text, record, index) =>
-                    <InputNumber disabled={this.isDisabled(record.month)} defaultValue={text === null ? 0 : text} onChange={(e) => this.outEuChange(e, record, 'qty')} />,
+                    <InputNumber style={{width: 49}} disabled={this.isDisabled(record.month)} defaultValue={text === null ? 0 : text} onChange={(e) => this.outEuChange(e, record, 'qty')} />,
             },
             {
                 title: 'Total',
                 dataIndex: 'total',
                 key: 'total',
-                width: '5%',
+                width: '12.2%',
+                align: 'right',
                 render: (text, record, index) =>
                     <Text disabled={this.isDisabled(record.month)} >
-                        {this.state.update.map(x => x.sales_forecast_non_eu) === null ? this.state.outEuData[index].total : text}
+                        {this.state.update.map(x => x.sales_forecast_non_eu) === null ? this.state.outEuData[index].total : '€' + text}
                     </Text>,
             },
             {
                 title: 'When paid',
                 dataIndex: 'paid',
                 key: 'paid',
-                width: '10%',
+                width: '18.3%',
+                align: 'right',
                 render: (text, record) => (
                     <Input.Group compact>
                         <Select defaultValue={text === null ? 0 : text} onChange={(e) => this.outEuChange(e, record, 'paid')} disabled={this.isDisabled(record.month)} >
@@ -1041,42 +1063,42 @@ class SalesForecast extends React.Component {
 
         ];
         return (
-            <Row align="middle" >
+            <>
                 <UnsavedChangesHeader
                     visibility={this.state.isVisibleHeader}
                     saveChanges={this.saveChanges}
                     discardChanges={this.onDiscardChanges}
                 />
-                <Col span={20} offset={3}>
-                    <Col span={16} offset={0}>
-                        <Breadcrumb className="margin-top-links">
-                            <Breadcrumb.Item className="margin-top-links">
-                                <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
-                            </Breadcrumb.Item>
-                            <Breadcrumb.Item className="margin-top-links">
-                                <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
-                            </Breadcrumb.Item>
-                            <Breadcrumb.Item>
-                                <Space>Sales forecast</Space>
-                            </Breadcrumb.Item>
-                        </Breadcrumb>
+                <Col span={20} offset={2}>
+                    <Breadcrumb className="margin-top-links">
+                        <Breadcrumb.Item className="margin-top-links">
+                            <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item className="margin-top-links">
+                            <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item>
+                            <Space>Sales forecast</Space>
+                        </Breadcrumb.Item>
+                    </Breadcrumb>
+                </Col>
+
+                <Row className="margin-heading" align="middle">
+                    <Col span={16} offset={2}>
+                        <div className="button-style-heading-section">
+                            <Button className="back-button-style" icon={<ArrowLeftOutlined />} onClick={() => this.onBackClick()}></Button>
+                            <Text className="titleTextStyle" >Sales forecast</Text>
+                            <TooltipComponent code="salesforecast1" type="title" />
+                        </div>
                     </Col>
+                    <Col span={4}>
+                        <div className="button-style-heading-section" style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
+                            <Text className="mark-as-completed-style">Mark as completed: </Text><Switch className="margin-left-8px" checked={this.props.salesForecast.is_sales_forecast_completed} onClick={this.onCompletedChange.bind(this)} />
+                        </div>
 
-                    <Row className="margin-heading" align="middle">
-                        <Col span={12} offset={0}>
-                            <div className="button-style-heading-section">
-                                <Button className="back-button-style" icon={<ArrowLeftOutlined />} onClick={() => this.onBackClick()}></Button>
-                                <Text className="titleTextStyle" >Sales forecast</Text>
-                            </div>
-                        </Col>
-                        <Col span={4} offset={6}>
-                            <div className="button-style-heading-section">
-                                <Text className="mark-as-completed-style">Mark as completed: </Text><Switch className="margin-left-8px" checked={this.props.salesForecast.is_sales_forecast_completed} onClick={this.onCompletedChange.bind(this)} />
-                            </div>
-
-                        </Col>
-                    </Row>
-
+                    </Col>
+                </Row>
+                <Col span={20} offset={2}>
                     <Tabs defaultActiveKey={this.state.tabKey} onChange={e => this.getKey(e)} >
                         {this.props.salesForecast.productsTitles.map((x) => {
                             return (
@@ -1088,7 +1110,7 @@ class SalesForecast extends React.Component {
                                                 return (
                                                     <>
                                                         <Row className="margin-top-links about-Title-section-Style" align="middle">
-                                                            <Col span={6} >
+                                                            <Col span={8} >
                                                                 <div style={{ marginRight: '40px', position: "absolute" }}>
                                                                     <Typography.Title className="about-Title-heading-Style">{x.name}</Typography.Title>
                                                                     <Typography.Text className="text-Style">
@@ -1098,76 +1120,69 @@ class SalesForecast extends React.Component {
                                                                     </Typography.Text>
                                                                 </div>
                                                             </Col>
-
-                                                            < Col span={12} offset={2} className="margin-top-5px" >
-                                                                <Card style={{ borderRadius: '15px' }}  >
-                                                                    <Row style={{ marginBottom: '20px' }}>
-
-                                                                        <Col span={8} ><p className="card-style-font">When Ready ?</p></Col>
-                                                                        <Col span={4} offset={12} >
-
-                                                                            <Input.Group compact >
-                                                                                <SalesForecastSelect defaultValue={element.when_ready === 0 ? 1 + "st mo." : element.when_ready + "th mo."} onChange={this.onMonthChange} dataSource={dataSourceMonth} />
-                                                                            </Input.Group>
-
+                                                            <Col span={16} className="margin-top-5px" >
+                                                                <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                                                                    <div style={{ display: 'flex' }}>
+                                                                        <Col span={12}>
+                                                                            <div style={{ marginTop: 24, marginLeft: 16 }}>
+                                                                                <Text style={{ ...titleTextStyle }}>What Ready?</Text>
+                                                                                <TooltipComponent code="salesforecast2" type="text" />
+                                                                            </div>
                                                                         </Col>
-
-
-                                                                    </Row>
-                                                                    <hr style={{ borderColor: '#D9D9D9' }} />
-                                                                    <Row style={{ marginTop: '20px' }}>
-
-                                                                        <Col span={9}><p className="card-style-font">Do you have plan to export? </p></Col>
-                                                                        <Col span={3} offset={12}>
-                                                                            <Input.Group compact >
-                                                                                <Select defaultValue={element.export === false ? 'NO' : 'yes'} onChange={(e) => this.changePlan(x.id, e)}  >
-                                                                                    <Option value={true} >Yes</Option>
-                                                                                    <Option value={false} >NO</Option>
-                                                                                </Select>
-                                                                                {/* <SalesForecastSelect defaultValue={element.export === false ? 'NO' : 'Yes'} dataSource={dataSourceExport} onChange={(e) => this.changePlan(x.id, e)} /> */}
-                                                                            </Input.Group>
-
+                                                                        <Col span={12}>
+                                                                            <div style={{ float: "right", marginTop: 16, marginRight: 16 }}>
+                                                                                <Input.Group compact >
+                                                                                    <SalesForecastSelect defaultValue={element.when_ready === 0 ? 1 + "st mo." : element.when_ready + "th mo."} onChange={this.onMonthChange} dataSource={dataSourceMonth} />
+                                                                                </Input.Group>
+                                                                            </div>
                                                                         </Col>
-
-                                                                    </Row>
-                                                                </Card>
-
-                                                            </Col>
-
-                                                        </Row>
-
-                                                        <Row align="middle" className="margin-top-20px">
-                                                            <Col span={12} offset={8} >
-                                                                <SalesForecastTable title='Sales forecast in EU' columns={columns} dataSource={element.sales_forecast_eu === null ? dataSourceTableInEu : element.sales_forecast_eu} />
-                                                            </Col>
-
-                                                        </Row>
-
-                                                        <Row align="middle" className={`margin-top-20px ${element.export === false ? `display-none` : ``}`} >
-                                                            <Col span={12} offset={8} >
-                                                                <SalesForecastTable title='Sales forecast outside EU' columns={columnsOutEU} dataSource={element.sales_forecast_non_eu === null ? dataSourceTableOutEu : element.sales_forecast_non_eu} />
+                                                                    </div>
+                                                                    <Divider />
+                                                                    <div style={{ display: 'flex' }}>
+                                                                        <Col span={12}>
+                                                                            <div style={{ marginTop: 4, marginLeft: 16 }}>
+                                                                                <Text style={{ ...titleTextStyle }}>Do you have plan to export?</Text>
+                                                                                <TooltipComponent code="salesforecast3" type="text" />
+                                                                            </div>
+                                                                        </Col>
+                                                                        <Col span={12}>
+                                                                            <div style={{ float: "right", marginBottom: 16, marginRight: 16 }}>
+                                                                                <Input.Group compact >
+                                                                                    <Select defaultValue={element.export === false ? 'No' : 'yes'} onChange={(e) => this.changePlan(x.id, e)} style={{ width: 71 }} suffixIcon={<CaretDownFilled />} >
+                                                                                        <Option value={true} >Yes</Option>
+                                                                                        <Option value={false} >No</Option>
+                                                                                    </Select>
+                                                                                    {/* <SalesForecastSelect defaultValue={element.export === false ? 'NO' : 'Yes'} dataSource={dataSourceExport} onChange={(e) => this.changePlan(x.id, e)} /> */}
+                                                                                </Input.Group>
+                                                                            </div>
+                                                                        </Col>
+                                                                    </div>
+                                                                </Card >
+                                                                <Row align="middle" className="margin-top-20px">
+                                                                    <Col span={24}>
+                                                                        <SalesForecastTable title='Sales forecast in EU' columns={columns} dataSource={element.sales_forecast_eu === null ? dataSourceTableInEu : element.sales_forecast_eu} />
+                                                                    </Col>
+                                                                </Row>
+                                                                <Row align="middle" className={`margin-top-20px ${element.export === false ? `display-none` : ``}`} >
+                                                                    <Col span={24}>
+                                                                        <SalesForecastTable title='Sales forecast outside EU' columns={columnsOutEU} dataSource={element.sales_forecast_non_eu === null ? dataSourceTableOutEu : element.sales_forecast_non_eu} />
+                                                                    </Col>
+                                                                </Row>
                                                             </Col>
                                                         </Row>
                                                     </>
-
                                                 )
                                             }
-
-
-
                                         })}
                                     </TabPane>
                                 </>
                             )
                         }
-
-
-
                         )}
                     </Tabs>
-
                 </Col>
-            </Row >
+
+            </>
         )
     }
 }

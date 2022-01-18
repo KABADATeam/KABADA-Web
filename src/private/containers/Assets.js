@@ -12,6 +12,8 @@ import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 //import { getCountryVats } from '../../appStore/actions/vatAction';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { conditionalExpression } from '@babel/types';
+import TooltipComponent from '../components/Tooltip';
+import '../../css/Assets.css';
 
 const { Option } = Select;
 
@@ -117,19 +119,19 @@ class AssetsWindow extends React.Component {
                 title: 'Asset',
                 dataIndex: 'type_title',
                 key: 'type_title',
-                width: '15%',
+                width: '20%',
             },
             {
                 title: 'Name',
                 dataIndex: 'resource_title',
                 key: 'resource_title',
-                width: '20%',
+                width: '28%',
             },
             {
                 title: 'Statuss',
                 dataIndex: 'resource_status',
                 key: 'resource_status',
-                width: '15%',
+                width: '12%',
                 align: 'right',
                 render: (text, obj, record) => (
                     text === null ? <div style={{ display: 'flex', justifyContent: 'center' }}><Text>-</Text></div> : <Text>{text}</Text>
@@ -140,7 +142,7 @@ class AssetsWindow extends React.Component {
                 title: 'Total amount with VAT',
                 dataIndex: 'amount',
                 key: 'amount',
-                width: '30%',
+                width: '24.5%',
                 align: 'right',
                 render: (text, obj, record) => (
                     <div style={{ float: 'right' }}>
@@ -149,6 +151,7 @@ class AssetsWindow extends React.Component {
                             size="large"
                             onChange={e => this.props.updateAssetsItemAmount(e.target.value, obj)}
                             defaultValue={text === null ? 0 : text}
+                            className='assets-input-style'
                         />
                     </div>
 
@@ -158,21 +161,22 @@ class AssetsWindow extends React.Component {
             {
                 title: () => (
                     <Space>
-                        <Text>VAT Rate</Text>
-                        <Tooltip title="Tooltip text">
-                            <InfoCircleFilled style={{ color: '#BFBFBF' }} />
-                        </Tooltip>
+                        <Text>VAT Rate
+                            <TooltipComponent code="assets" type="text" />
+                        </Text>
                     </Space>
                 ),
                 dataIndex: 'vat',
                 key: 'vat',
                 align: 'right',
-                width: '20%',
+                width: '15%',
                 render: (text, obj, record) => (
                     <Space size={0}>
                         <Select defaultValue={text === null ? this.props.vat.defaultVAT : text}
                             suffixIcon={<CaretDownFilled />}
                             onChange={e => this.props.updateAssetsItemVat(e, obj)}
+                            style={{ width: 79 }}
+                            className='assets-selector-style'
                         >
                             {vatOptions}
                         </Select>
@@ -191,7 +195,7 @@ class AssetsWindow extends React.Component {
                     <div></div>
                     :
                     <div>
-                        <Col span={16} offset={4}>
+                        <Col span={20} offset={2}>
                             <Breadcrumb style={{ marginTop: "40px" }}>
                                 <Breadcrumb.Item>
                                     <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
@@ -206,7 +210,7 @@ class AssetsWindow extends React.Component {
                         </Col>
 
                         <Row align="middle" style={{ marginTop: "9px", marginBottom: "25px" }}>
-                            <Col span={12} offset={4}>
+                            <Col span={16} offset={2}>
                                 <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                                     <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                                     <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Assets</Text>
@@ -218,10 +222,13 @@ class AssetsWindow extends React.Component {
                                 </div>
                             </Col>
                         </Row>
-                        <Col span={16} offset={4}>
+                        <Col span={20} offset={2}>
+                            <Divider />
+                        </Col>
+                        <Col span={20} offset={2}>
                             <Col span={24} >
-                                <Row style={{ marginBottom: "50px" }}>
-                                    <Col span={8}>
+                                <Row style={{ marginTop: "50.5px",marginBottom: "50px" }}>
+                                    <Col span={7}>
                                         <div style={{ marginRight: '40px' }}>
                                             <Typography.Title style={{ ...aboutTitleTextStyle }}>Assets</Typography.Title>
                                             <Typography.Text style={{ ...textStyle }}>
@@ -229,7 +236,7 @@ class AssetsWindow extends React.Component {
                                             </Typography.Text>
                                         </div>
                                     </Col>
-                                    <Col span={16}>
+                                    <Col span={17}>
                                         <div>
                                             <Table
                                                 title={() => (

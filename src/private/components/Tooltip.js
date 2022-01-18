@@ -15,24 +15,62 @@ class TooltipComponent extends Component {
         }
     }
     render() {
-        const { tooltipCode } = this.props;
+        const { tooltipCode, type } = this.props;
         const title = this.title(this.props.tooltips.tooltips, tooltipCode);
         if (title !== undefined) {
-            return (
-                <>
-                    <Tooltip title="Tooltip">
-                        <InfoCircleFilled style={{ width: '17.5px', height: '17.5px', color: '#BFBFBF' }} />
-                    </Tooltip>
-                </>
-            )
+            if (type === 'title') {
+                return (
+                    <>
+                        <Tooltip title="Tooltip">
+                            <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '9.5px' }} />
+                        </Tooltip>
+                    </>
+                )
+            } else if (type === 'text') {
+                return (
+                    <>
+                        <Tooltip title="Tooltip">
+                            <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF', marginLeft: '5.25px' }} />
+                        </Tooltip>
+                    </>
+                )
+            } else {
+                return (
+                    <>
+                        <Tooltip title="Tooltip">
+                            <InfoCircleFilled style={{ fontSize: '17.5px',color: '#BFBFBF', marginLeft: '5.25px' }} />
+                        </Tooltip>
+                    </>
+                )
+            }
         } else {
-            return (
-                <>
-                    <Tooltip title="Tooltip">
-                        <InfoCircleFilled style={{ width: '17.5px', height: '17.5px', color: '#BFBFBF' }} />
-                    </Tooltip>
-                </>
-            )
+            if (type === 'title') {
+                console.log('test1')
+                return (
+                    <>
+                        <Tooltip title="Tooltip">
+                            <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '9.5px' }} />
+                        </Tooltip>
+                    </>
+                )
+            } else if (type === 'text') {
+                console.log('undefined code text')
+                return (
+                    <>
+                        <Tooltip title="Tooltip">
+                            <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF', marginLeft: '5.25px' }} />
+                        </Tooltip>
+                    </>
+                )
+            } else {
+                return (
+                    <>
+                        <Tooltip title="Tooltip">
+                            <InfoCircleFilled style={{ fontSize: '17.5px',color: '#BFBFBF', marginLeft: '5.25px'  }} />
+                        </Tooltip>
+                    </>
+                )
+            }
         }
     }
 }

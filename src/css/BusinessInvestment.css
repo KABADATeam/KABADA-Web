@@ -1,0 +1,15 @@
+.business-startup-selector-style{
+    background: #FFFFFF;
+    border: 1px #BFBFBF;
+    box-sizing: border-box;
+    box-shadow: inset 0px 2px 0px rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+.business-startup-input-style{
+    background: #FFFFFF;
+    border: 1px solid #BFBFBF;
+    box-sizing: border-box;
+    box-shadow: inset 0px 1px 0px rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
