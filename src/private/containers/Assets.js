@@ -162,7 +162,7 @@ class AssetsWindow extends React.Component {
                 title: () => (
                     <Space>
                         <Text>VAT Rate
-                        <TooltipComponent code="assets" type="text"/>
+                            <TooltipComponent code="assets" type="text" />
                         </Text>
                     </Space>
                 ),
@@ -175,7 +175,7 @@ class AssetsWindow extends React.Component {
                         <Select defaultValue={text === null ? this.props.vat.defaultVAT : text}
                             suffixIcon={<CaretDownFilled />}
                             onChange={e => this.props.updateAssetsItemVat(e, obj)}
-                            style={{width: 79}}
+                            style={{ width: 79 }}
                             className='assets-selector-style'
                         >
                             {vatOptions}
@@ -223,8 +223,11 @@ class AssetsWindow extends React.Component {
                             </Col>
                         </Row>
                         <Col span={20} offset={2}>
+                            <Divider />
+                        </Col>
+                        <Col span={20} offset={2}>
                             <Col span={24} >
-                                <Row style={{ marginBottom: "50px" }}>
+                                <Row style={{ marginTop: "50.5px",marginBottom: "50px" }}>
                                     <Col span={7}>
                                         <div style={{ marginRight: '40px' }}>
                                             <Typography.Title style={{ ...aboutTitleTextStyle }}>Assets</Typography.Title>

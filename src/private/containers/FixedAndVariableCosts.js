@@ -573,7 +573,7 @@ class FixedAndVariableCosts extends React.Component {
                         </Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
-                <Row align="middle" styke={{ marginTop: "9px" }}>
+                <Row align="middle" style={{ marginTop: "9px", marginBottom: "25px" }}>
                     <Col span={16} offset={2}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
@@ -587,10 +587,6 @@ class FixedAndVariableCosts extends React.Component {
                         </div>
                     </Col>
                 </Row>
-
-                <Col span={20} offset={2}>
-                    <Divider />
-                </Col>
                 <Col offset={2} span={20}>
                     <Tabs defaultActiveKey="1">
                         <TabPane tab="Fixed Costs" key="1">
