@@ -13,6 +13,7 @@ import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { conditionalExpression } from '@babel/types';
 import TooltipComponent from '../components/Tooltip';
+import '../../css/Assets.css';
 
 const { Option } = Select;
 
@@ -150,6 +151,7 @@ class AssetsWindow extends React.Component {
                             size="large"
                             onChange={e => this.props.updateAssetsItemAmount(e.target.value, obj)}
                             defaultValue={text === null ? 0 : text}
+                            className='assets-input-style'
                         />
                     </div>
 
@@ -174,6 +176,7 @@ class AssetsWindow extends React.Component {
                             suffixIcon={<CaretDownFilled />}
                             onChange={e => this.props.updateAssetsItemVat(e, obj)}
                             style={{width: 79}}
+                            className='assets-selector-style'
                         >
                             {vatOptions}
                         </Select>
