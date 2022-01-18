@@ -189,7 +189,7 @@ class EditSegmentModal extends Component {
                             </Select>
                         </Form.Item>
 
-                        <Form.Item key="type" name="type" label={additionalTitle}
+                        <Form.Item key="type" name="type" label="Segments"
                             validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
                             <Select style={{ width: '100%' }} placeholder="Choose segment"
                                 onChange={this.onNgoTypeChange.bind(this)}

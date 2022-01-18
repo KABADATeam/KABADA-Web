@@ -188,7 +188,7 @@ class AddSegmentModal extends Component {
                         </Form.Item>
 
 
-                        <Form.Item key="names" name="names" label={additionalTitle}
+                        <Form.Item key="names" name="names" label="Segments"
                         //validateStatus={this.state.segment_name !== null ? 'error' : 'success'}
                         >
                             <Select style={{ width: '100%' }}

@@ -24,6 +24,12 @@ const { Text } = Typography;
 const titleTextStyle = {
     fontStyle: "normal",
     fontWeight: "600",
+    fontSize: "38px",
+    lineHeight: "30px"
+}
+const tableTitleTextStyle = {
+    fontStyle: "normal",
+    fontWeight: "600",
     fontSize: "16px",
     lineHeight: "24px"
 }
@@ -170,7 +176,7 @@ class AssetsWindow extends React.Component {
                 title: () => (
                     <Space>
                         <Text>VAT Rate
-                            <TooltipComponent code="assets" type="text" />
+                            <TooltipComponent code="physintelassets" type="text" />
                         </Text>
                     </Space>
                 ),
@@ -222,6 +228,7 @@ class AssetsWindow extends React.Component {
                                 <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                                     <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                                     <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Assets</Text>
+                                    <TooltipComponent code="assets" type="title" />
                                 </div>
                             </Col>
                             <Col span={4}>
@@ -251,7 +258,7 @@ class AssetsWindow extends React.Component {
                                                     <div>
                                                         <Row>
                                                             <div>
-                                                                <Text style={{ ...titleTextStyle }}>Physical and Intellectual assets</Text>
+                                                                <Text style={{ ...tableTitleTextStyle }}>Physical and Intellectual assets</Text>
                                                             </div>
                                                         </Row>
                                                     </div>

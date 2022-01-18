@@ -95,7 +95,7 @@ class EditKeyPartnerModal extends Component {
                                     },
                                 },
                             ]}>
-                            {this.props.item.type_title === 'Self distribution' || 'Highly diversified distributors' ? <Input size="large" style={inputStyle} value={this.state.companyName} onChange={this.onCompanyNameChange} /> :
+                            {this.props.item.type_title === 'Self distribution' || this.props.item.type_title ===  'Highly diversified distributors' ? <Input size="large" style={inputStyle} disabled value={this.state.companyName} onChange={this.onCompanyNameChange} /> :
                                 <Input size="large" style={inputStyle} value={this.state.companyName} onChange={this.onCompanyNameChange} />}
 
                         </Form.Item>
