@@ -39,7 +39,7 @@ function initState() {
 };
 
 function saveToStorage(authObject) {
-    var inFifteenMinutes = new Date(new Date().getTime() + 15 * 60 * 1000);
+    var inFifteenMinutes = new Date(new Date().getTime() + 60 * 60 * 1000);
     Cookies.set('access_token', authObject.access_token, {
         expires: inFifteenMinutes
     });

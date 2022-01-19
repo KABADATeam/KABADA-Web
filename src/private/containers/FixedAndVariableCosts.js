@@ -14,6 +14,7 @@ import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
 import '../../css/FixedAndVarStyles.css'
 import TooltipComponent from '../components/Tooltip';
+import TextHelper from '../components/TextHelper';
 import Cookies from 'js-cookie';
 
 
@@ -602,18 +603,16 @@ class FixedAndVariableCosts extends React.Component {
                                     <div style={{ marginBottom: 24 }}>
                                         <Col span={24}>
                                             <Row>
-                                                <Col span={7}>
+                                                <Col span={8}>
                                                     {index === 0 ?
                                                         <div style={{ marginRight: '40px' }}>
                                                             <Typography.Title style={{ ...aboutTitleTextStyle }}>Fixed Costs</Typography.Title>
-                                                            <Typography.Text style={{ ...textStyle }}>
-                                                                Please indicate the amount of fixed and variable costs (all shown cost are based on pre-filled information in canvas)A60
-                                                            </Typography.Text>
+                                                            <TextHelper code="fixedcost" type="lefttext"/>
                                                         </div> : <div></div>}
                                                 </Col>
                                                 {/* returns second column with table */}
                                                 {/* <FixedCostTable data={obj.types} countryVats={this.props.countryVats} category_title={obj.category_title} category_id={obj.category_id} /> */}
-                                                {obj.category_title === "Salaries" ? <Col span={17}>
+                                                {obj.category_title === "Salaries" ? <Col span={16}>
                                                     <Table
                                                         rowKey="id"
                                                         columns={fixed_salaries_costs_columns}
@@ -621,7 +620,7 @@ class FixedAndVariableCosts extends React.Component {
                                                         pagination={false}
                                                         title={() => obj.category_title}
                                                     />
-                                                </Col> : <Col span={17}>
+                                                </Col> : <Col span={16}>
                                                     <Table
                                                         rowKey="id"
                                                         columns={fixed_costs_columns}
@@ -643,17 +642,15 @@ class FixedAndVariableCosts extends React.Component {
                                     <div style={{ marginBottom: 24 }}>
                                         <Col span={24}>
                                             <Row>
-                                                <Col span={7}>
+                                                <Col span={8}>
                                                     {index === 0 ?
                                                         <div style={{ marginRight: '40px' }}>
                                                             <Typography.Title style={{ ...aboutTitleTextStyle }}>Variable Costs</Typography.Title>
-                                                            <Typography.Text style={{ ...textStyle }}>
-                                                                Please indicate the amount of fixed and variable costs (all shown cost are based on pre-filled information in canvas)A60
-                                                            </Typography.Text>
+                                                            <TextHelper code="variablecost" type="lefttext"/>
                                                         </div> : <div></div>}
                                                 </Col>
                                                 {/* returns second column with table */}
-                                                {obj.category_title === "Salaries" ? <Col span={17}>
+                                                {obj.category_title === "Salaries" ? <Col span={16}>
                                                     <Table
                                                         rowKey="id"
                                                         columns={variable_salaries_costs_columns}
@@ -661,7 +658,7 @@ class FixedAndVariableCosts extends React.Component {
                                                         pagination={false}
                                                         title={() => obj.category_title}
                                                     />
-                                                </Col> : <Col span={17}>
+                                                </Col> : <Col span={16}>
                                                     <Table
                                                         rowKey="id"
                                                         columns={variable_costs_columns}

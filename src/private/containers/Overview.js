@@ -19,6 +19,7 @@ import { logout } from '../../appStore/actions/authenticationActions';
 import IndustryDataComponent from '../components/industry_data/IndustryDataComponent';
 import html2canvas from 'html2canvas';
 import TooltipComponent from '../components/Tooltip';
+import TextHelper from '../components/TextHelper';
 import Cookies from 'js-cookie';
 
 const { TabPane } = Tabs;
@@ -732,13 +733,9 @@ class Overview extends React.Component {
                             <TabPane tab="Industry risks" key="3">
                                 <Row style={{ marginBottom: "50px", marginTop: "40px" }}>
                                     <Col span={8}>
-                                        <div>
+                                        <div style={{ marginRight: '40px' }}>
                                             <Typography.Title style={aboutTitleTextStyle}>{overview.nace.activity_code} Industry risks</Typography.Title>
-                                            <Typography.Text className="text-Style">
-                                                Product description Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
-                                                Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                                                You can add products at Value proposition
-                                            </Typography.Text>
+                                            <TextHelper code="ovir" type="lefttext"/>
                                         </div>
                                     </Col>
                                     <Col span={16}>

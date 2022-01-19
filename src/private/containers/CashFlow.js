@@ -9,6 +9,7 @@ import { logout } from '../../appStore/actions/authenticationActions';
 import { tableTitleStyle } from '../../styles/customStyles';
 import TooltipComponent from '../components/Tooltip';
 import Cookies from 'js-cookie';
+import TextHelper from '../components/TextHelper';
 
 const { Text } = Typography;
 const { Title } = Typography;
@@ -204,7 +205,7 @@ class CashFlow extends React.Component {
                     <Row style={{ marginBottom: "50px" }}>
                         <Col span={12}>
                             <Title level={4}>Cash flow</Title>
-                            <Typography.Text>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</Typography.Text>
+                            <TextHelper code="cashflowhelp" type="lefttext"/>
                         </Col>
                     </Row>
                     <Row style={{ marginBottom: "50px" }}>

@@ -14,6 +14,7 @@ import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
 import { conditionalExpression } from '@babel/types';
 import TooltipComponent from '../components/Tooltip';
+import TextHelper from '../components/TextHelper';
 import '../../css/Assets.css';
 import Cookies from 'js-cookie';
 
@@ -243,15 +244,13 @@ class AssetsWindow extends React.Component {
                         <Col span={20} offset={2}>
                             <Col span={24} >
                                 <Row style={{ marginTop: "50.5px",marginBottom: "50px" }}>
-                                    <Col span={7}>
+                                    <Col span={8}>
                                         <div style={{ marginRight: '40px' }}>
                                             <Typography.Title style={{ ...aboutTitleTextStyle }}>Assets</Typography.Title>
-                                            <Typography.Text style={{ ...textStyle }}>
-                                                Explanation … Before you start selling your product or service, you need to  understand what investments are needed to start your business. Bellow in this section are most  usuall investment categories for start-up business
-                                            </Typography.Text>
+                                            <TextHelper code="assetshelp" type="lefttext"/>
                                         </div>
                                     </Col>
-                                    <Col span={17}>
+                                    <Col span={16}>
                                         <div>
                                             <Table
                                                 title={() => (

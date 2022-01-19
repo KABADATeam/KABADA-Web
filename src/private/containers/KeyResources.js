@@ -10,7 +10,8 @@ import { getResourcesList, getResourcesCategoriesList, deleteItem, saveEditable,
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
-import TooltipComponent from "../components/Tooltip"
+import TooltipComponent from "../components/Tooltip";
+import TextHelper from '../components/TextHelper';
 import Cookies from 'js-cookie';
 
 const { Text } = Typography;
@@ -206,19 +207,13 @@ class KeyResources extends React.Component {
 
                 <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Key resources</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    To reach the value proposition a company needs resources, these resources can be seen as the main assets to reach a company’s goal.
-                                    Different departments within companies might even require different resources.
-                                    These resources are needed to create the value proposition, to serve customer segments and to deliver the product or service to the customer.
-                                    In that way the quality of the resources has a direct impact on the client and ultimately on the revenues,
-                                    which needs to be known to create a sustainable business model.
-                                </Typography.Text>
+                                <TextHelper code='keyresourceshelp' type='lefttext'/>
                             </div>
                         </Col>
-                        <Col span={17}>
+                        <Col span={16}>
                             <Table
                                 title={() => <>
                                     <Typography style={{ ...tableTitleStyle }}>Key resources</Typography>

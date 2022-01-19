@@ -12,6 +12,7 @@ import EditCustomerRelationshipModal from '../components/customer_relationships/
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
 import TooltipComponent from '../components/Tooltip';
+import TextHelper from '../components/TextHelper';
 import Cookies from 'js-cookie';
 const { Text } = Typography;
 
@@ -334,17 +335,13 @@ class CustomerRelationships extends React.Component {
 
                 <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>How to get new customers?</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                                    <br /><br />
-                                    Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.
-                                </Typography.Text>
+                                <TextHelper code="custrelgetcust" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
+                        <Col span={16}>
                             <Table
                                 dataSource={this.props.customerRelationships.how_to_get_new}
                                 columns={howToGetNewColumns}
@@ -355,17 +352,13 @@ class CustomerRelationships extends React.Component {
                     </Row>
                     <Divider />
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>How to keep customers?</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                                    <br /><br />
-                                    Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.
-                                </Typography.Text>
+                                <TextHelper code="custrelkeepcust" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
+                        <Col span={16}>
                             <Table
                                 dataSource={this.props.customerRelationships.how_to_keep_existing}
                                 columns={howToKeepExistingColumns}
@@ -376,15 +369,13 @@ class CustomerRelationships extends React.Component {
                     </Row>
                     <Divider />
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>How to convince existing to spend more?</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                                </Typography.Text>
+                                <TextHelper code="custrelconvince" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
+                        <Col span={16}>
                             <Table
                                 dataSource={this.props.customerRelationships.how_to_make_spend}
                                 columns={howToMakeSpendColumns}

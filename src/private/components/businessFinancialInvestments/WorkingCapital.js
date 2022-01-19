@@ -9,6 +9,7 @@ import WorkingCapitalScenario1 from './WorkingCapitalScenario1';
 import WorkingCapitalScenario2 from './WorkingCapitalScenario2';
 import TooltipComponent from '../Tooltip';
 import '../../../css/BusinessInvestment.css'
+import TextHelper from '../TextHelper';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -50,9 +51,7 @@ class WorkingCapital extends React.Component {
                             <Col span={8}>
                                 <div style={{ marginRight: '40px' }}>
                                     <Typography.Title style={{ ...aboutTitleTextStyle }}>Business start-up investments</Typography.Title>
-                                    <Typography.Text style={{ ...textStyle }}>
-                                        Explanation … Before you start selling your product or service, you need to  understand what investments are needed to start your business. Bellow in this section are most  usuall investment categories for start-up business
-                                    </Typography.Text>
+                                    <TextHelper code="bstartinvestcapital" type="lefttext"/>
                                 </div>
                             </Col>
                             <Col span={16}>

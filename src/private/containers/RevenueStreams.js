@@ -10,7 +10,8 @@ import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getStreamTypes, getPrices, getRevenues, saveState, deleteRevenue } from "../../appStore/actions/revenueStreamActions";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
-import TooltipComponent from "../components/Tooltip"
+import TooltipComponent from "../components/Tooltip";
+import TextHelper from '../components/TextHelper';
 import Cookies from 'js-cookie';
 
 const { Text } = Typography;
@@ -300,15 +301,13 @@ class RevenueStreams extends React.Component {
 
                 <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Consumers</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Plan a separate Revenue Streams for each Customer Segment as each of them may have different pricing requirements.  You can, actually  have several Revenue streams for each Segment.
-                                </Typography.Text>
+                                <TextHelper code="revstreamconsumer" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
+                        <Col span={16}>
                             {this.props.revenues.segment_1.length === 0 ?
                                 <Button size="large" style={{ ...buttonStyle, marginBottom: '10px', marginTop: '10px' }} onClick={this.onAddFirstRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button>
                                 :
@@ -323,15 +322,13 @@ class RevenueStreams extends React.Component {
                     </Row>
                     <Divider />
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Business</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Plan a separate Revenue Streams for each Customer Segment as each of them may have different pricing requirements.  You can, actually  have several Revenue streams for each Segment.
-                                </Typography.Text>
+                                <TextHelper code="revstreambusiness" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
+                        <Col span={16}>
                             {this.props.revenues.segment_2.length === 0 ?
                                 <Button size="large" style={{ ...buttonStyle, marginBottom: '10px', marginTop: '10px' }} onClick={this.onAddSecondRevenueStream.bind(this)}><PlusOutlined />Add Revenue Stream</Button>
                                 :
@@ -346,15 +343,13 @@ class RevenueStreams extends React.Component {
                     </Row>
                     <Divider />
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Public bodies & NGO</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.
-                                </Typography.Text>
+                                <TextHelper code="revstreampublicbodies" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
+                        <Col span={16}>
                             {this.props.revenues.other.length === 0 ?
                                 <Button size="large" style={{ ...buttonStyle, marginBottom: '10px', marginTop: '10px' }} onClick={this.onAddNewOther.bind(this)}><PlusOutlined />Add Other Revenue Stream</Button>
                                 :

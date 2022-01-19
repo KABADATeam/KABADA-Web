@@ -13,6 +13,7 @@ import AddCostModal from "../components/cost_structure/AddCostModal";
 import { logout } from '../../appStore/actions/authenticationActions';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import TooltipComponent from "../components/Tooltip";
+import TextHelper from '../components/TextHelper';
 import Cookies from 'js-cookie';
 
 const { Text } = Typography;
@@ -257,15 +258,13 @@ class CostStructure extends React.Component {
                 </Col>
                 <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Fixed costs</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    A fixed cost is a cost that does not change with an increase or decrease in the amount of goods or services produced or sold. Fixed costs are expenses that have to be paid by a start-up, independently of any specific business activity. Below are listed most common groups of fixed costs.
-                                </Typography.Text>
+                                <TextHelper code="coststrucfixed" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
+                        <Col span={16}>
                             <Table
                                 dataSource={this.props.costs.fixed_costs}
                                 columns={fixedCostsColumns}
@@ -277,15 +276,13 @@ class CostStructure extends React.Component {
                     </Row>
                     <Divider />
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Variable costs</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Are costs that changes in proportion to production output or service amount. Variable costs increase or decrease depending on a production or service volume; they rise as it increases and fall as production decreases.
-                                </Typography.Text>
+                                <TextHelper code="coststrucvariable" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
+                        <Col span={16}>
                             <Table
                                 dataSource={this.props.costs.variable_costs}
                                 columns={varCostsColumns}

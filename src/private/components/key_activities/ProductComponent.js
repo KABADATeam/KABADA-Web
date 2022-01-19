@@ -95,15 +95,15 @@ class ProductComponent extends React.Component {
             <>
                 <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
-                            <div style={{ marginRight: '40px' }}>
+                        <Col span={8}>
+                            <div style={{ marginRight: '40px', marginTop: '20px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>{this.props.data.title}</Typography.Title>
                                 <Typography.Text style={{ ...textStyle }}>
                                     {this.state.description}
                                 </Typography.Text>
                             </div>
                         </Col>
-                        <Col span={17}>
+                        <Col span={16}>
                             <Table
                                 title={() => <>
                                     <Typography style={{ ...tableTitleStyle }}>Key Activities</Typography>

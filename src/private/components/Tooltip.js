@@ -17,16 +17,25 @@ class TooltipComponent extends Component {
     render() {
         const { code, type } = this.props;
         const title = this.title(this.props.tooltips.tooltips, code);
-        if (title !== undefined ) {
-            if (type === 'title') {
+        if (title !== undefined) {
+            if (type === 'title' && title.tooltip !== null) {
                 return (
                     <>
-                        <Tooltip title="Tooltip">
+                        <Tooltip title={title.tooltip}>
                             <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '9.5px' }} />
                         </Tooltip>
                     </>
                 )
-            } else if (type === 'text') {
+            } else if (type === 'text' && title.tooltip !== null) {
+                return (
+                    <>
+                        <Tooltip title={title.tooltip}>
+                            <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF', marginLeft: '5.25px' }} />
+                        </Tooltip>
+                    </>
+                )
+            } else if (type === 'text' && title.tooltip === null) {
+                console.log('nera tooltip')
                 return (
                     <>
                         <Tooltip title="Tooltip">
@@ -34,11 +43,19 @@ class TooltipComponent extends Component {
                         </Tooltip>
                     </>
                 )
+            } else if (type === 'title' && title.tooltip === null) {
+                return (
+                    <>
+                        <Tooltip title="Title tooltip">
+                            <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '9.5px' }} />
+                        </Tooltip>
+                    </>
+                )
             } else {
                 return (
                     <>
                         <Tooltip title="Tooltip">
-                            <InfoCircleFilled style={{ fontSize: '17.5px',color: '#BFBFBF', marginLeft: '5.25px' }} />
+                            <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF', marginLeft: '5.25px' }} />
                         </Tooltip>
                     </>
                 )
@@ -64,7 +81,7 @@ class TooltipComponent extends Component {
                 return (
                     <>
                         <Tooltip title="Tooltip">
-                            <InfoCircleFilled style={{ fontSize: '17.5px',color: '#BFBFBF', marginLeft: '5.25px'  }} />
+                            <InfoCircleFilled style={{ fontSize: '17.5px', color: '#BFBFBF', marginLeft: '5.25px' }} />
                         </Tooltip>
                     </>
                 )

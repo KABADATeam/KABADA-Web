@@ -12,6 +12,7 @@ import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
 import TooltipComponent from "../components/Tooltip";
+import TextHelper from '../components/TextHelper';
 import Cookies from 'js-cookie';
 
 const { Text } = Typography;
@@ -327,17 +328,13 @@ class KeyPartners extends React.Component {
 
                 <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Key Distributors</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Possible if you distribute your products through your own channels – directly, your own store, homepage. Often the case in some service sectors.
-                                    <br /><br />
-                                    You can choose type “Many Retailers” if you believe that distribution channels are strongly diversified and no distributor is of high importance
-                                </Typography.Text>
+                                <TextHelper code="keypartnerdistributor" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
+                        <Col span={16}>
                             <Table
                                 dataSource={this.props.partners.distributors}
                                 columns={distributorsColumns}
@@ -348,17 +345,13 @@ class KeyPartners extends React.Component {
                     </Row>
                     <Divider />
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Key Suppliers</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Consider professional associations, networks locally and internationally, employers’ unions, chambers of commerce, trade unions
-                                    <br /> <br />
-                                    Consider relevant regulatory bodies, watchdogs, supporting institutions, municipalities, state revenue service and similar
-                                </Typography.Text>
+                                <TextHelper code="keypartnersupplier" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
+                        <Col span={16}>
                             <Table
                                 dataSource={this.props.partners.suppliers}
                                 columns={suppliersColumns}
@@ -369,15 +362,13 @@ class KeyPartners extends React.Component {
                     </Row>
                     <Divider />
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Other</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Consider professional associations, networks locally and internationally, employers’ unions, chambers of commerce, trade unions
-                                </Typography.Text>
+                                <TextHelper code="keypartnerother" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
+                        <Col span={16}>
                             <Table
                                 title={() => <>
                                     <Typography style={{ ...tableTitleStyle }}>

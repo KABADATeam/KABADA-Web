@@ -12,6 +12,7 @@ import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
 import Cookies from 'js-cookie';
 import TooltipComponent from '../components/Tooltip';
+import TextHelper from '../components/TextHelper';
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
@@ -240,12 +241,7 @@ class SwotWindow extends React.Component {
                                 <Col span={8}>
                                     <div style={{ marginRight: '40px' }}>
                                         <Typography.Title style={{ ...aboutTitleTextStyle }}>Strengths and weaknesses</Typography.Title>
-                                        <Typography.Text style={{ ...textStyle }}>
-                                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
-                                            Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                                            <br />
-                                            <Typography.Link underline style={{ ...textStyle }}>Read more about SWOT</Typography.Link>
-                                        </Typography.Text>
+                                        <TextHelper code="swotsw" type="lefttext"/>
                                     </div>
                                 </Col>
                                 <Col span={16}>
@@ -256,12 +252,7 @@ class SwotWindow extends React.Component {
                                 <Col span={8}>
                                     <div style={{ marginRight: '40px' }}>
                                         <Typography.Title style={aboutTitleTextStyle}>Opportunities and threats</Typography.Title>
-                                        <Typography.Text style={textStyle}>
-                                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
-                                            Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                                            <br />
-                                            <Typography.Link underline style={{ ...textStyle }}>Read more about SWOT</Typography.Link>
-                                        </Typography.Text>
+                                        <TextHelper code="swotot" type="lefttext"/>
                                     </div>
                                 </Col>
                                 <Col span={16}>
@@ -274,12 +265,7 @@ class SwotWindow extends React.Component {
                                 <Col span={8}>
                                     <div style={{ marginRight: '40px' }}>
                                         <Typography.Title style={{ ...aboutTitleTextStyle }}>Strengths and weaknesses</Typography.Title>
-                                        <Typography.Text style={{ ...textStyle }}>
-                                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
-                                            Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                                            <br />
-                                            <Typography.Link underline style={{ ...textStyle }}>Read more about SWOT</Typography.Link>
-                                        </Typography.Text>
+                                        <TextHelper code="swotsw" type="lefttext"/>
                                     </div>
                                 </Col>
                                 <Col span={16}>
@@ -292,12 +278,7 @@ class SwotWindow extends React.Component {
                                 <Col span={8}>
                                     <div style={{ marginRight: '40px' }}>
                                         <Typography.Title style={aboutTitleTextStyle}>Opportunities and threats</Typography.Title>
-                                        <Typography.Text style={textStyle}>
-                                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
-                                            Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                                            <br />
-                                            <Typography.Link underline style={{ ...textStyle }}>Read more about SWOT</Typography.Link>
-                                        </Typography.Text>
+                                        <TextHelper code="swotot" type="lefttext"/>
                                     </div>
                                 </Col>
                                 <Col span={16}>

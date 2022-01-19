@@ -15,6 +15,7 @@ import { getCustomerSegmentProperties, getCustomerSegments, deleteConsumerSegmen
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
 import TooltipComponent from "../components/Tooltip";
+import TextHelper from '../components/TextHelper';
 import Cookies from 'js-cookie';
 
 const { Text } = Typography;
@@ -293,17 +294,13 @@ class CustomerSegments extends React.Component {
 
                 <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Consumers</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    You are creating several customer segments.
-                                    <br /><br />
-                                    I am alone, and feel the charm of existence in this spot, which was created for the bliss of souls like mine. I am so happy, my dear friend, so absorbed in the exquisite sense of mere tranquil existence, that I neglect my talents.
-                                </Typography.Text>
+                                <TextHelper code="custsegconsumers" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
+                        <Col span={16}>
 
                             <Table
                                 title={() => <>
@@ -322,17 +319,13 @@ class CustomerSegments extends React.Component {
                     </Row>
                     <Divider />
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Business</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    You are creating several customer segments.
-                                    <br /><br />
-                                    I am alone, and feel the charm of existence in this spot, which was created for the bliss of souls like mine. I am so happy, my dear friend, so absorbed in the exquisite sense of mere tranquil existence, that I neglect my talents.
-                                </Typography.Text>
+                                <TextHelper code="custsegbusiness" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
+                        <Col span={16}>
                             <Table
                                 title={() => <>
                                     <Typography style={{ ...tableTitleStyle }}>Business segments</Typography>
@@ -350,17 +343,13 @@ class CustomerSegments extends React.Component {
                     </Row>
                     <Divider />
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Public bodies & NGO</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    You are creating several customer segments.
-                                    <br /><br />
-                                    I am alone, and feel the charm of existence in this spot, which was created for the bliss of souls like mine. I am so happy, my dear friend, so absorbed in the exquisite sense of mere tranquil existence, that I neglect my talents.
-                                </Typography.Text>
+                                <TextHelper code="custsegpublicbodngo" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
+                        <Col span={16}>
                             <Table
                                 title={() => <>
                                     <Typography style={{ ...tableTitleStyle }}>Public bodies & NGO segments</Typography>

@@ -5,8 +5,9 @@ import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCa
 import { connect } from 'react-redux';
 import { CaretDownFilled } from '@ant-design/icons';
 import { changeVisibility, changePaymentPeriod, changePaymentPeriodShort, changeInterestRate, changeInterestRateShort, changeGracePeriod, changeGracePeriodShort } from "../../../appStore/actions/businessInvestmentAction";
-import TooltipComponent from '../Tooltip'
-import '../../../css/BusinessInvestment.css'
+import TooltipComponent from '../Tooltip';
+import TextHelper from '../TextHelper';
+import '../../../css/BusinessInvestment.css';
 
 const { Option } = Select;
 
@@ -246,15 +247,13 @@ class BusinessStartUpInvestments extends React.Component {
             <>
                 <Col span={24} >
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Business Financing</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Explanation … In previous section we understood total needed amount of invetsments …. Now we have to understand how to finance these investments. Do you have the means to fund your startup, or will you need to borrow money
-                                </Typography.Text>
+                                <TextHelper code="bstartinvestfinancing" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
+                        <Col span={16}>
                             <div>
                                 <Table
                                     title={() => (

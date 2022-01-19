@@ -12,6 +12,7 @@ import { getProducts } from "../../appStore/actions/productActions";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
 import TooltipComponent from "../components/Tooltip";
+import TextHelper from '../components/TextHelper';
 import Cookies from 'js-cookie';
 
 const { Text } = Typography;
@@ -215,15 +216,13 @@ class Channels extends React.Component {
 
                 <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Channels</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Some - few sentences long description.
-                                </Typography.Text>
+                                <TextHelper code="channelhelp" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
+                        <Col span={16}>
                             <Table
                                 title={() =>
                                     <>
