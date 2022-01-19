@@ -714,7 +714,7 @@ class Overview extends React.Component {
                                                                     </div>
                                                                 </Col>
                                                                 <Col span={2}>
-                                                                    <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}><Avatar size='small' onClick={this.onDeleteMember.bind(this, item)} icon={<DeleteOutlined />} /></div>
+                                                                    <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}><Button type="link" icon={<Avatar size='small' icon={<DeleteOutlined />} />} onClick={this.onDeleteMember.bind(this, item)}/></div>
 
                                                                 </Col>
                                                             </Row>
