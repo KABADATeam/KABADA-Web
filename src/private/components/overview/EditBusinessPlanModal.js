@@ -32,10 +32,50 @@ class EditBusinessPlanModal extends Component {
         this.setState({
             fileList: [],
         });
-        console.log("mes cia")
-        console.log(this.props.personalPlans.map((x) => x.overview).map((y) => y.nace).map((z) => z.activity_code))
     }
 
+    getActivityID = (nace, industryCode, activityCode) => {
+        const firstLevelActivities = nace.find(item => item.code === industryCode);
+        console.log(firstLevelActivities);
+
+        if (firstLevelActivities.code === activityCode) {
+            console.log('First level ', firstLevelActivities.id)
+            return firstLevelActivities.id;
+        } else {
+            if (firstLevelActivities.activities !== null) {
+                const secondLevelActivities = firstLevelActivities.activities.find(item => item.code === activityCode);
+                if (secondLevelActivities !== undefined) {
+                    console.log(secondLevelActivities);
+                    console.log('Second level', secondLevelActivities.id);
+                    return secondLevelActivities.id;
+                } else {
+                    const activity2nd = activityCode.split('.').slice(0, 2).join('.');
+                    const secondLevelActivities = firstLevelActivities.activities.find(item => item.code === activity2nd);
+                    if (secondLevelActivities.code === activityCode) {
+                        console.log('Antras levelis');
+                        console.log(secondLevelActivities.code);
+                        return secondLevelActivities.id;
+                    } else {
+                        const test = activityCode.split('.').slice(0, 2).join('.');
+                        console.log(test);
+                        console.log(activityCode.split('.')[2].slice(0,1));
+                        const activity3nd = test + '.' + activityCode.split('.')[2].slice(0,1);
+                        const thirdLevelActivities = secondLevelActivities.activities.length > 1 ? secondLevelActivities.activities.find(item => item.code === activity3nd): secondLevelActivities.activities[0];
+                        console.log(thirdLevelActivities);
+                        if (thirdLevelActivities.code === activityCode) {
+                            return thirdLevelActivities.id;
+                        } else {
+                            const activity4nd = activityCode.split('.').slice(0, 3).join('.');
+                            const fourthLevelActivities = thirdLevelActivities.activities.find(item => item.code === activity4nd);
+                            return fourthLevelActivities.id;
+                        }
+                    }
+                }
+            } else {
+                console.log(firstLevelActivities.code);
+            }
+        }
+    }
 
     handleOk = (values) => {
 
@@ -57,9 +97,10 @@ class EditBusinessPlanModal extends Component {
             'countryId': values.country,
             'languageId': values.language,
         }
-        console.log(values)
-        console.log(postObject)
-        console.log(reducerObject)
+        // console.log(values)
+        // console.log(postObject)
+        // console.log(reducerObject)
+
 
         if (Array.isArray(fileList) && fileList.length !== 0 && fileList[0].fileList.length !== 0) {
             fileList.forEach(item => {
@@ -141,13 +182,16 @@ class EditBusinessPlanModal extends Component {
 
     render() {
         const { fileList } = this.state;
-        console.log(this.props.updatingPlan)
+        console.log(this.props.updatingPlan);
         const naceClass = this.props.nace;
+        console.log(naceClass);
         const oldName = this.props.updatingPlan.name;
-        const oldActivity = this.props.updatingPlan.activityId;
-        const oldIndustry = this.props.updatingPlan.industryId;
-        const oldCountry = this.props.updatingPlan.countryId;
-        const oldLanguage = this.props.updatingPlan.languageId;
+        const oldActivity = this.getActivityID(this.props.nace, this.props.updatingPlan.overview.nace.industry_code, this.props.updatingPlan.overview.nace.activity_code)
+        const oldIndustry = this.props.updatingPlan.overview.nace.industry_code;
+
+        const oldCountry = this.props.countries.find(item => item.title === this.props.updatingPlan.countryTitle).id;
+        const oldLanguage = this.props.planLanguages.find(item => item.title === 'English').id;
+
         /*const industries = this.props.industries.map((item) => ({
             key: item.id,
             value: item.id,
@@ -306,10 +350,9 @@ class EditBusinessPlanModal extends Component {
                                 dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                                 treeData={naceClass}
                                 allowClear
-
                                 treeLine={true}
-                                defaultValue={this.props.personalPlans.map((x) => x.overview).map((y) => y.nace).map((z) => z.activity_code)}
-                                value={this.props.personalPlans.map((x) => x.overview).map((y) => y.nace).map((z) => z.activity_code)}
+                                //defaultValue={this.props.personalPlans.map((x) => x.overview).map((y) => y.nace).map((z) => z.activity_code)}
+                                value={oldActivity}
                                 treeNodeFilterProp='title'
                                 placeholder="Select NACE Rev. 2"
                             >
@@ -326,7 +369,7 @@ class EditBusinessPlanModal extends Component {
                                     style={{ width: 315 }}
                                     placeholder="Select country"
                                     optionFilterProp="label"
-                                    defaultValue={this.props.updatingPlan.countryTitle}
+                                    //defaultValue={this.props.updatingPlan.countryTitle}
                                     value={this.props.updatingPlan.countryTitle}
                                     filterOption={(input, option) =>
                                         option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -354,7 +397,7 @@ class EditBusinessPlanModal extends Component {
                                     style={{ width: 315 }}
                                     placeholder="Select language"
                                     optionFilterProp="children"
-                                    defaultValue={this.props.planLanguages.map((x) => x.title)}
+                                    //defaultValue={this.props.planLanguages.map((x) => x.title)}
                                     value={this.props.planLanguages.map((x) => x.title)}
                                     filterOption={(input, option) =>
                                         option.toLowerCase().indexOf(input.toLowerCase()) >= 0
