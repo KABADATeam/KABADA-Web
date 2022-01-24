@@ -89,6 +89,8 @@ export const getSelectedPlanOverview = (planId) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get("api/plans/overview/" + planId, { headers: { Authorization: `Bearer ${token}` } });
+            console.log('FETCHING_SELECTED_PLAN_OVERVIEW_SUCCESS');
+            console.log(response.data);
             dispatch({ type: "FETCHING_SELECTED_PLAN_OVERVIEW_SUCCESS", payload: { "overview": response.data } });
         } finally {
             dispatch({ type: "LOADING", payload: false });
@@ -165,7 +167,8 @@ export const inviteMember = (postObject) => {
         try {
             const token = getState().user.access_token;
             await kabadaAPI.post('api/plans/inviteMember', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            //dispatch({ type: 'UPDATING_SELECTED_PLAN_STATUS_SUCCESS', payload: status });
+            const response = await kabadaAPI.get("api/plans/members/" + postObject.business_plan_id, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: "FETCHING_PLAN_MEMBERS_SUCCESS", payload: response.data });
         } finally {
             dispatch({ type: "LOADING", payload: false });
         }
