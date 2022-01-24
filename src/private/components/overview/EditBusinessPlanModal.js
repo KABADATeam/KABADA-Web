@@ -35,33 +35,27 @@ class EditBusinessPlanModal extends Component {
     }
 
     getActivityID = (nace, industryCode, activityCode) => {
+        console.log(activityCode);
+        console.log(industryCode);
         const firstLevelActivities = nace.find(item => item.code === industryCode);
-        console.log(firstLevelActivities);
-
         if (firstLevelActivities.code === activityCode) {
-            console.log('First level ', firstLevelActivities.id)
             return firstLevelActivities.id;
         } else {
             if (firstLevelActivities.activities !== null) {
                 const secondLevelActivities = firstLevelActivities.activities.find(item => item.code === activityCode);
                 if (secondLevelActivities !== undefined) {
-                    console.log(secondLevelActivities);
-                    console.log('Second level', secondLevelActivities.id);
                     return secondLevelActivities.id;
                 } else {
                     const activity2nd = activityCode.split('.').slice(0, 2).join('.');
+                    console.log(activity2nd);
                     const secondLevelActivities = firstLevelActivities.activities.find(item => item.code === activity2nd);
+                    console.log(secondLevelActivities);
                     if (secondLevelActivities.code === activityCode) {
-                        console.log('Antras levelis');
-                        console.log(secondLevelActivities.code);
                         return secondLevelActivities.id;
                     } else {
-                        const test = activityCode.split('.').slice(0, 2).join('.');
-                        console.log(test);
-                        console.log(activityCode.split('.')[2].slice(0,1));
-                        const activity3nd = test + '.' + activityCode.split('.')[2].slice(0,1);
-                        const thirdLevelActivities = secondLevelActivities.activities.length > 1 ? secondLevelActivities.activities.find(item => item.code === activity3nd): secondLevelActivities.activities[0];
-                        console.log(thirdLevelActivities);
+                        const secondLvlCode = activityCode.split('.').slice(0, 2).join('.');
+                        const activity3nd = secondLvlCode + '.' + activityCode.split('.')[2].slice(0, 1);
+                        const thirdLevelActivities = secondLevelActivities.activities.length > 1 ? secondLevelActivities.activities.find(item => item.code === activity3nd) : secondLevelActivities.activities[0];
                         if (thirdLevelActivities.code === activityCode) {
                             return thirdLevelActivities.id;
                         } else {
@@ -72,16 +66,118 @@ class EditBusinessPlanModal extends Component {
                     }
                 }
             } else {
-                console.log(firstLevelActivities.code);
             }
         }
+    }
+
+    // handleOk = (values) => {
+
+    //     const { fileList } = this.state;
+    //     const formData = new FormData();
+
+    //     let postObject = {
+    //         "Id": this.props.updatingPlan.id,
+    //         'Title': values.name,
+    //         'ActivityId': values.activity,
+    //         'CountryId': values.country,
+    //         'LanguageId': values.language
+    //     }
+    //     let reducerObject = {
+    //         "id": this.props.updatingPlan.id,
+    //         'name': values.name,
+    //         'activityId': values.activity,
+    //         //'industryId': values.industry,
+    //         'countryId': values.country,
+    //         'languageId': values.language,
+    //     }
+    //     // console.log(values)
+    //     // console.log(postObject)
+    //     // console.log(reducerObject)
+
+
+    //     if (Array.isArray(fileList) && fileList.length !== 0 && fileList[0].fileList.length !== 0) {
+    //         fileList.forEach(item => {
+    //             if (item.file.status !== 'removed') {
+    //                 formData.append('files[]', item.file);
+    //             }
+    //         })
+    //         if (this.props.updatingPlan.planImage) {
+    //             this.props.deleteFile(this.props.updatingPlan.planImage)
+    //         }
+    //         this.props.uploadFile(formData)
+    //             .then(
+    //                 () => {
+    //                     console.log("image changed")
+    //                     postObject = { ...postObject, 'Img': this.props.uploadedFile }
+    //                     reducerObject = { ...reducerObject, 'planImage': this.props.uploadedFile }
+    //                     this.props.updateImage(reducerObject);
+    //                     this.props.updatePlanData(postObject, reducerObject)
+    //                     this.props.onClose();
+    //                 });
+    //     }
+    //     else if (Array.isArray(fileList) && fileList.length !== 0 && fileList[0].file.status === 'removed') {
+    //         console.log("image deleted")
+    //         postObject = { ...postObject, 'Img': '' }
+    //         reducerObject = { ...reducerObject, 'planImage': '', 'coverImage': null }
+    //         if (this.props.updatingPlan.planImage !== null || this.props.updatingPlan.planImage !== undefined) {
+    //             this.props.deleteFile(this.props.updatingPlan.planImage)
+    //         }
+    //         this.props.updatePlanData(postObject, reducerObject)
+    //         this.props.onClose();
+    //     }
+    //     else if (Array.isArray(fileList) && fileList.length === 0) {
+    //         console.log("image unchanged")
+    //         postObject = { ...postObject, 'Img': this.props.updatingPlan.planImage }
+    //         reducerObject = { ...reducerObject, 'planImage': this.props.updatingPlan.planImage }
+    //         this.props.updatePlanData(postObject, reducerObject)
+    //         this.props.onClose();
+    //     }
+    // };
+
+    getActivityCode = (nace, activityId) => {
+        let activityCode = undefined;
+        const firstLevelActivities = nace.find(item => item.code === activityId);
+        if (firstLevelActivities !== undefined) {
+            activityCode = firstLevelActivities.code;
+        } else {
+            for (var i = 0; i < nace.length; i++) {
+                const firstLevelActivities = nace[i].activities;
+                const secondLevelActivities = firstLevelActivities.find(item => item.id === activityId);
+                if (secondLevelActivities !== undefined) {
+                    activityCode = secondLevelActivities.code;
+                    break;
+                } else {
+                    for (var j = 0; j < firstLevelActivities.length; j++) {
+                        const thirdLevelActivities = firstLevelActivities[j].activities;
+                        const thirdLevelActivity = thirdLevelActivities.find(item => item.id === activityId);
+                        if (thirdLevelActivity !== undefined) {
+                            activityCode = thirdLevelActivity.code;
+                            break;
+                        } else {
+                            for (var k = 0; k < thirdLevelActivities.length; k++) {
+                                const fourthLevelActivities = thirdLevelActivities[k].activities;
+                                const fourthLevelActivity = fourthLevelActivities.find(item => item.id === activityId);
+                                if (fourthLevelActivity !== undefined) {
+                                    activityCode = fourthLevelActivity.code;
+                                    break;
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+        return activityCode;
+
     }
 
     handleOk = (values) => {
 
         const { fileList } = this.state;
         const formData = new FormData();
-
+        const activityCode = this.getActivityCode(this.props.nace, values.activity);
+        console.log(activityCode);
         let postObject = {
             "Id": this.props.updatingPlan.id,
             'Title': values.name,
@@ -93,14 +189,14 @@ class EditBusinessPlanModal extends Component {
             "id": this.props.updatingPlan.id,
             'name': values.name,
             'activityId': values.activity,
+            'activityCode': activityCode,
             //'industryId': values.industry,
             'countryId': values.country,
             'languageId': values.language,
         }
-        // console.log(values)
-        // console.log(postObject)
-        // console.log(reducerObject)
-
+        console.log(values);
+        console.log(postObject);
+        console.log(reducerObject);
 
         if (Array.isArray(fileList) && fileList.length !== 0 && fileList[0].fileList.length !== 0) {
             fileList.forEach(item => {
@@ -170,7 +266,7 @@ class EditBusinessPlanModal extends Component {
             });
         }
     };
-
+ 
     handleIndustryClear = () => {
         this.formRef.current.setFieldsValue({
             activity: undefined
@@ -182,13 +278,10 @@ class EditBusinessPlanModal extends Component {
 
     render() {
         const { fileList } = this.state;
-        console.log(this.props.updatingPlan);
         const naceClass = this.props.nace;
-        console.log(naceClass);
         const oldName = this.props.updatingPlan.name;
-        const oldActivity = this.getActivityID(this.props.nace, this.props.updatingPlan.overview.nace.industry_code, this.props.updatingPlan.overview.nace.activity_code)
-        const oldIndustry = this.props.updatingPlan.overview.nace.industry_code;
-
+        console.log(this.props.updatingPlan);
+        const oldActivity = this.getActivityID(this.props.nace, this.props.updatingPlan.overview.nace.industry_code, this.props.updatingPlan.activityCode);
         const oldCountry = this.props.countries.find(item => item.title === this.props.updatingPlan.countryTitle).id;
         const oldLanguage = this.props.planLanguages.find(item => item.title === 'English').id;
 
@@ -197,7 +290,7 @@ class EditBusinessPlanModal extends Component {
             value: item.id,
             text: item.code + '. ' + item.title
         }));
-
+ 
         const activities = this.props.activities.map((item) => ({
             key: item.id,
             value: item.id,

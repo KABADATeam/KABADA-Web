@@ -308,7 +308,7 @@ class Overview extends React.Component {
                                                                 <Button style={{ paddingLeft: '0px', ...pageTitleTextStyle }} type="text" onClick={this.onEditBusinessPlan.bind(this)}>Create Bussines Plan</Button>
                                                             </Row>
                                                             <Row>
-                                                                <Text style={descriptionTextStyle}>{overview.nace === "" || overview.nace === null ? "NACE: " : "NACE: " + overview.nace.activity_code}</Text>
+                                                                <Text style={descriptionTextStyle}>{this.props.businessPlan.activityCode === "" || this.props.businessPlan.activityCode === null ? "NACE: " : "NACE: " + this.props.businessPlan.activityCode}</Text>
                                                             </Row>
                                                         </div>
                                                     }

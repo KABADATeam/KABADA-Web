@@ -55,7 +55,8 @@ export const selectedplanFetchReducer = (state = {
     'public': false,
     'sharedWithMe': false,
     'countryShortCode': null,
-    'countryTitle': null
+    'countryTitle': null, 
+    'activityCode': '',
     }, action) => {
     switch (action.type) {
         case "FETCHING_SELECTED_PLAN_SUCCESS":
@@ -69,6 +70,7 @@ export const selectedplanFetchReducer = (state = {
                 "planImage": action.payload.planImage,
                 "public": action.payload.public,
                 "sharedWithMe": action.payload.sharedWithMe,
+                "activityCode": action.payload.overview.nace.activity_code,
             }
         case "FETCHING_SELECTED_PLAN_DETAILS_SUCCESS":
             return { ...state, "countryShortCode": action.payload.country.shortCode, "countryTitle": action.payload.country.title, "planImage": action.payload.img ? action.payload.img : null };
