@@ -393,11 +393,17 @@ class SalesForecast extends React.Component {
             if (element.sales_forecast_eu === null) {
 
                 element.sales_forecast_eu = this.dataSourceTableInEu;
+                this.props.getProductByID(this.props.businessPlan.id, () => {
+                    this.setTotal();
+                });
                 console.log('DAAAAAAAAAAADDDADDAAAAAAAAA111111111111111111');
             }
             if (element.sales_forecast_non_eu === null) {
 
                 element.sales_forecast_non_eu = this.dataSourceTableOutEu;
+                this.props.getProductByID(this.props.businessPlan.id, () => {
+                    this.setTotal();
+                });
                 console.log('DAAAAAAAAAAADDDADDAAAAAAAAA');
             }
 
@@ -414,6 +420,8 @@ class SalesForecast extends React.Component {
         //console.log(JSON.stringify(this.state.update) + "this is what we have");
         // console.log(product_id + "this is what we have");
         this.props.updateSalesForecast(obj);
+
+
     }
 
 
@@ -1196,4 +1204,4 @@ const mapStateToProps = (state) => {
 
 }
 
-export default connect(mapStateToProps, { getCountryShortCode, getCountryVat, refreshPlan, changState, getProducts, getProductByID, updateSalesForecast, saveState, logout})(withRouter(SalesForecast))
+export default connect(mapStateToProps, { getCountryShortCode, getCountryVat, refreshPlan, changState, getProducts, getProductByID, updateSalesForecast, saveState, logout })(withRouter(SalesForecast))
