@@ -281,7 +281,7 @@ class EditBusinessPlanModal extends Component {
         const naceClass = this.props.nace;
         const oldName = this.props.updatingPlan.name;
         console.log(this.props.updatingPlan);
-        const oldActivity = this.getActivityID(this.props.nace, this.props.updatingPlan.overview.nace.industry_code, this.props.updatingPlan.activityCode);
+        const oldActivity = this.getActivityID(this.props.nace, this.props.updatingPlan.overview.nace.industry_code, this.props.updatingPlan.overview.nace.activity_code);
         const oldCountry = this.props.countries.find(item => item.title === this.props.updatingPlan.countryTitle).id;
         const oldLanguage = this.props.planLanguages.find(item => item.title === 'English').id;
 

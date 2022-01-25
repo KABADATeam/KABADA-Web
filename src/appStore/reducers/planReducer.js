@@ -72,24 +72,23 @@ export const selectedplanFetchReducer = (state = {
                 "percentage": action.payload.percentage,
                 "planImage": action.payload.planImage,
                 "public": action.payload.public,
-                "sharedWithMe": action.payload.sharedWithMe,
-                "activityCode": action.payload.overview.nace.activity_code,
+                "sharedWithMe": action.payload.sharedWithMe
             }
-        case "REFRESH_FETCHING_SELECTED_PLAN_SUCCESS":
-            console.log(action.payload);
-            return {
-                ...state,
-                "id": action.payload.plan.id,
-                "name": action.payload.plan.name,
-                "coverImage": action.payload.plan.coverImage,
-                "dateCreated": action.payload.plan.dateCreated,
-                "overview": action.payload.overview,
-                "percentage": action.payload.plan.percentage,
-                "planImage": action.payload.plan.planImage,
-                "public": action.payload.plan.public,
-                "sharedWithMe": action.payload.plan.sharedWithMe,
-                "activityCode": action.payload.overview.nace.activity_code,
-            }
+        // case "REFRESH_FETCHING_SELECTED_PLAN_SUCCESS":
+        //     console.log(action.payload);
+        //     return {
+        //         ...state,
+        //         "id": action.payload.plan.id,
+        //         "name": action.payload.plan.name,
+        //         "coverImage": action.payload.plan.coverImage,
+        //         "dateCreated": action.payload.plan.dateCreated,
+        //         "overview": action.payload.overview,
+        //         "percentage": action.payload.plan.percentage,
+        //         "planImage": action.payload.plan.planImage,
+        //         "public": action.payload.plan.public,
+        //         "sharedWithMe": action.payload.plan.sharedWithMe,
+        //         "activityCode": action.payload.overview.nace.activity_code,
+        //     }
         case "FETCHING_SELECTED_PLAN_DETAILS_SUCCESS":
             return { ...state, "countryShortCode": action.payload.country.shortCode, "countryTitle": action.payload.country.title, "planImage": action.payload.img ? action.payload.img : null };
         case "UPDATING_SELECTED_PLAN_SUCCESS":
@@ -103,7 +102,6 @@ export const selectedplanFetchReducer = (state = {
         case "UPDATING_SELECTED_PLAN_STATUS_SUCCESS":
             return { ...state, "public": action.payload };
         case "FETCHING_PLAN_MEMBERS_SUCCESS":
-            console.log(action.payload);
             return { ...state, "members": action.payload.members }
         case "FETCHING_SELECTED_PLAN_OVERVIEW_SUCCESS":
             const percentage = getPercentage(action.payload.overview);

@@ -89,8 +89,6 @@ export const getSelectedPlanOverview = (planId) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get("api/plans/overview/" + planId, { headers: { Authorization: `Bearer ${token}` } });
-            console.log('FETCHING_SELECTED_PLAN_OVERVIEW_SUCCESS');
-            console.log(response.data);
             dispatch({ type: "FETCHING_SELECTED_PLAN_OVERVIEW_SUCCESS", payload: { "overview": response.data } });
         } finally {
             dispatch({ type: "LOADING", payload: false });
