@@ -49,7 +49,7 @@ export const selectedplanFetchReducer = (state = {
     'name': null,
     'coverImage': null,
     'dateCreated': null,
-    'overview': [],
+    'overview': null,
     'percentage': 0,
     'planImage': null,
     'public': false,
@@ -72,7 +72,7 @@ export const selectedplanFetchReducer = (state = {
                 "percentage": action.payload.percentage,
                 "planImage": action.payload.planImage,
                 "public": action.payload.public,
-                "sharedWithMe": action.payload.sharedWithMe
+                "sharedWithMe": action.payload.sharedWithMe,
             }
         // case "REFRESH_FETCHING_SELECTED_PLAN_SUCCESS":
         //     console.log(action.payload);
@@ -104,9 +104,42 @@ export const selectedplanFetchReducer = (state = {
         case "FETCHING_PLAN_MEMBERS_SUCCESS":
             return { ...state, "members": action.payload.members }
         case "FETCHING_SELECTED_PLAN_OVERVIEW_SUCCESS":
+            console.log(action.payload);
+            const obj = action.payload.overview
             const percentage = getPercentage(action.payload.overview);
             const new_overview = { ...action.payload.overview, "percentage": percentage };
-            return { ...state, "overview": new_overview, "percentage": percentage }
+            return {
+                ...state,
+                "overview": new_overview,
+                "percentage": percentage,
+                "activityCode": obj.nace.activity_code,
+                "value_proposition_state": obj.value_proposition.is_completed,
+                "value_proposition_description": obj.value_proposition.description,
+                "customer_segments_state": obj.customer_segments.is_completed,
+                "customer_segments_description": obj.customer_segments.description,
+                "channels_state": obj.channels.is_completed,
+                "channels_description": obj.channels.description,
+                "customer_relationship_state": obj.customer_relationship.is_completed,
+                "customer_relationship_description": obj.customer_relationship.description,
+                "revenue_streams_state": obj.revenue_streams.is_completed,
+                "revenue_streams_description": obj.revenue_streams.description,
+                "key_resources_state": obj.key_resources.is_completed,
+                "key_resources_description": obj.key_resources.description,
+                "key_activities_state": obj.key_activities.is_completed,
+                "key_activities_description": obj.key_activities.description,
+                "key_partners_state": obj.key_partners.is_completed,
+                "key_partners_description": obj.key_partners.description,
+                "cost_structure_state": obj.cost_structure.is_completed,
+                "cost_structure_description": obj.cost_structure.description,
+                "swot_state": obj.swot.is_completed,
+                "swot_description": obj.swot.description,
+                "assets_state": obj.assets.is_completed,
+                "fixed_and_variables_costs_state": obj.fixed_and_variables_costs.is_completed,
+                "sales_forecast_state": obj.sales_forecast.is_completed,
+                "business_start_up_investments_state": obj.business_start_up_investments.is_completed,
+                "personal_characteristics_state": obj.personal_characteristics.is_completed,
+                "personal_characteristics_description": obj.personal_characteristics.description,
+            }
         default:
             return state;
     }
