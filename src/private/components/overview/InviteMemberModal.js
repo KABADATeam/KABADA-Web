@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Modal, Button, Form, Input } from 'antd';
 import '../../../css/customModal.css';
 import { inputStyle } from '../../../styles/customStyles';
-import { inviteMember } from '../../../appStore/actions/planActions';
+import { inviteMember, getMembers } from '../../../appStore/actions/planActions';
 
 const invitationLink = "http://kabada.ba.lv/register?email=";
 
@@ -106,5 +106,5 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { inviteMember })(InviteMemberModal);
+export default connect(mapStateToProps, { inviteMember, getMembers })(InviteMemberModal);
 
