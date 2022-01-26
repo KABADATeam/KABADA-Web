@@ -7,7 +7,7 @@ import { tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
 import VariableCostPopUp from '../components/fixed_and_variable_costs/VariableCostPopUp';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getFinancialProjectionsCosts, updateFixedAndVarCosts, saveState } from '../../appStore/actions/financialProjectionsActions';
+import { getFinancialProjectionsCosts, updateFixedAndVarCosts, saveState, updateFixedCosts, updateVariableCosts, discardChanges } from '../../appStore/actions/financialProjectionsActions';
 import { getCountryVat } from '../../appStore/actions/vatsActions'
 import { getCountryShortCode } from '../../appStore/actions/countriesActions'
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
@@ -107,30 +107,30 @@ class FixedAndVariableCosts extends React.Component {
     }
 
     handleModalCancel = () => {
-        const obj = {
-            category_id: null,
-            category_title: null,
-            values: null,
-            record: {},
-            visible: false
-        }
-        this.setState({
-            variablePopUp: obj,
-        })
+        this.setState(prevState => ({
+            variablePopUp: {
+                ...prevState.variablePopUp,
+                category_id: null,
+                category_title: null,
+                values: null,
+                record: {},
+                visible: false
+            }
+        }))
     }
     //passing prices array 
     handleOk = () => {
-        const obj = {
-            category_id: null,
-            category_title: null,
-            values: null,
-            record: {},
-            visible: false
-        }
-        this.setState({
-            variablePopUp: obj,
-            visibleHeader: 'hidden'
-        });
+        this.setState(prevState => ({
+            variablePopUp: {
+                ...prevState.variablePopUp,
+                category_id: null,
+                category_title: null,
+                values: null,
+                record: {},
+                visible: false
+            }
+        }))
+        // visibleHeader: 'hidden'
     }
 
     onCompletedChange(state) {
@@ -141,13 +141,8 @@ class FixedAndVariableCosts extends React.Component {
 
 
     discardChanges = () => {
-        // cloning fixed and variable states from redux state
-        const fixedArray = JSON.parse(JSON.stringify(this.props.financialProjections.fixed));
-        const variableArray = JSON.parse(JSON.stringify(this.props.financialProjections.variable));
-        //setting our fixed and variable states to original from redux that were not changed
+        this.props.discardChanges();
         this.setState({
-            fixed: fixedArray,
-            variable: variableArray,
             visibleHeader: 'hidden'
         });
     }
@@ -155,56 +150,77 @@ class FixedAndVariableCosts extends React.Component {
         const items = [];
 
         // cloning fixed and variable from financialProjections. i dont work directly with states
-        const originalFixedArray = JSON.parse(JSON.stringify(this.props.financialProjections.fixed));
-        const originalVariableArray = JSON.parse(JSON.stringify(this.props.financialProjections.variable));
-        // cloning fixed and variable states. cant work directly with them
-        const modifiedFixedArray = JSON.parse(JSON.stringify(this.state.fixed));
-        const modifiedVariableArray = JSON.parse(JSON.stringify(this.state.variable));
+        // const originalFixedArray = JSON.parse(JSON.stringify(this.props.financialProjections.fixed));
+        // const originalVariableArray = JSON.parse(JSON.stringify(this.props.financialProjections.variable));
+        // // cloning fixed and variable states. cant work directly with them
+        // const modifiedFixedArray = JSON.parse(JSON.stringify(this.state.fixed));
+        // const modifiedVariableArray = JSON.parse(JSON.stringify(this.state.variable));
+
+        const cost_items = [...this.props.financialProjections.cost_items];
+        const original_cost_items = [...this.props.financialProjections.original_cost_items];
+        for (var a = 0; a < original_cost_items.length; a++) {
+                console.log(JSON.stringify(original_cost_items[a]))
+                if (original_cost_items[a].price !== cost_items[a].price ||
+                    original_cost_items[a].vat !== cost_items[a].vat ||
+                    original_cost_items[a].first_expenses !== cost_items[a].first_expenses ||
+                    original_cost_items[a].price !== cost_items[a].price ||
+                    original_cost_items[a].monthly_expenses !== cost_items[a].monthly_expenses) {
+
+                    const modifiedObj = {
+                        cost_item_id: cost_items[a].cost_item_id,
+                        price: cost_items[a].price,
+                        vat: cost_items[a].vat,
+                        first_expenses: cost_items[a].first_expenses === null ? 1 : cost_items[a].first_expenses,
+                        monthly_expenses: cost_items[a].monthly_expenses
+                    }
+                    items.push(modifiedObj);
+                }
+        }
 
 
         // looping through original array and checking if any of attributes where changed in modified array 
-        for (var a = 0; a < originalFixedArray.length; a++) {
-            for (var b = 0; b < originalFixedArray[a].types.length; b++) {
-                console.log(JSON.stringify(originalFixedArray[a].types[b]))
-                if (originalFixedArray[a].types[b].price !== modifiedFixedArray[a].types[b].price ||
-                    originalFixedArray[a].types[b].vat !== modifiedFixedArray[a].types[b].vat ||
-                    originalFixedArray[a].types[b].first_expenses !== modifiedFixedArray[a].types[b].first_expenses ||
-                    originalFixedArray[a].types[b].price !== modifiedFixedArray[a].types[b].price) {
+        // for (var a = 0; a < originalFixedArray.length; a++) {
+        //     for (var b = 0; b < originalFixedArray[a].types.length; b++) {
+        //         console.log(JSON.stringify(originalFixedArray[a].types[b]))
+        //         if (originalFixedArray[a].types[b].price !== modifiedFixedArray[a].types[b].price ||
+        //             originalFixedArray[a].types[b].vat !== modifiedFixedArray[a].types[b].vat ||
+        //             originalFixedArray[a].types[b].first_expenses !== modifiedFixedArray[a].types[b].first_expenses ||
+        //             originalFixedArray[a].types[b].price !== modifiedFixedArray[a].types[b].price) {
 
-                    const modifiedObj = {
-                        cost_item_id: modifiedFixedArray[a].types[b].cost_item_id,
-                        price: modifiedFixedArray[a].types[b].price,
-                        vat: modifiedFixedArray[a].types[b].vat,
-                        first_expenses: modifiedFixedArray[a].types[b].first_expenses === null ? 1 : modifiedFixedArray[a].types[b].first_expenses,
-                        monthly_expenses: modifiedFixedArray[a].types[b].monthly_expenses
-                    }
-                    items.push(modifiedObj);
-                }
-            }
-        }
+        //             const modifiedObj = {
+        //                 cost_item_id: modifiedFixedArray[a].types[b].cost_item_id,
+        //                 price: modifiedFixedArray[a].types[b].price,
+        //                 vat: modifiedFixedArray[a].types[b].vat,
+        //                 first_expenses: modifiedFixedArray[a].types[b].first_expenses === null ? 1 : modifiedFixedArray[a].types[b].first_expenses,
+        //                 monthly_expenses: modifiedFixedArray[a].types[b].monthly_expenses
+        //             }
+        //             items.push(modifiedObj);
+        //         }
+        //     }
+        // }
 
-        for (var a = 0; a < originalVariableArray.length; a++) {
-            for (var b = 0; b < originalVariableArray[a].types.length; b++) {
-                console.log(JSON.stringify(originalVariableArray[a].types[b]))
-                if (originalVariableArray[a].types[b].price !== modifiedVariableArray[a].types[b].price ||
-                    originalVariableArray[a].types[b].vat !== modifiedVariableArray[a].types[b].vat ||
-                    originalVariableArray[a].types[b].monthly_expenses !== modifiedVariableArray[a].types[b].first_expenses) {
+        // for (var a = 0; a < originalVariableArray.length; a++) {
+        //     for (var b = 0; b < originalVariableArray[a].types.length; b++) {
+        //         console.log(JSON.stringify(originalVariableArray[a].types[b]))
+        //         if (originalVariableArray[a].types[b].price !== modifiedVariableArray[a].types[b].price ||
+        //             originalVariableArray[a].types[b].vat !== modifiedVariableArray[a].types[b].vat ||
+        //             originalVariableArray[a].types[b].monthly_expenses !== modifiedVariableArray[a].types[b].first_expenses) {
 
-                    const modifiedObj = {
-                        cost_item_id: modifiedVariableArray[a].types[b].cost_item_id,
-                        price: modifiedVariableArray[a].types[b].price,
-                        vat: modifiedVariableArray[a].types[b].vat,
-                        first_expenses: modifiedVariableArray[a].types[b].first_expenses === null ? 0 : modifiedVariableArray[a].types[b].first_expenses,
-                        monthly_expenses: modifiedVariableArray[a].types[b].monthly_expenses
-                    }
-                    items.push(modifiedObj);
-                }
-            }
-        }
+        //             const modifiedObj = {
+        //                 cost_item_id: modifiedVariableArray[a].types[b].cost_item_id,
+        //                 price: modifiedVariableArray[a].types[b].price,
+        //                 vat: modifiedVariableArray[a].types[b].vat,
+        //                 first_expenses: modifiedVariableArray[a].types[b].first_expenses === null ? 0 : modifiedVariableArray[a].types[b].first_expenses,
+        //                 monthly_expenses: modifiedVariableArray[a].types[b].monthly_expenses
+        //             }
+        //             items.push(modifiedObj);
+        //         }
+        //     }
+        // }
         // postObject for update
         const postObject = {
             business_plan_id: this.props.businessPlan.id,
-            cost_items: items
+            cost_items: cost_items
         }
 
         console.log(JSON.stringify(postObject))
@@ -225,7 +241,7 @@ class FixedAndVariableCosts extends React.Component {
         }
     }
 
-    arraysEqual = (array1, array2) => {
+    arraysEqual = (array1, array2, isVar) => {
         let a = JSON.parse(JSON.stringify(array1));
         let b = JSON.parse(JSON.stringify(array2));
 
@@ -235,115 +251,90 @@ class FixedAndVariableCosts extends React.Component {
         if (a === b) return true;
         if (a == null || b == null) return false;
         if (a.length !== b.length) return false;
+        if (a !== b) return false;
 
         a = a.sort();
         b = b.sort();
-
-        original.map((obj, index) => {
-            obj.types.map((element, index1) => {
-                if (original[index].types[index1].price !== modified[index].types[index1].price ||
-                    original[index].types[index1].vat !== modified[index].types[index1].vat ||
-                    original[index].types[index1].first_expenses !== modified[index].types[index1].first_expenses
+        if(isVar === true){
+            for (let z = 0; z < original.length; z++) {
+                if (original[z].vat !== modified[z].vat ||
+                    original[z].monthly_expenses !== modified[z].monthly_expenses
+                    
                 ) {
+                    console.log(JSON.stringify(original[z]))
+                    console.log('modified' + JSON.stringify(modified[z]))
                     return false;
                 }
-            });
-        });
+            }
+            
+        }else{
+            for (let z = 0; z < original.length; z++) {
+                if (original[z].price !== modified[z].price ||
+                    original[z].vat !== modified[z].vat ||
+                    original[z].first_expenses !== modified[z].first_expenses
+                    
+                ) {
+                    console.log(JSON.stringify(original[z]))
+                    console.log('modified' + JSON.stringify(modified[z]))
+                    return false;
+                }
+            }
+        }
+        
 
         return true;
     }
 
-    getUpdateWindowState = () => {
+    getUpdateWindowState = (isVar) => {
         // clone of fixed state. i should not interact with it directly
-        const originalFixed = JSON.parse(JSON.stringify(this.props.financialProjections.fixed));
-        const modifiedFixed = JSON.parse(JSON.stringify(this.state.fixed));
-        const originalVariable = JSON.parse(JSON.stringify(this.props.financialProjections.variable))
-        const modifiedVariable = JSON.parse(JSON.stringify(this.state.variable));
-
-        if (originalFixed !== modifiedFixed || originalVariable !== modifiedVariable) {
-            this.setState({
-                visibleHeader: 'visible'
-            });
-        } else {
-            this.setState({
-                visibleHeader: 'hidden'
-            });
+        const o_cost_items = [...this.props.financialProjections.original_cost_items];
+        const m_cost_items = [...this.props.financialProjections.cost_items];
+        // console.log(JSON.stringify(o_cost_items))
+        if (o_cost_items == null || m_cost_items == null) {
+            return 'visible'
+        } else if (o_cost_items.length != m_cost_items.length) {
+            return 'visible'
+        }else if(this.arraysEqual(o_cost_items,m_cost_items,isVar)===false){
+            return 'visible'
         }
+        return 'hidden'
     }
 
     onFixedChange = (value, record, inputName) => {
-        // clone of fixed state
-        const originalArray = [...this.props.financialProjections.fixed]
-        const arrayOfFixed = JSON.parse(JSON.stringify(this.state.fixed))
-        arrayOfFixed.map((obj, index) => {
-            obj.types.map((element, index2) => {
-                if (element.cost_item_id === record.cost_item_id) {
-                    if (inputName === "price") {
-                        element.price = value;
-                    }
-                    if (inputName === "vat") {
-                        element.vat = value;
-                    }
-                    if (inputName === "first_expenses") {
-                        // const st = value.charAt(0);
-                        const expensesSliced = value.slice(0, -6)
-                        element.first_expenses = Number(expensesSliced)
-                    }
-                }
-            });
-        });
-        this.setState({
-            fixed: arrayOfFixed
-        });
-
-        this.getUpdateWindowState();
-
-    }
-
-    onVariableChange = (value, record, inputName, updateFrom) => {
-        // clone variable state, dont change directly
-        const originalArray = [...this.props.financialProjections.variable];
-        const arrayOfVariable = JSON.parse(JSON.stringify(this.state.variable));
-        arrayOfVariable.map((obj, index) => {
-            obj.types.map((element, index1) => {
-                if (element.cost_item_id === record.cost_item_id) {
-                    if (inputName === "vat") {
-                        element.vat = value;
-                    }
-                    if (inputName === "monthly_expenses") {
-                        element.monthly_expenses = value;
-                    }
-                }
-            });
-        });
-        if (updateFrom === 0) {
-            this.setState({
-                variable: arrayOfVariable
-            });
-            this.getUpdateWindowState();
-        } if (updateFrom === 1) {
-            this.setState({ variable: arrayOfVariable }, () => {
-                this.saveChanges();
-
-            });
+        if (inputName === "first_expenses") {
+            // const st = value.charAt(0);
+            const expensesSliced = value.slice(0, -6) 
+            const obj = {
+                ...record,
+                [inputName]: Number(expensesSliced)
+            }
+            this.props.updateFixedCosts(inputName, value, obj)
+        }else{
+            const obj = {
+                ...record,
+                [inputName]: value
+            }
+            this.props.updateFixedCosts(inputName, value, obj)
+            
         }
-
+        let visible = this.getUpdateWindowState(false)
+            this.setState({
+                visibleHeader: visible
+            },()=>console.log(this.state.visibleHeader))
+        
     }
 
+    onVariableChange = (value, record, inputName) => {
+        const obj = {
+            ...record,
+            [inputName]: value
+        }
+        this.props.updateVariableCosts(inputName, value, obj)
+        let visible = this.getUpdateWindowState(true)
+        this.setState({
+            visibleHeader: visible
+        },()=>console.log(this.state.visibleHeader))
 
-    setFixedAndVarCosts = () => {
-        // cloning financialProjections fixed and variable costs
-        // const fixedArray = [...this.props.financialProjections.fixed]
-        const fixedClone = JSON.parse(JSON.stringify(this.props.financialProjections.fixed))
-        const variableClone = JSON.parse(JSON.stringify(this.props.financialProjections.variable));
-        // const variableArray = [...this.props.financialProjections.variable]
-        this.setState({
-            fixed: fixedClone
-        });
-        // [{"category_title":"Rent of office","category_id":"df741ccc-d2ef-4797-8c96-8b5be0344f88","types":[{"cost_item_id":"c857933a-317e-4e28-98c7-4aad3d9a8276","type_title":"Other","type_id":"e221190c-00bc-404f-a540-708d0e673454","price":"600","vat":5,"first_expenses":4,"monthly_expenses":null}],"key":"df741ccc-d2ef-4797-8c96-8b5be0344f88"},{"category_title":"Rent of buildings","category_id":"da2dac96-650b-4d54-a984-9c6bae0653c7","types":[{"cost_item_id":"0b57a5b8-cbaa-4dd2-8992-81bf9c6d7e4d","type_title":"Manufacturing buildings","type_id":"2d9ebc0f-7a82-4891-8dc6-1fa64b5fa22d","price":800,"vat":21,"first_expenses":2,"monthly_expenses":null}],"key":"da2dac96-650b-4d54-a984-9c6bae0653c7"},{"category_title":"Utilities","category_id":"25532174-0c07-4293-99c2-10c954ad6367","types":[{"cost_item_id":"590d5af6-fa73-4fcf-913b-55186c8077b1","type_title":"Electricity","type_id":"e6aaacaf-9550-4937-bf13-0d1ff0b69874","price":1000,"vat":21,"first_expenses":3,"monthly_expenses":null}],"key":"25532174-0c07-4293-99c2-10c954ad6367"},{"category_title":"Salaries","category_id":"f5d95c3b-4894-41b1-98b8-b1eb44ef436a","types":[{"cost_item_id":"713bd669-9901-4b55-b57a-10d4c42f1049","type_title":"Management","type_id":"c804bad3-0387-44fb-9817-93085d14ccf9","price":800,"vat":5,"first_expenses":2,"monthly_expenses":null}],"key":"f5d95c3b-4894-41b1-98b8-b1eb44ef436a"}]
-        this.setState({
-            variable: variableClone
-        });
     }
 
     componentDidMount() {
@@ -353,39 +344,32 @@ class FixedAndVariableCosts extends React.Component {
                     this.props.history.push(`/`);
                 } else {
                     this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                        this.props.getFinancialProjectionsCosts(this.props.businessPlan.id, () => {
-                            // cloning what is in financialProjections fixed and variable state
-                            this.setFixedAndVarCosts();
-                            const obj = { id: this.props.businessPlan.id }
-                            this.props.getCountryShortCode(obj, (data) => {
-                                this.props.getCountryVat(this.props.country.countryShortCode, () => {
-                                    this.setState({
-                                        vats: this.props.countryVats
-                                    });
+                        this.props.getFinancialProjectionsCosts(this.props.businessPlan.id)
+                        const obj = { id: this.props.businessPlan.id }
+                        this.props.getCountryShortCode(obj, (data) => {
+                            this.props.getCountryVat(this.props.country.countryShortCode, () => {
+                                this.setState({
+                                    vats: this.props.countryVats
                                 });
-
                             });
 
-                            this.monthsSet();
                         });
+                        this.monthsSet();
 
                     });
                 }
             } else {
-                this.props.getFinancialProjectionsCosts(this.props.businessPlan.id, () => {
-                    // cloning what is in financialProjections fixed and variable state
-                    this.setFixedAndVarCosts();
-                    const obj = { id: this.props.businessPlan.id }
-                    this.props.getCountryShortCode(obj, (data) => {
-                        this.props.getCountryVat(this.props.country.countryShortCode, () => {
-                            this.setState({
-                                vats: this.props.countryVats
-                            });
+                this.props.getFinancialProjectionsCosts(this.props.businessPlan.id)
+                const obj = { id: this.props.businessPlan.id }
+                this.props.getCountryShortCode(obj, (data) => {
+                    this.props.getCountryVat(this.props.country.countryShortCode, () => {
+                        this.setState({
+                            vats: this.props.countryVats
                         });
                     });
 
-                    this.monthsSet();
                 });
+                this.monthsSet();
             }
         } else {
             this.props.logout()
@@ -396,8 +380,8 @@ class FixedAndVariableCosts extends React.Component {
 
 
     render() {
-        console.log(this.state.variable);
-        console.log(this.state.fixed);
+        // console.log(this.state.variable);
+        // console.log(this.state.fixed);
         const fixed_costs_columns = [
             {
                 title: 'Type',
@@ -551,7 +535,7 @@ class FixedAndVariableCosts extends React.Component {
                 width: '17.7%',
                 render: (text, record, index) => (
                     <Input.Group compact>
-                        <Select defaultValue={text === null ? this.state.vats.standardRate : text} value={text === null ? this.state.vats.standardRate : text} onChange={e => this.onVariableChange(e, record, "vat", 0)}>
+                        <Select defaultValue={text === null ? this.state.vats.standardRate : text} value={text === null ? this.state.vats.standardRate : text} onChange={e => this.onVariableChange(e, record, "vat")}>
                             <Option value={this.state.vats.standardRate}>{this.state.vats.standardRate + "%"}</Option>
                             <Option value={this.state.vats.reducedRates2}>{this.state.vats.reducedRates2 + "%"}</Option>
                             <Option value={this.state.vats.reducedRates1}>{this.state.vats.reducedRates1 + "%"}</Option>
@@ -598,7 +582,7 @@ class FixedAndVariableCosts extends React.Component {
                 <Col offset={2} span={20}>
                     <Tabs defaultActiveKey="1">
                         <TabPane tab="Fixed Costs" key="1">
-                            {this.state.fixed.map((obj, index) => {
+                            {this.props.financialProjections.fixed.map((obj, index) => {
                                 return (
                                     <div style={{ marginBottom: 24 }}>
                                         <Col span={24}>
@@ -607,7 +591,7 @@ class FixedAndVariableCosts extends React.Component {
                                                     {index === 0 ?
                                                         <div style={{ marginRight: '40px' }}>
                                                             <Typography.Title style={{ ...aboutTitleTextStyle }}>Fixed Costs</Typography.Title>
-                                                            <TextHelper code="fixedcost" type="lefttext"/>
+                                                            <TextHelper code="fixedcost" type="lefttext" />
                                                         </div> : <div></div>}
                                                 </Col>
                                                 {/* returns second column with table */}
@@ -637,7 +621,7 @@ class FixedAndVariableCosts extends React.Component {
                             })}
                         </TabPane>
                         <TabPane tab="Variable Costs" key="2">
-                            {this.state.variable.map((obj, index) => {
+                            {this.props.financialProjections.variable.map((obj, index) => {
                                 return (
                                     <div style={{ marginBottom: 24 }}>
                                         <Col span={24}>
@@ -646,7 +630,7 @@ class FixedAndVariableCosts extends React.Component {
                                                     {index === 0 ?
                                                         <div style={{ marginRight: '40px' }}>
                                                             <Typography.Title style={{ ...aboutTitleTextStyle }}>Variable Costs</Typography.Title>
-                                                            <TextHelper code="variablecost" type="lefttext"/>
+                                                            <TextHelper code="variablecost" type="lefttext" />
                                                         </div> : <div></div>}
                                                 </Col>
                                                 {/* returns second column with table */}
@@ -700,4 +684,4 @@ const mapStateToProps = (state) => {
 }
 //connect function connect react component to redux store
 //the functions it can use to dispatch actions to the store.
-export default connect(mapStateToProps, { getSelectedPlanOverview, getCountryShortCode, getFinancialProjectionsCosts, getCountryVat, updateFixedAndVarCosts, saveState, refreshPlan, logout })(withRouter(FixedAndVariableCosts));
+export default connect(mapStateToProps, { getSelectedPlanOverview, updateFixedCosts, updateVariableCosts, getCountryShortCode, getFinancialProjectionsCosts, getCountryVat, updateFixedAndVarCosts, saveState, refreshPlan, logout, discardChanges })(withRouter(FixedAndVariableCosts));
