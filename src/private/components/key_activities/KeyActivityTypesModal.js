@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { Modal, List, Button } from 'antd';
 import '../../../css/customModal.css';
 import {RightOutlined} from '@ant-design/icons';
-import { selectActivityCategory } from '../../../appStore/actions/keyActivitiesAction'
+import { selectActivityCategory } from '../../../appStore/actions/keyActivitiesAction';
+import TextHelper from '../TextHelper';
 
 class KeyActivityTypesModal extends Component {
     constructor(props){
@@ -28,13 +29,25 @@ class KeyActivityTypesModal extends Component {
         const array = this.props.categories.activity_categories;
         array.forEach((element,index)=>{
             if(element.title === "Production"){
-                newArray[0] = element;
+                const newObj = {
+                    ...element,
+                    "tooltip": 'keynewactivity1'
+                }
+                newArray[0] = newObj;
             }
             else if(element.title === "Problem solving"){
-                newArray[1] = element;
+                const newObj = {
+                    ...element,
+                    "tooltip": 'keynewactivity2'
+                }
+                newArray[1] = newObj;
             }
             else if(element.title === "Platform/Network"){
-                newArray[2] = element;
+                const newObj = {
+                    ...element,
+                    "tooltip": 'keynewactivity3'
+                }
+                newArray[2] = newObj;
             }else{
                 newArray.push(element)
             }
@@ -72,7 +85,7 @@ class KeyActivityTypesModal extends Component {
                                 <List.Item.Meta style={{ cursor: "pointer" }}
                                     onClick={this.chooseActivityCategory.bind(this, item)}
                                     title={item.title}
-                                    description='{item description}'                                    
+                                    description={<TextHelper code={item.tooltip} type="lefttext"/>}                                   
                                 />
                             </List.Item>
                         )}
