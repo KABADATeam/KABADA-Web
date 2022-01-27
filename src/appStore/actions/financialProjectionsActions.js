@@ -4,36 +4,39 @@ import { errorHandler } from './errorHandler';
 export const getFinancialProjectionsCosts = (planId) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
-        try{
+        try {
             const token = getState().user.access_token;
-            const response = await kabadaAPI.get('api/cost/costsvf/'+planId, { headers: { Authorization: `Bearer ${token}` } });
+            const response = await kabadaAPI.get('api/cost/costsvf/' + planId, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: "FETCHING_FINANCIAL_PROJECTION_SUCCESS", payload: response.data });
-        }catch(error){
+        } catch (error) {
             if (error.response === undefined) {
                 dispatch({
                     type: "ERROR",
                     payload: { message: "Oopsie... System error. Try again, later" },
                 });
-            }else{
+            } else {
                 dispatch({
                     type: "ERROR", payload: error.response.data
                 });
             }
         }
-        finally{
+        finally {
             dispatch({ type: "LOADING", payload: false });
         }
     }
 }
 
-export const updateFixedCosts = (inputName,givenValue,record) => {
-    return async(dispatch,getState)=>{
-        try{
+export const updateFixedCosts = (inputName, givenValue, record) => {
+    return async (dispatch, getState) => {
+        try {
             dispatch({
                 type: 'FIXED_COSTS_UPDATE_SUCCESS',
-                payload: {name:inputName,value:givenValue, item:record}
+                payload: { name: inputName, value: givenValue, item: record }
             })
-        }catch (error) {
+            dispatch({
+                type:'GET_WINDOWS_STATE_SUCCESS'
+            })
+        } catch (error) {
             if (error.response === undefined) {
                 dispatch({
                     type: "ERROR",
@@ -47,14 +50,17 @@ export const updateFixedCosts = (inputName,givenValue,record) => {
     }
 }
 
-export const updateVariableCosts = (inputName,givenValue,record)=>{
-    return async(dispatch,getState)=>{
-        try{
+export const updateVariableCosts = (inputName, givenValue, record) => {
+    return async (dispatch, getState) => {
+        try {
             dispatch({
                 type: 'VARIABLE_COSTS_UPDATE_SUCCESS',
-               payload: {name:inputName,value:givenValue, item:record}
+                payload: { name: inputName, value: givenValue, item: record }
             })
-        }catch (error) {
+            dispatch({
+                type:'GET_WINDOWS_STATE_SUCCESS'
+            })
+        } catch (error) {
             if (error.response === undefined) {
                 dispatch({
                     type: "ERROR",
@@ -69,23 +75,49 @@ export const updateVariableCosts = (inputName,givenValue,record)=>{
 }
 
 export const discardChanges = () => {
-    return async(dispatch,getState)=>{
+    return async (dispatch, getState) => {
         dispatch({
             type: 'DISCARD_CHANGES_SUCCESS'
+        })
+        dispatch({
+            type:'GET_WINDOWS_STATE_SUCCESS'
         })
     }
 }
 
+export const setItemsForSave = (callback) => {
+    return async (dispatch, getState) => {
+        dispatch({
+            type: 'SET_ITEMS_TO_SAVE'
+        })
+        callback()
+    }
+}
 
-export const updateFixedAndVarCosts = (postObject) => {
-    return async(dispatch, getState)=>{
-        try{
+export const getWindowsState = () => {
+    return async(dispatch,getState)=>{
+        dispatch({
+            type:'GET_WINDOWS_STATE_SUCCESS'
+        })
+    }
+}
+
+export const updateFixedAndVarCosts = (postObject,callback) => {
+    return async (dispatch, getState) => {
+        try {
+            const cost_items = getState().financialProjections.save_cost_items;
+            const obj = {
+                ...postObject,
+                "cost_items":cost_items
+            }
+            console.log(JSON.stringify(obj))
             const token = getState().user.access_token;
-            await kabadaAPI.post('api/cost/costsvf/save', postObject, {headers: {Authorization: `Bearer ${token}` }});
-            dispatch({type: 'UPDATE_FIXED_AND_VAR_COSTS_SUCCESS', payload: {postObject}});
+            await kabadaAPI.post('api/cost/costsvf/save', obj, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: 'UPDATE_FIXED_AND_VAR_COSTS_SUCCESS', payload: { obj } });
+            callback()
         }
-        finally{
-            dispatch({type: 'LOADING', payload: false})
+        finally {
+            dispatch({ type: 'LOADING', payload: false })
         }
     }
 }
@@ -106,7 +138,7 @@ export const saveState = (planId, is_completed, callback) => {
 
 
 
-export const getBusinessStartUpInvestmentInformation = (planId,callback) => {
+export const getBusinessStartUpInvestmentInformation = (planId, callback) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
         try {

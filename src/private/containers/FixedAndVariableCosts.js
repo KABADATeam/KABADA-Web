@@ -7,7 +7,7 @@ import { tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader'
 import VariableCostPopUp from '../components/fixed_and_variable_costs/VariableCostPopUp';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getFinancialProjectionsCosts, updateFixedAndVarCosts, saveState, updateFixedCosts, updateVariableCosts, discardChanges } from '../../appStore/actions/financialProjectionsActions';
+import { getFinancialProjectionsCosts, updateFixedAndVarCosts, saveState, updateFixedCosts, updateVariableCosts, discardChanges,setItemsForSave,getWindowsState} from '../../appStore/actions/financialProjectionsActions';
 import { getCountryVat } from '../../appStore/actions/vatsActions'
 import { getCountryShortCode } from '../../appStore/actions/countriesActions'
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
@@ -130,7 +130,6 @@ class FixedAndVariableCosts extends React.Component {
                 visible: false
             }
         }))
-        // visibleHeader: 'hidden'
     }
 
     onCompletedChange(state) {
@@ -147,88 +146,15 @@ class FixedAndVariableCosts extends React.Component {
         });
     }
     saveChanges = () => {
-        const items = [];
-
-        // cloning fixed and variable from financialProjections. i dont work directly with states
-        // const originalFixedArray = JSON.parse(JSON.stringify(this.props.financialProjections.fixed));
-        // const originalVariableArray = JSON.parse(JSON.stringify(this.props.financialProjections.variable));
-        // // cloning fixed and variable states. cant work directly with them
-        // const modifiedFixedArray = JSON.parse(JSON.stringify(this.state.fixed));
-        // const modifiedVariableArray = JSON.parse(JSON.stringify(this.state.variable));
-
-        const cost_items = [...this.props.financialProjections.cost_items];
-        const original_cost_items = [...this.props.financialProjections.original_cost_items];
-        for (var a = 0; a < original_cost_items.length; a++) {
-                console.log(JSON.stringify(original_cost_items[a]))
-                if (original_cost_items[a].price !== cost_items[a].price ||
-                    original_cost_items[a].vat !== cost_items[a].vat ||
-                    original_cost_items[a].first_expenses !== cost_items[a].first_expenses ||
-                    original_cost_items[a].price !== cost_items[a].price ||
-                    original_cost_items[a].monthly_expenses !== cost_items[a].monthly_expenses) {
-
-                    const modifiedObj = {
-                        cost_item_id: cost_items[a].cost_item_id,
-                        price: cost_items[a].price,
-                        vat: cost_items[a].vat,
-                        first_expenses: cost_items[a].first_expenses === null ? 1 : cost_items[a].first_expenses,
-                        monthly_expenses: cost_items[a].monthly_expenses
-                    }
-                    items.push(modifiedObj);
-                }
-        }
-
-
-        // looping through original array and checking if any of attributes where changed in modified array 
-        // for (var a = 0; a < originalFixedArray.length; a++) {
-        //     for (var b = 0; b < originalFixedArray[a].types.length; b++) {
-        //         console.log(JSON.stringify(originalFixedArray[a].types[b]))
-        //         if (originalFixedArray[a].types[b].price !== modifiedFixedArray[a].types[b].price ||
-        //             originalFixedArray[a].types[b].vat !== modifiedFixedArray[a].types[b].vat ||
-        //             originalFixedArray[a].types[b].first_expenses !== modifiedFixedArray[a].types[b].first_expenses ||
-        //             originalFixedArray[a].types[b].price !== modifiedFixedArray[a].types[b].price) {
-
-        //             const modifiedObj = {
-        //                 cost_item_id: modifiedFixedArray[a].types[b].cost_item_id,
-        //                 price: modifiedFixedArray[a].types[b].price,
-        //                 vat: modifiedFixedArray[a].types[b].vat,
-        //                 first_expenses: modifiedFixedArray[a].types[b].first_expenses === null ? 1 : modifiedFixedArray[a].types[b].first_expenses,
-        //                 monthly_expenses: modifiedFixedArray[a].types[b].monthly_expenses
-        //             }
-        //             items.push(modifiedObj);
-        //         }
-        //     }
-        // }
-
-        // for (var a = 0; a < originalVariableArray.length; a++) {
-        //     for (var b = 0; b < originalVariableArray[a].types.length; b++) {
-        //         console.log(JSON.stringify(originalVariableArray[a].types[b]))
-        //         if (originalVariableArray[a].types[b].price !== modifiedVariableArray[a].types[b].price ||
-        //             originalVariableArray[a].types[b].vat !== modifiedVariableArray[a].types[b].vat ||
-        //             originalVariableArray[a].types[b].monthly_expenses !== modifiedVariableArray[a].types[b].first_expenses) {
-
-        //             const modifiedObj = {
-        //                 cost_item_id: modifiedVariableArray[a].types[b].cost_item_id,
-        //                 price: modifiedVariableArray[a].types[b].price,
-        //                 vat: modifiedVariableArray[a].types[b].vat,
-        //                 first_expenses: modifiedVariableArray[a].types[b].first_expenses === null ? 0 : modifiedVariableArray[a].types[b].first_expenses,
-        //                 monthly_expenses: modifiedVariableArray[a].types[b].monthly_expenses
-        //             }
-        //             items.push(modifiedObj);
-        //         }
-        //     }
-        // }
         // postObject for update
-        const postObject = {
-            business_plan_id: this.props.businessPlan.id,
-            cost_items: cost_items
-        }
-
-        console.log(JSON.stringify(postObject))
-        // dispatching action to update fixedAndVar costs
-        this.props.updateFixedAndVarCosts(postObject);
-        this.setState({
-            visibleHeader: 'hidden'
-        });
+        this.props.setItemsForSave(() => {
+            const postObject = {
+                business_plan_id: this.props.businessPlan.id,
+            }
+            this.props.updateFixedAndVarCosts(postObject, () => {
+                this.props.getWindowsState();
+            });
+        })
     }
 
     monthsSet = () => {
@@ -241,72 +167,11 @@ class FixedAndVariableCosts extends React.Component {
         }
     }
 
-    arraysEqual = (array1, array2, isVar) => {
-        let a = JSON.parse(JSON.stringify(array1));
-        let b = JSON.parse(JSON.stringify(array2));
-
-        let original = array1;
-        let modified = array2;
-
-        if (a === b) return true;
-        if (a == null || b == null) return false;
-        if (a.length !== b.length) return false;
-        if (a !== b) return false;
-
-        a = a.sort();
-        b = b.sort();
-        if(isVar === true){
-            for (let z = 0; z < original.length; z++) {
-                if (original[z].vat !== modified[z].vat ||
-                    original[z].monthly_expenses !== modified[z].monthly_expenses
-                    
-                ) {
-                    console.log(JSON.stringify(original[z]))
-                    console.log('modified' + JSON.stringify(modified[z]))
-                    return false;
-                }
-            }
-            
-        }else{
-            for (let z = 0; z < original.length; z++) {
-                if (original[z].price !== modified[z].price ||
-                    original[z].vat !== modified[z].vat ||
-                    original[z].first_expenses !== modified[z].first_expenses
-                    
-                ) {
-                    console.log(JSON.stringify(original[z]))
-                    console.log('modified' + JSON.stringify(modified[z]))
-                    return false;
-                }
-            }
-        }
-        
-
-        return true;
-    }
-
-    getUpdateWindowState = (isVar) => {
-        // clone of fixed state. i should not interact with it directly
-        const o_cost_items = [...this.props.financialProjections.original_cost_items];
-        const m_cost_items = [...this.props.financialProjections.cost_items];
-        // console.log(JSON.stringify(o_cost_items))
-        if (o_cost_items == null || m_cost_items == null) {
-            return 'visible'
-        } else if (o_cost_items.length != m_cost_items.length) {
-            return 'visible'
-        }else if(this.arraysEqual(o_cost_items,m_cost_items,isVar)===false){
-            return 'visible'
-        }
-        return 'hidden'
-    }
-
     onFixedChange = (value, record, inputName) => {
         if (inputName === "first_expenses") {
-            // const st = value.charAt(0);
-            const expensesSliced = value.slice(0, -6) 
             const obj = {
                 ...record,
-                [inputName]: Number(expensesSliced)
+                [inputName]: Number(value)
             }
             this.props.updateFixedCosts(inputName, value, obj)
         }else{
@@ -317,11 +182,6 @@ class FixedAndVariableCosts extends React.Component {
             this.props.updateFixedCosts(inputName, value, obj)
             
         }
-        let visible = this.getUpdateWindowState(false)
-            this.setState({
-                visibleHeader: visible
-            },()=>console.log(this.state.visibleHeader))
-        
     }
 
     onVariableChange = (value, record, inputName) => {
@@ -330,11 +190,6 @@ class FixedAndVariableCosts extends React.Component {
             [inputName]: value
         }
         this.props.updateVariableCosts(inputName, value, obj)
-        let visible = this.getUpdateWindowState(true)
-        this.setState({
-            visibleHeader: visible
-        },()=>console.log(this.state.visibleHeader))
-
     }
 
     componentDidMount() {
@@ -404,7 +259,7 @@ class FixedAndVariableCosts extends React.Component {
                         type={"number"}
                         className={"numInput"}
                         defaultValue={text === null ? 0 : text}
-                        value={text}
+                        value={text === null?0:text}
                         onChange={e => this.onFixedChange(e.target.value, record, "price")}
                     />
                 )
@@ -428,9 +283,9 @@ class FixedAndVariableCosts extends React.Component {
                 width: '17.7%',
                 render: (text, record, index) => (
                     <Input.Group compact>
-                        <Select value={text === null ? "1st mo." : text + "st mo."} onChange={e => this.onFixedChange(e, record, "first_expenses")}>
+                        <Select value={text === null ? 1 : text} onChange={e => this.onFixedChange(e, record, "first_expenses")}>
                             {this.state.selectedPeriod.map((value, index) => (
-                                <Option value={value + "st mo."}>{value + "st mo."}</Option>
+                                <Option value={value}>{value + "st mo."}</Option>
                             ))}
                         </Select>
                     </Input.Group>
@@ -460,7 +315,7 @@ class FixedAndVariableCosts extends React.Component {
                         type={"number"}
                         className={"numInput"}
                         defaultValue={text === null ? 0 : text}
-                        value={text}
+                        value={text === null?0:text}
                         onChange={e => this.onFixedChange(e.target.value, record, "price")}
                     />
                 )
@@ -471,9 +326,9 @@ class FixedAndVariableCosts extends React.Component {
                 width: '17.7%',
                 render: (text, record, index) => (
                     <Input.Group compact>
-                        <Select value={text === null ? "1st mo." : text + "st mo."} onChange={e => this.onFixedChange(e, record, "first_expenses")}>
+                        <Select value={text === null ? 1 : text} onChange={e => this.onFixedChange(e, record, "first_expenses")}>
                             {this.state.selectedPeriod.map((value, index) => (
-                                <Option value={value + "st mo."}>{value + "st mo."}</Option>
+                                <Option value={value}>{value + "st mo."}</Option>
                             ))}
                         </Select>
                     </Input.Group>
@@ -499,7 +354,7 @@ class FixedAndVariableCosts extends React.Component {
                 render: (text, record, index) => {
                     return (<Input
                         defaultValue={text === null ? '0,0,0,0,0,0,0,0,0,0,0,0' : String(text)}
-                        value={text}
+                        value={text === null ? '0,0,0,0,0,0,0,0,0,0,0,0' : text }
                         size="large"
                         onClick={(e) => this.showModal(record, text, index)} />)
                 }
@@ -524,7 +379,7 @@ class FixedAndVariableCosts extends React.Component {
                 render: (text, record, index) => {
                     return (<Input
                         defaultValue={text === null ? '0,0,0,0,0,0,0,0,0,0,0,0' : String(text)}
-                        value={String(text)}
+                        value={text === null ? '0,0,0,0,0,0,0,0,0,0,0,0' : text}
                         size="large"
                         onClick={(e) => this.showModal(record, text, index)} />)
                 }
@@ -548,7 +403,7 @@ class FixedAndVariableCosts extends React.Component {
         return (
             <>
                 <UnsavedChangesHeader
-                    visibility={this.state.visibleHeader}
+                    visibility={this.props.financialProjections.windows_state}
                     discardChanges={this.discardChanges}
                     saveChanges={this.saveChanges}
                 />
@@ -684,4 +539,4 @@ const mapStateToProps = (state) => {
 }
 //connect function connect react component to redux store
 //the functions it can use to dispatch actions to the store.
-export default connect(mapStateToProps, { getSelectedPlanOverview, updateFixedCosts, updateVariableCosts, getCountryShortCode, getFinancialProjectionsCosts, getCountryVat, updateFixedAndVarCosts, saveState, refreshPlan, logout, discardChanges })(withRouter(FixedAndVariableCosts));
+export default connect(mapStateToProps, { getSelectedPlanOverview, updateFixedCosts, updateVariableCosts, getCountryShortCode, getFinancialProjectionsCosts, getCountryVat, updateFixedAndVarCosts, saveState, refreshPlan, logout, discardChanges,setItemsForSave,getWindowsState })(withRouter(FixedAndVariableCosts));
