@@ -26,17 +26,6 @@ class PublicBusinessPlans extends React.Component {
         };
     }
 
-    componentDidMount() {
-        this.props.getAllPublicPlans((data => {
-            this.setState({
-                planData: this.props.publicPlans
-            })
-        }));
-
-    }
-
-
-
     getFullDate = (date) => {
         const dateAndTime = date.split('T');
         return dateAndTime[0].split('-').reverse().join('.');
@@ -95,9 +84,17 @@ class PublicBusinessPlans extends React.Component {
 
     componentDidMount(){
         if (Cookies.get('access_token') === undefined && Cookies.get('access_token') === null) {
+            this.props.getAllPublicPlans();
             this.props.logout();
             this.props.history.push('/')
+        } else {
+            this.props.getAllPublicPlans((data => {
+                this.setState({
+                    planData: this.props.publicPlans
+                })
+            }));
         }
+        
     }
 
     render() {

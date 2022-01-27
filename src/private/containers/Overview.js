@@ -1,11 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar, Dropdown, Menu, message, Popconfirm, Collapse, Tooltip, Steps, Divider } from 'antd';
+import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar, Dropdown, Menu, message, Popconfirm, Collapse, Tooltip, Steps, Divider, Input } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled, PlusSquareOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { discardChanges, saveChanges } from "../../appStore/actions/swotAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
+import { uploadFile } from '../../appStore/actions/userFileAction';
+import { updatePlanData, updateImage } from '../../appStore/actions/planActions';
 import { updateStatus, getMembers, deleteMember, getSelectedPlanOverview, getSelectedPlanDetails, getImage, removePlan, downloadDOCFile, downloadPDFFile, downloadCashFlow } from "../../appStore/actions/planActions";
 import { getSurvivalRate } from '../../appStore/actions/eurostat/eurostatSurvivalRateAction';
 import { withRouter } from 'react-router-dom';
@@ -109,8 +111,91 @@ class Overview extends React.Component {
         super(props);
         this.state = {
             showInviteModal: false,
-            showEditBusinessPlanModal: false
+            showEditBusinessPlanModal: false,
+            selectedImage: null
         }
+        this.fileSelectRef = React.createRef();
+    }
+    getActivityID = (nace, industryCode, activityCode) => {
+        console.log(activityCode);
+        console.log(industryCode);
+        console.log(nace);
+        const firstLevelActivities = nace.find(item => item.code === industryCode);
+        if (firstLevelActivities.code === activityCode) {
+            return firstLevelActivities.id;
+        } else {
+            if (firstLevelActivities.activities !== null) {
+                const secondLevelActivities = firstLevelActivities.activities.find(item => item.code === activityCode);
+                if (secondLevelActivities !== undefined) {
+                    return secondLevelActivities.id;
+                } else {
+                    const activity2nd = activityCode.split('.').slice(0, 2).join('.');
+                    console.log(activity2nd);
+                    const secondLevelActivities = firstLevelActivities.activities.find(item => item.code === activity2nd);
+                    console.log(secondLevelActivities);
+                    if (secondLevelActivities.code === activityCode) {
+                        return secondLevelActivities.id;
+                    } else {
+                        const secondLvlCode = activityCode.split('.').slice(0, 2).join('.');
+                        const activity3nd = secondLvlCode + '.' + activityCode.split('.')[2].slice(0, 1);
+                        const thirdLevelActivities = secondLevelActivities.activities.length > 1 ? secondLevelActivities.activities.find(item => item.code === activity3nd) : secondLevelActivities.activities[0];
+                        if (thirdLevelActivities.code === activityCode) {
+                            return thirdLevelActivities.id;
+                        } else {
+                            const activity4nd = activityCode.split('.').slice(0, 3).join('.');
+                            const fourthLevelActivities = thirdLevelActivities.activities.find(item => item.code === activity4nd);
+                            return fourthLevelActivities.id;
+                        }
+                    }
+                }
+            } else {
+            }
+        }
+    }
+    onImageChange = (e) => {
+        this.setState({
+            selectedImage: e.target.files[0]
+        })
+        console.log(e.target.files[0])
+        const formData = new FormData();
+        const oldCountry = this.props.countries.find(item => item.title === this.props.businessPlan.countryTitle).id;
+        console.log(oldCountry);
+        const oldLanguage = this.props.planLanguages.find(item => item.title === 'English').id;
+        console.log(oldLanguage);
+        const oldActivity = this.getActivityID(this.props.nace, this.props.businessPlan.overview.nace.industry_code, this.props.businessPlan.activityCode);
+        console.log(oldActivity)
+        console.log(this.state.selectedImage);
+        formData.append('files[]', e.target.files[0]);
+        formData.getAll('files[]')
+        let postObject = {
+            "Id": this.props.businessPlan.id,
+            "Title": this.props.businessPlan.name,
+            "ActivityId": oldActivity,
+            "CountryId": oldCountry,
+            "LanguageId": oldLanguage
+        }
+        let reducerObject = {
+            "id": this.props.businessPlan.id,
+            'name': this.props.businessPlan.name,
+            'activityId': oldActivity,
+            'activityCode': this.props.businessPlan.activityCode,
+            'countryId': oldCountry,
+            'languageId': oldLanguage,
+        }
+        console.log(postObject)
+        this.props.uploadFile(formData)
+            .then(
+                () => {
+                    console.log("image changed");
+                    console.log(this.props.uploadedFile)
+                    postObject = { ...postObject, 'Img': this.props.uploadedFile }
+                    reducerObject = { ...reducerObject, 'planImage': this.props.uploadedFile }
+                    this.props.updateImage(reducerObject);
+                    this.props.updatePlanData(postObject, reducerObject)
+                });
+    }
+    onFileUpload = (e) => {
+        this.fileSelectRef.current.click();
     }
 
     onBackClick() {
@@ -201,6 +286,7 @@ class Overview extends React.Component {
                         this.props.getSelectedPlanDetails(this.props.businessPlan.id);
                         this.props.getSelectedPlanOverview(this.props.businessPlan.id);
                     });
+
                 }
             } else {
                 this.props.getMembers(this.props.businessPlan.id);
@@ -210,6 +296,9 @@ class Overview extends React.Component {
         } else {
             this.props.history.push('/')
         }
+        this.setState({
+            selectedFile: []
+        })
     }
 
     render() {
@@ -305,10 +394,10 @@ class Overview extends React.Component {
                                                     title={
                                                         <div>
                                                             <Row>
-                                                                <Button style={{ paddingLeft: '0px', ...pageTitleTextStyle }} type="text" onClick={this.onEditBusinessPlan.bind(this)}>Create Bussines Plan</Button>
+                                                                <Button style={{ paddingLeft: '0px', ...pageTitleTextStyle }} type="text" onClick={this.onEditBusinessPlan.bind(this)}>Edit Bussines Plan</Button>
                                                             </Row>
                                                             <Row>
-                                                                <Text style={descriptionTextStyle}>{overview.nace === "" || overview.nace === null ? "NACE: " : "NACE: " + overview.nace.activity_code}</Text>
+                                                                <Text style={descriptionTextStyle}>{this.props.businessPlan.activityCode === "" || this.props.businessPlan.activityCode === null ? "NACE: " : "NACE: " + this.props.businessPlan.activityCode}</Text>
                                                             </Row>
                                                         </div>
                                                     }
@@ -328,7 +417,7 @@ class Overview extends React.Component {
                                             <List.Item key='2'>
                                                 <List.Item.Meta
                                                     style={{ padding: '0px 20px 0px' }}
-                                                    avatar={overview.value_proposition.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    avatar={this.props.businessPlan.value_proposition_state === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                     title={
                                                         <div>
                                                             <Row>
@@ -336,7 +425,7 @@ class Overview extends React.Component {
                                                             </Row>
                                                             <Row>
                                                                 <Text style={descriptionTextStyle}>
-                                                                    {overview.value_proposition.description === "" ? "Proposed products" : overview.value_proposition.description}
+                                                                    {this.props.businessPlan.value_proposition_description === "" ? "Proposed products" : this.props.businessPlan.value_proposition_description}
                                                                 </Text>
                                                             </Row>
                                                         </div>
@@ -347,7 +436,7 @@ class Overview extends React.Component {
                                             <List.Item key='3'>
                                                 <List.Item.Meta
                                                     style={{ padding: '0px 20px 0px' }}
-                                                    avatar={overview.customer_segments.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    avatar={this.props.businessPlan.customer_segments_state === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                     title={
                                                         <div>
                                                             <Row>
@@ -355,7 +444,7 @@ class Overview extends React.Component {
                                                             </Row>
                                                             <Row>
                                                                 <Text style={descriptionTextStyle}>
-                                                                    {overview.customer_segments.description === "" ? "Customer segments" : overview.customer_segments.description}
+                                                                    {this.props.businessPlan.customer_segments_description === "" ? "Customer segments" : this.props.businessPlan.customer_segments_description}
                                                                 </Text>
                                                             </Row>
                                                         </div>
@@ -366,7 +455,7 @@ class Overview extends React.Component {
                                             <List.Item key='4'>
                                                 <List.Item.Meta
                                                     style={{ padding: '0px 20px 0px' }}
-                                                    avatar={overview.channels.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    avatar={this.props.businessPlan.channels_state === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                     title={
                                                         <div>
                                                             <Row>
@@ -374,7 +463,7 @@ class Overview extends React.Component {
                                                             </Row>
                                                             <Row>
                                                                 <Text style={descriptionTextStyle}>
-                                                                    {overview.channels.description === null ? "Channels list" : overview.channels.description}
+                                                                    {this.props.businessPlan.channels_description === null ? "Channels list" : this.props.businessPlan.channels_description}
                                                                 </Text>
                                                             </Row>
                                                         </div>
@@ -385,7 +474,7 @@ class Overview extends React.Component {
                                             <List.Item key='5'>
                                                 <List.Item.Meta
                                                     style={{ padding: '0px 20px 0px' }}
-                                                    avatar={overview.customer_relationship.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    avatar={this.props.businessPlan.customer_relationship_state === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                     title={
                                                         <div>
                                                             <Row>
@@ -393,7 +482,7 @@ class Overview extends React.Component {
                                                             </Row>
                                                             <Row>
                                                                 <Text style={descriptionTextStyle}>
-                                                                    {overview.customer_relationship.description === "" ? "Customer relationships" : overview.customer_relationship.description}
+                                                                    {this.props.businessPlan.customer_relationship_description === "" ? "Customer relationships" : this.props.businessPlan.customer_relationship_description}
                                                                 </Text>
                                                             </Row>
                                                         </div>
@@ -404,7 +493,7 @@ class Overview extends React.Component {
                                             <List.Item key='6'>
                                                 <List.Item.Meta
                                                     style={{ padding: '0px 20px 0px' }}
-                                                    avatar={overview.revenue_streams.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    avatar={this.props.businessPlan.revenue_streams_state === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                     title={
                                                         <div>
                                                             <Row>
@@ -412,7 +501,7 @@ class Overview extends React.Component {
                                                             </Row>
                                                             <Row>
                                                                 <Text style={descriptionTextStyle}>
-                                                                    {overview.revenue_streams.description === "" ? "Customer segments revenue streams" : overview.revenue_streams.description}
+                                                                    {this.props.businessPlan.revenue_streams_description === "" ? "Customer segments revenue streams" : this.props.businessPlan.revenue_streams_description}
                                                                 </Text>
                                                             </Row>
                                                         </div>
@@ -423,7 +512,7 @@ class Overview extends React.Component {
                                             <List.Item key='7'>
                                                 <List.Item.Meta
                                                     style={{ padding: '0px 20px 0px' }}
-                                                    avatar={overview.key_resources.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    avatar={this.props.businessPlan.key_resources_state === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                     title={
                                                         <div>
                                                             <Row>
@@ -431,7 +520,7 @@ class Overview extends React.Component {
                                                             </Row>
                                                             <Row>
                                                                 <Text style={descriptionTextStyle}>
-                                                                    {overview.key_resources.description === "" ? "Key resources list" : overview.key_resources.description}
+                                                                    {this.props.businessPlan.key_resources_description === "" ? "Key resources list" : this.props.businessPlan.key_resources_description}
                                                                 </Text>
                                                             </Row>
                                                         </div>
@@ -442,7 +531,7 @@ class Overview extends React.Component {
                                             <List.Item key='8'>
                                                 <List.Item.Meta
                                                     style={{ padding: '0px 20px 0px' }}
-                                                    avatar={overview.key_activities.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    avatar={this.props.businessPlan.key_activities_state === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                     title={
                                                         <div>
                                                             <Row>
@@ -450,7 +539,7 @@ class Overview extends React.Component {
                                                             </Row>
                                                             <Row>
                                                                 <Text style={descriptionTextStyle}>
-                                                                    {overview.key_activities.description === "" ? "Key activities list" : overview.key_activities.description}
+                                                                    {this.props.businessPlan.key_activities_description === "" ? "Key activities list" : this.props.businessPlan.key_activities_description}
                                                                 </Text>
                                                             </Row>
                                                         </div>
@@ -461,7 +550,7 @@ class Overview extends React.Component {
                                             <List.Item key='9'>
                                                 <List.Item.Meta
                                                     style={{ padding: '0px 20px 0px' }}
-                                                    avatar={overview.key_partners.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    avatar={this.props.businessPlan.key_partners_state === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                     title={
                                                         <div>
                                                             <Row>
@@ -469,7 +558,7 @@ class Overview extends React.Component {
                                                             </Row>
                                                             <Row>
                                                                 <Text style={descriptionTextStyle}>
-                                                                    {overview.key_partners.description === null ? "Key partners list" : overview.key_partners.description}
+                                                                    {this.props.businessPlan.key_partners_description === null ? "Key partners list" : this.props.businessPlan.key_partners_description}
                                                                 </Text>
                                                             </Row>
                                                         </div>
@@ -480,7 +569,7 @@ class Overview extends React.Component {
                                             <List.Item key='10'>
                                                 <List.Item.Meta
                                                     style={{ padding: '0px 20px 0px' }}
-                                                    avatar={overview.cost_structure.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    avatar={this.props.businessPlan.cost_structure_state === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                     title={
                                                         <div>
                                                             <Row>
@@ -488,7 +577,7 @@ class Overview extends React.Component {
                                                             </Row>
                                                             <Row>
                                                                 <Text style={descriptionTextStyle}>
-                                                                    {overview.cost_structure.description === "" ? "Fixed and variable costs" : overview.cost_structure.description}
+                                                                    {this.props.businessPlan.cost_structure_description === "" ? "Fixed and variable costs" : this.props.businessPlan.cost_structure_description}
                                                                 </Text>
                                                             </Row>
                                                         </div>
@@ -501,7 +590,7 @@ class Overview extends React.Component {
                                             <List.Item key='11'>
                                                 <List.Item.Meta
                                                     style={{ padding: '0px 20px 16px' }}
-                                                    avatar={overview.swot.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    avatar={this.props.businessPlan.swot_state === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                     title={
                                                         <div>
                                                             <Row >
@@ -513,7 +602,7 @@ class Overview extends React.Component {
                                                                 </Col>
                                                             </Row>
                                                             <Row>
-                                                                <Text style={descriptionTextStyle}>{overview.swot.description === "" || overview.swot.description === null ? "Strengths/Weaknesses and Threats/Oportunities" : overview.swot.description}</Text>
+                                                                <Text style={descriptionTextStyle}>{this.props.businessPlan.swot_description === "" || this.props.businessPlan.swot_description === null ? "Strengths/Weaknesses and Threats/Oportunities" : this.props.businessPlan.swot_description}</Text>
                                                             </Row>
                                                         </div>
                                                     }
@@ -537,7 +626,7 @@ class Overview extends React.Component {
                                                         <div>
                                                             <Row>
                                                                 <Col span={1}>
-                                                                    {overview.assets.is_completed === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
+                                                                    {this.props.businessPlan.assets_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
                                                                 </Col>
                                                                 <Col span={11}>
                                                                     <div style={{ ...financialTitlePositionStyle }}>
@@ -560,7 +649,7 @@ class Overview extends React.Component {
                                                         <div>
                                                             <Row>
                                                                 <Col span={1}>
-                                                                    {overview.fixed_and_variables_costs.is_completed === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
+                                                                    {this.props.businessPlan.fixed_and_variables_costs_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
                                                                 </Col>
                                                                 <Col span={11}>
                                                                     <div style={{ ...financialTitlePositionStyle }}>
@@ -583,7 +672,7 @@ class Overview extends React.Component {
                                                         <div>
                                                             <Row>
                                                                 <Col span={1}>
-                                                                    {overview.sales_forecast.is_completed === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
+                                                                    {this.props.businessPlan.sales_forecast_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
                                                                 </Col>
                                                                 <Col span={11}>
                                                                     <div style={{ ...financialTitlePositionStyle }}>
@@ -606,7 +695,7 @@ class Overview extends React.Component {
                                                         <div>
                                                             <Row>
                                                                 <Col span={1}>
-                                                                    {overview.business_start_up_investments.is_completed === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
+                                                                    {this.props.businessPlan.business_start_up_investments_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
                                                                 </Col>
                                                                 <Col span={11}>
                                                                     <div style={{ ...financialTitlePositionStyle }}>
@@ -629,7 +718,7 @@ class Overview extends React.Component {
                                                         <div>
                                                             <Row>
                                                                 <Col span={1}>
-                                                                    {overview.assets.is_completed === true && overview.fixed_and_variables_costs.is_completed === true && overview.sales_forecast.is_completed === true && overview.business_start_up_investments.is_completed === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
+                                                                    {this.props.businessPlan.assets_state === true && this.props.businessPlan.fixed_and_variables_costs_state === true && this.props.businessPlan.sales_forecast_state === true && this.props.businessPlan.business_start_up_investments_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
                                                                 </Col>
                                                                 <Col span={11}>
                                                                     <div style={{ ...financialTitlePositionStyle }}>
@@ -650,7 +739,7 @@ class Overview extends React.Component {
                                             <List.Item key='17'>
                                                 <List.Item.Meta
                                                     style={{ padding: '0px 20px 0px' }}
-                                                    avatar={overview.personal_characteristics.is_completed === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                    avatar={this.props.businessPlan.personal_characteristics_state === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
                                                     title={
                                                         <div>
                                                             <Row>
@@ -662,7 +751,7 @@ class Overview extends React.Component {
                                                                 </Col>
                                                             </Row>
                                                             <Row>
-                                                                <Text style={descriptionTextStyle}>{overview.personal_characteristics.description === "" || overview.personal_characteristics.description === null ? "Descriptions" : overview.personal_characteristics.description}</Text>
+                                                                <Text style={descriptionTextStyle}>{this.props.businessPlan.personal_characteristics_description === "" || this.props.businessPlan.personal_characteristics_description === null ? "Descriptions" : this.props.businessPlan.personal_characteristics_description}</Text>
                                                             </Row>
                                                         </div>
                                                     }
@@ -680,7 +769,11 @@ class Overview extends React.Component {
                                                 objectFit: 'cover', backgroundSize: '100% auto', backgroundRepeat: 'no-repeat', backgroundPosition: 'center top',
                                             }}>
                                             <h4 style={{ marginTop: '145px', marginBottom: 0, fontSize: '16px' }}>Cover image</h4>
-                                            <Button type="link" style={{ paddingLeft: '0px', fontWeight: 600, fontSize: '14px' }} onClick={this.onEditBusinessPlan.bind(this)}>Change</Button>
+                                            {/* <Button type="link" style={{ paddingLeft: '0px', fontWeight: 600, fontSize: '14px' }} onClick={this.onEditBusinessPlan.bind(this)}>Change</Button> */}
+                                            <input accept="image/*" type="file" id="select-image" ref={this.fileSelectRef} onChange={e => this.onImageChange(e)} style={{ display: 'none' }} />
+                                            <label htmlFor='select-image'>
+                                                <Button type="link" style={{ paddingLeft: '0px', fontWeight: 600, fontSize: '14px' }} onClick={e => this.onFileUpload(e)}>Change</Button>
+                                            </label>
                                         </Card>
                                         <Card style={{
                                             marginTop: "16px", borderRadius: '8px', backgroundColor: '#FFFFFF'
@@ -714,7 +807,7 @@ class Overview extends React.Component {
                                                                     </div>
                                                                 </Col>
                                                                 <Col span={2}>
-                                                                    <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}><Button type="link" icon={<Avatar size='small' icon={<DeleteOutlined />} />} onClick={this.onDeleteMember.bind(this, item)}/></div>
+                                                                    <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}><Button type="link" icon={<Avatar size='small' icon={<DeleteOutlined />} />} onClick={this.onDeleteMember.bind(this, item)} /></div>
 
                                                                 </Col>
                                                             </Row>
@@ -734,8 +827,8 @@ class Overview extends React.Component {
                                 <Row style={{ marginBottom: "50px", marginTop: "40px" }}>
                                     <Col span={8}>
                                         <div style={{ marginRight: '40px' }}>
-                                            <Typography.Title style={aboutTitleTextStyle}>{overview.nace.activity_code} Industry risks</Typography.Title>
-                                            <TextHelper code="ovir" type="lefttext"/>
+                                            <Typography.Title style={aboutTitleTextStyle}>{this.props.businessPlan.activityCode} Industry risks</Typography.Title>
+                                            <TextHelper code="ovir" type="lefttext" />
                                         </div>
                                     </Col>
                                     <Col span={16}>
@@ -767,7 +860,13 @@ const mapStateToProps = (state) => {
         survivalRate: state.survivalRate,
         userInf: state.user,
         downloadLoading: state.downloadLoading,
+        uploadedFile: state.uploadedFile,
+        countries: state.countries,
+        activities: state.activities,
+        industries: state.industries,
+        planLanguages: state.planLanguages,
+        nace: state.nace
     };
 }
 
-export default connect(mapStateToProps, { getImage, logout, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, removePlan, getSurvivalRate, getCountryShortCodeV2, downloadDOCFile, downloadPDFFile, downloadCashFlow })(withRouter(Overview))
+export default connect(mapStateToProps, { getImage, logout, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, removePlan, getSurvivalRate, getCountryShortCodeV2, downloadDOCFile, downloadPDFFile, downloadCashFlow, uploadFile, updateImage, updatePlanData })(withRouter(Overview))

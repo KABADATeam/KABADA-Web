@@ -1,14 +1,13 @@
 import kabadaAPI from './kabadaAPI';
 import { errorHandler } from './errorHandler';
 
-export const getFinancialProjectionsCosts = (planId,callback) => {
+export const getFinancialProjectionsCosts = (planId) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
         try{
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/cost/costsvf/'+planId, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: "FETCHING_FINANCIAL_PROJECTION_SUCCESS", payload: response.data });
-            callback()
         }catch(error){
             if (error.response === undefined) {
                 dispatch({
@@ -26,6 +25,57 @@ export const getFinancialProjectionsCosts = (planId,callback) => {
         }
     }
 }
+
+export const updateFixedCosts = (inputName,givenValue,record) => {
+    return async(dispatch,getState)=>{
+        try{
+            dispatch({
+                type: 'FIXED_COSTS_UPDATE_SUCCESS',
+                payload: {name:inputName,value:givenValue, item:record}
+            })
+        }catch (error) {
+            if (error.response === undefined) {
+                dispatch({
+                    type: "ERROR",
+                    payload: { message: "Oopsie... System error. Try again, later" },
+                });
+            } else {
+                dispatch({ type: "ERROR", payload: error.response.data });
+            }
+        } finally {
+        }
+    }
+}
+
+export const updateVariableCosts = (inputName,givenValue,record)=>{
+    return async(dispatch,getState)=>{
+        try{
+            dispatch({
+                type: 'VARIABLE_COSTS_UPDATE_SUCCESS',
+               payload: {name:inputName,value:givenValue, item:record}
+            })
+        }catch (error) {
+            if (error.response === undefined) {
+                dispatch({
+                    type: "ERROR",
+                    payload: { message: "Oopsie... System error. Try again, later" },
+                });
+            } else {
+                dispatch({ type: "ERROR", payload: error.response.data });
+            }
+        } finally {
+        }
+    }
+}
+
+export const discardChanges = () => {
+    return async(dispatch,getState)=>{
+        dispatch({
+            type: 'DISCARD_CHANGES_SUCCESS'
+        })
+    }
+}
+
 
 export const updateFixedAndVarCosts = (postObject) => {
     return async(dispatch, getState)=>{
