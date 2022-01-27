@@ -26,7 +26,7 @@ export const cashFlowReducer = (state = [], action) => {
             console.log(monthsCount)
             const renderContent = (value, row, index) => {
                 const obj = {
-                    children: <p style={{ marginBottom: 0 }}>{(typeof value === 'number') ? value : '-'}</p>,
+                    children: <p style={{ marginBottom: 0, float: 'right' }}>{(typeof value === 'number') ? value : '-'}</p>,
                     props: { style: { color: (typeof value === 'number' && value < 0) ? '#820014' : "#262626", background: (typeof value === 'number' && value < 0) ? "#FFCCC7" : '#FFFFFF' } },
                 };
                 if (row.tag === "title" || row.tag === "section") {

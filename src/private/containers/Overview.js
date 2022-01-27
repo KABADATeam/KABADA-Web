@@ -1,11 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar, Dropdown, Menu, message, Popconfirm, Collapse, Tooltip, Steps, Divider } from 'antd';
+import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar, Dropdown, Menu, message, Popconfirm, Collapse, Tooltip, Steps, Divider, Input } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled, PlusSquareOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { discardChanges, saveChanges } from "../../appStore/actions/swotAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
+import { uploadFile } from '../../appStore/actions/userFileAction';
+import { updatePlanData, updateImage } from '../../appStore/actions/planActions';
 import { updateStatus, getMembers, deleteMember, getSelectedPlanOverview, getSelectedPlanDetails, getImage, removePlan, downloadDOCFile, downloadPDFFile, downloadCashFlow } from "../../appStore/actions/planActions";
 import { getSurvivalRate } from '../../appStore/actions/eurostat/eurostatSurvivalRateAction';
 import { withRouter } from 'react-router-dom';
@@ -109,8 +111,91 @@ class Overview extends React.Component {
         super(props);
         this.state = {
             showInviteModal: false,
-            showEditBusinessPlanModal: false
+            showEditBusinessPlanModal: false,
+            selectedImage: null
         }
+        this.fileSelectRef = React.createRef();
+    }
+    getActivityID = (nace, industryCode, activityCode) => {
+        console.log(activityCode);
+        console.log(industryCode);
+        console.log(nace);
+        const firstLevelActivities = nace.find(item => item.code === industryCode);
+        if (firstLevelActivities.code === activityCode) {
+            return firstLevelActivities.id;
+        } else {
+            if (firstLevelActivities.activities !== null) {
+                const secondLevelActivities = firstLevelActivities.activities.find(item => item.code === activityCode);
+                if (secondLevelActivities !== undefined) {
+                    return secondLevelActivities.id;
+                } else {
+                    const activity2nd = activityCode.split('.').slice(0, 2).join('.');
+                    console.log(activity2nd);
+                    const secondLevelActivities = firstLevelActivities.activities.find(item => item.code === activity2nd);
+                    console.log(secondLevelActivities);
+                    if (secondLevelActivities.code === activityCode) {
+                        return secondLevelActivities.id;
+                    } else {
+                        const secondLvlCode = activityCode.split('.').slice(0, 2).join('.');
+                        const activity3nd = secondLvlCode + '.' + activityCode.split('.')[2].slice(0, 1);
+                        const thirdLevelActivities = secondLevelActivities.activities.length > 1 ? secondLevelActivities.activities.find(item => item.code === activity3nd) : secondLevelActivities.activities[0];
+                        if (thirdLevelActivities.code === activityCode) {
+                            return thirdLevelActivities.id;
+                        } else {
+                            const activity4nd = activityCode.split('.').slice(0, 3).join('.');
+                            const fourthLevelActivities = thirdLevelActivities.activities.find(item => item.code === activity4nd);
+                            return fourthLevelActivities.id;
+                        }
+                    }
+                }
+            } else {
+            }
+        }
+    }
+    onImageChange = (e) => {
+        this.setState({
+            selectedImage: e.target.files[0]
+        })
+        console.log(e.target.files[0])
+        const formData = new FormData();
+        const oldCountry = this.props.countries.find(item => item.title === this.props.businessPlan.countryTitle).id;
+        console.log(oldCountry);
+        const oldLanguage = this.props.planLanguages.find(item => item.title === 'English').id;
+        console.log(oldLanguage);
+        const oldActivity = this.getActivityID(this.props.nace, this.props.businessPlan.overview.nace.industry_code, this.props.businessPlan.activityCode);
+        console.log(oldActivity)
+        console.log(this.state.selectedImage);
+        formData.append('files[]', e.target.files[0]);
+        formData.getAll('files[]')
+        let postObject = {
+            "Id": this.props.businessPlan.id,
+            "Title": this.props.businessPlan.name,
+            "ActivityId": oldActivity,
+            "CountryId": oldCountry,
+            "LanguageId": oldLanguage
+        }
+        let reducerObject = {
+            "id": this.props.businessPlan.id,
+            'name': this.props.businessPlan.name,
+            'activityId': oldActivity,
+            'activityCode': this.props.businessPlan.activityCode,
+            'countryId': oldCountry,
+            'languageId': oldLanguage,
+        }
+        console.log(postObject)
+        this.props.uploadFile(formData)
+            .then(
+                () => {
+                    console.log("image changed");
+                    console.log(this.props.uploadedFile)
+                    postObject = { ...postObject, 'Img': this.props.uploadedFile }
+                    reducerObject = { ...reducerObject, 'planImage': this.props.uploadedFile }
+                    this.props.updateImage(reducerObject);
+                    this.props.updatePlanData(postObject, reducerObject)
+                });
+    }
+    onFileUpload = (e) => {
+        this.fileSelectRef.current.click();
     }
 
     onBackClick() {
@@ -201,7 +286,7 @@ class Overview extends React.Component {
                         this.props.getSelectedPlanDetails(this.props.businessPlan.id);
                         this.props.getSelectedPlanOverview(this.props.businessPlan.id);
                     });
-                    
+
                 }
             } else {
                 this.props.getMembers(this.props.businessPlan.id);
@@ -211,6 +296,9 @@ class Overview extends React.Component {
         } else {
             this.props.history.push('/')
         }
+        this.setState({
+            selectedFile: []
+        })
     }
 
     render() {
@@ -561,7 +649,7 @@ class Overview extends React.Component {
                                                         <div>
                                                             <Row>
                                                                 <Col span={1}>
-                                                                    {this.props.businessPlan.fixed_and_variables_costs_state=== true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
+                                                                    {this.props.businessPlan.fixed_and_variables_costs_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
                                                                 </Col>
                                                                 <Col span={11}>
                                                                     <div style={{ ...financialTitlePositionStyle }}>
@@ -681,7 +769,11 @@ class Overview extends React.Component {
                                                 objectFit: 'cover', backgroundSize: '100% auto', backgroundRepeat: 'no-repeat', backgroundPosition: 'center top',
                                             }}>
                                             <h4 style={{ marginTop: '145px', marginBottom: 0, fontSize: '16px' }}>Cover image</h4>
-                                            <Button type="link" style={{ paddingLeft: '0px', fontWeight: 600, fontSize: '14px' }} onClick={this.onEditBusinessPlan.bind(this)}>Change</Button>
+                                            {/* <Button type="link" style={{ paddingLeft: '0px', fontWeight: 600, fontSize: '14px' }} onClick={this.onEditBusinessPlan.bind(this)}>Change</Button> */}
+                                            <input accept="image/*" type="file" id="select-image" ref={this.fileSelectRef} onChange={e => this.onImageChange(e)} style={{ display: 'none' }} />
+                                            <label htmlFor='select-image'>
+                                                <Button type="link" style={{ paddingLeft: '0px', fontWeight: 600, fontSize: '14px' }} onClick={e => this.onFileUpload(e)}>Change</Button>
+                                            </label>
                                         </Card>
                                         <Card style={{
                                             marginTop: "16px", borderRadius: '8px', backgroundColor: '#FFFFFF'
@@ -715,7 +807,7 @@ class Overview extends React.Component {
                                                                     </div>
                                                                 </Col>
                                                                 <Col span={2}>
-                                                                    <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}><Button type="link" icon={<Avatar size='small' icon={<DeleteOutlined />} />} onClick={this.onDeleteMember.bind(this, item)}/></div>
+                                                                    <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}><Button type="link" icon={<Avatar size='small' icon={<DeleteOutlined />} />} onClick={this.onDeleteMember.bind(this, item)} /></div>
 
                                                                 </Col>
                                                             </Row>
@@ -736,7 +828,7 @@ class Overview extends React.Component {
                                     <Col span={8}>
                                         <div style={{ marginRight: '40px' }}>
                                             <Typography.Title style={aboutTitleTextStyle}>{this.props.businessPlan.activityCode} Industry risks</Typography.Title>
-                                            <TextHelper code="ovir" type="lefttext"/>
+                                            <TextHelper code="ovir" type="lefttext" />
                                         </div>
                                     </Col>
                                     <Col span={16}>
@@ -768,7 +860,13 @@ const mapStateToProps = (state) => {
         survivalRate: state.survivalRate,
         userInf: state.user,
         downloadLoading: state.downloadLoading,
+        uploadedFile: state.uploadedFile,
+        countries: state.countries,
+        activities: state.activities,
+        industries: state.industries,
+        planLanguages: state.planLanguages,
+        nace: state.nace
     };
 }
 
-export default connect(mapStateToProps, { getImage, logout, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, removePlan, getSurvivalRate, getCountryShortCodeV2, downloadDOCFile, downloadPDFFile, downloadCashFlow })(withRouter(Overview))
+export default connect(mapStateToProps, { getImage, logout, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, removePlan, getSurvivalRate, getCountryShortCodeV2, downloadDOCFile, downloadPDFFile, downloadCashFlow, uploadFile, updateImage, updatePlanData })(withRouter(Overview))
