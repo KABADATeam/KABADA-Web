@@ -1,0 +1,63 @@
+h1{
+    width: 79%;
+    height: 128px;
+    /* font-family: "SF Pro Text"; */
+    font-style: normal;
+    font-weight: 600;
+    font-size: 56px;
+    line-height: 64px;
+    color: rgb(38, 38, 38);
+    margin-top: 86px;
+}
+.regtengle{
+    /* width: 55vh; */
+    width: 160%;
+    height: 389px;
+    background: #C4C4C4;
+}
+p{
+width: 80%;
+height: 56px;
+font-family: SF Pro Text;
+font-style: normal;
+font-weight: normal;
+font-size: 20px;
+line-height: 28px;
+
+
+color: #8C8C8C;
+}
+.PrimaryButton{
+    padding: 13px 24px !important;
+    text-align: center !important;
+    width: 148px !important;
+    height: 48px !important;
+    margin-top: 2%;
+}
+.secanP{
+    width: 780px;
+    height: 140px;
+    font-family: SF Pro Text;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 28px;
+    text-align: center;
+    color: #262626;
+}
+
+h2{
+    font-style: normal;
+font-weight: 600;
+font-size: 38px;
+line-height: 46px;
+color: #262626;
+}
+
+h3{
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    color: #262626;  
+}
