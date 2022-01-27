@@ -40,7 +40,7 @@ class SiteHeader extends React.Component {
 
                     <Col span={12} offset={2}  >
 
-                        <h1>Get down to business and grow sales</h1>
+                        <h1 className='h1Style'>Get down to business and grow sales</h1>
                         <p>Engage your customers and boost your business with Mailchimp's advanced, yet easy‑to‑use marketing platform.</p>
 
                         <Button className='PrimaryButton' type="primary">Primary Button</Button>
@@ -74,9 +74,9 @@ class SiteHeader extends React.Component {
 
                         <h2>Do it all with KABADA</h2>
 
-                        <p style={{ width: '64%', marginBottom: '7%' }}>Bring your audience data, marketing channels, and insights together so you can reach your goals faster—all from a single platform.</p>
-                        <h2>aka Features</h2>
-                        <h2>Dropboxī ir vision</h2>
+                        <p style={{ width: '64%', marginBottom: '7%' }} className='pStyle'>Bring your audience data, marketing channels, and insights together so you can reach your goals faster—all from a single platform.</p>
+                        <h2 className='h2Style'>aka Features</h2>
+                        <h2 className='h2Style'>Dropboxī ir vision</h2>
                     </Col>
                     <Col span={12} style={{ marginTop: '85px' }}  >
 
@@ -85,9 +85,9 @@ class SiteHeader extends React.Component {
                                 <path d="M0 9V27C0 28.625 1.375 30 3 30H6V6H3C1.375 6 0 7.375 0 9ZM21 0H11C9.375 0 8 1.375 8 3V30H24V3C24 1.375 22.625 0 21 0ZM21 6H11V3H21V6ZM29 6H26V30H29C30.625 30 32 28.625 32 27V9C32 7.375 30.625 6 29 6Z" fill="#1890FF" />
                             </svg>
 
-                            <h3>Risk Anssdfgd</h3>
+                            <h3 className='h3Style'>Risk Anssdfgd</h3>
 
-                            <p style={{ width: '55%' }}>Give your brand a home with a custom domain. Then launch a website to sell products
+                            <p style={{ width: '55%' }} className='pStyle'>Give your brand a home with a custom domain. Then launch a website to sell products
                                 or take appointments, all with built-in marketing tools to help you boost sales and find fans.</p>
                         </div>
 
@@ -97,9 +97,9 @@ class SiteHeader extends React.Component {
                             </svg>
 
 
-                            <h3>Get your business online</h3>
+                            <h3 className='h3Style'>Get your business online</h3>
 
-                            <p style={{ width: '55%' }}>Give your brand a home with a custom domain. Then launch a website to sell products
+                            <p style={{ width: '55%' }} className='pStyle'>Give your brand a home with a custom domain. Then launch a website to sell products
                                 or take appointments, all with built-in marketing tools to help you boost sales and find fans.</p>
                         </div>
 
@@ -108,9 +108,9 @@ class SiteHeader extends React.Component {
                             <svg width="32" height="30" viewBox="0 0 32 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M0 9V27C0 28.625 1.375 30 3 30H6V6H3C1.375 6 0 7.375 0 9ZM21 0H11C9.375 0 8 1.375 8 3V30H24V3C24 1.375 22.625 0 21 0ZM21 6H11V3H21V6ZM29 6H26V30H29C30.625 30 32 28.625 32 27V9C32 7.375 30.625 6 29 6Z" fill="#1890FF" />
                             </svg>
-                            <h3>Get your business online</h3>
+                            <h3 className='h3Style'>Get your business online</h3>
 
-                            <p style={{ width: '55%' }}>Give your brand a home with a custom domain. Then launch a website to sell products
+                            <p style={{ width: '55%' }} className='pStyle'>Give your brand a home with a custom domain. Then launch a website to sell products
                                 or take appointments, all with built-in marketing tools to help you boost sales and find fans.</p>
                         </div>
 
@@ -119,9 +119,9 @@ class SiteHeader extends React.Component {
                             <svg width="32" height="30" viewBox="0 0 32 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M0 9V27C0 28.625 1.375 30 3 30H6V6H3C1.375 6 0 7.375 0 9ZM21 0H11C9.375 0 8 1.375 8 3V30H24V3C24 1.375 22.625 0 21 0ZM21 6H11V3H21V6ZM29 6H26V30H29C30.625 30 32 28.625 32 27V9C32 7.375 30.625 6 29 6Z" fill="#1890FF" />
                             </svg>
-                            <h3>Get your business online</h3>
+                            <h3 className='h3Style'>Get your business online</h3>
 
-                            <p style={{ width: '55%' }}>Give your brand a home with a custom domain. Then launch a website to sell products
+                            <p style={{ width: '55%' }} className='pStyle'>Give your brand a home with a custom domain. Then launch a website to sell products
                                 or take appointments, all with built-in marketing tools to help you boost sales and find fans.</p>
                         </div>
                     </Col>

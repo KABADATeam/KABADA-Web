@@ -1,4 +1,4 @@
-h1{
+.h1Style{
     width: 79%;
     height: 128px;
     /* font-family: "SF Pro Text"; */
@@ -15,7 +15,7 @@ h1{
     height: 389px;
     background: #C4C4C4;
 }
-p{
+.pStyle{
 width: 80%;
 height: 56px;
 font-family: SF Pro Text;
@@ -46,7 +46,7 @@ color: #8C8C8C;
     color: #262626;
 }
 
-h2{
+.h2Style{
     font-style: normal;
 font-weight: 600;
 font-size: 38px;
@@ -54,7 +54,7 @@ line-height: 46px;
 color: #262626;
 }
 
-h3{
+.h3Style{
     font-style: normal;
     font-weight: 600;
     font-size: 16px;
