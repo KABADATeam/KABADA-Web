@@ -78,7 +78,7 @@ class CashFlow extends React.Component {
 
         const renderContent = (value, row, index) => {
             const obj = {
-                children: <p style={{ marginBottom: 0 }}>{value}</p>,
+                children: <p style={{ marginBottom: 0, float: 'right' }}>{value}</p>,
                 props: {
                     style: { fontWeight: 600, fontSize: '14px', background: (parseInt(value) < 0) ? "#FFCCC7" : '', marginBottom: 0 },
                 }
@@ -215,7 +215,7 @@ class CashFlow extends React.Component {
                                 dataSource={data}
                                 pagination={false}
                                 bordered
-                                scroll={{ x: 'calc(700px + 50%)' }}
+                                scroll={{ x: 'max-content' }} //'calc(700px + 50%)'
                                 sticky
                                 showHeader
                             />
