@@ -35,7 +35,6 @@ class TooltipComponent extends Component {
                     </>
                 )
             } else if (type === 'text' && title.tooltip === null) {
-                console.log('nera tooltip')
                 return (
                     <>
                         <Tooltip title="Tooltip">

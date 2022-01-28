@@ -6,6 +6,8 @@ export const refreshPlan = (planId, callback) => {
             const token = getState().user.access_token;
             const [response] = await Promise.all([kabadaAPI.get("api/plans", { headers: { Authorization: `Bearer ${token}` } })]);
             dispatch({ type: "FETCHING_PLANS_SUCCESS", payload: response.data.privateBusinessPlans.businessPlan });
+            const response_tooltip = await kabadaAPI.get('api/Technical/tooltips', { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: "FETCHING_TOOLTIPS_SUCCESS", payload: response_tooltip.data});
             const plan = getState().personalBusinessPlans.find(x => x.id === planId);
             const response_nace = await kabadaAPI.get('/api/nace/wood');
             dispatch({ type: 'FETCHING_NACE_SUCCESS', payload: response_nace.data });
