@@ -15,10 +15,8 @@ export const refreshPlan = (planId, callback) => {
             const response_languages = await kabadaAPI.get('api/languages');
             dispatch({ type: 'PLAN_LANGUAGES_FETCH_SUCCESS', payload: response_languages.data }); 
             const plan = getState().personalBusinessPlans.find(x => x.id === planId);
-            console.log(plan);
             dispatch({ type: 'FETCHING_SELECTED_PLAN_SUCCESS', payload: plan });
             const response_plan_details = await kabadaAPI.post("api/plans/fetch", { "Id": planId }, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response_plan_details.data);
             dispatch({ type: "FETCHING_SELECTED_PLAN_DETAILS_SUCCESS", payload: response_plan_details.data });
             const response2 = await kabadaAPI.get("api/files/" + plan.planImage, { headers: { Authorization: `Bearer ${token}` }, responseType: 'arraybuffer' });
             dispatch({ type: "UPDATING_SELECTED_PLAN_SUCCESS", payload: { ...plan, coverImage: getURL(response2.data) } });

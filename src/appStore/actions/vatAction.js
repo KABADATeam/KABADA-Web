@@ -1,14 +1,14 @@
 import kabadaAPI from './kabadaAPI';
 import { errorHandler } from './errorHandler';
 
-export const getCountryVats = (countryCode) => {
+export const getCountryVats = (countryCode, callback) => {
     return async(dispatch, getState) =>{
         dispatch({ type: "LOADING", payload: true });
-        dispatch({ type: 'RESET_VAT', payload: true });
         try{
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/cost/vat/'+countryCode, {headers: {Authorization: `Bearer ${token}` }});
             dispatch({ type: "FETCHING_COUNTRY_VAT_SUCCESS", payload: response.data });
+            callback();
         }catch(error){
             if(error.response === undefined){
                 dispatch({

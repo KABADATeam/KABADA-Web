@@ -2,19 +2,16 @@ import kabadaAPI from './kabadaAPI';
 import { errorHandler } from './errorHandler';
 
 
-export const getAssets = (planId, callback) => {
+export const getAssets = (planId) => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
-        dispatch({ type: "RESET_VAT", payload: null})
         dispatch({ type: "RESET_ASSETS", payload: null})
         try {
             const token = getState().user.access_token;
             const defaultVATValue = getState().vat.defaultVAT;
+            console.log(defaultVATValue);
             const response = await kabadaAPI.get('api/kres/assets/' + planId, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: "FETCHING_ASSETS_SUCCESS", payload: {data: response.data, defaultVAT: defaultVATValue} });
-            if (callback !== null) {
-                callback();
-            }
         } catch (error) {
             if (error.response === undefined) {
                 dispatch({
@@ -42,6 +39,7 @@ export const saveChanges = (planId, callback) => {
                 investment_amount: updates.investment_amount,
                 physical_assets: updates.physical_assets_updated
             }
+            console.log(postObject);
             await kabadaAPI.post('/api/kres/assets/save', postObject, { headers: { Authorization: `Bearer ${token}` } })
             if (callback !== null) {
                 callback();

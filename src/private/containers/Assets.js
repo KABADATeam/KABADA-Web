@@ -83,43 +83,47 @@ class AssetsWindow extends React.Component {
     }
     saveChanges = () => {
         this.props.saveChanges(this.props.businessPlan.id, () => {
-            const obj = { id: this.props.businessPlan.id }
-            this.props.getCountryShortCode(obj, (data) => {
-                this.props.getCountryVats(this.props.countryCode.countryShortCode);
+            this.props.getCountryVats(this.props.businessPlan.countryShortCode, () => {
+                this.props.getAssets(this.props.businessPlan.id);
             });
-            this.props.getAssets(this.props.businessPlan.id);
         });
     }
     discardChanges = () => {
         this.props.discardChanges();
     }
     componentDidMount() {
-        if(Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null){
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
             if (this.props.businessPlan.id === null) {
                 if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
                     this.props.history.push(`/`);
                 } else {
                     this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                        this.props.getAssets(this.props.businessPlan.id, () => {
-                            this.props.getCountryVats(this.props.businessPlan.countryShortCode);
-                        });  
+                        console.log(this.props.businessPlan.countryShortCode);
+                        this.props.getCountryVats(this.props.businessPlan.countryShortCode, () => {
+                            this.props.getAssets(this.props.businessPlan.id);
+                        });
+                        //this.props.getAssets(this.props.businessPlan.id);
                     });
-    
                 }
             } else {
-                console.log('not refresh')
-                this.props.getAssets(this.props.businessPlan.id, () => {
-                    this.props.getCountryVats(this.props.businessPlan.countryShortCode);
+                console.log(this.props.businessPlan.countryShortCode);
+                // this.props.getCountryVats(this.props.businessPlan.countryShortCode);
+                // this.props.getAssets(this.props.businessPlan.id);
+                this.props.getCountryVats(this.props.businessPlan.countryShortCode, () => {
+                    this.props.getAssets(this.props.businessPlan.id);
                 });
             }
-        }else{
+        } else {
             this.props.logout()
             this.props.history.push('/login')
         }
-    
+
     }
 
     render() {
+        console.log(this.props.assets)
+        console.log(this.props.vat);
+        console.log(this.props.businessPlan.countryShortCode);
         const isVisibleHeader = this.getUpdatesWindowState();
         const vatOptions = this.props.vat.vat.map((v, index) => (
             <Option value={v.vatValue} key={index}>{v.vatValue + "%"}</Option>
@@ -238,11 +242,11 @@ class AssetsWindow extends React.Component {
                         </Col>
                         <Col span={20} offset={2}>
                             <Col span={24} >
-                                <Row style={{ marginTop: "50.5px",marginBottom: "50px" }}>
+                                <Row style={{ marginTop: "50.5px", marginBottom: "50px" }}>
                                     <Col span={8}>
                                         <div style={{ marginRight: '40px' }}>
                                             <Typography.Title style={{ ...aboutTitleTextStyle }}>Assets</Typography.Title>
-                                            <TextHelper code="assetshelp" type="lefttext"/>
+                                            <TextHelper code="assetshelp" type="lefttext" />
                                         </div>
                                     </Col>
                                     <Col span={16}>
@@ -321,4 +325,4 @@ const mapStateToProps = (state) => {
         assets: state.assets,
     };
 }
-export default connect(mapStateToProps, { refreshPlan,logout, getAssets, saveChanges, discardChanges, getCountryShortCode, getCountryVats, saveState, getSelectedPlanOverview, updateAssetsItemVat, updateAssetsItemAmount })(AssetsWindow);
+export default connect(mapStateToProps, { refreshPlan, logout, getAssets, saveChanges, discardChanges, getCountryShortCode, getCountryVats, saveState, getSelectedPlanOverview, updateAssetsItemVat, updateAssetsItemAmount })(AssetsWindow);
