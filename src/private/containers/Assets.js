@@ -100,31 +100,26 @@ class AssetsWindow extends React.Component {
                     this.props.history.push(`/`);
                 } else {
                     this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                        const obj = { id: this.props.businessPlan.id }
-                        this.props.getCountryShortCode(obj, (data) => {
-                            this.props.getCountryVats(this.props.countryCode.countryShortCode);
-                        });
-                        this.props.getAssets(this.props.businessPlan.id);
-    
+                        this.props.getAssets(this.props.businessPlan.id, () => {
+                            this.props.getCountryVats(this.props.businessPlan.countryShortCode);
+                        });  
                     });
     
                 }
             } else {
-                const obj = { id: this.props.businessPlan.id }
-                this.props.getCountryShortCode(obj, (data) => {
-                    this.props.getCountryVats(this.props.countryCode.countryShortCode);
+                console.log('not refresh')
+                this.props.getAssets(this.props.businessPlan.id, () => {
+                    this.props.getCountryVats(this.props.businessPlan.countryShortCode);
                 });
-                this.props.getAssets(this.props.businessPlan.id)
             }
         }else{
             this.props.logout()
             this.props.history.push('/login')
         }
-        
+    
     }
 
     render() {
-        const data = this.props.assets.physical_assets;
         const isVisibleHeader = this.getUpdatesWindowState();
         const vatOptions = this.props.vat.vat.map((v, index) => (
             <Option value={v.vatValue} key={index}>{v.vatValue + "%"}</Option>
