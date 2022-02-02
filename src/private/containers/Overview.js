@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar, Dropdown, Menu, message, Popconfirm, Collapse, Tooltip, Steps, Divider, Input } from 'antd';
-import { ArrowLeftOutlined, InfoCircleFilled, PlusSquareOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, InfoCircleFilled, PlusSquareOutlined, EllipsisOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { discardChanges, saveChanges } from "../../appStore/actions/swotAction";
@@ -23,6 +23,7 @@ import html2canvas from 'html2canvas';
 import TooltipComponent from '../components/Tooltip';
 import TextHelper from '../components/TextHelper';
 import Cookies from 'js-cookie';
+import EditBusinessPlanItem from '../components/overview/EditBusinessPlanItem';
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
@@ -431,7 +432,13 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
-                                                <div style={{ marginRight: '28px' }}>...</div>
+                                                {/* DROPDOWN FOR EDIT VALUE PROPOSITIONS */}
+                                                <div style={{ marginRight: '28px' }}>
+                                                    <EditBusinessPlanItem link={'/value-propositions'}
+                                                        isCompleted={this.props.businessPlan.overview.value_proposition.is_completed}
+                                                    />
+                                                </div>
+
                                             </List.Item>
                                             <List.Item key='3'>
                                                 <List.Item.Meta
@@ -450,7 +457,11 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
-                                                <div style={{ marginRight: '28px' }}>...</div>
+                                                <div style={{ marginRight: '28px' }}>
+                                                    <EditBusinessPlanItem link={'/customer-segments'}
+                                                        isCompleted={this.props.businessPlan.overview.customer_segments.is_completed}
+                                                    />
+                                                </div>
                                             </List.Item>
                                             <List.Item key='4'>
                                                 <List.Item.Meta
@@ -469,7 +480,11 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
-                                                <div style={{ marginRight: '28px' }}>...</div>
+                                                <div style={{ marginRight: '28px' }}>
+                                                    <EditBusinessPlanItem link={'/channels'}
+                                                        isCompleted={this.props.businessPlan.overview.channels.is_completed}
+                                                    />
+                                                </div>
                                             </List.Item>
                                             <List.Item key='5'>
                                                 <List.Item.Meta
@@ -488,7 +503,11 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
-                                                <div style={{ marginRight: '28px' }}>...</div>
+                                                <div style={{ marginRight: '28px' }}>
+                                                    <EditBusinessPlanItem link={'/customer-relationships'}
+                                                        isCompleted={this.props.businessPlan.overview.customer_relationship.is_completed}
+                                                    />
+                                                </div>
                                             </List.Item>
                                             <List.Item key='6'>
                                                 <List.Item.Meta
@@ -507,7 +526,11 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
-                                                <div style={{ marginRight: '28px' }}>...</div>
+                                                <div style={{ marginRight: '28px' }}>
+                                                    <EditBusinessPlanItem link={'/revenue-streams'}
+                                                        isCompleted={this.props.businessPlan.overview.revenue_streams.is_completed}
+                                                    />
+                                                </div>
                                             </List.Item>
                                             <List.Item key='7'>
                                                 <List.Item.Meta
@@ -526,7 +549,11 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
-                                                <div style={{ marginRight: '28px' }}>...</div>
+                                                <div style={{ marginRight: '28px' }}>
+                                                    <EditBusinessPlanItem link={'/key-resources'}
+                                                        isCompleted={this.props.businessPlan.overview.key_resources.is_completed}
+                                                    />
+                                                </div>
                                             </List.Item>
                                             <List.Item key='8'>
                                                 <List.Item.Meta
@@ -545,7 +572,11 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
-                                                <div style={{ marginRight: '28px' }}>...</div>
+                                                <div style={{ marginRight: '28px' }}>
+                                                    <EditBusinessPlanItem link={'/key-activities'}
+                                                        isCompleted={this.props.businessPlan.overview.key_activities.is_completed}
+                                                    />
+                                                </div>
                                             </List.Item>
                                             <List.Item key='9'>
                                                 <List.Item.Meta
@@ -564,7 +595,11 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
-                                                <div style={{ marginRight: '28px' }}>...</div>
+                                                <div style={{ marginRight: '28px' }}>
+                                                    <EditBusinessPlanItem link={'/key-partners'}
+                                                        isCompleted={this.props.businessPlan.overview.key_partners.is_completed}
+                                                    />
+                                                </div>
                                             </List.Item>
                                             <List.Item key='10'>
                                                 <List.Item.Meta
@@ -583,7 +618,11 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
-                                                <div style={{ marginRight: '28px' }}>...</div>
+                                                <div style={{ marginRight: '28px' }}>
+                                                    <EditBusinessPlanItem link={'/cost-structure'}
+                                                        isCompleted={this.props.businessPlan.overview.cost_structure.is_completed}
+                                                    />
+                                                </div>
                                             </List.Item>
                                         </List>
                                         <List itemLayout='horizontal' style={{ marginTop: '16px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
@@ -607,7 +646,11 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
-                                                <div style={{ marginRight: '28px' }}>...</div>
+                                                <div style={{ marginRight: '28px' }}>
+                                                    <EditBusinessPlanItem link={'/swot'}
+                                                        isCompleted={this.props.businessPlan.overview.swot.is_completed}
+                                                    />
+                                                </div>
                                             </List.Item>
                                         </List>
                                         <List
@@ -635,7 +678,9 @@ class Overview extends React.Component {
                                                                 </Col>
                                                                 <Col span={12}>
                                                                     <div style={{ ...financialTitleButtonPositionStyle, marginRight: '8px' }}>
-                                                                        <Text>...</Text>
+                                                                        <EditBusinessPlanItem link={'/assets'}
+                                                                            isCompleted={this.props.businessPlan.overview.assets.is_completed}
+                                                                        />
                                                                     </div>
                                                                 </Col>
                                                             </Row>
@@ -658,7 +703,9 @@ class Overview extends React.Component {
                                                                 </Col>
                                                                 <Col span={12}>
                                                                     <div style={{ ...financialTitleButtonPositionStyle, marginRight: '8px' }}>
-                                                                        <Text>...</Text>
+                                                                        <EditBusinessPlanItem link={'/fixed-and-variable-costs'}
+                                                                            isCompleted={this.props.businessPlan.overview.fixed_and_variables_costs.is_completed}
+                                                                        />
                                                                     </div>
                                                                 </Col>
                                                             </Row>
@@ -681,7 +728,9 @@ class Overview extends React.Component {
                                                                 </Col>
                                                                 <Col span={12}>
                                                                     <div style={{ ...financialTitleButtonPositionStyle, marginRight: '8px' }}>
-                                                                        <Text>...</Text>
+                                                                        <EditBusinessPlanItem link={'/sales-forecast'}
+                                                                            isCompleted={this.props.businessPlan.overview.sales_forecast.is_completed}
+                                                                        />
                                                                     </div>
                                                                 </Col>
                                                             </Row>
@@ -704,7 +753,9 @@ class Overview extends React.Component {
                                                                 </Col>
                                                                 <Col span={12}>
                                                                     <div style={{ ...financialTitleButtonPositionStyle, marginRight: '8px' }}>
-                                                                        <Text>...</Text>
+                                                                        <EditBusinessPlanItem link={'/business-start-up-investments'}
+                                                                            isCompleted={this.props.businessPlan.overview.business_start_up_investments.is_completed}
+                                                                        />
                                                                     </div>
                                                                 </Col>
                                                             </Row>
@@ -756,7 +807,11 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
-                                                <div style={{ marginRight: '28px' }}>...</div>
+                                                <div style={{ marginRight: '28px' }}>
+                                                    <EditBusinessPlanItem link={'/personal-characteristics'}
+                                                        isCompleted={this.props.businessPlan.overview.personal_characteristics.is_completed}
+                                                    />
+                                                </div>
                                             </List.Item>
                                         </List>
 
