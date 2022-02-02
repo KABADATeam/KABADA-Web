@@ -135,7 +135,7 @@ class SiteHeader extends React.Component {
                     </Col>
                     <Col span={10} offset={2} style={{ marginTop: '60px' }}>
                         <h2>Who is this tool for?</h2>
-                        <p>Bring your audience data, marketing channels, and insights together so you can reach your goals faster—all from a single platform.</p>
+                        <p className='pStyle'>Bring your audience data, marketing channels, and insights together so you can reach your goals faster—all from a single platform.</p>
                     </Col>
 
                     <Col span={10} style={{ marginTop: '60px', marginBottom: '115px' }} >
