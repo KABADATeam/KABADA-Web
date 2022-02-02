@@ -60,6 +60,23 @@ const canvasElementTextStyle = {
     lineHeight: "22px",
     color: '#262626'
 }
+const financialAvatarStyle = {
+    width: "24px",
+    height: "24px",
+    marginTop: "0px"
+}
+
+const financialTitlePositionStyle = {
+    float: 'left',
+    display: 'inline-flex',
+    alignItems: 'center'
+}
+
+const financialTitleButtonPositionStyle = {
+    float: 'right',
+    display: 'inline-flex',
+    alignItems: 'center'
+}
 
 class PublicOverview extends React.Component {
 
@@ -362,29 +379,113 @@ class PublicOverview extends React.Component {
                                                 />
                                             </List.Item>
                                         </List>
-                                        <Card style={{ marginTop: '10px' }}>
-                                            <List>
-                                                <List.Item key='10' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                    <List.Item.Meta
-                                                        avatar={false === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
-                                                        title="Financial projections"
-                                                        description="Description goes here" />
-                                                    <div>...</div>
-                                                </List.Item>
-                                            </List>
-                                        </Card>
-                                        <Card style={{ marginTop: '10px' }}>
-                                            <List >
-                                                <List.Item key='12' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                    <List.Item.Meta
-                                                        avatar={false === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
-                                                        title="Team and competencies"
-                                                        description="Description goes here" />
-                                                    <div>...</div>
-                                                </List.Item>
-                                            </List>
-                                        </Card>
 
+                                        <List
+                                            header={
+                                                <>
+                                                    <Text style={{ ...pageTitleTextStyle, marginLeft: '20px' }}>
+                                                        Financial projections
+                                                    </Text>
+                                                    <TooltipComponent code="ovmbp2" type="text" />
+                                                </>}
+                                            style={{ marginTop: '16px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}
+                                        >
+                                            <List.Item key='12'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    description={
+                                                        <div>
+                                                            <Row>
+                                                                <Col span={1}>
+                                                                    {this.props.businessPlan.assets_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
+                                                                </Col>
+                                                                <Col span={11}>
+                                                                    <div style={{ ...financialTitlePositionStyle }}>
+                                                                        <Link to='/public/assets' style={canvasElementTextStyle}>Assets</Link>
+                                                                    </div>
+                                                                </Col>                                
+                                                            </Row>
+                                                        </div>}
+                                                />
+                                            </List.Item>
+                                            <List.Item key='13'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    description={
+                                                        <div>
+                                                            <Row>
+                                                                <Col span={1}>
+                                                                    {this.props.businessPlan.fixed_and_variables_costs_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
+                                                                </Col>
+                                                                <Col span={11}>
+                                                                    <div style={{ ...financialTitlePositionStyle }}>
+                                                                        <Link to="/public/fixed-and-variable-costs" style={canvasElementTextStyle}>Fixed and Variable Costs</Link>
+                                                                    </div>
+                                                                </Col>
+                                                            </Row>
+                                                        </div>}
+                                                />
+                                            </List.Item>
+                                            <List.Item key='14'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    description={
+                                                        <div>
+                                                            <Row>
+                                                                <Col span={1}>
+                                                                    {this.props.businessPlan.sales_forecast_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
+                                                                </Col>
+                                                                <Col span={11}>
+                                                                    <div style={{ ...financialTitlePositionStyle }}>
+                                                                        <Link to="/public/sales-forecast" style={canvasElementTextStyle}>Sales Forecast</Link>
+                                                                    </div>
+                                                                </Col>
+                                                            </Row>
+                                                        </div>}
+                                                />
+                                            </List.Item>
+                                            <List.Item key='15'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    description={
+                                                        <div>
+                                                            <Row>
+                                                                <Col span={1}>
+                                                                    {this.props.businessPlan.business_start_up_investments_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
+                                                                </Col>
+                                                                <Col span={11}>
+                                                                    <div style={{ ...financialTitlePositionStyle }}>
+                                                                        <Link to="/public/business-start-up-investments" style={canvasElementTextStyle}>Business start-up investments</Link>
+                                                                    </div>
+                                                                </Col>
+                                                            </Row>
+                                                        </div>}
+                                                />
+                                            </List.Item>
+                                            <List.Item key='16'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    description={
+                                                        <div>
+                                                            <Row>
+                                                                <Col span={1}>
+                                                                    {this.props.businessPlan.assets_state === true && this.props.businessPlan.fixed_and_variables_costs_state === true && this.props.businessPlan.sales_forecast_state === true && this.props.businessPlan.business_start_up_investments_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
+                                                                </Col>
+                                                                <Col span={11}>
+                                                                    <div style={{ ...financialTitlePositionStyle }}>
+                                                                        <Link to="/public/cash-flow" style={canvasElementTextStyle}>Cash Flow</Link>
+                                                                    </div>
+                                                                </Col>
+                                                                <Col span={12}>
+                                                                    <div style={{ ...financialTitleButtonPositionStyle, marginRight: '0px' }}>
+                                                                        <Button style={{ borderRadius: '4px' }}><Link to="/public/cash-flow" style={canvasElementTextStyle}>See cash flow</Link></Button>
+                                                                    </div>
+                                                                </Col>
+                                                            </Row>
+                                                        </div>}
+                                                />
+                                            </List.Item>
+                                        </List>
                                     </Col>
                                     <Col span={6}>
                                         {image}
