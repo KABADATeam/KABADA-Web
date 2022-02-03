@@ -163,14 +163,14 @@ class ValuePropositions extends React.Component {
                     </Col>
 
                     <Row align="middle" style={{ marginTop: "9px", marginBottom: "25px" }}>
-                        <Col span={14} offset={2}>
+                        <Col span={12} offset={2}>
                             <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                                 <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                                 <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Value propositions</Text>
                                 <TooltipComponent code="vp1" type="title"/>
                             </div>
                         </Col>
-                        <Col span={6}>
+                        <Col span={8}>
                             <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                                 <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed </Text><Switch checked={this.props.products.is_proposition_completed} onClick={this.onCompleteChange.bind(this)} />
                                 <Button style={{ ...buttonStyle, marginLeft: "32px" }} disabled={keyProductsCount >= 3 ? true : false} size="large" type="primary" onClick={this.addKeyProduct.bind(this)}>Add key product</Button>

@@ -10,7 +10,8 @@ import EditPublicBodiesSegmentModal from '../components/EditPublicBodiesSegmentM
 import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getCustomerSegmentProperties, getCustomerSegments, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState } from "../../../appStore/actions/customerSegmentAction";
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
-
+import TooltipComponent from '../../components/Tooltip';
+import TextHelper from '../../components/TextHelper';
 const { Text } = Typography;
 
 const titleTextStyle = {
@@ -62,24 +63,6 @@ class PublicCustomerSegments extends React.Component {
         this.props.history.push(`/public/overview`);
     }
 
-    onAddConsumerSegment = () => {
-        this.setState({
-            consumerSegment: true
-        });
-    }
-
-    onAddBusinessSegment = () => {
-        this.setState({
-            businessSegment: true
-        });
-    }
-
-    onAddPublicBodiesSegment = () => {
-        this.setState({
-            publicBodiesSegment: true
-        });
-    }
-
     onCloseAddSegmentModal = () => {
         this.setState({
             consumerSegment: null,
@@ -98,18 +81,6 @@ class PublicCustomerSegments extends React.Component {
             item: null
         });
     };
-
-    onDeleteConsumerSegment(item) {
-        this.props.deleteConsumerSegment({ "id": item.id });
-    }
-
-    onDeleteBusinessSegment(item) {
-        this.props.deleteBusinessSegment({ "id": item.id });
-    }
-
-    onDeletePublicBodiesSegment(item) {
-        this.props.deleteNgoSegment({ "id": item.id });
-    }
 
     onEditConsumerSegment(item) {
         this.setState({
@@ -132,12 +103,6 @@ class PublicCustomerSegments extends React.Component {
         });
     }
 
-    onCompletedChange(state) {
-        this.props.saveState(this.props.businessPlan.id, state, () => {
-            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-        });
-    }
-
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
             if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
@@ -157,32 +122,30 @@ class PublicCustomerSegments extends React.Component {
     render() {
         const consumersSegmentsColumns = [
             {
+                title: "Name",
+                dataIndex: "segment_name",
+                width: '28.5%'
+            },
+            {
                 title: 'Age group',
                 dataIndex: 'age_titles',
                 key: 'age_titles',
-                width: '25%',
+                width: '24.5%',
             },
             {
                 title: 'Gender',
                 dataIndex: 'gender_titles',
                 key: 'gender_titles',
-                width: '20%',
-            },
-            {
-                title: 'Geographic Location',
-                dataIndex: 'location_titles',
-                key: 'location_titles',
-                width: '45%',
+                width: '24.5%',
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '22.5%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditConsumerSegment.bind(this, record)} >View</Button>
-
                     </Space>
                 ),
             }
@@ -190,30 +153,29 @@ class PublicCustomerSegments extends React.Component {
 
         const businessSegmentsColumns = [
             {
+                title: "Name",
+                dataIndex: "segment_name",
+                width: '28.5%'
+            },
+            {
                 title: 'Type',
                 dataIndex: 'business_type_titles',
                 key: 'business_type_titles',
-                width: '25%',
+                width: '24.5%',
             },
             {
                 title: 'Size',
                 dataIndex: 'company_size_titles',
                 key: 'company_size_titles',
-                width: '20%',
-            },
-            {
-                title: 'Revenue',
-                dataIndex: 'annual_revenue',
-                key: 'annual_revenue',
-                width: '45%',
+                width: '24.5%',
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '22.5%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditBusinessSegment.bind(this, record)} >View</Button>
 
                     </Space>
@@ -223,18 +185,23 @@ class PublicCustomerSegments extends React.Component {
 
         const publicBodiesNgoSegmentsColumns = [
             {
+                title: "Name",
+                dataIndex: "segment_name",
+                width: '28.5%'
+            },
+            {
                 title: 'Type',
                 dataIndex: 'ngo_types_titles',
                 key: 'ngo_types_titles',
-                width: '90%',
+                width: '24.5%',
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '47%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditPublicBodiesSegment.bind(this, record)} >View</Button>
                     </Space>
                 ),
@@ -243,7 +210,7 @@ class PublicCustomerSegments extends React.Component {
 
         return (
             <>
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
                             <Space><Link to='/public-business-plans'>Public Business plans</Link></Space>
@@ -258,41 +225,29 @@ class PublicCustomerSegments extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col span={12} offset={4}>
+                    <Col span={12} offset={2}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Customer segments</Text>
-                            <Tooltip title="Tooltip text">
-                                <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
-                            </Tooltip>
+                            <TooltipComponent code="custsegm" type="title" />
                         </div>
                     </Col>
-                    {/*  <Col span={4}>
-                        <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.customerSegments.is_customer_segments_completed} onClick={this.onCompletedChange.bind(this)} />
-                        </div>
-                    </Col> */}
                 </Row>
 
 
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Divider />
                 </Col>
 
-                <Col offset={4} span={16}>
+                <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Consumers</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    You are creating several customer segments.
-                                    <br /><br />
-                                    I am alone, and feel the charm of existence in this spot, which was created for the bliss of souls like mine. I am so happy, my dear friend, so absorbed in the exquisite sense of mere tranquil existence, that I neglect my talents.
-                                </Typography.Text>
+                                <TextHelper code="custsegconsumers" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                        <Col span={16}>
                                 <Table
                                     title={() => <>
                                         <Typography style={{ ...tableTitleStyle }}>Consumers segments</Typography>
@@ -305,23 +260,17 @@ class PublicCustomerSegments extends React.Component {
                                     pagination={false}
                                 // footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddConsumerSegment.bind(this)}><PlusOutlined />Add segment</Button></Space>)}
                                 />
-                            </Card >
                         </Col>
                     </Row>
                     <Divider />
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Business</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    You are creating several customer segments.
-                                    <br /><br />
-                                    I am alone, and feel the charm of existence in this spot, which was created for the bliss of souls like mine. I am so happy, my dear friend, so absorbed in the exquisite sense of mere tranquil existence, that I neglect my talents.
-                                </Typography.Text>
+                                <TextHelper code="custsegbusiness" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                        <Col span={16}>
                                 <Table
                                     title={() => <>
                                         <Typography style={{ ...tableTitleStyle }}>Business segments</Typography>
@@ -334,23 +283,17 @@ class PublicCustomerSegments extends React.Component {
                                     pagination={false}
                                 //footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddBusinessSegment.bind(this)}><PlusOutlined />Add segment</Button>)}
                                 />
-                            </Card >
                         </Col>
                     </Row>
                     <Divider />
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Public bodies & NGO</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    You are creating several customer segments.
-                                    <br /><br />
-                                    I am alone, and feel the charm of existence in this spot, which was created for the bliss of souls like mine. I am so happy, my dear friend, so absorbed in the exquisite sense of mere tranquil existence, that I neglect my talents.
-                                </Typography.Text>
+                                <TextHelper code="custsegpublicbodngo" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                        <Col span={16}>
                                 <Table
                                     title={() => <>
                                         <Typography style={{ ...tableTitleStyle }}>Public bodies & NGO segments</Typography>
@@ -363,7 +306,6 @@ class PublicCustomerSegments extends React.Component {
                                     pagination={false}
                                 // footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddPublicBodiesSegment.bind(this)}><PlusOutlined />Add segment</Button>)}
                                 />
-                            </Card >
                         </Col>
                     </Row>
                 </Col>

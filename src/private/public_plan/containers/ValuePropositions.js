@@ -10,6 +10,7 @@ import { getProducts, deleteProduct, saveState } from "../../../appStore/actions
 import EditProduct from "../components/EditProduct";
 import '../../../css/customTable.css';
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
+import TooltipComponent from '../../components/Tooltip';
 
 const { Text } = Typography;
 
@@ -94,33 +95,33 @@ class PublicValuePropositions extends React.Component {
                 title: 'Product name',
                 dataIndex: 'name',
                 key: 'name',
-                width: '20%',
+                width: '16.67%',
             },
             {
                 title: 'Product type',
                 dataIndex: 'product_type',
                 key: 'product_type',
-                width: '20%',
+                width: '16.67%',
             },
             {
                 title: 'Price',
                 dataIndex: 'price',
                 key: 'price',
-                width: '20%',
+                width: '16.67%',
             },
             {
                 title: 'Value',
                 dataIndex: 'value',
                 key: 'value',
-                width: '20%',
+                width: '16.67%',
             },
             {
                 title: "",
                 dataIndex: 'action',
                 key: 'action',
-                width: '20%',
+                width: '33.33%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditItem.bind(this, record)} >View</Button>
                         {/* <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.deleteItem.bind(this, record)} ><DeleteOutlined /></Button> */}
                     </Space>
@@ -138,7 +139,7 @@ class PublicValuePropositions extends React.Component {
         } else {
             return (
                 <>
-                    <Col span={16} offset={4}>
+                    <Col span={20} offset={2}>
                         <Breadcrumb style={{ marginTop: "40px" }}>
                             <Breadcrumb.Item>
                                 <Space><Link to='/public-business-plans'>Public Business plans</Link></Space>
@@ -153,22 +154,16 @@ class PublicValuePropositions extends React.Component {
                     </Col>
 
                     <Row align="middle" style={{ marginTop: "9px", marginBottom: "25px" }}>
-                        <Col span={10} offset={4}>
+                        <Col span={20} offset={2}>
                             <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                                 <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                                 <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Value propositions</Text>
-                                <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
+                                <TooltipComponent code="vp1" type="title"/>
                             </div>
                         </Col>
-                        {/* <Col span={6}>
-                            {<div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                                <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed </Text><Switch checked={this.props.products.is_proposition_completed} onClick={this.onCompleteChange.bind(this)} />
-                                <Button style={{ ...buttonStyle, marginLeft: "32px" }} disabled={keyProductsCount >= 3 ? true : false} size="large" type="primary" onClick={this.addKeyProduct.bind(this)}>Add key product</Button>
-                            </div>}
-                        </Col> */}
                     </Row>
 
-                    <Col span={16} offset={4}>
+                    <Col span={20} offset={2}>
                         {keyProductsCount === 0 ?
                             (
                                 <Row style={{ marginBottom: "50px" }} justify="center">
@@ -191,7 +186,7 @@ class PublicValuePropositions extends React.Component {
                                             dataSource={data}
                                             columns={valuePropositionsColumns}
                                             pagination={false}
-                                            footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Text>Maximum products: {keyProductsCount}/3 <InfoCircleFilled style={{ fontSize: '16px', color: '#BFBFBF', marginLeft: '5px' }} /></Text></Space>)}
+                                            footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Text>Maximum products: {keyProductsCount}/3 <TooltipComponent code="vp2" type="text"/></Text></Space>)}
                                         />
                                     </Col>
                                 </Row>

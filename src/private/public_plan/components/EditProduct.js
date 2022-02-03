@@ -10,6 +10,7 @@ import { cardStyle, tableCardBodyStyle, buttonStyle } from '../../../styles/cust
 import EditProductInfoComponent from './EditProductInfoComponent';
 import EditPriceLevelComponent from './EditPriceLevelComponent';
 import EditProductFeaturesComponent from './EditProductFeaturesComponent';
+import TooltipComponent from '../../components/Tooltip'
 import { getProduct, getProductTypes, getProductPriceLevels, getAditionalIncomeSources, getProductFeatures, updateProduct, getInnovativeLevels, getQualityLevels, getDifferentiationLevels, discardChanges } from "../../../appStore/actions/productActions";
 
 const { Text } = Typography;
@@ -193,12 +194,7 @@ class EditProduct extends React.Component {
 
         return (
             <>
-                <UnsavedChangesHeader
-                    visibility={isVisibleHeader}
-                    discardChanges={this.discardChanges}
-                    onCancel={this.onCancel}
-                    saveChanges={this.saveChanges}
-                />
+
                 <Col span={16} offset={4}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
@@ -221,7 +217,6 @@ class EditProduct extends React.Component {
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Edit Product</Text>
-                            <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
                         </div>
                     </Col>
                 </Row>

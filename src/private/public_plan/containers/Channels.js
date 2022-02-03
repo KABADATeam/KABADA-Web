@@ -10,6 +10,8 @@ import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getChannelTypes, getChannels, deleteChannel, saveState } from "../../../appStore/actions/channelActions";
 import { getProducts } from "../../../appStore/actions/productActions";
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
+import TooltipComponent from "../../components/Tooltip";
+import TextHelper from '../../components/TextHelper';
 
 const { Text } = Typography;
 
@@ -135,27 +137,27 @@ class PublicChannels extends React.Component {
                 title: 'Channels',
                 dataIndex: 'channel_name',
                 key: 'channel_name',
-                width: '25%',
+                width: '24.5%',
             },
             {
                 title: 'Distribution channel',
                 dataIndex: 'distribution_name',
                 key: 'distribution_name',
-                width: '30%',
+                width: '25.2%',
             },
             {
                 title: 'Product',
                 dataIndex: 'product_name',
                 key: 'product_name',
-                width: '35%',
+                width: '31%',
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.3%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditChannel.bind(this, record)} >View</Button>
                         {/* <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteChannel.bind(this, record)} ><DeleteOutlined /></Button> */}
                     </Space>
@@ -165,7 +167,7 @@ class PublicChannels extends React.Component {
 
         return (
             <>
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
                             <Space><Link to='/public-business-plans'>Public Business plans</Link></Space>
@@ -180,13 +182,11 @@ class PublicChannels extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col span={12} offset={4}>
+                    <Col span={16} offset={2}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Channels</Text>
-                            <Tooltip title="Tooltip text">
-                                <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
-                            </Tooltip>
+                            <TooltipComponent code="channel" type="title" />
                         </div>
                     </Col>
                     {/* <Col span={4}>
@@ -197,33 +197,29 @@ class PublicChannels extends React.Component {
                 </Row>
 
 
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Divider />
                 </Col>
 
-                <Col offset={4} span={16}>
+                <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Channels</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Some - few sentences long description.
-                                </Typography.Text>
+                                <TextHelper code="channelhelp" type="lefttext" />
                             </div>
                         </Col>
-                        <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Table
-                                    title={() =>
-                                        <>
-                                            <Typography style={{ ...tableTitleStyle }}>Channels</Typography>
-                                        </>}
-                                    dataSource={data}
-                                    columns={channelsColumns}
-                                    pagination={false}
-                                //footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddChannel.bind(this)}><PlusOutlined />Add Channel</Button></Space>)}
-                                />
-                            </Card >
+                        <Col span={16}>
+                            <Table
+                                title={() =>
+                                    <>
+                                        <Typography style={{ ...tableTitleStyle }}>Channels</Typography>
+                                    </>}
+                                dataSource={data}
+                                columns={channelsColumns}
+                                pagination={false}
+                            //footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddChannel.bind(this)}><PlusOutlined />Add Channel</Button></Space>)}
+                            />
                         </Col>
                     </Row>
                 </Col>

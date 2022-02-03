@@ -9,7 +9,8 @@ import EditKeyResourceModal from "../../public_plan/components/EditKeyResourceMo
 import { getResourcesList, getResourcesCategoriesList, deleteItem, saveEditable, saveChanges } from "../../../appStore/actions/resourcesAction";
 import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
-
+import TooltipComponent from "../../components/Tooltip";
+import TextHelper from '../../components/TextHelper';
 const { Text } = Typography;
 
 const titleTextStyle = {
@@ -59,39 +60,12 @@ class PublicKeyResources extends React.Component {
         this.props.history.push(`/public/overview`);
     }
 
-    onCompletedChange(state) {
-        this.props.saveChanges(this.props.businessPlan.id, state, () => {
-            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-        });
-    }
-
-    onAddNewItem = () => {
-        this.setState({
-            is_categories_modal_visible: true
-        });
-    }
-
-    onOpenCategoriesModal = () => {
-        this.setState({
-            is_categories_modal_visible: true
-        });
-    };
-
-    onCloseNewItemModal = () => {
-        this.setState({
-            is_categories_modal_visible: false
-        });
-    };
-
     onCloseEditItemModal = () => {
         this.setState({
             is_edit_resource_modal_visible: false
         });
     };
 
-    onDeleteItem(item) {
-        this.props.deleteItem(item.resource_id);
-    }
 
     onEditItem(item) {
         this.props.saveEditable(item);
@@ -124,37 +98,36 @@ class PublicKeyResources extends React.Component {
                 title: 'Type',
                 dataIndex: 'type',
                 key: 'type',
-                width: '30%',
+                width: '16.5%',
             },
             {
                 title: 'Name',
                 dataIndex: 'name',
                 key: 'name',
-                width: '30%',
+                width: '25%',
             },
             {
                 title: 'Ownership',
                 dataIndex: 'ownership',
                 key: 'ownership',
-                width: '30%',
+                width: '39%',
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditItem.bind(this, record)} >View</Button>
                     </Space>
                 ),
             }
         ];
-        console.log("sdf")
         return (
 
             <>
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
                             <Space><Link to='/public-business-plans'>Public Business plans</Link></Space>
@@ -169,50 +142,40 @@ class PublicKeyResources extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col span={12} offset={4}>
+                    <Col span={12} offset={2}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Key Resource</Text>
-                            <Tooltip title="Tooltip text">
-                                <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
-                            </Tooltip>
+                            <TooltipComponent code="keyresources" type="title" />
                         </div>
                     </Col>
                 </Row>
 
 
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Divider />
                 </Col>
 
-                <Col offset={4} span={16}>
+                <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Key resources</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    To reach the value proposition a company needs resources, these resources can be seen as the main assets to reach a company’s goal.
-                                    Different departments within companies might even require different resources.
-                                    These resources are needed to create the value proposition, to serve customer segments and to deliver the product or service to the customer.
-                                    In that way the quality of the resources has a direct impact on the client and ultimately on the revenues,
-                                    which needs to be known to create a sustainable business model.
-                                </Typography.Text>
+                                <TextHelper code='keyresourceshelp' type='lefttext' />
                             </div>
                         </Col>
-                        <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Table
-                                    title={() => <>
-                                        <Typography style={{ ...tableTitleStyle }}>Key resources</Typography>
-                                        <Typography style={{ ...tableDescriptionStyle }}>
-                                            Only state those resources that make you unique compared to your competitors in the market.
-                                        </Typography>
-                                    </>}
-                                    dataSource={data}
-                                    columns={columns}
-                                    pagination={false}
-                                />
-                            </Card >
+                        <Col span={16}>
+                            <Table
+                                title={() => <>
+                                    <Typography style={{ ...tableTitleStyle }}>Key resources</Typography>
+                                    <Typography style={{ ...tableDescriptionStyle }}>
+                                        Only state those resources that make you unique compared to your competitors in the market.
+                                    </Typography>
+                                </>}
+                                dataSource={data}
+                                columns={columns}
+                                pagination={false}
+                            />
                         </Col>
                         <KeyResourcesCategoriesModal visibility={this.state.is_categories_modal_visible} handleClose={this.onCloseNewItemModal} handleOpen={this.onOpenCategoriesModal} />
                         <EditKeyResourceModal visibility={this.state.is_edit_resource_modal_visible} handleClose={this.onCloseEditItemModal} />

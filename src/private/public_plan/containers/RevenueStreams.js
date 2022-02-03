@@ -9,6 +9,8 @@ import EditSegmentModal from '../../public_plan/components/EditSegmentModal';
 import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getStreamTypes, getPrices, getRevenues, saveState, deleteRevenue } from "../../../appStore/actions/revenueStreamActions";
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
+import TooltipComponent from "../../components/Tooltip";
+import TextHelper from '../../components/TextHelper';
 
 const { Text } = Typography;
 
@@ -59,47 +61,11 @@ class PublicRevenueStreams extends React.Component {
         this.props.history.push(`/public/overview`);
     }
 
-    onAddFirstRevenueStream = () => {
-        this.setState({
-            segmentNumber: 1
-        });
-    }
-
-    onAddSecondRevenueStream = () => {
-        this.setState({
-            segmentNumber: 2
-        });
-    }
-
-    onAddNewOther = () => {
-        this.setState({
-            segmentNumber: 3
-        });
-    }
-
-    onCloseAddSegmentModal = () => {
-        this.setState({
-            segmentNumber: null
-        });
-    };
-
     onCloseEditSegmentModal = () => {
         this.setState({
             item: null
         });
     };
-
-    onDeleteFirstSegment(item) {
-        this.props.deleteRevenue({ "id": item.id, "segment": 1 });
-    }
-
-    onDeleteSecondSegment(item) {
-        this.props.deleteRevenue({ "id": item.id, "segment": 2 });
-    }
-
-    onDeleteOtherSegment(item) {
-        this.props.deleteRevenue({ "id": item.id, "segment": 3 });
-    }
 
     onEditFirstSegment(item) {
         this.setState({
@@ -119,11 +85,6 @@ class PublicRevenueStreams extends React.Component {
         });
     }
 
-    onCompletedChange(state) {
-        this.props.saveState(this.props.businessPlan.id, state, () => {
-            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-        });
-    }
 
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
@@ -149,27 +110,30 @@ class PublicRevenueStreams extends React.Component {
                 title: 'Type',
                 dataIndex: 'stream_type_name',
                 key: 'stream_type_name',
-                width: '25%',
+                width: '23.5%',
             },
             {
                 title: 'Prices',
                 dataIndex: 'price_category_name',
                 key: 'price_category_name',
-                width: '20%',
+                width: '15%',
             },
             {
-                title: 'Types of pricing',
-                dataIndex: 'price_type_name',
-                key: 'price_type_name',
-                width: '45%',
+                title: 'Consumers',
+                dataIndex: 'segments',
+                key: 'segments',
+                width: '42%',
+                render: (obj, record) => (
+                    <p>{record.segments + ' '}</p>
+                ),
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditFirstSegment.bind(this, record)} >View</Button>
                     </Space>
                 ),
@@ -181,27 +145,30 @@ class PublicRevenueStreams extends React.Component {
                 title: 'Type',
                 dataIndex: 'stream_type_name',
                 key: 'stream_type_name',
-                width: '25%',
+                width: '23.5%',
             },
             {
                 title: 'Prices',
                 dataIndex: 'price_category_name',
                 key: 'price_category_name',
-                width: '20%',
+                width: '15%',
             },
             {
-                title: 'Types of pricing',
+                title: 'Business',
                 dataIndex: 'price_type_name',
                 key: 'price_type_name',
-                width: '45%',
+                width: '42%',
+                render: (obj, record) => (
+                    <p>{record.segments + ' '}</p>
+                ),
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditSecondSegment.bind(this, record)} >View</Button>
                     </Space>
                 ),
@@ -213,27 +180,30 @@ class PublicRevenueStreams extends React.Component {
                 title: 'Type',
                 dataIndex: 'stream_type_name',
                 key: 'stream_type_name',
-                width: '25%',
+                width: '23.5%',
             },
             {
                 title: 'Prices',
                 dataIndex: 'price_category_name',
                 key: 'price_category_name',
-                width: '20%',
+                width: '15%',
             },
             {
-                title: 'Type of pricing',
-                dataIndex: 'price_type_name',
-                key: 'price_type_name',
-                width: '45%',
+                title: 'Public bodies & NGO',
+                dataIndex: 'segments',
+                key: 'segments',
+                width: '42%',
+                render: (obj, record) => (
+                    <p>{record.segments + ' '}</p>
+                ),
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (obj, record) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditOther.bind(this, record)} >View</Button>
                     </Space>
                 ),
@@ -242,7 +212,7 @@ class PublicRevenueStreams extends React.Component {
 
         return (
             <>
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
                             <Space><Link to='/public-business-plans'>Public Business plans</Link></Space>
@@ -257,80 +227,66 @@ class PublicRevenueStreams extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col span={12} offset={4}>
+                    <Col span={12} offset={2}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Revenue streams</Text>
-                            <Tooltip title="Tooltip text">
-                                <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
-                            </Tooltip>
+                            <TooltipComponent code="revstrem" type="title" />
                         </div>
                     </Col>
                 </Row>
 
 
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Divider />
                 </Col>
 
-                <Col offset={4} span={16}>
+                <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
-                                <Typography.Title style={{ ...aboutTitleTextStyle }}>Customer segment 1</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Plan a separate Revenue Streams for each Customer Segment as each of them may have different pricing requirements.  You can, actually  have several Revenue streams for each Segment.
-                                </Typography.Text>
+                                <Typography.Title style={{ ...aboutTitleTextStyle }}>Consumers</Typography.Title>
+                                <TextHelper code="revstreamconsumer" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Table
-                                    dataSource={this.props.revenues.segment_1}
-                                    columns={firstSegmentColumns}
-                                    pagination={false}
-                                />
-                            </Card >
+                        <Col span={16}>
+                            <Table
+                                dataSource={this.props.revenues.segment_1}
+                                columns={firstSegmentColumns}
+                                pagination={false}
+                            />
                         </Col>
                     </Row>
                     <Divider />
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
-                                <Typography.Title style={{ ...aboutTitleTextStyle }}>Customer segment 2</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Plan a separate Revenue Streams for each Customer Segment as each of them may have different pricing requirements.  You can, actually  have several Revenue streams for each Segment.
-                                </Typography.Text>
+                                <Typography.Title style={{ ...aboutTitleTextStyle }}>Business</Typography.Title>
+                                <TextHelper code="revstreambusiness" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                        <Col span={16}>
                                 <Table
                                     dataSource={this.props.revenues.segment_2}
                                     columns={secondSegmentColumns}
                                     pagination={false}
                                 />
-                            </Card >
                         </Col>
                     </Row>
                     <Divider />
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
-                                <Typography.Title style={{ ...aboutTitleTextStyle }}>Other</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.
-                                </Typography.Text>
+                                <Typography.Title style={{ ...aboutTitleTextStyle }}>Public bodies & NGO</Typography.Title>
+                                <TextHelper code="revstreampublicbodies" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                        <Col span={16}>
                                 <Table
                                     dataSource={this.props.revenues.other}
                                     columns={otherColumns}
                                     pagination={false}
                                 />
-                            </Card >
                         </Col>
                     </Row>
                 </Col>

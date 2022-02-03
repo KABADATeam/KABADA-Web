@@ -36,6 +36,8 @@ export const refreshPublicPlan = (planId, callback) => {
             dispatch({ type: "FETCHING_ALL_PLANS_SUCCESS", payload: response.data });
             const plan = getState().publicPlans.find(x => x.id === planId);
             dispatch({ type: 'FETCHING_SELECTED_PLAN_SUCCESS', payload: plan });
+            const response_plan_details = await kabadaAPI.post("api/plans/fetch", { "Id": planId }, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: "FETCHING_SELECTED_PLAN_DETAILS_SUCCESS", payload: response_plan_details.data });
         } finally {
             if (callback !== null && callback !== undefined) {
                 callback();

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tab, Tabs } from 'antd';
 import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined, RightSquareFilled } from '@ant-design/icons';
 import { connect } from 'react-redux';
-import { refreshPlan } from "../../../appStore/actions/refreshAction";
+import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import WorkingCapital from '../components/businessFinancialInvestments/WorkingCapital';
 import BusinessFinancing from '../components/businessFinancialInvestments/BusinessFinancing';
 import { getBusinessStartUpInvestmentInformation, changeVisibility, saveChanges, getNecessaryCapitalInformation, saveState, recalculateInvestment, discardChanges } from "../../../appStore/actions/businessInvestmentAction";
@@ -65,36 +65,6 @@ class BusinessInvestmentsWindow extends React.Component {
             return 'visible'
         }
     }
-    
-    saveChanges = () => {
-        if(this.props.investments.original.grace_period_short > 0){
-            console.log('OK')
-            console.log(this.props.totalNecessary);
-            this.props.recalculateInvestment(this.props.businessPlan.id, () => {
-                console.log('recalculate');
-                this.props.getNecessaryCapitalInformation(this.props.businessPlan.id);
-                this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);
-            })
-        } else {
-            console.log('First save');
-            this.props.saveChanges(this.props.businessPlan.id, () => {
-                this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);
-                this.props.getNecessaryCapitalInformation(this.props.businessPlan.id);
-            });
-        }
-        
-        
-    }
-    discardChanges = () => {
-        this.props.discardChanges(()=> {
-            this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);
-        });
-    }
-    onCompletedChange(state) {
-        this.props.saveState(this.props.businessPlan.id, state, () => {
-            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-        });
-    }
 
     componentDidMount() {
         if(Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null){
@@ -102,7 +72,7 @@ class BusinessInvestmentsWindow extends React.Component {
                 if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
                     this.props.history.push(`/`);
                 } else {
-                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                    this.props.refreshPublicPlan(localStorage.getItem("plan"), () => {
                         this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);
                         this.props.getNecessaryCapitalInformation(this.props.businessPlan.id);
                     });
@@ -173,4 +143,4 @@ const mapStateToProps = (state) => {
         totalNecessary: state.necessaryCapital,
     };
 }
-export default connect(mapStateToProps, { refreshPlan, logout,getBusinessStartUpInvestmentInformation, getCountryShortCode, changeVisibility, saveChanges, getNecessaryCapitalInformation, saveState, getSelectedPlanOverview, recalculateInvestment, discardChanges })(BusinessInvestmentsWindow);
+export default connect(mapStateToProps, { refreshPublicPlan, logout,getBusinessStartUpInvestmentInformation, getCountryShortCode, changeVisibility, saveChanges, getNecessaryCapitalInformation, saveState, getSelectedPlanOverview, recalculateInvestment, discardChanges })(BusinessInvestmentsWindow);

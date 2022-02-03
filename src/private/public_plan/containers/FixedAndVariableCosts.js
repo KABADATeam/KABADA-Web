@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Form, Select, InputNumber, Input, Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tooltip, Tabs } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled } from '@ant-design/icons';
 import VariableCostPopUp from '../components/VariableCostPopUp';
-import { refreshPlan } from "../../../appStore/actions/refreshAction";
+import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getFinancialProjectionsCosts, updateFixedAndVarCosts, saveState, updateFixedCosts, updateVariableCosts, discardChanges,setItemsForSave,getWindowsState} from '../../../appStore/actions/financialProjectionsActions';
 import { getCountryVat } from '../../../appStore/actions/vatsActions'
 import { getCountryShortCode } from '../../../appStore/actions/countriesActions'
@@ -26,16 +26,6 @@ const aboutTitleTextStyle = {
     fontSize: '20px',
     marginBottom: '16px',
 }
-
-const textStyle = {
-    fontSize: '14px',
-    color: '#8C8C8C',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    lineHeight: '22px',
-    marginRight: '40px',
-}
-
 
 const titleTextStyle = {
     fontStyle: "normal",
@@ -136,25 +126,6 @@ class FixedAndVariableCosts extends React.Component {
         });
     }
 
-
-    discardChanges = () => {
-        this.props.discardChanges();
-        this.setState({
-            visibleHeader: 'hidden'
-        });
-    }
-    saveChanges = () => {
-        // postObject for update
-        this.props.setItemsForSave(() => {
-            const postObject = {
-                business_plan_id: this.props.businessPlan.id,
-            }
-            this.props.updateFixedAndVarCosts(postObject, () => {
-                this.props.getWindowsState();
-            });
-        })
-    }
-
     monthsSet = () => {
         const months = [];
         for (var a = 1; a < 13; a++) {
@@ -196,7 +167,7 @@ class FixedAndVariableCosts extends React.Component {
                 if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
                     this.props.history.push(`/`);
                 } else {
-                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                    this.props.refreshPublicPlan(localStorage.getItem("plan"), () => {
                         this.props.getFinancialProjectionsCosts(this.props.businessPlan.id)
                         const obj = { id: this.props.businessPlan.id }
                         this.props.getCountryShortCode(obj, (data) => {
@@ -533,4 +504,4 @@ const mapStateToProps = (state) => {
 }
 //connect function connect react component to redux store
 //the functions it can use to dispatch actions to the store.
-export default connect(mapStateToProps, { getSelectedPlanOverview, updateFixedCosts, updateVariableCosts, getCountryShortCode, getFinancialProjectionsCosts, getCountryVat, updateFixedAndVarCosts, saveState, refreshPlan, logout, discardChanges,setItemsForSave,getWindowsState })(withRouter(FixedAndVariableCosts));
+export default connect(mapStateToProps, { getSelectedPlanOverview, updateFixedCosts, updateVariableCosts, getCountryShortCode, getFinancialProjectionsCosts, getCountryVat, updateFixedAndVarCosts, saveState, refreshPublicPlan, logout, discardChanges,setItemsForSave,getWindowsState })(withRouter(FixedAndVariableCosts));

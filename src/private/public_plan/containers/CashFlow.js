@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Space, Table } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
-import { refreshPlan } from "../../../appStore/actions/refreshAction";
+import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getCashFlow } from "../../../appStore/actions/cashFlowAction"
 import { logout } from '../../../appStore/actions/authenticationActions';
 import TooltipComponent from '../../components/Tooltip';
@@ -55,7 +55,7 @@ class CashFlow extends React.Component {
                 if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
                     this.props.history.push(`/`);
                 } else {
-                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                    this.props.refreshPublicPlan(localStorage.getItem("plan"), () => {
                         this.props.getCashFlow(this.props.businessPlan.id);
                     });
                 }
@@ -229,4 +229,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { refreshPlan, getCashFlow,logout })(CashFlow);
+export default connect(mapStateToProps, { refreshPublicPlan, getCashFlow,logout })(CashFlow);

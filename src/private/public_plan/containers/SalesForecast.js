@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom';
 import { Breadcrumb, Col, Space, Row, Button, Typography, Switch, Card, Tabs, Input, Select, InputNumber, Divider } from 'antd';
 import { ArrowLeftOutlined, CaretDownFilled } from '@ant-design/icons';
-import { refreshPlan } from "../../../appStore/actions/refreshAction";
+import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getProducts, changState, getProductByID, updateSalesForecast, saveState } from '../../../appStore/actions/salesForecastActions';
 import { getCountryVat } from '../../../appStore/actions/vatsActions'
 import { getCountryShortCode } from '../../../appStore/actions/countriesActions'
@@ -431,7 +431,7 @@ class SalesForecast extends React.Component {
                 if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
                     this.props.history.push(`/`);
                 } else {
-                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                    this.props.refreshPublicPlan(localStorage.getItem("plan"), () => {
                         this.props.getProducts(this.props.businessPlan.id)
                         const obj = { id: this.props.businessPlan.id }
                         this.props.getCountryShortCode(obj, (data) => {
@@ -1192,4 +1192,4 @@ const mapStateToProps = (state) => {
 
 }
 
-export default connect(mapStateToProps, { getCountryShortCode, getCountryVat, refreshPlan, changState, getProducts, getProductByID, updateSalesForecast, saveState, logout })(withRouter(SalesForecast))
+export default connect(mapStateToProps, { getCountryShortCode, getCountryVat, refreshPublicPlan, changState, getProducts, getProductByID, updateSalesForecast, saveState, logout })(withRouter(SalesForecast))

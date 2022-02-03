@@ -97,7 +97,7 @@ class EditKeyActivity extends Component {
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
-                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />{this.props.item.type_name}</Space>}
+                    title={<Space>{this.props.item.type_name}</Space>}
                     visible={this.props.visibility}
                     onCancel={this.onCancel}
                     footer={

@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { Divider, Row, Col, Typography, Card, Select, Space, Input, Table, Button, InputNumber, Tooltip, Breadcrumb, Switch } from 'antd';
 import { connect } from 'react-redux';
 import { CaretDownFilled, UserOutlined, InfoCircleFilled, ArrowLeftOutlined } from '@ant-design/icons';
-import { refreshPlan } from "../../../appStore/actions/refreshAction";
-import { getAssets, saveChanges, discardChanges, saveState, updateAssetsItemVat, updateAssetsItemAmount } from '../../../appStore/actions/assetsAction';
+import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
+import { getAssets, discardChanges } from '../../../appStore/actions/assetsAction';
 import { getCountryShortCode } from '../../../appStore/actions/countriesActions';
 import { getCountryVats } from '../../../appStore/actions/vatAction';
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
@@ -63,38 +63,14 @@ class AssetsWindow extends React.Component {
         this.props.history.push(`/overview`);
     }
 
-    getUpdatesWindowState() {
-        let original = JSON.stringify(this.props.assets.physical_assets_original);
-        let modified = JSON.stringify(this.props.assets.physical_assets_updated)
-        if (original === modified) {
-            return 'hidden'
-        } else {
-            return 'visible'
-        }
-    }
-
-    onCompletedChange(state) {
-        this.props.saveState(this.props.businessPlan.id, state, () => {
-            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-        });
-    }
-    saveChanges = () => {
-        this.props.saveChanges(this.props.businessPlan.id, () => {
-            this.props.getCountryVats(this.props.businessPlan.countryShortCode, () => {
-                this.props.getAssets(this.props.businessPlan.id);
-            });
-        });
-    }
-    discardChanges = () => {
-        this.props.discardChanges();
-    }
+    
     componentDidMount() {
         if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
             if (this.props.businessPlan.id === null) {
                 if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
                     this.props.history.push(`/`);
                 } else {
-                    this.props.refreshPlan(localStorage.getItem("public_plan"), () => {
+                    this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
                         this.props.getAssets(this.props.businessPlan.id);
                     });
                 }
@@ -114,7 +90,6 @@ class AssetsWindow extends React.Component {
         console.log(this.props.assets)
         console.log(this.props.vat);
         console.log(this.props.businessPlan.countryShortCode);
-        const isVisibleHeader = this.getUpdatesWindowState();
         const vatOptions = this.props.vat.vat.map((v, index) => (
             <Option value={v.vatValue} key={index}>{v.vatValue + "%"}</Option>
         ))
@@ -304,4 +279,4 @@ const mapStateToProps = (state) => {
         assets: state.assets,
     };
 }
-export default connect(mapStateToProps, { refreshPlan, logout, getAssets, saveChanges, discardChanges, getCountryShortCode, getCountryVats, saveState, getSelectedPlanOverview, updateAssetsItemVat, updateAssetsItemAmount })(AssetsWindow);
+export default connect(mapStateToProps, { refreshPublicPlan, logout, getAssets, discardChanges, getCountryShortCode, getCountryVats, getSelectedPlanOverview })(AssetsWindow);
