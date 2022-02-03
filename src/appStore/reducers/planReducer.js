@@ -96,7 +96,7 @@ export const selectedplanFetchReducer = (state = {
         case "UPDATING_IMAGE_SUCCESS":
             return { ...state, "coverImage": action.payload };
         case "FETCHING_IMAGE_SUCCESS":
-            return { ...state, "coverImage": action.payload };
+            return { ...state, "coverImage": action.payload.coverImage };
         case "CLEARING_SELECTED_PLAN_SUCCESS":
             return action.payload;
         case "UPDATING_SELECTED_PLAN_STATUS_SUCCESS":
