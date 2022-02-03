@@ -403,7 +403,7 @@ class PublicOverview extends React.Component {
                                                                     <div style={{ ...financialTitlePositionStyle }}>
                                                                         <Link to='/public/assets' style={canvasElementTextStyle}>Assets</Link>
                                                                     </div>
-                                                                </Col>                                
+                                                                </Col>
                                                             </Row>
                                                         </div>}
                                                 />
@@ -488,7 +488,14 @@ class PublicOverview extends React.Component {
                                         </List>
                                     </Col>
                                     <Col span={6}>
-                                        {image}
+                                        <Card
+                                            style={{
+                                                height: '246px', borderRadius: '8px', backgroundColor: '#FFFFFF',
+                                                backgroundImage: 'linear-gradient(to bottom, rgba(255, 255, 252, 0) 62%, rgba(255, 255, 255, 1) 38%), ' + (this.props.businessPlan.coverImage ? `url(${this.props.businessPlan.coverImage})` : `url(businessPlan.webp)`),
+                                                objectFit: 'cover', backgroundSize: '100% auto', backgroundRepeat: 'no-repeat', backgroundPosition: 'center top',
+                                            }}>
+                                            <h4 style={{ marginTop: '145px', marginBottom: 0, fontSize: '16px' }}>Cover image</h4>
+                                        </Card>
                                     </Col>
                                 </Row>
                             </TabPane>
