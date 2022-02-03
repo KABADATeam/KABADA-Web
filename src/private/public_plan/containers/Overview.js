@@ -7,6 +7,7 @@ import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview, getImage, getSelectedPlanDetails } from "../../../appStore/actions/planActions";
 import { withRouter } from 'react-router-dom';
 import TooltipComponent from '../../components/Tooltip';
+import IndustryDataComponent from '../components/IndustryDataComponent';
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
@@ -500,16 +501,7 @@ class PublicOverview extends React.Component {
                                 </Row>
                             </TabPane>
                             <TabPane tab="Industry data" key="2">
-                                <Row style={{ marginBottom: "50px" }}>
-                                    <Col span={8}>
-                                        <div style={{ marginRight: '40px' }}>
-                                            <Typography.Title style={aboutTitleTextStyle}>Industry data</Typography.Title>
-                                        </div>
-                                    </Col>
-                                    <Col span={16}>
-
-                                    </Col>
-                                </Row>
+                                <IndustryDataComponent />
                             </TabPane>
                             <TabPane tab="Industry risks" key="3">
                                 <Row style={{ marginBottom: "50px" }}>
