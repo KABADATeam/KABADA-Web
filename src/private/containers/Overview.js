@@ -10,6 +10,23 @@ import { uploadFile } from '../../appStore/actions/userFileAction';
 import { updatePlanData, updateImage } from '../../appStore/actions/planActions';
 import { updateStatus, getMembers, deleteMember, getSelectedPlanOverview, getSelectedPlanDetails, getImage, removePlan, downloadDOCFile, downloadPDFFile, downloadCashFlow } from "../../appStore/actions/planActions";
 import { getSurvivalRate } from '../../appStore/actions/eurostat/eurostatSurvivalRateAction';
+import { saveState as saveValuePropositions } from '../../appStore/actions/productActions'
+import { saveState as saveCustomerSegments } from "../../appStore/actions/customerSegmentAction";
+import { saveState as saveChannelsCompleted } from "../../appStore/actions/channelActions";
+import { saveState as saveCustomerRelationshipsCompleted } from "../../appStore/actions/customerRelationshipsAction";
+import { saveState as saveRevenueStreamsCompleted } from "../../appStore/actions/revenueStreamActions";
+import { saveChanges as saveResourcesCompleted } from "../../appStore/actions/resourcesAction";
+import { saveState as saveKeyActivitiesCompleted } from "../../appStore/actions/keyActivitiesAction";
+import { saveState as saveKeyPartnersCompleted } from "../../appStore/actions/partnersAction";
+import { saveState as saveCostStructureCompleted } from "../../appStore/actions/costStructureAction"
+import { saveState as saveSwotCompleted } from "../../appStore/actions/swotAction";
+import { saveState as saveAssetsCompleted } from '../../appStore/actions/assetsAction';
+import { saveState as saveFixedAndVariableCompleted } from '../../appStore/actions/financialProjectionsActions';
+import { saveState as saveBusinessInvestmentsCompleted } from "../../appStore/actions/businessInvestmentAction";
+import {  saveState as saveSalesForecastCompleted } from '../../appStore/actions/salesForecastActions';
+import { savePersonalCharacteristics as savePersonalCharacteristicsCompleted } from '../../appStore/actions/personalCharacteristicsActions';
+
+
 import { withRouter } from 'react-router-dom';
 import InviteMemberModal from '../components/overview/InviteMemberModal';
 import EditBusinessPlanModal from '../components/overview/EditBusinessPlanModal';
@@ -433,11 +450,15 @@ class Overview extends React.Component {
                                                     }
                                                 />
                                                 {/* DROPDOWN FOR EDIT VALUE PROPOSITIONS */}
-                                                <div style={{ marginRight: '28px' }}>
-                                                    <EditBusinessPlanItem link={'/value-propositions'}
-                                                        isCompleted={this.props.businessPlan.overview.value_proposition.is_completed}
-                                                    />
-                                                </div>
+                                                {overview !== null && overview.value_proposition !== null ?
+                                                    <div style={{ marginRight: '28px' }}>
+                                                        <EditBusinessPlanItem link={'/value-propositions'}
+                                                            isCompleted={overview.value_proposition.is_completed}
+                                                            save={this.props.saveValuePropositions}
+                                                        />
+                                                    </div> : null
+                                                }
+
 
                                             </List.Item>
                                             <List.Item key='3'>
@@ -457,11 +478,14 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
-                                                <div style={{ marginRight: '28px' }}>
-                                                    <EditBusinessPlanItem link={'/customer-segments'}
-                                                        isCompleted={this.props.businessPlan.overview.customer_segments.is_completed}
-                                                    />
-                                                </div>
+                                                {overview !== null && overview.customer_segments !== null ?
+                                                    <div style={{ marginRight: '28px' }}>
+                                                        <EditBusinessPlanItem link={'/customer-segments'}
+                                                            isCompleted={overview.customer_segments.is_completed}
+                                                            save={this.props.saveCustomerSegments}
+                                                        />
+                                                    </div> : null}
+
                                             </List.Item>
                                             <List.Item key='4'>
                                                 <List.Item.Meta
@@ -480,11 +504,14 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
-                                                <div style={{ marginRight: '28px' }}>
-                                                    <EditBusinessPlanItem link={'/channels'}
-                                                        isCompleted={this.props.businessPlan.overview.channels.is_completed}
-                                                    />
-                                                </div>
+                                                {overview !== null && overview.channels !== null ?
+                                                    <div style={{ marginRight: '28px' }}>
+                                                        <EditBusinessPlanItem link={'/channels'}
+                                                            isCompleted={overview.channels.is_completed}
+                                                            save={this.props.saveChannelsCompleted}
+                                                        />
+                                                    </div> : null}
+
                                             </List.Item>
                                             <List.Item key='5'>
                                                 <List.Item.Meta
@@ -504,9 +531,12 @@ class Overview extends React.Component {
                                                     }
                                                 />
                                                 <div style={{ marginRight: '28px' }}>
-                                                    <EditBusinessPlanItem link={'/customer-relationships'}
-                                                        isCompleted={this.props.businessPlan.overview.customer_relationship.is_completed}
-                                                    />
+                                                    {overview !== null && overview.customer_relationship !== null ?
+                                                        <EditBusinessPlanItem link={'/customer-relationships'}
+                                                            isCompleted={overview.customer_relationship.is_completed}
+                                                            save={this.props.saveCustomerRelationshipsCompleted}
+                                                        /> : null}
+
                                                 </div>
                                             </List.Item>
                                             <List.Item key='6'>
@@ -526,11 +556,13 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
-                                                <div style={{ marginRight: '28px' }}>
-                                                    <EditBusinessPlanItem link={'/revenue-streams'}
-                                                        isCompleted={this.props.businessPlan.overview.revenue_streams.is_completed}
-                                                    />
-                                                </div>
+                                                {overview !== null && overview.revenue_streams !== null ?
+                                                    <div style={{ marginRight: '28px' }}>
+                                                        <EditBusinessPlanItem link={'/revenue-streams'}
+                                                            isCompleted={overview.revenue_streams.is_completed}
+                                                            save={this.props.saveRevenueStreamsCompleted}
+                                                        />
+                                                    </div> : null}
                                             </List.Item>
                                             <List.Item key='7'>
                                                 <List.Item.Meta
@@ -549,11 +581,13 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
-                                                <div style={{ marginRight: '28px' }}>
-                                                    <EditBusinessPlanItem link={'/key-resources'}
-                                                        isCompleted={this.props.businessPlan.overview.key_resources.is_completed}
-                                                    />
-                                                </div>
+                                                {overview !== null && overview.key_resources !== null ?
+                                                    <div style={{ marginRight: '28px' }}>
+                                                        <EditBusinessPlanItem link={'/key-resources'}
+                                                            isCompleted={overview.key_resources.is_completed}
+                                                            save={this.props.saveResourcesCompleted}
+                                                        />
+                                                    </div> : null}
                                             </List.Item>
                                             <List.Item key='8'>
                                                 <List.Item.Meta
@@ -572,11 +606,13 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
-                                                <div style={{ marginRight: '28px' }}>
-                                                    <EditBusinessPlanItem link={'/key-activities'}
-                                                        isCompleted={this.props.businessPlan.overview.key_activities.is_completed}
-                                                    />
-                                                </div>
+                                                {overview !== null && overview.key_activities !== null ?
+                                                    <div style={{ marginRight: '28px' }}>
+                                                        <EditBusinessPlanItem link={'/key-activities'}
+                                                            isCompleted={overview.key_activities.is_completed}
+                                                            save={this.props.saveKeyActivitiesCompleted}
+                                                        />
+                                                    </div> : null}
                                             </List.Item>
                                             <List.Item key='9'>
                                                 <List.Item.Meta
@@ -595,11 +631,13 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
-                                                <div style={{ marginRight: '28px' }}>
-                                                    <EditBusinessPlanItem link={'/key-partners'}
-                                                        isCompleted={this.props.businessPlan.overview.key_partners.is_completed}
-                                                    />
-                                                </div>
+                                                {overview !== null && overview.key_partners !== null ?
+                                                    <div style={{ marginRight: '28px' }}>
+                                                        <EditBusinessPlanItem link={'/key-partners'}
+                                                            isCompleted={overview.key_partners.is_completed}
+                                                            save={this.props.saveKeyPartnersCompleted}
+                                                        />
+                                                    </div> : null}
                                             </List.Item>
                                             <List.Item key='10'>
                                                 <List.Item.Meta
@@ -618,11 +656,13 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
-                                                <div style={{ marginRight: '28px' }}>
-                                                    <EditBusinessPlanItem link={'/cost-structure'}
-                                                        isCompleted={this.props.businessPlan.overview.cost_structure.is_completed}
-                                                    />
-                                                </div>
+                                                {overview !== null && overview.cost_structure !== null ?
+                                                    <div style={{ marginRight: '28px' }}>
+                                                        <EditBusinessPlanItem link={'/cost-structure'}
+                                                            isCompleted={overview.cost_structure.is_completed}
+                                                            save={this.props.saveCostStructureCompleted}
+                                                        />
+                                                    </div> : null}
                                             </List.Item>
                                         </List>
                                         <List itemLayout='horizontal' style={{ marginTop: '16px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
@@ -646,11 +686,13 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
-                                                <div style={{ marginRight: '28px' }}>
-                                                    <EditBusinessPlanItem link={'/swot'}
-                                                        isCompleted={this.props.businessPlan.overview.swot.is_completed}
-                                                    />
-                                                </div>
+                                                {overview !== null && overview.swot !== null ?
+                                                    <div style={{ marginRight: '28px' }}>
+                                                        <EditBusinessPlanItem link={'/swot'}
+                                                            isCompleted={overview.swot.is_completed}
+                                                            save={this.props.saveSwotCompleted}
+                                                        />
+                                                    </div> : null}
                                             </List.Item>
                                         </List>
                                         <List
@@ -677,11 +719,13 @@ class Overview extends React.Component {
                                                                     </div>
                                                                 </Col>
                                                                 <Col span={12}>
-                                                                    <div style={{ ...financialTitleButtonPositionStyle, marginRight: '8px' }}>
-                                                                        <EditBusinessPlanItem link={'/assets'}
-                                                                            isCompleted={this.props.businessPlan.overview.assets.is_completed}
-                                                                        />
-                                                                    </div>
+                                                                    {overview !== null && overview.assets !== null ?
+                                                                        <div style={{ ...financialTitleButtonPositionStyle, marginRight: '8px' }}>
+                                                                            <EditBusinessPlanItem link={'/assets'}
+                                                                                isCompleted={overview.assets.is_completed}
+                                                                                save={this.props.saveAssetsCompleted}
+                                                                            />
+                                                                        </div> : null}
                                                                 </Col>
                                                             </Row>
                                                         </div>}
@@ -702,11 +746,13 @@ class Overview extends React.Component {
                                                                     </div>
                                                                 </Col>
                                                                 <Col span={12}>
-                                                                    <div style={{ ...financialTitleButtonPositionStyle, marginRight: '8px' }}>
-                                                                        <EditBusinessPlanItem link={'/fixed-and-variable-costs'}
-                                                                            isCompleted={this.props.businessPlan.overview.fixed_and_variables_costs.is_completed}
-                                                                        />
-                                                                    </div>
+                                                                    {overview !== null && overview.fixed_and_variables_costs !== null ?
+                                                                        <div style={{ ...financialTitleButtonPositionStyle, marginRight: '8px' }}>
+                                                                            <EditBusinessPlanItem link={'/fixed-and-variable-costs'}
+                                                                                isCompleted={overview.fixed_and_variables_costs.is_completed}
+                                                                                save={this.props.saveFixedAndVariableCompleted}
+                                                                            />
+                                                                        </div> : null}
                                                                 </Col>
                                                             </Row>
                                                         </div>}
@@ -727,11 +773,13 @@ class Overview extends React.Component {
                                                                     </div>
                                                                 </Col>
                                                                 <Col span={12}>
-                                                                    <div style={{ ...financialTitleButtonPositionStyle, marginRight: '8px' }}>
-                                                                        <EditBusinessPlanItem link={'/sales-forecast'}
-                                                                            isCompleted={this.props.businessPlan.overview.sales_forecast.is_completed}
-                                                                        />
-                                                                    </div>
+                                                                    {overview !== null && overview.sales_forecast !== null ?
+                                                                        <div style={{ ...financialTitleButtonPositionStyle, marginRight: '8px' }}>
+                                                                            <EditBusinessPlanItem link={'/sales-forecast'}
+                                                                                isCompleted={overview.sales_forecast.is_completed}
+                                                                                save={this.props.saveSalesForecastCompleted}
+                                                                            />
+                                                                        </div> : null}
                                                                 </Col>
                                                             </Row>
                                                         </div>}
@@ -752,11 +800,13 @@ class Overview extends React.Component {
                                                                     </div>
                                                                 </Col>
                                                                 <Col span={12}>
+                                                                {overview !== null && overview.business_start_up_investments !== null ?
                                                                     <div style={{ ...financialTitleButtonPositionStyle, marginRight: '8px' }}>
                                                                         <EditBusinessPlanItem link={'/business-start-up-investments'}
-                                                                            isCompleted={this.props.businessPlan.overview.business_start_up_investments.is_completed}
+                                                                            isCompleted={overview.business_start_up_investments.is_completed}
+                                                                            save={this.props.saveBusinessInvestmentsCompleted}
                                                                         />
-                                                                    </div>
+                                                                    </div>:null}
                                                                 </Col>
                                                             </Row>
                                                         </div>}
@@ -807,11 +857,13 @@ class Overview extends React.Component {
                                                         </div>
                                                     }
                                                 />
+                                                {overview !== null && overview.personal_characteristics !== null ?
                                                 <div style={{ marginRight: '28px' }}>
                                                     <EditBusinessPlanItem link={'/personal-characteristics'}
-                                                        isCompleted={this.props.businessPlan.overview.personal_characteristics.is_completed}
+                                                        isCompleted={overview.personal_characteristics.is_completed}
+                                                        // save={this.props.savePersonalCharacteristicsCompleted}
                                                     />
-                                                </div>
+                                                </div>:null}
                                             </List.Item>
                                         </List>
 
@@ -924,4 +976,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getImage, logout, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, removePlan, getSurvivalRate, getCountryShortCodeV2, downloadDOCFile, downloadPDFFile, downloadCashFlow, uploadFile, updateImage, updatePlanData })(withRouter(Overview))
+export default connect(mapStateToProps, { getImage, logout, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, removePlan, getSurvivalRate, getCountryShortCodeV2, downloadDOCFile, downloadPDFFile, downloadCashFlow, uploadFile, updateImage, updatePlanData, saveValuePropositions, saveCustomerSegments, saveChannelsCompleted, saveCustomerRelationshipsCompleted, saveRevenueStreamsCompleted, saveResourcesCompleted, saveKeyActivitiesCompleted, saveKeyPartnersCompleted, saveCostStructureCompleted, saveSwotCompleted, saveAssetsCompleted, saveFixedAndVariableCompleted,saveSalesForecastCompleted,saveBusinessInvestmentsCompleted,savePersonalCharacteristicsCompleted })(withRouter(Overview))

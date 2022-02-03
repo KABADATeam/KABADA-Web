@@ -1,7 +1,10 @@
 import React from 'react'
 import { Menu, Dropdown, Typography,Switch } from 'antd';
+import { getSelectedPlanOverview} from "../../../appStore/actions/planActions";
 import { EllipsisOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import {connect} from 'react-redux'
+import {withRouter} from 'react-router-dom'
 
 
 const {Text} = Typography;
@@ -18,9 +21,10 @@ class EditBusinessPlanItem extends React.Component {
         this.state = {
         }
     }
-
     onCompletedChange = (value) => {
-
+        this.props.save(this.props.businessPlan.id, value, () => {
+            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+        })
     }
 
     render() {
@@ -46,4 +50,10 @@ class EditBusinessPlanItem extends React.Component {
     }
 }
 
-export default EditBusinessPlanItem
+const mapStateToProps = (state) => {
+    return {
+        businessPlan: state.selectedBusinessPlan,
+    }
+}
+
+export default connect(mapStateToProps,{getSelectedPlanOverview})(withRouter(EditBusinessPlanItem))
