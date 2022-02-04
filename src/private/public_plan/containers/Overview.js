@@ -5,8 +5,12 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview, getImage, getSelectedPlanDetails } from "../../../appStore/actions/planActions";
+import { getSelectedPlanActiveKey, getRisks } from '../../../appStore/actions/industryRiskAction';
 import { withRouter } from 'react-router-dom';
 import TooltipComponent from '../../components/Tooltip';
+import TextHelper from '../../components/TextHelper';
+import IndustryDataComponent from '../components/IndustryDataComponent';
+import IndustryRisks from '../components/IndustryRisks';
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
@@ -60,26 +64,32 @@ const canvasElementTextStyle = {
     lineHeight: "22px",
     color: '#262626'
 }
+const financialAvatarStyle = {
+    width: "24px",
+    height: "24px",
+    marginTop: "0px"
+}
+
+const financialTitlePositionStyle = {
+    float: 'left',
+    display: 'inline-flex',
+    alignItems: 'center'
+}
+
+const financialTitleButtonPositionStyle = {
+    float: 'right',
+    display: 'inline-flex',
+    alignItems: 'center'
+}
 
 class PublicOverview extends React.Component {
+    
 
     onBackClick() {
         this.props.history.push(`/public-business-plans`);
     }
 
     componentDidMount() {
-        /*if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
-                this.props.history.push(`/`);
-            } else {
-                this.props.refreshPlan(localStorage.getItem("public_plan"), () => {
-                    this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-                });
-            }
-        } else {
-            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-
-        }*/
         if (this.props.businessPlan.id === null) {
             if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
                 this.props.history.push(`/`);
@@ -90,6 +100,10 @@ class PublicOverview extends React.Component {
                             if (this.props.businessPlan.overview.planImage)
                                 this.props.getImage({ ...this.props.businessPlan, "planImage": this.props.businessPlan.overview.planImage });
                         });
+                    this.props.getSelectedPlanDetails(this.props.businessPlan.id);
+                    this.props.getSelectedPlanActiveKey(this.props.businessPlan.id, () => {
+                        this.props.getRisks(this.props.industryRisk.activeKey)
+                    })
                 });
             }
         } else {
@@ -98,12 +112,16 @@ class PublicOverview extends React.Component {
                     if (this.props.businessPlan.overview.planImage)
                         this.props.getImage({ ...this.props.businessPlan, "planImage": this.props.businessPlan.overview.planImage });
                 });
+            this.props.getSelectedPlanDetails(this.props.businessPlan.id);
+            this.props.getSelectedPlanActiveKey(this.props.businessPlan.id, () => {
+                this.props.getRisks(this.props.industryRisk.activeKey)
+            })
         }
     }
 
     render() {
         const overview = this.props.businessPlan.overview;
-
+        console.log(this.props.businessPlan.activityID);
         if (this.props.loading === true || this.props.businessPlan.overview === undefined) {
             return (<div></div>)
         } else {
@@ -362,56 +380,139 @@ class PublicOverview extends React.Component {
                                                 />
                                             </List.Item>
                                         </List>
-                                        <Card style={{ marginTop: '10px' }}>
-                                            <List>
-                                                <List.Item key='10' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                    <List.Item.Meta
-                                                        avatar={false === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
-                                                        title="Financial projections"
-                                                        description="Description goes here" />
-                                                    <div>...</div>
-                                                </List.Item>
-                                            </List>
-                                        </Card>
-                                        <Card style={{ marginTop: '10px' }}>
-                                            <List >
-                                                <List.Item key='12' style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                                                    <List.Item.Meta
-                                                        avatar={false === true ? <Avatar src="../complete.png" style={avatarStyle} /> : <Avatar src="../incomplete.png" style={avatarStyle} />}
-                                                        title="Team and competencies"
-                                                        description="Description goes here" />
-                                                    <div>...</div>
-                                                </List.Item>
-                                            </List>
-                                        </Card>
 
+                                        <List
+                                            header={
+                                                <>
+                                                    <Text style={{ ...pageTitleTextStyle, marginLeft: '20px' }}>
+                                                        Financial projections
+                                                    </Text>
+                                                    <TooltipComponent code="ovmbp2" type="text" />
+                                                </>}
+                                            style={{ marginTop: '16px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}
+                                        >
+                                            <List.Item key='12'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    description={
+                                                        <div>
+                                                            <Row>
+                                                                <Col span={1}>
+                                                                    {this.props.businessPlan.assets_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
+                                                                </Col>
+                                                                <Col span={11}>
+                                                                    <div style={{ ...financialTitlePositionStyle }}>
+                                                                        <Link to='/public/assets' style={canvasElementTextStyle}>Assets</Link>
+                                                                    </div>
+                                                                </Col>
+                                                            </Row>
+                                                        </div>}
+                                                />
+                                            </List.Item>
+                                            <List.Item key='13'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    description={
+                                                        <div>
+                                                            <Row>
+                                                                <Col span={1}>
+                                                                    {this.props.businessPlan.fixed_and_variables_costs_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
+                                                                </Col>
+                                                                <Col span={11}>
+                                                                    <div style={{ ...financialTitlePositionStyle }}>
+                                                                        <Link to="/public/fixed-and-variable-costs" style={canvasElementTextStyle}>Fixed and Variable Costs</Link>
+                                                                    </div>
+                                                                </Col>
+                                                            </Row>
+                                                        </div>}
+                                                />
+                                            </List.Item>
+                                            <List.Item key='14'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    description={
+                                                        <div>
+                                                            <Row>
+                                                                <Col span={1}>
+                                                                    {this.props.businessPlan.sales_forecast_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
+                                                                </Col>
+                                                                <Col span={11}>
+                                                                    <div style={{ ...financialTitlePositionStyle }}>
+                                                                        <Link to="/public/sales-forecast" style={canvasElementTextStyle}>Sales Forecast</Link>
+                                                                    </div>
+                                                                </Col>
+                                                            </Row>
+                                                        </div>}
+                                                />
+                                            </List.Item>
+                                            <List.Item key='15'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    description={
+                                                        <div>
+                                                            <Row>
+                                                                <Col span={1}>
+                                                                    {this.props.businessPlan.business_start_up_investments_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
+                                                                </Col>
+                                                                <Col span={11}>
+                                                                    <div style={{ ...financialTitlePositionStyle }}>
+                                                                        <Link to="/public/business-start-up-investments" style={canvasElementTextStyle}>Business start-up investments</Link>
+                                                                    </div>
+                                                                </Col>
+                                                            </Row>
+                                                        </div>}
+                                                />
+                                            </List.Item>
+                                            <List.Item key='16'>
+                                                <List.Item.Meta
+                                                    style={{ padding: '0px 20px 0px' }}
+                                                    description={
+                                                        <div>
+                                                            <Row>
+                                                                <Col span={1}>
+                                                                    {this.props.businessPlan.assets_state === true && this.props.businessPlan.fixed_and_variables_costs_state === true && this.props.businessPlan.sales_forecast_state === true && this.props.businessPlan.business_start_up_investments_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
+                                                                </Col>
+                                                                <Col span={11}>
+                                                                    <div style={{ ...financialTitlePositionStyle }}>
+                                                                        <Link to="/public/cash-flow" style={canvasElementTextStyle}>Cash Flow</Link>
+                                                                    </div>
+                                                                </Col>
+                                                                <Col span={12}>
+                                                                    <div style={{ ...financialTitleButtonPositionStyle, marginRight: '0px' }}>
+                                                                        <Button style={{ borderRadius: '4px' }}><Link to="/public/cash-flow" style={canvasElementTextStyle}>See cash flow</Link></Button>
+                                                                    </div>
+                                                                </Col>
+                                                            </Row>
+                                                        </div>}
+                                                />
+                                            </List.Item>
+                                        </List>
                                     </Col>
                                     <Col span={6}>
-                                        {image}
+                                        <Card
+                                            style={{
+                                                height: '246px', borderRadius: '8px', backgroundColor: '#FFFFFF',
+                                                backgroundImage: 'linear-gradient(to bottom, rgba(255, 255, 252, 0) 62%, rgba(255, 255, 255, 1) 38%), ' + (this.props.businessPlan.coverImage ? `url(${this.props.businessPlan.coverImage})` : `url(businessPlan.webp)`),
+                                                objectFit: 'cover', backgroundSize: '100% auto', backgroundRepeat: 'no-repeat', backgroundPosition: 'center top',
+                                            }}>
+                                            <h4 style={{ marginTop: '145px', marginBottom: 0, fontSize: '16px' }}>Cover image</h4>
+                                        </Card>
                                     </Col>
                                 </Row>
                             </TabPane>
                             <TabPane tab="Industry data" key="2">
-                                <Row style={{ marginBottom: "50px" }}>
-                                    <Col span={8}>
-                                        <div style={{ marginRight: '40px' }}>
-                                            <Typography.Title style={aboutTitleTextStyle}>Industry data</Typography.Title>
-                                        </div>
-                                    </Col>
-                                    <Col span={16}>
-
-                                    </Col>
-                                </Row>
+                                <IndustryDataComponent />
                             </TabPane>
                             <TabPane tab="Industry risks" key="3">
-                                <Row style={{ marginBottom: "50px" }}>
+                                <Row style={{ marginBottom: "50px", marginTop: "40px" }}>
                                     <Col span={8}>
                                         <div style={{ marginRight: '40px' }}>
-                                            <Typography.Title style={aboutTitleTextStyle}>Industry risks</Typography.Title>
+                                            <Typography.Title style={aboutTitleTextStyle}>{this.props.businessPlan.activityCode} Industry risks</Typography.Title>
+                                            <TextHelper code="ovir" type="lefttext" />
                                         </div>
                                     </Col>
                                     <Col span={16}>
-
+                                        <IndustryRisks />
                                     </Col>
                                 </Row>
                             </TabPane>
@@ -427,8 +528,9 @@ const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
         loading: state.loading,
-        imageLoading: state.imageLoading
+        imageLoading: state.imageLoading,
+        industryRisk: state.industryRisk,
     };
 }
 
-export default connect(mapStateToProps, { refreshPublicPlan, getSelectedPlanOverview, getImage, getSelectedPlanDetails })(withRouter(PublicOverview))
+export default connect(mapStateToProps, { refreshPublicPlan, getSelectedPlanOverview, getImage, getSelectedPlanDetails, getRisks, getSelectedPlanActiveKey })(withRouter(PublicOverview))

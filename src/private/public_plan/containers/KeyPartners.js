@@ -2,14 +2,16 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Card, Table, Space, Tooltip } from 'antd';
 import { ArrowLeftOutlined, InfoCircleFilled, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle } from '../../../styles/customStyles';
+import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle, tableTitleStyle, defaultButtonStyle } from '../../../styles/customStyles';
 import { connect } from 'react-redux';
 //import KeyPartnersModal from "../components/KeyPartnersModal";
 //import AddKeyPartnerModal from '../components/AddKeyPartnerModal';
 import EditKeyPartnerModal from '../../public_plan/components/EditKeyPartnerModal';
 import { getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState } from "../../../appStore/actions/partnersAction";
-import { refreshPlan } from "../../../appStore/actions/refreshAction";
+import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
+import TooltipComponent from "../../components/Tooltip";
+import TextHelper from '../../components/TextHelper';
 
 const { Text } = Typography;
 
@@ -55,7 +57,7 @@ class KeyPartners extends React.Component {
             isPartnerModalVisible: false,
             isEditPartnerModalVisible: false,
             category: null,
-            item: { "type_title" : "" }
+            item: { "type_title": "" }
         };
     }
 
@@ -114,7 +116,7 @@ class KeyPartners extends React.Component {
     onCloseEditPartnerModal = () => {
         this.setState({
             isEditPartnerModalVisible: false,
-            item: { "type_title" : "" }
+            item: { "type_title": "" }
         });
     };
 
@@ -166,10 +168,10 @@ class KeyPartners extends React.Component {
 
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
                 this.props.history.push(`/`);
             } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
                     this.props.getPartners(this.props.businessPlan.id);
                     this.props.getPartnersCategories();
                 });
@@ -187,28 +189,28 @@ class KeyPartners extends React.Component {
                 title: 'Distributor type',
                 dataIndex: 'type_title',
                 key: 'type_title',
-                width: '38%',
+                width: '31.5%',
             },
             {
                 title: 'Company',
                 dataIndex: 'name',
                 key: 'name',
-                width: '30%',
+                width: '15%',
             },
             {
                 title: 'Priority',
                 dataIndex: 'priority',
                 key: 'priority',
-                width: '22%',
+                width: '34%',
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (obj, record) => (
-                    <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditDistributor.bind(this, record)} >View</Button>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
+                        <Button size="medium" style={{ ...defaultButtonStyle }} onClick={this.onEditDistributor.bind(this, record)} >View</Button>
                         {/*<Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteDistributor.bind(this, record)} ><DeleteOutlined /></Button>*/}
                     </Space>
                 ),
@@ -220,28 +222,28 @@ class KeyPartners extends React.Component {
                 title: 'Supplier type',
                 dataIndex: 'type_title',
                 key: 'type_title',
-                width: '38%',
+                width: '31.5%',
             },
             {
                 title: 'Company',
                 dataIndex: 'name',
                 key: 'name',
-                width: '30%',
+                width: '15%',
             },
             {
                 title: 'Priority',
                 dataIndex: 'priority',
                 key: 'priority',
-                width: '22%',
+                width: '34%',
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (obj, record) => (
-                    <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditSupplier.bind(this, record)} >View</Button>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
+                        <Button size="medium" style={{ ...defaultButtonStyle }} onClick={this.onEditSupplier.bind(this, record)} >View</Button>
                         {/*<Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteSupplier.bind(this, record)} ><DeleteOutlined /></Button>*/}
                     </Space>
                 ),
@@ -250,31 +252,31 @@ class KeyPartners extends React.Component {
 
         const otherColumns = [
             {
-                title: 'Type',
+                title: 'Supplier type',
                 dataIndex: 'type_title',
                 key: 'type_title',
-                width: '38%',
+                width: '31.5%',
             },
             {
                 title: 'Company',
                 dataIndex: 'name',
                 key: 'name',
-                width: '30%',
+                width: '15%',
             },
             {
                 title: 'Priority',
                 dataIndex: 'priority',
                 key: 'priority',
-                width: '22%',
+                width: '34%',
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (obj, record) => (
-                    <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditOther.bind(this, record)} >View</Button>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
+                        <Button size="medium" style={{ ...defaultButtonStyle }} onClick={this.onEditOther.bind(this, record)} >View</Button>
                         {/*<Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteOther.bind(this, record)} ><DeleteOutlined /></Button>*/}
                     </Space>
                 ),
@@ -283,13 +285,13 @@ class KeyPartners extends React.Component {
 
         return (
             <>
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
-                            <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
+                            <Space><Link to='/public-business-plans'>Public Business plans</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
+                            <Space><Link to='/public/overview'>{this.props.businessPlan.name}</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             Key Partners
@@ -298,97 +300,79 @@ class KeyPartners extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col span={12} offset={4}>
+                    <Col span={12} offset={2}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Key Partners</Text>
+                            <TooltipComponent code="keypartner" type="title" />
                         </div>
                     </Col>
-                  { /* <Col span={4}>
-                        <div style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
-                            <Text style={{ fontSize: '14px', color: '##262626', marginLeft: '10px', marginRight: '10px' }}>Mark as completed: </Text><Switch checked={this.props.partners.is_partners_completed} onClick={this.onCompletedChange.bind(this)} />
-                        </div>
-                         </Col>*/}
                 </Row>
 
 
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Divider />
                 </Col>
 
-                <Col offset={4} span={16}>
+                <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Key Distributors</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Possible if you distribute your products through your own channels – directly, your own store, homepage. Often the case in some service sectors.
-                                    <br /><br />
-                                    You can choose type “Many Retailers” if you believe that distribution channels are strongly diversified and no distributor is of high importance
-                                </Typography.Text>
+                                <TextHelper code="keypartnerdistributor" type="lefttext" />
                             </div>
                         </Col>
-                        <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Table
-                                    dataSource={this.props.partners.distributors}
-                                    columns={distributorsColumns}
-                                    pagination={false}
-                                  //  footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} disabled={this.props.partners.distributors.length === 3 ? true : false} onClick={this.onAddNewDistributor.bind(this)}><PlusOutlined />Add Distributor</Button><Text>Maximum distributors: {this.props.partners.distributors.length}/3 <Tooltip title="Tooltip text"><InfoCircleFilled style={{ fontSize: '16px', color: '#BFBFBF', marginLeft: '5px' }} /></Tooltip></Text></Space>)}
-                                />
-                            </Card >
+                        <Col span={16}>
+                            <Table
+                                dataSource={this.props.partners.distributors}
+                                columns={distributorsColumns}
+                                pagination={false}
+                            />
                         </Col>
                     </Row>
                     <Divider />
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Key Suppliers</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Consider professional associations, networks locally and internationally, employers’ unions, chambers of commerce, trade unions
-                                    <br /> <br />
-                                    Consider relevant regulatory bodies, watchdogs, supporting institutions, municipalities, state revenue service and similar
-                                </Typography.Text>
+                                <TextHelper code="keypartnersupplier" type="lefttext" />
                             </div>
                         </Col>
-                        <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Table
-                                    dataSource={this.props.partners.suppliers}
-                                    columns={suppliersColumns}
-                                    pagination={false}
-                                   // footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddNewSupplier.bind(this)}><PlusOutlined />Add Suppliers</Button>)}
-                                />
-                            </Card >
+                        <Col span={16}>
+                            <Table
+                                dataSource={this.props.partners.suppliers}
+                                columns={suppliersColumns}
+                                pagination={false}
+                            />
                         </Col>
                     </Row>
                     <Divider />
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Other</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Consider professional associations, networks locally and internationally, employers’ unions, chambers of commerce, trade unions
-                                </Typography.Text>
+                                <TextHelper code="keypartnerother" type="lefttext" />
                             </div>
                         </Col>
-                        <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Typography style={{ ...tableTitleStyle, marginLeft: "15px", marginTop: "5px", marginBottom: "5px" }}>Various other<InfoCircleFilled style={{ fontSize: '16px', color: '#BFBFBF', marginLeft: '17px' }} /></Typography>
-                                <Table
-                                    dataSource={this.props.partners.others}
-                                    columns={otherColumns}
-                                    pagination={false}
-                                   // footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddNewOther.bind(this)}><PlusOutlined />Add Other Partners</Button>)}
-                                />
-                            </Card >
+                        <Col span={16}>
+                            <Table
+                                title={() => <>
+                                    <Typography style={{ ...tableTitleStyle }}>
+                                        Various other
+                                        <TooltipComponent code="keypartnerother" type="text" />
+                                    </Typography>
+                                </>}
+                                dataSource={this.props.partners.others}
+                                columns={otherColumns}
+                                pagination={false}
+                            />
                         </Col>
                     </Row>
                 </Col>
-              {/*  <KeyPartnersModal visibility={this.state.isCategoriesModalVisible} onForward={this.onAddNewPartner}  onClose={this.onCloseCategoriesModal} />
+                {/*  <KeyPartnersModal visibility={this.state.isCategoriesModalVisible} onForward={this.onAddNewPartner}  onClose={this.onCloseCategoriesModal} />
                 <AddKeyPartnerModal visibility={this.state.isPartnerModalVisible} onClose={this.onClosePartnerModal} onBack={this.onBackToCategoriesModal} />*/}
                 {
-                    this.state.isEditPartnerModalVisible ? 
+                    this.state.isEditPartnerModalVisible ?
                         <EditKeyPartnerModal visibility={this.state.isEditPartnerModalVisible} item={this.state.item} onClose={this.onCloseEditPartnerModal} />
                         : null
                 }
@@ -405,4 +389,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState, refreshPlan })(withRouter(KeyPartners));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState, refreshPublicPlan })(withRouter(KeyPartners));

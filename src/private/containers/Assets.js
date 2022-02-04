@@ -186,7 +186,7 @@ class AssetsWindow extends React.Component {
                 width: '15%',
                 render: (text, obj, record) => (
                     <Space size={0}>
-                        <Select defaultValue={text === null ? this.props.vat.defaultVAT : text}
+                        <Select defaultValue={text === null ? this.props.vat.defaultVAT : text + '%'}
                             suffixIcon={<CaretDownFilled />}
                             onChange={e => this.props.updateAssetsItemVat(e, obj)}
                             style={{ width: 79 }}

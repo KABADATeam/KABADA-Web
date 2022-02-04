@@ -29,6 +29,11 @@ import PublicKeyPartners from './public_plan/containers/KeyPartners';
 import PublicCostStructure from './public_plan/containers/CostStructure'
 import PublicKeyActivities from './public_plan/containers/KeyActivities';
 import PublicSwot from './public_plan/containers/Swot';
+import PublicAssets from './public_plan/containers/Assets';
+import PublicFixedAndVariableCosts from './public_plan/containers/FixedAndVariableCosts';
+import PublicSalesForecast from './public_plan/containers/SalesForecast';
+import PublicBusinessInvestmentsWindow from './public_plan/containers/BusinessInvestmentWindow';
+import PublicCashFlow from './public_plan/containers/CashFlow';
 import FixedAndVariableCosts from './containers/FixedAndVariableCosts';
 import SalesForecast from './containers/SalesForecast';
 import CashFlow from './containers/CashFlow';
@@ -77,6 +82,11 @@ class PrivateApp extends React.Component {
                     <Route exact path="/public/cost-structure" render={(props) => <MainWindow {...props}> <PublicCostStructure {...props} /> </MainWindow>} />
                     <Route exact path="/public/key-partners" render={(props) => <MainWindow {...props}> <PublicKeyPartners {...props} /> </MainWindow>} />
                     <Route exact path="/public/swot" render={(props) => <MainWindow {...props}> <PublicSwot {...props} /> </MainWindow>} />
+                    <Route exact path="/public/assets" render={(props) => <MainWindow {...props}> <PublicAssets {...props} /> </MainWindow>} />
+                    <Route exact path="/public/fixed-and-variable-costs" render={(props) => <MainWindow {...props}> <PublicFixedAndVariableCosts {...props} /> </MainWindow>} />
+                    <Route exact path="/public/sales-forecast" render={(props) => <MainWindow {...props}> <PublicSalesForecast {...props} /> </MainWindow>} />
+                    <Route exact path="/public/business-start-up-investments" render={(props) => <MainWindow {...props}> <PublicBusinessInvestmentsWindow {...props} /></MainWindow>} />
+                    <Route exact path="/public/cash-flow" render={(props) => <MainWindow {...props}> <PublicCashFlow {...props} /> </MainWindow>} />
                     <Route exact path="/fixed-and-variable-costs" render={(props) => <MainWindow {...props}> <FixedAndVariableCosts {...props} /> </MainWindow>} />
                     <Route exact path="/sales-forecast" render={(props) => <MainWindow {...props}> <SalesForecast {...props} /> </MainWindow>} />
                     <Route exact path="/cash-flow" render={(props) => <MainWindow {...props}> <CashFlow {...props} /> </MainWindow>} />

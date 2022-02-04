@@ -10,6 +10,8 @@ import { getCustomerRelationshipsCategories, getCustomerRelationships, saveState
 import AddCustomerRelationshipModal from '../../components/customer_relationships/AddCustomerRelationshipModal';
 import EditCustomerRelationshipModal from '../../public_plan/components/EditCustomerRelationshipModal';
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
+import TooltipComponent from '../../components/Tooltip';
+import TextHelper from '../../components/TextHelper';
 
 const { Text } = Typography;
 
@@ -181,14 +183,14 @@ class PublicCustomerRelationships extends React.Component {
                 title: 'Action',
                 dataIndex: 'category',
                 key: 'category',
-                width: '25%',
+                width: '26.5%',
                 render: (value, row) => value.title,
             },
             {
                 title: 'Channel',
                 dataIndex: 'channels',
                 key: 'channels',
-                width: '65%',
+                width: '44%',
                 render: (value, row) => value.map(function (item, index) {
                     return (index ? ', ' : '') + item;
                 }),
@@ -197,9 +199,9 @@ class PublicCustomerRelationships extends React.Component {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (value, row) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditHowToGetNew.bind(this, row)} >View</Button>
                     </Space>
                 ),
@@ -211,14 +213,14 @@ class PublicCustomerRelationships extends React.Component {
                 title: 'Action',
                 dataIndex: 'category',
                 key: 'category',
-                width: '25%',
+                width: '26.5%',
                 render: (value, row) => (value.title)
             },
             {
                 title: 'Channel',
                 dataIndex: 'channels',
                 key: 'channels',
-                width: '65%',
+                width: '44%',
                 render: (value, row) => value.map(function (item, index) {
                     return (index ? ', ' : '') + item;
                 }),
@@ -227,9 +229,9 @@ class PublicCustomerRelationships extends React.Component {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (value, row) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditHowToKeepExisting.bind(this, row)} >View</Button>
                     </Space>
                 ),
@@ -241,14 +243,14 @@ class PublicCustomerRelationships extends React.Component {
                 title: 'Action',
                 dataIndex: 'category',
                 key: 'category',
-                width: '25%',
+                width: '26.5%',
                 render: (value, row) => (value.title),
             },
             {
                 title: 'Channel',
                 dataIndex: 'channels',
                 key: 'channels',
-                width: '65%',
+                width: '44%',
                 render: (value, row) => value.map(function (item, index) {
                     return (index ? ', ' : '') + item;
                 }),
@@ -257,9 +259,9 @@ class PublicCustomerRelationships extends React.Component {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (value, row) => (
-                    <Space size={0}>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...buttonStyle }} onClick={this.onEditHowToMakeSpend.bind(this, row)} >View</Button>
                     </Space>
                 ),
@@ -268,7 +270,7 @@ class PublicCustomerRelationships extends React.Component {
 
         return (
             <>
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
                             <Space><Link to='/public-business-plans'>Public Business plans</Link></Space>
@@ -283,85 +285,67 @@ class PublicCustomerRelationships extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col span={12} offset={4}>
+                    <Col span={12} offset={2}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Customer Relationships</Text>
-                            <Tooltip title="Tooltip text">
-                                <InfoCircleFilled style={{ fontSize: '21px', color: '#BFBFBF', marginLeft: '17px' }} />
-                            </Tooltip>
+                            <TooltipComponent code="ovmbp1" type="title" />
                         </div>
                     </Col>
 
                 </Row>
 
 
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Divider />
                 </Col>
 
-                <Col offset={4} span={16}>
+                <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>How to get new customers?</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                                    <br /><br />
-                                    Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.
-                                </Typography.Text>
+                                <TextHelper code="custrelgetcust" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                        <Col span={16}>
                                 <Table
                                     dataSource={this.props.customerRelationships.how_to_get_new}
                                     columns={howToGetNewColumns}
                                     pagination={false}
                                 />
-                            </Card >
                         </Col>
                     </Row>
                     <Divider />
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>How to keep customers?</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                                    <br /><br />
-                                    Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.
-                                </Typography.Text>
+                                <TextHelper code="custrelkeepcust" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                        <Col span={16}>
                                 <Table
                                     dataSource={this.props.customerRelationships.how_to_keep_existing}
                                     columns={howToKeepExistingColumns}
                                     pagination={false}
                                 />
-                            </Card >
                         </Col>
                     </Row>
                     <Divider />
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>How to convince existing to spend more?</Typography.Title>
-                                <Typography.Text style={{ ...textStyle }}>
-                                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                                </Typography.Text>
+                                <TextHelper code="custrelconvince" type="lefttext"/>
                             </div>
                         </Col>
-                        <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                        <Col span={16}>
                                 <Table
                                     dataSource={this.props.customerRelationships.how_to_make_spend}
                                     columns={howToMakeSpendColumns}
                                     pagination={false}
                                 />
-                            </Card >
                         </Col>
                     </Row>
                 </Col>

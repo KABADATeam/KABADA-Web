@@ -4,12 +4,13 @@ import { Divider, Button, Breadcrumb, Row, Col, Typography, Switch, Space, List 
 import { ArrowLeftOutlined } from '@ant-design/icons';
 //import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
 import { connect } from 'react-redux';
-import { refreshPlan } from "../../../appStore/actions/refreshAction";
-import { getKeyActivitiesList, getCategories, saveState } from "../../../appStore/actions/keyActivitiesAction";
+import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
+import { getKeyActivitiesList, getCategories } from "../../../appStore/actions/keyActivitiesAction";
 import ProductComponent from "../../public_plan/components/ProductComponent";
 import KeyActivityTypesModal from "../../components/key_activities/KeyActivityTypesModal";
 import AddKeyActivityModal from "../../components/key_activities/AddKeyActivityModal";
 import EditKeyActivityModal from "../../public_plan/components/EditKeyActivityModal"
+import TooltipComponent from "../../components/Tooltip";
 
 const { Text } = Typography;
 
@@ -82,16 +83,13 @@ class KeyActivities extends React.Component {
             item: null,
         })
     }
-    onCompletedChange(state) {
-        this.props.saveState(this.props.businessPlan.id, state);
-    }
 
     componentDidMount() {
         if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
                 this.props.history.push(`/`);
             } else {
-                this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
                     this.props.getKeyActivitiesList(this.props.businessPlan.id)
                     this.props.getCategories()
                 });                
@@ -105,13 +103,13 @@ class KeyActivities extends React.Component {
 
         return (
             <>
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Breadcrumb style={{ marginTop: "40px" }}>
                         <Breadcrumb.Item>
-                            <Space><Link to='/personal-business-plans'>My Business plans</Link></Space>
+                            <Space><Link to='/public-business-plans'>Public Business plans</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Space><Link to='/overview'>{this.props.businessPlan.name}</Link></Space>
+                            <Space><Link to='/public/overview'>{this.props.businessPlan.name}</Link></Space>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             Key activities
@@ -120,16 +118,15 @@ class KeyActivities extends React.Component {
                 </Col>
 
                 <Row align="middle" style={{ marginTop: "9px" }}>
-                    <Col span={12} offset={4}>
+                    <Col span={12} offset={2}>
                         <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                             <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                             <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Key Activities</Text>
+                            <TooltipComponent code="keyactive1" type="title" />
                         </div>
                     </Col>
-                    <Col span={4}>
-                    </Col>
                 </Row>
-                <Col span={16} offset={4}>
+                <Col span={20} offset={2}>
                     <Divider />
                 </Col>
                 <List
@@ -169,4 +166,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, {refreshPlan, getCategories, getKeyActivitiesList, saveState})(KeyActivities);
+export default connect(mapStateToProps, {refreshPublicPlan, getCategories, getKeyActivitiesList })(KeyActivities);

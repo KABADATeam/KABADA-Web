@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Row, Col, Typography, Card, Table, Space } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
+import { buttonStyle, leftButtonStyle, defaultButtonStyle } from '../../../styles/customStyles';
 import { connect } from 'react-redux';
 //import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { deleteActivity } from "../../../appStore/actions/keyActivitiesAction"
@@ -48,37 +48,37 @@ class ProductComponent extends React.Component {
                 title: 'Activity',
                 dataIndex: 'type_name',
                 key: 'type_name',
-                width: '30%',
+                width: '29.67%',
             },
             {
                 title: 'Sub Type',
                 dataIndex: 'sub_type_name',
                 key: 'sub_type_name',
-                width: '30%',
+                width: '28.53%',
             },
             {
                 title: 'Name',
                 dataIndex: 'name',
                 key: 'name',
-                width: '30%',
+                width: '22.27%',
             },
             {
                 title: '',
                 dataIndex: 'action',
                 key: 'action',
-                width: '10%',
+                width: '19.5%',
                 render: (obj, record) => (
-                    <Space size={0}>
-                        <Button size="medium" style={{ ...leftButtonStyle }}  onClick={this.openEditActivityModal.bind(this, record)}>View</Button>
+                    <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
+                        <Button size="medium" style={{ ...defaultButtonStyle }} onClick={this.openEditActivityModal.bind(this, record)}>View</Button>
                     </Space>
                 ),
             }
         ];
         return (
             <>
-                <Col offset={4} span={16}>
+                <Col offset={2} span={20}>
                     <Row style={{ marginBottom: "50px" }}>
-                        <Col span={7}>
+                        <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>{this.props.data.title}</Typography.Title>
                                 <Typography.Text style={{ ...textStyle }}>
@@ -86,25 +86,23 @@ class ProductComponent extends React.Component {
                                 </Typography.Text>
                             </div>
                         </Col>
-                        <Col span={17}>
-                            <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
-                                <Typography.Title style={{ ...tableTitleStyle, marginLeft: 20}}>
-                                    Key Activities
-                                </Typography.Title>
-                                <Typography.Text style={{ ...textStyle, marginLeft:20}}>
-                                    Description
-                                </Typography.Text>
+                        <Col span={16}>
                                 <Table
+                                    title={() => <>
+                                        <Typography style={{ ...tableTitleStyle }}>Key Activities</Typography>
+                                        <Typography style={{ ...textStyle }}>
+                                            Description
+                                        </Typography>
+                                    </>}
                                     dataSource={this.props.data.activities}
-                                    style={{marginTop: 20}}
+                                    style={{ marginTop: 20 }}
                                     columns={activitiesColumns}
                                     pagination={false}
                                 />
-                            </Card >
                         </Col>
                     </Row>
                 </Col>
-                </>
+            </>
         )
     }
 }
@@ -116,4 +114,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, {deleteActivity})(ProductComponent);
+export default connect(mapStateToProps, { deleteActivity })(ProductComponent);
