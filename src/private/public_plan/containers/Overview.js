@@ -5,9 +5,12 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview, getImage, getSelectedPlanDetails } from "../../../appStore/actions/planActions";
+import { getSelectedPlanActiveKey, getRisks } from '../../../appStore/actions/industryRiskAction';
 import { withRouter } from 'react-router-dom';
 import TooltipComponent from '../../components/Tooltip';
+import TextHelper from '../../components/TextHelper';
 import IndustryDataComponent from '../components/IndustryDataComponent';
+import IndustryRisks from '../components/IndustryRisks';
 
 const { TabPane } = Tabs;
 const { Text } = Typography;
@@ -80,24 +83,13 @@ const financialTitleButtonPositionStyle = {
 }
 
 class PublicOverview extends React.Component {
+    
 
     onBackClick() {
         this.props.history.push(`/public-business-plans`);
     }
 
     componentDidMount() {
-        /*if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
-                this.props.history.push(`/`);
-            } else {
-                this.props.refreshPlan(localStorage.getItem("public_plan"), () => {
-                    this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-                });
-            }
-        } else {
-            this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-
-        }*/
         if (this.props.businessPlan.id === null) {
             if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
                 this.props.history.push(`/`);
@@ -108,6 +100,10 @@ class PublicOverview extends React.Component {
                             if (this.props.businessPlan.overview.planImage)
                                 this.props.getImage({ ...this.props.businessPlan, "planImage": this.props.businessPlan.overview.planImage });
                         });
+                    this.props.getSelectedPlanDetails(this.props.businessPlan.id);
+                    this.props.getSelectedPlanActiveKey(this.props.businessPlan.id, () => {
+                        this.props.getRisks(this.props.industryRisk.activeKey)
+                    })
                 });
             }
         } else {
@@ -116,12 +112,16 @@ class PublicOverview extends React.Component {
                     if (this.props.businessPlan.overview.planImage)
                         this.props.getImage({ ...this.props.businessPlan, "planImage": this.props.businessPlan.overview.planImage });
                 });
+            this.props.getSelectedPlanDetails(this.props.businessPlan.id);
+            this.props.getSelectedPlanActiveKey(this.props.businessPlan.id, () => {
+                this.props.getRisks(this.props.industryRisk.activeKey)
+            })
         }
     }
 
     render() {
         const overview = this.props.businessPlan.overview;
-
+        console.log(this.props.businessPlan.activityID);
         if (this.props.loading === true || this.props.businessPlan.overview === undefined) {
             return (<div></div>)
         } else {
@@ -504,14 +504,15 @@ class PublicOverview extends React.Component {
                                 <IndustryDataComponent />
                             </TabPane>
                             <TabPane tab="Industry risks" key="3">
-                                <Row style={{ marginBottom: "50px" }}>
+                                <Row style={{ marginBottom: "50px", marginTop: "40px" }}>
                                     <Col span={8}>
                                         <div style={{ marginRight: '40px' }}>
-                                            <Typography.Title style={aboutTitleTextStyle}>Industry risks</Typography.Title>
+                                            <Typography.Title style={aboutTitleTextStyle}>{this.props.businessPlan.activityCode} Industry risks</Typography.Title>
+                                            <TextHelper code="ovir" type="lefttext" />
                                         </div>
                                     </Col>
                                     <Col span={16}>
-
+                                        <IndustryRisks />
                                     </Col>
                                 </Row>
                             </TabPane>
@@ -527,8 +528,9 @@ const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
         loading: state.loading,
-        imageLoading: state.imageLoading
+        imageLoading: state.imageLoading,
+        industryRisk: state.industryRisk,
     };
 }
 
-export default connect(mapStateToProps, { refreshPublicPlan, getSelectedPlanOverview, getImage, getSelectedPlanDetails })(withRouter(PublicOverview))
+export default connect(mapStateToProps, { refreshPublicPlan, getSelectedPlanOverview, getImage, getSelectedPlanDetails, getRisks, getSelectedPlanActiveKey })(withRouter(PublicOverview))

@@ -90,7 +90,7 @@ export const selectedplanFetchReducer = (state = {
         //         "activityCode": action.payload.overview.nace.activity_code,
         //     }
         case "FETCHING_SELECTED_PLAN_DETAILS_SUCCESS":
-            return { ...state, "countryShortCode": action.payload.country.shortCode, "countryTitle": action.payload.country.title, "planImage": action.payload.img ? action.payload.img : null };
+            return { ...state, "countryShortCode": action.payload.country.shortCode, "countryTitle": action.payload.country.title, "planImage": action.payload.img ? action.payload.img : null, "activityID": action.payload.activityID };
         case "UPDATING_SELECTED_PLAN_SUCCESS":
             return { ...state, ...action.payload };
         case "UPDATING_IMAGE_SUCCESS":
