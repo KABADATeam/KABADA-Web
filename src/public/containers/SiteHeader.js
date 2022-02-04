@@ -42,8 +42,8 @@ class SiteHeader extends React.Component {
 
                     <Col span={12} offset={2}  >
 
-                        <h1 className='h1Style'>Get down to business and grow sales</h1>
-                        <p>Engage your customers and boost your business with Mailchimp's advanced, yet easy‑to‑use marketing platform.</p>
+                        <h1 className='h1Style'>Start off your business on the right foot</h1>
+                        <p>Get organized and set up your business plan properly using our easy-to-use structured framework</p>
 
                         <Col span={12} >
                             <Button className='PrimaryButton' type="primary">Create business plan</Button>
@@ -60,10 +60,15 @@ class SiteHeader extends React.Component {
 
                     <Col span={12} offset={7} style={{ marginTop: '85px' }}  >
 
-                        <p className='secanP'>KABADA – Knowledge Alliance of Business idea Assessment: Digital Approach –
-                            is an Erasmus+ KA2 project aimed at developing a tool based on an artificial intelligence (AI)
-                            for the assessment of business ideas and plans applicable to a wide range of young entrepreneurs
-                            for the promotion of self-employment and business activities.</p>
+                        <p className='secanP'>KABADA stands for Knowledge Alliance of Business
+                            Idea Assessment: Digital Approach. It is a structured,
+                            Web-based platform that purports to take the guesswork
+                            out of business plan development. Informed by theoretical
+                            research, relevant statistics, and artificial intelligence (AI)
+                            insights, the tool guides new entrepreneurs through every step of
+                            the way, helping them understand where they stand, where and how
+                            they might consider going, and what challenges and
+                            opportunities lie ahead.</p>
 
 
                     </Col>
@@ -78,9 +83,8 @@ class SiteHeader extends React.Component {
 
                         <h2>Do it all with KABADA</h2>
 
-                        <p style={{ width: '64%', marginBottom: '7%' }} className='pStyle'>Bring your audience data, marketing channels, and insights together so you can reach your goals faster—all from a single platform.</p>
-                        <h2 className='h2Style'>aka Features</h2>
-                        <h2 className='h2Style'>Dropboxī ir vision</h2>
+                        <p style={{ width: '64%', marginBottom: '7%' }} className='pStyle'>Set up your perfect business plan from scratch. From the initial business idea to detailed financial projections, KABADA provides a way to plan and assess every aspect of your new enterprise.</p>
+
                     </Col>
                     <Col span={12} style={{ marginTop: '85px' }}  >
 
@@ -89,10 +93,9 @@ class SiteHeader extends React.Component {
                                 <path d="M0 9V27C0 28.625 1.375 30 3 30H6V6H3C1.375 6 0 7.375 0 9ZM21 0H11C9.375 0 8 1.375 8 3V30H24V3C24 1.375 22.625 0 21 0ZM21 6H11V3H21V6ZM29 6H26V30H29C30.625 30 32 28.625 32 27V9C32 7.375 30.625 6 29 6Z" fill="#1890FF" />
                             </svg>
 
-                            <h3 className='h3Style'>Risk Anssdfgd</h3>
+                            <h3 className='h3Style'>Business Canvas</h3>
 
-                            <p style={{ width: '55%' }} className='pStyle'>Give your brand a home with a custom domain. Then launch a website to sell products
-                                or take appointments, all with built-in marketing tools to help you boost sales and find fans.</p>
+                            <p style={{ width: '55%' }} className='pStyle'>The Business Canvas offers you a structured way to describe your business model. How will your business create, deliver, and capture value?</p>
                         </div>
 
                         <div style={{ marginTop: '6.5%' }}>
@@ -101,10 +104,11 @@ class SiteHeader extends React.Component {
                             </svg>
 
 
-                            <h3 className='h3Style'>Get your business online</h3>
+                            <h3 className='h3Style'>Financial Projections</h3>
 
-                            <p style={{ width: '55%' }} className='pStyle'>Give your brand a home with a custom domain. Then launch a website to sell products
-                                or take appointments, all with built-in marketing tools to help you boost sales and find fans.</p>
+                            <p style={{ width: '55%' }} className='pStyle'>The Financial Projections section will evaluate your company's current and future financial position. What assets
+
+                                do you have? What investments will you need? What will your costs and revenues be? Will your overall cash flow over time be viable?</p>
                         </div>
 
                         <div style={{ marginTop: '6.5%' }}>
@@ -112,21 +116,42 @@ class SiteHeader extends React.Component {
                             <svg width="32" height="30" viewBox="0 0 32 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M0 9V27C0 28.625 1.375 30 3 30H6V6H3C1.375 6 0 7.375 0 9ZM21 0H11C9.375 0 8 1.375 8 3V30H24V3C24 1.375 22.625 0 21 0ZM21 6H11V3H21V6ZM29 6H26V30H29C30.625 30 32 28.625 32 27V9C32 7.375 30.625 6 29 6Z" fill="#1890FF" />
                             </svg>
-                            <h3 className='h3Style'>Get your business online</h3>
+                            <h3 className='h3Style'>SWOT Analysis</h3>
 
-                            <p style={{ width: '55%' }} className='pStyle'>Give your brand a home with a custom domain. Then launch a website to sell products
-                                or take appointments, all with built-in marketing tools to help you boost sales and find fans.</p>
+                            <p style={{ width: '55%' }} className='pStyle'>Short for "Strengths, Weaknesses, Opportunities, and Threats", SWOT analysis allows you to identify both internal and external factors that affect your likelihood to succeed. What are your firm’s internal strengths and weaknesses relative to your competition? What opportunities does the external environment offer you, and what external threats are you likely to face?</p>
                         </div>
 
-                        <div style={{ marginTop: '6.5%' }}>
+                        <div style={{ marginTop: '12.5%' }}>
 
                             <svg width="32" height="30" viewBox="0 0 32 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M0 9V27C0 28.625 1.375 30 3 30H6V6H3C1.375 6 0 7.375 0 9ZM21 0H11C9.375 0 8 1.375 8 3V30H24V3C24 1.375 22.625 0 21 0ZM21 6H11V3H21V6ZM29 6H26V30H29C30.625 30 32 28.625 32 27V9C32 7.375 30.625 6 29 6Z" fill="#1890FF" />
                             </svg>
-                            <h3 className='h3Style'>Get your business online</h3>
+                            <h3 className='h3Style'>Personal Characteristics</h3>
 
-                            <p style={{ width: '55%' }} className='pStyle'>Give your brand a home with a custom domain. Then launch a website to sell products
-                                or take appointments, all with built-in marketing tools to help you boost sales and find fans.</p>
+                            <p style={{ width: '55%' }} className='pStyle'>The success of a company depends a great deal on the people behind it. In this section, you will answer a few questions about yourself, your reasons for starting the business, and your readiness to tackle the trials ahead. Are you up to the challenge?</p>
+                        </div>
+
+                        <div style={{ marginTop: '10.5%' }}>
+
+                            <svg width="32" height="30" viewBox="0 0 32 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0 9V27C0 28.625 1.375 30 3 30H6V6H3C1.375 6 0 7.375 0 9ZM21 0H11C9.375 0 8 1.375 8 3V30H24V3C24 1.375 22.625 0 21 0ZM21 6H11V3H21V6ZM29 6H26V30H29C30.625 30 32 28.625 32 27V9C32 7.375 30.625 6 29 6Z" fill="#1890FF" />
+                            </svg>
+                            <h3 className='h3Style'>Industry data</h3>
+
+                            <p style={{ width: '55%' }} className='pStyle'>
+                                You will be provided with data on how others are doing in your industry, in your country, and in the European Union. What are the turnover, the productivity, and the cost structure like? How likely are new firms to survive?</p>
+                        </div>
+
+
+                        <div style={{ marginTop: '10.5%', marginBottom: '5%' }}>
+
+                            <svg width="32" height="30" viewBox="0 0 32 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0 9V27C0 28.625 1.375 30 3 30H6V6H3C1.375 6 0 7.375 0 9ZM21 0H11C9.375 0 8 1.375 8 3V30H24V3C24 1.375 22.625 0 21 0ZM21 6H11V3H21V6ZM29 6H26V30H29C30.625 30 32 28.625 32 27V9C32 7.375 30.625 6 29 6Z" fill="#1890FF" />
+                            </svg>
+                            <h3 className='h3Style'>Industry risk assessment</h3>
+
+                            <p style={{ width: '55%' }} className='pStyle'>
+                                KABADA provides a structured overview of the risks your new business may face, depending on the industry in which you plan to operate. Awareness of the potential risks will help you take appropriate action to mitigate their potential impact.</p>
                         </div>
                     </Col>
 
@@ -139,12 +164,12 @@ class SiteHeader extends React.Component {
                     </Col>
 
                     <Col span={10} style={{ marginTop: '60px', marginBottom: '115px' }} >
-                        <span className='whoIsSpan'>entrepreneurs</span>
-                        <span className='whoIsSpan'>development finance institutions and related</span>
-                        <span className='whoIsSpan'>students</span>
-                        <span className='whoIsSpan'>teaching staff of HEI</span>
-                        <span className='whoIsSpan'>business consultants</span>
-                        <span className='whoIsSpan'>entrepreneurs</span>
+                        <span className='whoIsSpan'>Entrepreneurs</span>
+                        <span className='whoIsSpan'>Students</span>
+                        <span className='whoIsSpan'>Teaching staff of HEI </span>
+                        <span className='whoIsSpan'>Business consultants </span>
+                        <span className='whoIsSpan'>Development finance institutions and related </span>
+                        <span className='whoIsSpan'>Other parties interested in the development of business ideas</span>
                         <span className='whoIsSpan'>
                             business consultants
                             other parties interested in development of business ideas (pupils, unemployed,…)
@@ -154,7 +179,9 @@ class SiteHeader extends React.Component {
 
                 <Row style={{ background: '#F5F5F5' }}>
 
-                    <Col span={12} offset={9} style={{ marginTop: '72px', marginBottom: '56px' }}><h2 className='h2Style' style={{ width: '486px', textAlign: 'center' }}>Resources to give you the inside track</h2></Col>
+                    <Col span={12} offset={9} style={{ marginTop: '72px', marginBottom: '56px' }}>
+                        <h2 className='h2Style' style={{ width: '486px', textAlign: 'center' }}>Resources to give you the inside track</h2>
+                    </Col>
                     <Col offset={4} span={4} >
                         <Card
                             hoverable
@@ -171,7 +198,7 @@ class SiteHeader extends React.Component {
                         <Card
                             hoverable
                             style={{ width: 282 }}
-                            cover={<img alt="example" src="Rectangle7.png" />}
+                            cover={<img alt="example" src="Rectangle1.png" />}
                         >
                             <h3>KABADA: Why is it a more comprehensive assessment tool than the others?</h3>
                             <Meta title="Europe Street beat" description="www.instagram.com" />
@@ -182,7 +209,7 @@ class SiteHeader extends React.Component {
                         <Card
                             hoverable
                             style={{ width: 282 }}
-                            cover={<img alt="example" src="Rectangle7.png" />}
+                            cover={<img alt="example" src="Rectangle2.png" />}
                         >
                             <h3>KABADA: Why is it a more comprehensive assessment tool than the others?</h3>
                             <Meta title="Europe Street beat" description="www.instagram.com" />
@@ -193,7 +220,7 @@ class SiteHeader extends React.Component {
                         <Card
                             hoverable
                             style={{ width: 282 }}
-                            cover={<img alt="example" src="Rectangle7.png" />}
+                            cover={<img alt="example" src="Rectangle3.png" />}
                         >
                             <h3>KABADA: Why is it a more comprehensive assessment tool than the others?</h3>
                             <Meta title="Europe Street beat" description="www.instagram.com" />
@@ -223,7 +250,7 @@ class SiteHeader extends React.Component {
                                 className='card'
                                 hoverable
                                 style={{ width: 282, height: '97px', content: 'contents' }}
-                                cover={<img alt="example" src="image36.png" />}
+                                cover={<img alt="example" src="image37.png" />}
                             >
                             </Card>
                         </Col>
@@ -233,7 +260,7 @@ class SiteHeader extends React.Component {
                                 className='card'
                                 hoverable
                                 style={{ width: 282, height: '97px', content: 'contents' }}
-                                cover={<img alt="example" src="image36.png" />}
+                                cover={<img alt="example" src="image38.png" />}
                             >
                             </Card>
                         </Col>
@@ -243,7 +270,7 @@ class SiteHeader extends React.Component {
                                 className='card'
                                 hoverable
                                 style={{ width: 282, height: '97px', content: 'contents' }}
-                                cover={<img alt="example" src="image36.png" />}
+                                cover={<img alt="example" src="image39.png" />}
                             >
                             </Card>
                         </Col>
@@ -265,7 +292,7 @@ class SiteHeader extends React.Component {
                                 className='card'
                                 hoverable
                                 style={{ width: 282, height: '97px', content: 'contents' }}
-                                cover={<img alt="example" src="image36.png" />}
+                                cover={<img alt="example" src="image37.png" />}
                             >
                             </Card>
                         </Col>
@@ -275,7 +302,7 @@ class SiteHeader extends React.Component {
                                 className='card'
                                 hoverable
                                 style={{ width: 282, height: '97px', content: 'contents' }}
-                                cover={<img alt="example" src="image36.png" />}
+                                cover={<img alt="example" src="image38.png" />}
                             >
                             </Card>
                         </Col>
@@ -285,7 +312,7 @@ class SiteHeader extends React.Component {
                                 className='card'
                                 hoverable
                                 style={{ width: 282, height: '97px', content: 'contents' }}
-                                cover={<img alt="example" src="image36.png" />}
+                                cover={<img alt="example" src="image39.png" />}
                             >
                             </Card>
                         </Col>
@@ -294,10 +321,10 @@ class SiteHeader extends React.Component {
 
 
                 <Row style={{ background: '#262626' }} >
-                    <Col offset={2} span={20} style={{ alignContent: 'center' }}><h1 className='getDown'>Get down to business and grow sales</h1></Col>
+                    <Col offset={2} span={20} style={{ alignContent: 'center' }}><h1 className='getDown'>Set up your perfect business plan now</h1></Col>
 
                     <Col style={{ textAlign: 'center', marginBottom: '115px' }} offset={2} span={20}>
-                        <Button className='PrimaryButton' type="primary">Get Started</Button>
+                        <Button className='PrimaryButton' type="primary">Create Business Plan </Button>
                     </Col>
                 </Row>
 
@@ -307,9 +334,7 @@ class SiteHeader extends React.Component {
                     <Col offset={2} span={10} style={{ marginTop: '53px' }}>
                         <Image alt='EU' src='image46.png' />
 
-                        <p className='secanP' style={{ textAlign: 'left' }}>The information and views set out in this web-site are those
-                            of the authors and do not necessarily reflect the official opinion of the European Union. Neither the European Union institutions and bodies nor
-                            any person acting on their behalf may be held responsible for the use which may be made of the information contained therein.</p>
+                        <p className='secanP' style={{ textAlign: 'left' }}>The KABADA tool was developed as an Erasmus+ KA2 project No. 612542-EPP-1-2019-1-LV-EPPKA2-KA.</p>
                     </Col>
                     <Col offset={3} style={{ background: '#262626', marginTop: '53px', height: '95px' }}>
                         <FacebookFilled style={{ fontSize: '50px', color: '#ffff', padding: '10px' }} />
