@@ -859,10 +859,9 @@ class Overview extends React.Component {
                                                 />
                                                 {overview !== null && overview.personal_characteristics !== null ?
                                                 <div style={{ marginRight: '28px' }}>
-                                                    <EditBusinessPlanItem link={'/personal-characteristics'}
+                                                    {/* <EditBusinessPlanItem link={'/personal-characteristics'}
                                                         isCompleted={overview.personal_characteristics.is_completed}
-                                                        // save={this.props.savePersonalCharacteristicsCompleted}
-                                                    />
+                                                    /> */}
                                                 </div>:null}
                                             </List.Item>
                                         </List>
