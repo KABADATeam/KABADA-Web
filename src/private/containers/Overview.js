@@ -174,15 +174,10 @@ class Overview extends React.Component {
         this.setState({
             selectedImage: e.target.files[0]
         })
-        console.log(e.target.files[0])
         const formData = new FormData();
         const oldCountry = this.props.countries.find(item => item.title === this.props.businessPlan.countryTitle).id;
-        console.log(oldCountry);
         const oldLanguage = this.props.planLanguages.find(item => item.title === 'English').id;
-        console.log(oldLanguage);
         const oldActivity = this.getActivityID(this.props.nace, this.props.businessPlan.overview.nace.industry_code, this.props.businessPlan.activityCode);
-        console.log(oldActivity)
-        console.log(this.state.selectedImage);
         formData.append('files[]', e.target.files[0]);
         formData.getAll('files[]')
         let postObject = {
@@ -200,7 +195,6 @@ class Overview extends React.Component {
             'countryId': oldCountry,
             'languageId': oldLanguage,
         }
-        console.log(postObject)
         this.props.uploadFile(formData)
             .then(
                 () => {

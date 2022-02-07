@@ -80,12 +80,11 @@ class NewProduct extends React.Component {
     saveChanges = () => {
         const postObj = {
             ...this.props.product,
-            "innovative_level": this.props.productFeatures.innovative[this.props.product.innovative_level_index].id,
-            "quality_level": this.props.productFeatures.quality[this.props.product.quality_level_index].id,
-            "differentiation_level": this.props.productFeatures.differentiation[this.props.product.differentiation_level_index].id,
+            "innovative_level": this.props.product.innovative_level_index === undefined ? this.props.productFeatures.innovative[0].id : this.props.productFeatures.innovative[this.props.product.innovative_level_index].id,
+            "quality_level": this.props.product.quality_level_index === undefined ? this.props.productFeatures.quality[0].id : this.props.productFeatures.quality[this.props.product.quality_level_index].id,
+            "differentiation_level": this.props.product.differentiation_level_index === undefined ? this.props.productFeatures.differentiation[0].id : this.props.productFeatures.differentiation[this.props.product.differentiation_level_index].id,
             "business_plan_id": this.props.businessPlan.id
         };
-        console.log(postObj)
         this.props.saveProduct(postObj, () => {
             this.props.history.push(`/value-propositions`);
         });

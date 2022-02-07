@@ -8,8 +8,8 @@ body{
     /* font-family: "SF Pro Text"; */
     font-style: normal;
     font-weight: 600;
-    font-size: 56px;
-    line-height: 64px;
+    font-size: 2.9166666666666665vw;
+    line-height:  4.49438202247191vw;
     color: rgb(38, 38, 38);
     margin-top: 86px;
 }
@@ -22,14 +22,12 @@ body{
 .pStyle{
 width: 80%;
 height: 56px;
-font-family: SF Pro Text;
 font-style: normal;
 font-weight: normal;
-font-size: 20px;
-line-height: 28px;
-
-
+font-size:  0.8333333333333334vw;
+line-height: 1.4583333333333333vw;
 color: #8C8C8C;
+margin-bottom: 5%;
 }
 .PrimaryButton{
     padding: 13px 24px !important;
@@ -40,8 +38,7 @@ color: #8C8C8C;
     text-align: center;
 }
 .secanP{
-    width: 780px;
-    height: 140px;
+
     font-family: SF Pro Text;
     font-style: normal;
     font-weight: normal;
@@ -52,9 +49,9 @@ color: #8C8C8C;
 }
 
 .h2Style{
-    font-style: normal;
+font-style: normal;
 font-weight: 600;
-font-size: 38px;
+font-size:  4.0126715945089755vh;
 line-height: 46px;
 color: #262626;
 }
@@ -104,3 +101,13 @@ color: black;
 .background{
     background: white !important;
 }
+
+
+/* @media only screen and (max-width: 1270px) {
+    .pStyle{
+        margin-bottom: 12%;
+        font-size: 14px;
+        width: 100%;
+    }
+
+  } */
