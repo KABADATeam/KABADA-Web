@@ -43,7 +43,7 @@ class SiteHeader extends React.Component {
                     <Col span={12} offset={2}  >
 
                         <h1 className='h1Style'>Start off your business on the right foot</h1>
-                        <p>Get organized and set up your business plan properly using our easy-to-use structured framework</p>
+                        <p style={{ marginTop: '5%' }}>Get organized and set up your business plan properly using our easy-to-use structured framework</p>
 
                         <Col span={12} >
                             <Button className='PrimaryButton' type="primary">Create business plan</Button>
@@ -88,72 +88,72 @@ class SiteHeader extends React.Component {
                     </Col>
                     <Col span={12} style={{ marginTop: '85px' }}  >
 
-                        <div>
+                        <Col>
                             <svg width="32" height="30" viewBox="0 0 32 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M0 9V27C0 28.625 1.375 30 3 30H6V6H3C1.375 6 0 7.375 0 9ZM21 0H11C9.375 0 8 1.375 8 3V30H24V3C24 1.375 22.625 0 21 0ZM21 6H11V3H21V6ZM29 6H26V30H29C30.625 30 32 28.625 32 27V9C32 7.375 30.625 6 29 6Z" fill="#1890FF" />
                             </svg>
 
                             <h3 className='h3Style'>Business Canvas</h3>
 
-                            <p style={{ width: '55%' }} className='pStyle'>The Business Canvas offers you a structured way to describe your business model. How will your business create, deliver, and capture value?</p>
-                        </div>
+                            <p style={{ width: '80%' }} className='pStyle'>The Business Canvas offers you a structured way to describe your business model. How will your business create, deliver, and capture value?</p>
+                        </Col>
 
-                        <div style={{ marginTop: '6.5%' }}>
+                        <Col style={{ marginTop: '5.5%' }}>
                             <svg width="32" height="30" viewBox="0 0 32 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M0 9V27C0 28.625 1.375 30 3 30H6V6H3C1.375 6 0 7.375 0 9ZM21 0H11C9.375 0 8 1.375 8 3V30H24V3C24 1.375 22.625 0 21 0ZM21 6H11V3H21V6ZM29 6H26V30H29C30.625 30 32 28.625 32 27V9C32 7.375 30.625 6 29 6Z" fill="#1890FF" />
                             </svg>
-
-
                             <h3 className='h3Style'>Financial Projections</h3>
 
-                            <p style={{ width: '55%' }} className='pStyle'>The Financial Projections section will evaluate your company's current and future financial position. What assets
+                            <p style={{ width: '80%' }} className='pStyle'>The Financial Projections section will evaluate your company's current and future financial position. What assets
 
                                 do you have? What investments will you need? What will your costs and revenues be? Will your overall cash flow over time be viable?</p>
-                        </div>
+                        </Col>
 
-                        <div style={{ marginTop: '6.5%' }}>
+                        <Col style={{ marginTop: '6.5%' }}>
 
                             <svg width="32" height="30" viewBox="0 0 32 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M0 9V27C0 28.625 1.375 30 3 30H6V6H3C1.375 6 0 7.375 0 9ZM21 0H11C9.375 0 8 1.375 8 3V30H24V3C24 1.375 22.625 0 21 0ZM21 6H11V3H21V6ZM29 6H26V30H29C30.625 30 32 28.625 32 27V9C32 7.375 30.625 6 29 6Z" fill="#1890FF" />
                             </svg>
                             <h3 className='h3Style'>SWOT Analysis</h3>
 
-                            <p style={{ width: '55%' }} className='pStyle'>Short for "Strengths, Weaknesses, Opportunities, and Threats", SWOT analysis allows you to identify both internal and external factors that affect your likelihood to succeed. What are your firm’s internal strengths and weaknesses relative to your competition? What opportunities does the external environment offer you, and what external threats are you likely to face?</p>
-                        </div>
+                            <p style={{ width: '80%' }} className='pStyle'>Short for "Strengths, Weaknesses, Opportunities, and Threats", SWOT analysis allows you to identify both internal and external factors that affect your likelihood to succeed. What are your firm’s internal strengths and weaknesses relative to your competition? What opportunities does the external environment offer you</p>
+                        </Col>
 
-                        <div style={{ marginTop: '12.5%' }}>
+                        <Col style={{ marginTop: '12.5%' }}>
 
                             <svg width="32" height="30" viewBox="0 0 32 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M0 9V27C0 28.625 1.375 30 3 30H6V6H3C1.375 6 0 7.375 0 9ZM21 0H11C9.375 0 8 1.375 8 3V30H24V3C24 1.375 22.625 0 21 0ZM21 6H11V3H21V6ZM29 6H26V30H29C30.625 30 32 28.625 32 27V9C32 7.375 30.625 6 29 6Z" fill="#1890FF" />
                             </svg>
                             <h3 className='h3Style'>Personal Characteristics</h3>
 
-                            <p style={{ width: '55%' }} className='pStyle'>The success of a company depends a great deal on the people behind it. In this section, you will answer a few questions about yourself, your reasons for starting the business, and your readiness to tackle the trials ahead. Are you up to the challenge?</p>
-                        </div>
+                            <p style={{ width: '80%' }} className='pStyle'>The success of a company depends a great deal on the people behind it. In this section, you will answer a few questions about yourself, your reasons for starting the business, and your readiness to tackle the trials ahead. Are you up to the challenge?</p>
+                        </Col>
 
-                        <div style={{ marginTop: '10.5%' }}>
+                        <Col style={{ marginTop: '10.5%' }}>
 
                             <svg width="32" height="30" viewBox="0 0 32 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M0 9V27C0 28.625 1.375 30 3 30H6V6H3C1.375 6 0 7.375 0 9ZM21 0H11C9.375 0 8 1.375 8 3V30H24V3C24 1.375 22.625 0 21 0ZM21 6H11V3H21V6ZM29 6H26V30H29C30.625 30 32 28.625 32 27V9C32 7.375 30.625 6 29 6Z" fill="#1890FF" />
                             </svg>
                             <h3 className='h3Style'>Industry data</h3>
 
-                            <p style={{ width: '55%' }} className='pStyle'>
+                            <p style={{ width: '80%' }} className='pStyle'>
                                 You will be provided with data on how others are doing in your industry, in your country, and in the European Union. What are the turnover, the productivity, and the cost structure like? How likely are new firms to survive?</p>
-                        </div>
+                        </Col>
 
 
-                        <div style={{ marginTop: '10.5%', marginBottom: '5%' }}>
+                        <Col style={{ marginTop: '10.5%', marginBottom: '5%' }}>
 
                             <svg width="32" height="30" viewBox="0 0 32 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M0 9V27C0 28.625 1.375 30 3 30H6V6H3C1.375 6 0 7.375 0 9ZM21 0H11C9.375 0 8 1.375 8 3V30H24V3C24 1.375 22.625 0 21 0ZM21 6H11V3H21V6ZM29 6H26V30H29C30.625 30 32 28.625 32 27V9C32 7.375 30.625 6 29 6Z" fill="#1890FF" />
                             </svg>
                             <h3 className='h3Style'>Industry risk assessment</h3>
 
-                            <p style={{ width: '55%' }} className='pStyle'>
+                            <p style={{ width: '80%' }} className='pStyle'>
                                 KABADA provides a structured overview of the risks your new business may face, depending on the industry in which you plan to operate. Awareness of the potential risks will help you take appropriate action to mitigate their potential impact.</p>
-                        </div>
+                        </Col>
                     </Col>
+                </Row>
+                <Row style={{ background: '#ffff' }}>
 
                     <Col span={20} offset={2}>
                         <Divider style={{ color: 'red', background: "#D9D9D9" }} />
@@ -179,13 +179,14 @@ class SiteHeader extends React.Component {
 
                 <Row style={{ background: '#F5F5F5' }}>
 
-                    <Col span={12} offset={9} style={{ marginTop: '72px', marginBottom: '56px' }}>
-                        <h2 className='h2Style' style={{ width: '486px', textAlign: 'center' }}>Resources to give you the inside track</h2>
+                    <Col span={24} style={{ marginTop: '72px', marginBottom: '56px' }}>
+                        <h2 className='h2Style' style={{ textAlign: 'center' }}>Resources to give you the </h2>
+                        <h2 className='h2Style' style={{ textAlign: 'center' }}>inside track </h2>
                     </Col>
                     <Col offset={4} span={4} >
                         <Card
                             hoverable
-                            style={{ width: 282 }}
+                            style={{ width: '14.6875vw' }}
                             cover={<img alt="example" src="Rectangle7.png" />}
                         >
                             <h3>KABADA: Why is it a more comprehensive assessment tool than the others?</h3>
@@ -197,7 +198,7 @@ class SiteHeader extends React.Component {
                     <Col span={4} >
                         <Card
                             hoverable
-                            style={{ width: 282 }}
+                            style={{ width: '14.6875vw' }}
                             cover={<img alt="example" src="Rectangle1.png" />}
                         >
                             <h3>KABADA: Why is it a more comprehensive assessment tool than the others?</h3>
@@ -208,7 +209,7 @@ class SiteHeader extends React.Component {
                     <Col span={4}>
                         <Card
                             hoverable
-                            style={{ width: 282 }}
+                            style={{ width: '14.6875vw' }}
                             cover={<img alt="example" src="Rectangle2.png" />}
                         >
                             <h3>KABADA: Why is it a more comprehensive assessment tool than the others?</h3>
@@ -219,7 +220,7 @@ class SiteHeader extends React.Component {
                     <Col span={4}>
                         <Card
                             hoverable
-                            style={{ width: 282 }}
+                            style={{ width: '14.6875vw' }}
                             cover={<img alt="example" src="Rectangle3.png" />}
                         >
                             <h3>KABADA: Why is it a more comprehensive assessment tool than the others?</h3>
@@ -239,7 +240,7 @@ class SiteHeader extends React.Component {
                             <Card
                                 className='card'
                                 hoverable
-                                style={{ width: 282, height: '97px', content: 'contents' }}
+                                style={{ width: ' 15.309446254071661vw', height: '97px', content: 'contents' }}
                                 cover={<img alt="example" src="image36.png" />}
                             >
                             </Card>
@@ -249,8 +250,8 @@ class SiteHeader extends React.Component {
                             <Card
                                 className='card'
                                 hoverable
-                                style={{ width: 282, height: '97px', content: 'contents' }}
-                                cover={<img alt="example" src="image37.png" />}
+                                style={{ width: ' 15.309446254071661vw', height: '97px', content: 'contents' }}
+                                cover={<img style={{ marginTop: '9%' }} alt="example" src="image37.png" />}
                             >
                             </Card>
                         </Col>
@@ -259,8 +260,8 @@ class SiteHeader extends React.Component {
                             <Card
                                 className='card'
                                 hoverable
-                                style={{ width: 282, height: '97px', content: 'contents' }}
-                                cover={<img alt="example" src="image38.png" />}
+                                style={{ width: ' 15.309446254071661vw', height: '97px', content: 'contents' }}
+                                cover={<img style={{ marginTop: '9%' }} alt="example" src="image38.png" />}
                             >
                             </Card>
                         </Col>
@@ -269,8 +270,8 @@ class SiteHeader extends React.Component {
                             <Card
                                 className='card'
                                 hoverable
-                                style={{ width: 282, height: '97px', content: 'contents' }}
-                                cover={<img alt="example" src="image39.png" />}
+                                style={{ width: ' 15.309446254071661vw', height: '97px', content: 'contents' }}
+                                cover={<img style={{ marginTop: '14%' }} alt="example" src="image39.png" />}
                             >
                             </Card>
                         </Col>
@@ -281,7 +282,7 @@ class SiteHeader extends React.Component {
                             <Card
                                 className='card'
                                 hoverable
-                                style={{ width: 282, height: '97px', content: 'contents' }}
+                                style={{ width: '15.309446254071661vw', height: '97px', content: 'contents' }}
                                 cover={<img alt="example" src="image36.png" />}
                             >
                             </Card>
@@ -291,8 +292,8 @@ class SiteHeader extends React.Component {
                             <Card
                                 className='card'
                                 hoverable
-                                style={{ width: 282, height: '97px', content: 'contents' }}
-                                cover={<img alt="example" src="image37.png" />}
+                                style={{ width: ' 15.309446254071661vw', height: '97px', content: 'contents' }}
+                                cover={<img style={{ marginTop: '10%' }} alt="example" src="image37.png" />}
                             >
                             </Card>
                         </Col>
@@ -301,8 +302,8 @@ class SiteHeader extends React.Component {
                             <Card
                                 className='card'
                                 hoverable
-                                style={{ width: 282, height: '97px', content: 'contents' }}
-                                cover={<img alt="example" src="image38.png" />}
+                                style={{ width: ' 15.309446254071661vw', height: '97px', content: 'contents' }}
+                                cover={<img style={{ marginTop: '9%' }} alt="example" src="image38.png" />}
                             >
                             </Card>
                         </Col>
@@ -311,8 +312,8 @@ class SiteHeader extends React.Component {
                             <Card
                                 className='card'
                                 hoverable
-                                style={{ width: 282, height: '97px', content: 'contents' }}
-                                cover={<img alt="example" src="image39.png" />}
+                                style={{ width: ' 15.309446254071661vw', height: '97px', content: 'contents' }}
+                                cover={<img style={{ marginTop: '14%' }} alt="example" src="image39.png" />}
                             >
                             </Card>
                         </Col>
