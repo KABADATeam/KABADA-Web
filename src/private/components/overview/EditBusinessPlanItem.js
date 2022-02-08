@@ -1,5 +1,5 @@
 import React from 'react'
-import { Menu, Dropdown, Typography,Switch } from 'antd';
+import { Menu, Dropdown, Typography,Switch, Button } from 'antd';
 import { getSelectedPlanOverview} from "../../../appStore/actions/planActions";
 import { EllipsisOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
@@ -34,7 +34,9 @@ class EditBusinessPlanItem extends React.Component {
                 <Link to={this.props.link} >Edit</Link>
                 </Menu.Item>
                 <Menu.Item>
-                        <Text>Mark as completed: </Text><Switch checked={this.props.isCompleted} onClick={this.onCompletedChange.bind(this)} />
+                        {this.props.isCompleted === false?
+                        <div onClick={(e) => this.onCompletedChange(true)}>Mark as completed</div> : 
+                        <div onClick={(e) => this.onCompletedChange(false)}>Mark as uncompleted</div>}
                 </Menu.Item>
             </Menu>
         );

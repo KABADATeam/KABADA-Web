@@ -50,7 +50,7 @@ class VariableCostPopUp extends React.Component {
                 pricesWithoutDisabled.push(0)
             }
         });
-        this.props.onVariableChange(pricesWithoutDisabled,this.props.record,"monthly_expenses",1);
+        this.props.onVariableChange(pricesWithoutDisabled, this.props.record, "monthly_expenses", 1);
         this.setState({
             checked: [],
             data: [],
@@ -97,37 +97,37 @@ class VariableCostPopUp extends React.Component {
         const duom = []
 
         // if selected period is null then it can be 12 by deefault
-        if(selectedPeriod === null || selectedPeriod === 12){
+        if (selectedPeriod === null || selectedPeriod === 12) {
             // checking if there is something in monthly_expenses or not
-            if(this.props.monthly_expenses === null || this.props.monthly_expenses === undefined){
+            if (this.props.monthly_expenses === null || this.props.monthly_expenses === undefined) {
                 for (var i = 1; i < 13; i++) {
                     duom.push({ id: i, month: i, price: 0 })
                 }
-            }else if(this.props.monthly_expenses.length === 12 || this.props.monthly_expenses.length === 24){
+            } else if (this.props.monthly_expenses.length === 12 || this.props.monthly_expenses.length === 24) {
                 //this.props.monthly_expenses.length
                 for (var i = 0; i < 12; i++) {
                     // console.log('Monthly expenses at index' + i + ' ,and element is:' + this.props.monthly_expenses[i])
-                    duom.push({ id: i+1, month: i+1, price: this.props.monthly_expenses[i] })
+                    duom.push({ id: i + 1, month: i + 1, price: this.props.monthly_expenses[i] })
                 }
             }
-        }else if(selectedPeriod === 24){
+        } else if (selectedPeriod === 24) {
             // if there is no data. set array with 24 prices at 0
-            if(this.props.monthly_expenses === null || this.props.monthly_expenses === undefined){
-                for(var i=1;i<25;i++){
-                    duom.push({id: i, month: i, price: 0})
+            if (this.props.monthly_expenses === null || this.props.monthly_expenses === undefined) {
+                for (var i = 1; i < 25; i++) {
+                    duom.push({ id: i, month: i, price: 0 })
                 }
-            }else if(this.props.monthly_expenses.length === 12){
+            } else if (this.props.monthly_expenses.length === 12) {
                 //add twelve items that exist in monthly_expenses array. then add
                 for (var i = 0; i < 24; i++) {
-                    if(i < 12){
-                        duom.push({ id: i+1, month: i+1, price: this.props.monthly_expenses[i]});
-                    }else if(i >= 12){
-                        duom.push({id: i+1, month: i+1, price: 0});
+                    if (i < 12) {
+                        duom.push({ id: i + 1, month: i + 1, price: this.props.monthly_expenses[i] });
+                    } else if (i >= 12) {
+                        duom.push({ id: i + 1, month: i + 1, price: 0 });
                     }
                 }
-            }else if(this.props.monthly_expenses.length === 24){
+            } else if (this.props.monthly_expenses.length === 24) {
                 for (var i = 0; i < 24; i++) {
-                    duom.push({ id: i+1, month: i+1, price: this.props.monthly_expenses[i] })
+                    duom.push({ id: i + 1, month: i + 1, price: this.props.monthly_expenses[i] })
                 }
             }
         }
@@ -137,13 +137,13 @@ class VariableCostPopUp extends React.Component {
     }
 
     componentDidMount() {
-        this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlanId,()=>{
-            if(this.props.financialProjections.period === null || this.props.financialProjections.period === undefined){
+        this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlanId, () => {
+            if (this.props.financialProjections.period === null || this.props.financialProjections.period === undefined) {
                 this.setState({
                     monthsChecked: 12
                 })
-            }else{
-                this.setState({monthsChecked: this.props.financialProjections.period});
+            } else {
+                this.setState({ monthsChecked: this.props.financialProjections.period });
             }
             this.loadData(this.props.financialProjections.period);
         });
@@ -196,8 +196,12 @@ class VariableCostPopUp extends React.Component {
                             </Col>
                             <Col span={12}>
                                 <div style={{ float: "right", marginTop: 16, marginBottom: 16, marginRight: 16 }}>
-                                    <Select defaultValue={this.props.financialProjections.period === null?12:this.props.financialProjections.period}
-                                        suffixIcon={<CaretDownFilled />} size='default' onSelect={this.onMonthsChanged.bind(this)}>
+                                    <Select
+                                    style={{width: '87px'}}
+                                        defaultValue={this.props.financialProjections.period === null ? 12 : this.props.financialProjections.period}
+                                        suffixIcon={<CaretDownFilled />}
+                                        size='default'
+                                        onSelect={this.onMonthsChanged.bind(this)}>
                                         {this.state.data.map((obj, index) => (
                                             <Option value={obj.id}>{obj.month + "mo."}</Option>
                                         ))}
@@ -230,4 +234,4 @@ const mapStateToProps = (state) => {
     };
 
 }
-export default connect(mapStateToProps, { updateFixedAndVarCosts, getFinancialProjectionsCosts,getBusinessStartUpInvestmentInformation })(withRouter(VariableCostPopUp));
+export default connect(mapStateToProps, { updateFixedAndVarCosts, getFinancialProjectionsCosts, getBusinessStartUpInvestmentInformation })(withRouter(VariableCostPopUp));

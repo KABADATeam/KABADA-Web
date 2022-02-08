@@ -27,6 +27,32 @@ export const getPersonalCharacteristics = (planId,callback) => async(dispatch, g
 }
 
 
+export const getCompletedPersonalCharacteristics = (planId) => async(dispatch, getState) => {
+    try {
+        dispatch({
+            type: 'LOADING',
+            payload: true
+        });
+        //getting token
+        const token = getState().user.access_token;
+        const response = await kabadaAPI.get('api/quest/personal/' + planId, { headers: { Authorization: `Bearer ${token}` } });
+        // dispatch({ type: "FETCHING_PARTNERS_SUCCESS", payload: response.data });
+        dispatch({
+            type: 'FETCHING_COMPLETED_PERSONAL_CHARACTERISTICS_SUCCESS',
+            payload: response.data
+        });
+    } catch (error) {
+        if (error.response === undefined) {
+            dispatch({ type: 'FETCHING_COMPLETED_PERSONAL_CHARACTERISTICS_ERROR', payload: { message: 'Oopsie... System error. Try again, later' } });
+        } else {
+            dispatch({ type: 'FETCHING_COMPLETED_PERSONAL_CHARACTERISTICS_ERROR', payload: error.response.data });
+        }
+    } finally {
+        dispatch({ type: 'LOADING', payload: false });
+    }
+}
+
+
 export const savePersonalCharacteristics = (postObject,callback) => async(dispatch,getState) => {
     try{
         dispatch({

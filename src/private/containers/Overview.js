@@ -23,8 +23,8 @@ import { saveState as saveSwotCompleted } from "../../appStore/actions/swotActio
 import { saveState as saveAssetsCompleted } from '../../appStore/actions/assetsAction';
 import { saveState as saveFixedAndVariableCompleted } from '../../appStore/actions/financialProjectionsActions';
 import { saveState as saveBusinessInvestmentsCompleted } from "../../appStore/actions/businessInvestmentAction";
-import {  saveState as saveSalesForecastCompleted } from '../../appStore/actions/salesForecastActions';
-import { savePersonalCharacteristics as savePersonalCharacteristicsCompleted } from '../../appStore/actions/personalCharacteristicsActions';
+import { saveState as saveSalesForecastCompleted } from '../../appStore/actions/salesForecastActions';
+import { savePersonalCharacteristics as savePersonalCharacteristicsCompleted, getCompletedPersonalCharacteristics } from '../../appStore/actions/personalCharacteristicsActions';
 
 
 import { withRouter } from 'react-router-dom';
@@ -294,13 +294,16 @@ class Overview extends React.Component {
                     this.props.history.push(`/`);
                 } else {
                     this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                        this.props.getCompletedPersonalCharacteristics(this.props.businessPlan.id)
                         this.props.getMembers(this.props.businessPlan.id);
                         this.props.getSelectedPlanDetails(this.props.businessPlan.id);
                         this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+                        
                     });
 
                 }
             } else {
+                this.props.getCompletedPersonalCharacteristics(this.props.businessPlan.id)
                 this.props.getMembers(this.props.businessPlan.id);
                 this.props.getSelectedPlanDetails(this.props.businessPlan.id);
                 this.props.getSelectedPlanOverview(this.props.businessPlan.id);
@@ -794,13 +797,13 @@ class Overview extends React.Component {
                                                                     </div>
                                                                 </Col>
                                                                 <Col span={12}>
-                                                                {overview !== null && overview.business_start_up_investments !== null ?
-                                                                    <div style={{ ...financialTitleButtonPositionStyle, marginRight: '8px' }}>
-                                                                        <EditBusinessPlanItem link={'/business-start-up-investments'}
-                                                                            isCompleted={overview.business_start_up_investments.is_completed}
-                                                                            save={this.props.saveBusinessInvestmentsCompleted}
-                                                                        />
-                                                                    </div>:null}
+                                                                    {overview !== null && overview.business_start_up_investments !== null ?
+                                                                        <div style={{ ...financialTitleButtonPositionStyle, marginRight: '8px' }}>
+                                                                            <EditBusinessPlanItem link={'/business-start-up-investments'}
+                                                                                isCompleted={overview.business_start_up_investments.is_completed}
+                                                                                save={this.props.saveBusinessInvestmentsCompleted}
+                                                                            />
+                                                                        </div> : null}
                                                                 </Col>
                                                             </Row>
                                                         </div>}
@@ -846,18 +849,22 @@ class Overview extends React.Component {
                                                                 </Col>
                                                             </Row>
                                                             <Row>
-                                                                <Text style={descriptionTextStyle}>{this.props.businessPlan.personal_characteristics_description === "" || this.props.businessPlan.personal_characteristics_description === null ? "Descriptions" : this.props.businessPlan.personal_characteristics_description}</Text>
+                                                                {/* <Text style={descriptionTextStyle}>{this.props.businessPlan.personal_characteristics_description === "" || this.props.businessPlan.personal_characteristics_description === null ? "Descriptions" : this.props.businessPlan.personal_characteristics_description}</Text> */}
+                                                                {this.props.personalCharacteristics.choices !== undefined && this.props.personalCharacteristics.choices.length > 0 ?
+                                                                    <Text style={descriptionTextStyle}>{this.props.personalCharacteristics.completed_choices} of {this.props.personalCharacteristics.choices.length} questions answered</Text>
+                                                                    :
+                                                                    <Text style={descriptionTextStyle}>{this.props.personalCharacteristics.completed_choices} of 20 questions answered</Text>
+                                                                }
                                                             </Row>
                                                         </div>
                                                     }
                                                 />
                                                 {overview !== null && overview.personal_characteristics !== null ?
-                                                <div style={{ marginRight: '28px' }}>
-                                                    <EditBusinessPlanItem link={'/personal-characteristics'}
+                                                    <div style={{ marginRight: '28px' }}>
+                                                        {/* <EditBusinessPlanItem link={'/personal-characteristics'}
                                                         isCompleted={overview.personal_characteristics.is_completed}
-                                                        // save={this.props.savePersonalCharacteristicsCompleted}
-                                                    />
-                                                </div>:null}
+                                                    /> */}
+                                                    </div> : null}
                                             </List.Item>
                                         </List>
 
@@ -966,8 +973,9 @@ const mapStateToProps = (state) => {
         activities: state.activities,
         industries: state.industries,
         planLanguages: state.planLanguages,
-        nace: state.nace
+        nace: state.nace,
+        personalCharacteristics: state.personalCharacteristics
     };
 }
 
-export default connect(mapStateToProps, { getImage, logout, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, removePlan, getSurvivalRate, getCountryShortCodeV2, downloadDOCFile, downloadPDFFile, downloadCashFlow, uploadFile, updateImage, updatePlanData, saveValuePropositions, saveCustomerSegments, saveChannelsCompleted, saveCustomerRelationshipsCompleted, saveRevenueStreamsCompleted, saveResourcesCompleted, saveKeyActivitiesCompleted, saveKeyPartnersCompleted, saveCostStructureCompleted, saveSwotCompleted, saveAssetsCompleted, saveFixedAndVariableCompleted,saveSalesForecastCompleted,saveBusinessInvestmentsCompleted,savePersonalCharacteristicsCompleted })(withRouter(Overview))
+export default connect(mapStateToProps, { getImage, logout, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, removePlan, getSurvivalRate, getCountryShortCodeV2, downloadDOCFile, downloadPDFFile, downloadCashFlow, uploadFile, updateImage, updatePlanData, saveValuePropositions, saveCustomerSegments, saveChannelsCompleted, saveCustomerRelationshipsCompleted, saveRevenueStreamsCompleted, saveResourcesCompleted, saveKeyActivitiesCompleted, saveKeyPartnersCompleted, saveCostStructureCompleted, saveSwotCompleted, saveAssetsCompleted, saveFixedAndVariableCompleted, saveSalesForecastCompleted, saveBusinessInvestmentsCompleted, savePersonalCharacteristicsCompleted, getCompletedPersonalCharacteristics })(withRouter(Overview))

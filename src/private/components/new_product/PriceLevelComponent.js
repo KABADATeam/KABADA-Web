@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Typography, Space, Card, Divider, Select, Checkbox,Col,Row } from 'antd';
+import { Typography, Space, Card, Divider, Select, Checkbox, Col, Row, Form } from 'antd';
 import { cardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
 import { setProductPriceLevel, setIncomeSources } from "../../../appStore/actions/productActions";
 import TooltipComponent from "../Tooltip";
@@ -24,24 +24,25 @@ class PriceLevelComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          checked: []
+            checked: []
         };
-      }
-      //everytime you check checkbox it will add id of income source to checked array ['7878787','898954654654654']
-      onChange = checkedValues => {
+    }
+    //everytime you check checkbox it will add id of income source to checked array ['7878787','898954654654654']
+    onChange = checkedValues => {
         this.setState(() => {
-          return { checked: checkedValues };
+            return { checked: checkedValues };
         });
         this.props.setIncomeSources(checkedValues);
-      };
-    
-      isDisabled = id => {
+    };
+
+    isDisabled = id => {
         return (
-          this.state.checked.length > 4 && this.state.checked.indexOf(id) === -1
+            this.state.checked.length > 4 && this.state.checked.indexOf(id) === -1
         );
-      };
+    };
 
     onSelectionChange(id) {
+        this.props.getPrice(id);
         this.props.setProductPriceLevel(id);
     }
 
@@ -53,30 +54,53 @@ class PriceLevelComponent extends Component {
         const checkBoxes = this.props.incomeSources.map((obj) =>
             <Checkbox value={obj.id} key={obj.key}>{obj.title}</Checkbox>
         );
-        
+
 
         return (
             <>
                 <Card style={{ ...cardStyle, padding: 20 }} bodyStyle={{ ...tableCardBodyStyle, padding: 0 }}>
-                    <Text style={infoTextStyle}>
-                        Price Level<TooltipComponent code="vpnp1" type="text"/>
-                    </Text>
-                    <Select style={{ width: '100%', marginTop: '20px' }} placeholder="Select price level" onChange={this.onSelectionChange.bind(this)}>
-                        {options}
-                    </Select>
+                    <Form>
+                        <Text style={infoTextStyle}>
+                            Price Level<TooltipComponent code="vpnp1" type="text" />
+                        </Text>
+                        {
+                            this.props.price_error === false ?
+                                <Form.Item style={{ display: 'inline-block', width: '100%', marginRight: "10px" }}
+                                    key="price"
+                                    name="price"
 
-                    <Divider />
-                    <Space direction="vertical">
-                        <Text style={infoTextStyle}>Additional income sources<TooltipComponent code="vpnp2" type="text"/></Text>
-                        <Text style={descriptionTextStyle}>Select up to 5 sources</Text>
-                        <Checkbox.Group onChange={this.onChange}>
-                            <Space direction="vertical">
-                            {this.props.incomeSources.map((obj) => (
-                               <Checkbox value={obj.id} key={obj.key} disabled={this.isDisabled(obj.id)}>{obj.title}</Checkbox>
-                            ))}
-                            </Space>
-                        </Checkbox.Group>
-                    </Space>
+                                >
+                                    <Select style={{ width: '100%', marginTop: '20px' }} placeholder="Select price level" onChange={this.onSelectionChange.bind(this)}>
+                                        {options}
+                                    </Select>
+                                </Form.Item>
+                                :
+                                <Form.Item style={{ display: 'inline-block', width: '100%', marginRight: "10px" }}
+                                    key="price"
+                                    name="price"
+                                    validateStatus="error"
+                                    help="Select price level"
+
+                                >
+                                    <Select style={{ width: '100%', marginTop: '20px' }} placeholder="Select price level" onChange={this.onSelectionChange.bind(this)}>
+                                        {options}
+                                    </Select>
+                                </Form.Item>
+                        }
+
+                        <Divider />
+                        <Space direction="vertical">
+                            <Text style={infoTextStyle}>Additional income sources<TooltipComponent code="vpnp2" type="text" /></Text>
+                            <Text style={descriptionTextStyle}>Select up to 5 sources</Text>
+                            <Checkbox.Group onChange={this.onChange}>
+                                <Space direction="vertical">
+                                    {this.props.incomeSources.map((obj) => (
+                                        <Checkbox value={obj.id} key={obj.key} disabled={this.isDisabled(obj.id)}>{obj.title}</Checkbox>
+                                    ))}
+                                </Space>
+                            </Checkbox.Group>
+                        </Space>
+                    </Form>
                 </Card>
             </>
         );
