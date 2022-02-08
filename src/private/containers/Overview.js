@@ -853,7 +853,7 @@ class Overview extends React.Component {
                                                                 {this.props.personalCharacteristics.choices !== undefined && this.props.personalCharacteristics.choices.length > 0 ?
                                                                     <Text style={descriptionTextStyle}>{this.props.personalCharacteristics.completed_choices} of {this.props.personalCharacteristics.choices.length} questions answered</Text>
                                                                     :
-                                                                    <Text style={descriptionTextStyle}>{this.props.businessPlan.personal_characteristics_description === "" || this.props.businessPlan.personal_characteristics_description === null ? "Descriptions" : this.props.businessPlan.personal_characteristics_description}</Text>
+                                                                    <Text style={descriptionTextStyle}>{this.props.personalCharacteristics.completed_choices} of 20 questions answered</Text>
                                                                 }
                                                             </Row>
                                                         </div>
