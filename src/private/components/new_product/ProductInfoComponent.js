@@ -18,10 +18,12 @@ const infoTextStyle = {
 class ProductInfoComponent extends Component {
 
     onTitleChanged = (e) => {
+        this.props.getTitle(e.target.value);
         this.props.setProductTitle(e.target.value);
     }
 
     onSelectionChange(id) {
+        this.props.getType(id);
         this.props.setProductType(id);
     }
 
@@ -42,37 +44,77 @@ class ProductInfoComponent extends Component {
                         layout="vertical"
                         style={{ marginTop: '20px' }}
                     >
-                        <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 8px)', marginRight: "10px" }} key="name" name="name" label="Product name"
-                            rules={[
-                                {
-                                    validator: async (_, name) => {
-                                        if (!name || name.length < 1) {
-                                            return Promise.reject(new Error('Enter product name'));
-                                        }
-                                    },
-                                },
-                            ]}>
-                            <Input size="large" style={{ ...inputStyle, width: '100%' }} onChange={this.onTitleChanged} />
-                        </Form.Item>
-                        <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 8px)' }} key="type" name="type" label="Product type"
-                            rules={[
-                                {
-                                    validator: async (_, type) => {
-                                        if (!type || type.length < 1) {
-                                            return Promise.reject(new Error('Select product type'));
-                                        }
-                                    },
-                                },
-                            ]}>
+                        {
+                            this.props.title_error === false ?
+                                <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 8px)', marginRight: "10px" }} key="name" name="name" label="Product name"
+                                    rules={[
+                                        {
+                                            validator: async (_, name) => {
+                                                if (!name || name.length < 1) {
+                                                    return Promise.reject(new Error('Enter product name'));
+                                                }
+                                            },
+                                        },
+                                    ]}>
+                                    <Input size="large" style={{ ...inputStyle, width: '100%' }} onChange={this.onTitleChanged} />
+                                </Form.Item>
+                                :
+                                <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 8px)', marginRight: "10px" }} key="name" name="name" label="Product name"
+                                    validateStatus="error"
+                                    help="Enter product name"
+                                    rules={[
+                                        {
+                                            validator: async (_, name) => {
+                                                if (!name || name.length < 1) {
+                                                    return Promise.reject(new Error('Enter product name'));
+                                                }
+                                            },
+                                        },
+                                    ]}>
+                                    <Input size="large" style={{ ...inputStyle, width: '100%' }} onChange={this.onTitleChanged} />
+                                </Form.Item>
+                        }
+                        {
+                            this.props.product_type_error === false ?
+                                <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 8px)' }} key="type" name="type" label="Product type"
+                                    rules={[
+                                        {
+                                            validator: async (_, type) => {
+                                                if (!type || type.length < 1) {
+                                                    return Promise.reject(new Error('Select product type'));
+                                                }
+                                            },
+                                        },
+                                    ]}>
 
-                            <Select style={{ width: '100%' }} placeholder="Select product type" onChange={this.onSelectionChange.bind(this)} >
-                                {options}
-                            </Select>
-                        </Form.Item>
+                                    <Select style={{ width: '100%' }} placeholder="Select product type" onChange={this.onSelectionChange.bind(this)} >
+                                        {options}
+                                    </Select>
+                                </Form.Item>
+                                :
+                                <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 8px)' }} key="type" name="type" label="Product type"
+                                    validateStatus="error"
+                                    help="Select product type"
+                                    rules={[
+                                        {
+                                            validator: async (_, type) => {
+                                                if (!type || type.length < 1) {
+                                                    return Promise.reject(new Error('Select product type'));
+                                                }
+                                            },
+                                        },
+                                    ]}>
+
+                                    <Select style={{ width: '100%' }} placeholder="Select product type" onChange={this.onSelectionChange.bind(this)} >
+                                        {options}
+                                    </Select>
+                                </Form.Item>
+
+                        }
                         <Form.Item
                             style={{ marginBottom: '0px' }}
                             key="description" name="description" label="Short description of Product (2-3 sentences)">
-                            <TextArea style={inputStyle} rows={3} onChange={this.onDescriptionChanged}/>
+                            <TextArea style={inputStyle} rows={3} onChange={this.onDescriptionChanged} />
                         </Form.Item>
                     </Form>
                 </Card>
