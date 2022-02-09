@@ -200,7 +200,6 @@ export const productReducer = (
     }, action) => {
     switch (action.type) {
         case "SETTING_PRODUCT_TITLE_SUCCESS":
-            console.log(action.payload);
             return { ...state, "title": action.payload };
         case "SETTING_PRODUCT_TYPE_SUCCESS":
             return { ...state, "product_type": action.payload };
@@ -211,7 +210,6 @@ export const productReducer = (
         case "SETTING_INCOME_SOURCES_SUCCESS":
             return { ...state, "selected_additional_income_sources": action.payload };
         case "SETTING_PRODUCT_FEATURES_SUCCESS":
-            console.log(action.payload);
             const innovativeLevelIndex = getSliderValue(innovative, action.payload);
             const qualityLevelIndex = getSliderValue(quality, action.payload);
             const differentiationLevelIndex = getSliderValue(differentiation, action.payload);

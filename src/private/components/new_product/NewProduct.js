@@ -54,16 +54,43 @@ const titleButtonStyle = {
 
 
 class NewProduct extends React.Component {
-    state = {
-        title: '',
-        product_type: '',
-        description: '',
-        price_level: '',
-        selected_additional_income_sources: [],
-        product_features: [],
-        differentiation_level: '',
-        innovative_level: '',
-        quality_level: ''
+    constructor(props) {
+        super(props);
+        this.state = {
+            title: '',
+            product_type: '',
+            description: '',
+            price_level: '',
+            selected_additional_income_sources: [],
+            product_features: [],
+            differentiation_level: '',
+            innovative_level: '',
+            quality_level: '',
+            title_value: null,
+            title_error: false,
+            product_type_value: null,
+            product_type_error: false,
+            price_level_value: null,
+            price_level_error: false
+        }
+    }
+    getTitleValue = (title) => {
+        this.setState({
+            title_value: title,
+            title_error: title.lenght < 1 ? true : false
+        })
+    }
+    getTypeValue = (value) => {
+        this.setState({
+            product_type_value: value,
+            product_type_error: false
+        })
+    }
+    getPriceValue = (value) => {
+        this.setState({
+            price_level_value: value,
+            price_level_error: false
+        })
     }
 
     onBackClick() {
@@ -78,16 +105,39 @@ class NewProduct extends React.Component {
     };
 
     saveChanges = () => {
-        const postObj = {
-            ...this.props.product,
-            "innovative_level": this.props.product.innovative_level_index === undefined ? this.props.productFeatures.innovative[0].id : this.props.productFeatures.innovative[this.props.product.innovative_level_index].id,
-            "quality_level": this.props.product.quality_level_index === undefined ? this.props.productFeatures.quality[0].id : this.props.productFeatures.quality[this.props.product.quality_level_index].id,
-            "differentiation_level": this.props.product.differentiation_level_index === undefined ? this.props.productFeatures.differentiation[0].id : this.props.productFeatures.differentiation[this.props.product.differentiation_level_index].id,
-            "business_plan_id": this.props.businessPlan.id
-        };
-        this.props.saveProduct(postObj, () => {
-            this.props.history.push(`/value-propositions`);
-        });
+        const { title_value, product_type_value, price_level_value, title_error, product_type_error, price_level_error } = this.state;
+        if (title_value === null) {
+            this.setState({
+                title_error: true
+            })
+        }
+        if (product_type_value === null) {
+            this.setState({
+                product_type_error: true
+            })
+        }
+        if (price_level_value === null) {
+            this.setState({
+                price_level_error: true
+            })
+        }
+        if (title_error === false && product_type_error === false && price_level_error === false) {
+            const postObj = {
+                ...this.props.product,
+                "innovative_level": this.props.product.innovative_level_index === undefined ? this.props.productFeatures.innovative[0].id : this.props.productFeatures.innovative[this.props.product.innovative_level_index].id,
+                "quality_level": this.props.product.quality_level_index === undefined ? this.props.productFeatures.quality[0].id : this.props.productFeatures.quality[this.props.product.quality_level_index].id,
+                "differentiation_level": this.props.product.differentiation_level_index === undefined ? this.props.productFeatures.differentiation[0].id : this.props.productFeatures.differentiation[this.props.product.differentiation_level_index].id,
+                "business_plan_id": this.props.businessPlan.id
+            };
+            console.log(postObj);
+            this.props.saveProduct(postObj, () => {
+                this.props.history.push(`/value-propositions`);
+            });
+        }
+        else {
+            console.log('neviskas uzpildyta')
+        }
+
     };
 
     arraysEqual = (array1, array2) => {
@@ -107,7 +157,18 @@ class NewProduct extends React.Component {
     }
 
     getUpdatesWindowState() {
-        const original = this.state;
+        const original_object = {
+            title: '',
+            product_type: '',
+            description: '',
+            price_level: '',
+            selected_additional_income_sources: [],
+            product_features: [],
+            differentiation_level: '',
+            innovative_level: '',
+            quality_level: '',
+        }
+        const original = original_object;
         const modified = this.props.product;
 
         if (original === null) {
@@ -117,7 +178,6 @@ class NewProduct extends React.Component {
         if (original.title !== modified.title) {
             console.log(original)
             console.log(modified)
-            console.log('visible')
             return 'visible';
         }
 
@@ -211,8 +271,6 @@ class NewProduct extends React.Component {
     }
 
     render() {
-        //console.log(this.props.product);
-        //console.log(this.props.productFeatures);
         const isVisibleHeader = this.getUpdatesWindowState();
         const differentiationMarks = this.getSliderMarks(this.props.productFeatures.differentiation);
         const priceMarks = this.getSliderMarks(this.props.productFeatures.priceLevels);
@@ -256,12 +314,12 @@ class NewProduct extends React.Component {
                     <Col span={11} offset={4}>
                         <Row style={{ marginBottom: "20px" }}>
                             <Col span={23} >
-                                <ProductInfoComponent />
+                                <ProductInfoComponent title_error={this.state.title_error} product_type_error={this.state.product_type_error} getTitle={this.getTitleValue} getType={this.getTypeValue} />
                             </Col>
                         </Row>
                         <Row style={{ marginBottom: "20px" }}>
                             <Col span={23} >
-                                <PriceLevelComponent />
+                                <PriceLevelComponent price_error={this.state.price_level_error} getPrice={this.getPriceValue} />
                             </Col>
                         </Row>
                         <Row style={{ marginBottom: "20px" }}>

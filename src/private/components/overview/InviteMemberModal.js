@@ -15,7 +15,9 @@ const validateEmail = (email) => {
 class InviteMemberModal extends Component {
     state = {
         invitationEmail: '',
-        isEmailValid: true
+        isEmailValid: true, 
+        validateStatus: 'success',
+        errorMsg: null
     }
 
     
@@ -28,35 +30,58 @@ class InviteMemberModal extends Component {
 
         if (validateEmail(this.state.invitationEmail) === false) {
             this.setState({
-                isEmailValid: false
+                validateStatus: 'error',
+                errorMsg: 'Please enter a valid email address'
             });
             return;
         }
-
-        const postObj = {
-            "business_plan_id": this.props.businessPlan.id,
-            "email": this.state.invitationEmail
+        if (this.state.validateStatus === 'error'){
+            
+        } else {
+            const postObj = {
+                "business_plan_id": this.props.businessPlan.id,
+                "email": this.state.invitationEmail
+            }
+    
+            this.setState({
+                invitationEmail: ''
+            });
+    
+            this.props.inviteMember(postObj);
+            this.props.onClose();
         }
-
-        this.setState({
-            invitationEmail: ''
-        });
-
-        this.props.inviteMember(postObj);
-        this.props.onClose();
+        
     }
 
     onEmailChange = (e) => {
-        this.setState({
-            invitationEmail: e.target.value,
-            isEmailValid: true
-        });
+        const emailInMemberList = this.props.businessPlan.members.find((x) => x.email === e.target.value) === undefined ? false : true;
+        if (e.target.value !== this.props.user.email){
+            this.setState({
+                invitationEmail: e.target.value,
+                validateStatus: 'success',
+                errorMsg: null
+            });
+        }
+        if (e.target.value === this.props.user.email){
+            this.setState({
+                invitationEmail: e.target.value,
+                validateStatus: 'error',
+                errorMsg: 'Can not share business plan with yourseft'
+            })
+        }
+        if (emailInMemberList === true){
+            this.setState({
+                invitationEmail: e.target.value,
+                validateStatus: 'error',
+                errorMsg: 'The invited member is already on the list'
+            })
+        } 
+        
     }
 
     onBack = () => {
         this.props.onBack();
     }
-
 
     render() {
         console.log(this.state);
@@ -79,14 +104,14 @@ class InviteMemberModal extends Component {
                     <Form layout="vertical" id="invitationForm">
                     
                         <Form.Item label="Invitation link"  >
-                            <Input disabled={true} value={invitationLink + this.state.invitationEmail}/>
+                            <Input disabled={true} value={invitationLink + this.state.invitationEmail} />
                         </Form.Item>
 
                         <Form.Item 
                             name="email"
                             label="Member email"
-                            validateStatus={this.state.isEmailValid === false ? 'error' : 'success'}
-                            help={this.state.isEmailValid === false ? 'Enter valid email' : ''}
+                            validateStatus={this.state.validateStatus}
+                            help={this.state.errorMsg}
                             >
                         
                             <Input size="large" style={inputStyle} onChange={this.onEmailChange} />
@@ -102,7 +127,8 @@ class InviteMemberModal extends Component {
 const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
-        type: state.selectedPartnersCategoryType
+        type: state.selectedPartnersCategoryType,
+        user: state.user
     };
 }
 
