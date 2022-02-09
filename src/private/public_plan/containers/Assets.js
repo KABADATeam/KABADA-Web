@@ -62,8 +62,6 @@ class AssetsWindow extends React.Component {
     onBackClick() {
         this.props.history.push(`/overview`);
     }
-
-    
     componentDidMount() {
         if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
             if (this.props.businessPlan.id === null) {

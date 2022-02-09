@@ -9,6 +9,8 @@ import EditKeyResourceModal from "../../public_plan/components/EditKeyResourceMo
 import { getResourcesList, getResourcesCategoriesList, deleteItem, saveEditable, saveChanges } from "../../../appStore/actions/resourcesAction";
 import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
+import { logout } from '../../../appStore/actions/authenticationActions';
+import Cookies from 'js-cookie';
 import TooltipComponent from "../../components/Tooltip";
 import TextHelper from '../../components/TextHelper';
 const { Text } = Typography;
@@ -75,20 +77,24 @@ class PublicKeyResources extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
-                this.props.history.push(`/`);
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
+                        this.props.getResourcesList(this.props.businessPlan.id);
+                        this.props.getResourcesCategoriesList();
+                    });
+                }
             } else {
-                this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
-                    this.props.getResourcesList(this.props.businessPlan.id);
-                    this.props.getResourcesCategoriesList();
-                });
+                this.props.getResourcesList(this.props.businessPlan.id);
+                this.props.getResourcesCategoriesList();
             }
         } else {
-            this.props.getResourcesList(this.props.businessPlan.id);
-            this.props.getResourcesCategoriesList();
+            this.props.logout()
+            this.props.history.push('/')
         }
-
     }
 
     render() {
@@ -193,4 +199,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getResourcesList, getResourcesCategoriesList, deleteItem, saveChanges, saveEditable, refreshPublicPlan })(withRouter(PublicKeyResources));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getResourcesList, getResourcesCategoriesList, deleteItem, saveChanges, saveEditable, refreshPublicPlan, logout })(withRouter(PublicKeyResources));

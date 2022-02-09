@@ -10,6 +10,8 @@ import EditKeyPartnerModal from '../../public_plan/components/EditKeyPartnerModa
 import { getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState } from "../../../appStore/actions/partnersAction";
 import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
+import { logout } from '../../../appStore/actions/authenticationActions';
+import Cookies from 'js-cookie';
 import TooltipComponent from "../../components/Tooltip";
 import TextHelper from '../../components/TextHelper';
 
@@ -167,18 +169,23 @@ class KeyPartners extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
-                this.props.history.push(`/`);
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
+                        this.props.getPartners(this.props.businessPlan.id);
+                        this.props.getPartnersCategories();
+                    });
+                }
             } else {
-                this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
-                    this.props.getPartners(this.props.businessPlan.id);
-                    this.props.getPartnersCategories();
-                });
+                this.props.getPartners(this.props.businessPlan.id);
+                this.props.getPartnersCategories();
             }
         } else {
-            this.props.getPartners(this.props.businessPlan.id);
-            this.props.getPartnersCategories();
+            this.props.logout()
+            this.props.history.push('/')
         }
     }
 
@@ -389,4 +396,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState, refreshPublicPlan })(withRouter(KeyPartners));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState, refreshPublicPlan, logout })(withRouter(KeyPartners));

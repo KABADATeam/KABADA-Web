@@ -10,6 +10,8 @@ import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getChannelTypes, getChannels, deleteChannel, saveState } from "../../../appStore/actions/channelActions";
 import { getProducts } from "../../../appStore/actions/productActions";
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
+import { logout } from '../../../appStore/actions/authenticationActions';
+import Cookies from 'js-cookie';
 import TooltipComponent from "../../components/Tooltip";
 import TextHelper from '../../components/TextHelper';
 
@@ -97,20 +99,25 @@ class PublicChannels extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
-                this.props.history.push(`/`);
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
+                        this.props.getChannelTypes();
+                        this.props.getChannels(this.props.businessPlan.id);
+                        this.props.getProducts(this.props.businessPlan.id);
+                    });
+                }
             } else {
-                this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
-                    this.props.getChannelTypes();
-                    this.props.getChannels(this.props.businessPlan.id);
-                    this.props.getProducts(this.props.businessPlan.id);
-                });
+                this.props.getChannelTypes();
+                this.props.getChannels(this.props.businessPlan.id);
+                this.props.getProducts(this.props.businessPlan.id);
             }
         } else {
-            this.props.getChannelTypes();
-            this.props.getChannels(this.props.businessPlan.id);
-            this.props.getProducts(this.props.businessPlan.id);
+            this.props.logout()
+            this.props.history.push('/')
         }
     }
 
@@ -247,4 +254,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getChannelTypes, getProducts, getChannels, deleteChannel, saveState, refreshPublicPlan, getSelectedPlanOverview })(withRouter(PublicChannels));
+export default connect(mapStateToProps, { getChannelTypes, getProducts, getChannels, deleteChannel, saveState, refreshPublicPlan, getSelectedPlanOverview, logout })(withRouter(PublicChannels));

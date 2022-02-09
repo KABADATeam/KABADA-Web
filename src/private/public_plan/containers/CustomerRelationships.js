@@ -10,6 +10,8 @@ import { getCustomerRelationshipsCategories, getCustomerRelationships, saveState
 import AddCustomerRelationshipModal from '../../components/customer_relationships/AddCustomerRelationshipModal';
 import EditCustomerRelationshipModal from '../../public_plan/components/EditCustomerRelationshipModal';
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
+import { logout } from '../../../appStore/actions/authenticationActions';
+import Cookies from 'js-cookie';
 import TooltipComponent from '../../components/Tooltip';
 import TextHelper from '../../components/TextHelper';
 
@@ -161,18 +163,23 @@ class PublicCustomerRelationships extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
-                this.props.history.push(`/`);
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
+                        this.props.getCustomerRelationshipsCategories();
+                        this.props.getCustomerRelationships(this.props.businessPlan.id);
+                    });
+                }
             } else {
-                this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
-                    this.props.getCustomerRelationshipsCategories();
-                    this.props.getCustomerRelationships(this.props.businessPlan.id);
-                });
+                this.props.getCustomerRelationshipsCategories();
+                this.props.getCustomerRelationships(this.props.businessPlan.id);
             }
         } else {
-            this.props.getCustomerRelationshipsCategories();
-            this.props.getCustomerRelationships(this.props.businessPlan.id);
+            this.props.logout()
+            this.props.history.push('/')
         }
     }
 
@@ -305,15 +312,15 @@ class PublicCustomerRelationships extends React.Component {
                         <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>How to get new customers?</Typography.Title>
-                                <TextHelper code="custrelgetcust" type="lefttext"/>
+                                <TextHelper code="custrelgetcust" type="lefttext" />
                             </div>
                         </Col>
                         <Col span={16}>
-                                <Table
-                                    dataSource={this.props.customerRelationships.how_to_get_new}
-                                    columns={howToGetNewColumns}
-                                    pagination={false}
-                                />
+                            <Table
+                                dataSource={this.props.customerRelationships.how_to_get_new}
+                                columns={howToGetNewColumns}
+                                pagination={false}
+                            />
                         </Col>
                     </Row>
                     <Divider />
@@ -321,15 +328,15 @@ class PublicCustomerRelationships extends React.Component {
                         <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>How to keep customers?</Typography.Title>
-                                <TextHelper code="custrelkeepcust" type="lefttext"/>
+                                <TextHelper code="custrelkeepcust" type="lefttext" />
                             </div>
                         </Col>
                         <Col span={16}>
-                                <Table
-                                    dataSource={this.props.customerRelationships.how_to_keep_existing}
-                                    columns={howToKeepExistingColumns}
-                                    pagination={false}
-                                />
+                            <Table
+                                dataSource={this.props.customerRelationships.how_to_keep_existing}
+                                columns={howToKeepExistingColumns}
+                                pagination={false}
+                            />
                         </Col>
                     </Row>
                     <Divider />
@@ -337,15 +344,15 @@ class PublicCustomerRelationships extends React.Component {
                         <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>How to convince existing to spend more?</Typography.Title>
-                                <TextHelper code="custrelconvince" type="lefttext"/>
+                                <TextHelper code="custrelconvince" type="lefttext" />
                             </div>
                         </Col>
                         <Col span={16}>
-                                <Table
-                                    dataSource={this.props.customerRelationships.how_to_make_spend}
-                                    columns={howToMakeSpendColumns}
-                                    pagination={false}
-                                />
+                            <Table
+                                dataSource={this.props.customerRelationships.how_to_make_spend}
+                                columns={howToMakeSpendColumns}
+                                pagination={false}
+                            />
                         </Col>
                     </Row>
                 </Col>
@@ -378,4 +385,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getCustomerRelationshipsCategories, getCustomerRelationships, refreshPublicPlan, saveState, selectRelationshipCategory, deleteCustomerRelationship })(withRouter(PublicCustomerRelationships));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getCustomerRelationshipsCategories, getCustomerRelationships, refreshPublicPlan, saveState, selectRelationshipCategory, deleteCustomerRelationship, logout })(withRouter(PublicCustomerRelationships));
