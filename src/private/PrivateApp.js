@@ -53,15 +53,15 @@ class PrivateApp extends React.Component {
         return (
             <Router>
                 <SiteHeader />
-                
+
                 <Switch>
                     <Route exact path="/public-business-plans" render={(props) => <MainWindow {...props}> <PublicBusinessPlans {...props} /> </MainWindow>} />
-                    <Route exact path="/personal-business-plans" render={(props) => <MainWindow {...props}><PersonalBusinessPlans {...props}/> </MainWindow>} />
+                    <Route exact path="/personal-business-plans" render={(props) => <MainWindow {...props}><PersonalBusinessPlans {...props} /> </MainWindow>} />
                     <Route exact path="/user-settings" render={(props) => <MainWindow {...props}> <UserSettingsWindow {...props} /> </MainWindow>} />
                     <Route exact path="/swot" render={(props) => <MainWindow {...props}> <SwotWindow {...props} /> </MainWindow>} />
                     <Route exact path="/key-resources" render={(props) => <MainWindow {...props}> <KeyResources {...props} /> </MainWindow>} />
                     <Route exact path="/key-partners" render={(props) => <MainWindow {...props}> <KeyPartners {...props} /> </MainWindow>} />
-                    <Route exact path="/overview" render={(props) => <MainWindow {...props}> <Overview {...props}/> <FullPageLoader/> </MainWindow>} />
+                    <Route exact path="/overview" render={(props) => <MainWindow {...props}> <Overview {...props} /> <FullPageLoader /> </MainWindow>} />
                     <Route exact path="/value-propositions" render={(props) => <MainWindow {...props}> <ValuePropositions {...props} /> </MainWindow>} />
                     <Route exact path="/new-product" render={(props) => <MainWindow {...props}> <NewProduct {...props} /> </MainWindow>} />
                     <Route exact path="/revenue-streams" render={(props) => <MainWindow {...props}> <RevenueStreams {...props} /> </MainWindow>} />
