@@ -10,6 +10,8 @@ import EditPublicBodiesSegmentModal from '../components/EditPublicBodiesSegmentM
 import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getCustomerSegmentProperties, getCustomerSegments, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState } from "../../../appStore/actions/customerSegmentAction";
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
+import { logout } from '../../../appStore/actions/authenticationActions';
+import Cookies from 'js-cookie';
 import TooltipComponent from '../../components/Tooltip';
 import TextHelper from '../../components/TextHelper';
 const { Text } = Typography;
@@ -104,18 +106,23 @@ class PublicCustomerSegments extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
-                this.props.history.push(`/`);
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
+                        this.props.getCustomerSegmentProperties();
+                        this.props.getCustomerSegments(this.props.businessPlan.id);
+                    });
+                }
             } else {
-                this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
-                    this.props.getCustomerSegmentProperties();
-                    this.props.getCustomerSegments(this.props.businessPlan.id);
-                });
+                this.props.getCustomerSegmentProperties();
+                this.props.getCustomerSegments(this.props.businessPlan.id);
             }
         } else {
-            this.props.getCustomerSegmentProperties();
-            this.props.getCustomerSegments(this.props.businessPlan.id);
+            this.props.logout()
+            this.props.history.push('/')
         }
     }
 
@@ -244,22 +251,22 @@ class PublicCustomerSegments extends React.Component {
                         <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Consumers</Typography.Title>
-                                <TextHelper code="custsegconsumers" type="lefttext"/>
+                                <TextHelper code="custsegconsumers" type="lefttext" />
                             </div>
                         </Col>
                         <Col span={16}>
-                                <Table
-                                    title={() => <>
-                                        <Typography style={{ ...tableTitleStyle }}>Consumers segments</Typography>
-                                        <Typography style={{ ...tableDescriptionStyle }}>
-                                            You are creating several customer segments.
-                                        </Typography>
-                                    </>}
-                                    dataSource={this.props.customerSegments.consumers}
-                                    columns={consumersSegmentsColumns}
-                                    pagination={false}
-                                // footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddConsumerSegment.bind(this)}><PlusOutlined />Add segment</Button></Space>)}
-                                />
+                            <Table
+                                title={() => <>
+                                    <Typography style={{ ...tableTitleStyle }}>Consumers segments</Typography>
+                                    <Typography style={{ ...tableDescriptionStyle }}>
+                                        You are creating several customer segments.
+                                    </Typography>
+                                </>}
+                                dataSource={this.props.customerSegments.consumers}
+                                columns={consumersSegmentsColumns}
+                                pagination={false}
+                            // footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddConsumerSegment.bind(this)}><PlusOutlined />Add segment</Button></Space>)}
+                            />
                         </Col>
                     </Row>
                     <Divider />
@@ -267,22 +274,22 @@ class PublicCustomerSegments extends React.Component {
                         <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Business</Typography.Title>
-                                <TextHelper code="custsegbusiness" type="lefttext"/>
+                                <TextHelper code="custsegbusiness" type="lefttext" />
                             </div>
                         </Col>
                         <Col span={16}>
-                                <Table
-                                    title={() => <>
-                                        <Typography style={{ ...tableTitleStyle }}>Business segments</Typography>
-                                        <Typography style={{ ...tableDescriptionStyle }}>
-                                            You are creating several customer segments.
-                                        </Typography>
-                                    </>}
-                                    dataSource={this.props.customerSegments.business}
-                                    columns={businessSegmentsColumns}
-                                    pagination={false}
-                                //footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddBusinessSegment.bind(this)}><PlusOutlined />Add segment</Button>)}
-                                />
+                            <Table
+                                title={() => <>
+                                    <Typography style={{ ...tableTitleStyle }}>Business segments</Typography>
+                                    <Typography style={{ ...tableDescriptionStyle }}>
+                                        You are creating several customer segments.
+                                    </Typography>
+                                </>}
+                                dataSource={this.props.customerSegments.business}
+                                columns={businessSegmentsColumns}
+                                pagination={false}
+                            //footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddBusinessSegment.bind(this)}><PlusOutlined />Add segment</Button>)}
+                            />
                         </Col>
                     </Row>
                     <Divider />
@@ -290,22 +297,22 @@ class PublicCustomerSegments extends React.Component {
                         <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Public bodies & NGO</Typography.Title>
-                                <TextHelper code="custsegpublicbodngo" type="lefttext"/>
+                                <TextHelper code="custsegpublicbodngo" type="lefttext" />
                             </div>
                         </Col>
                         <Col span={16}>
-                                <Table
-                                    title={() => <>
-                                        <Typography style={{ ...tableTitleStyle }}>Public bodies & NGO segments</Typography>
-                                        <Typography style={{ ...tableDescriptionStyle }}>
-                                            You are creating several customer segments.
-                                        </Typography>
-                                    </>}
-                                    dataSource={this.props.customerSegments.public_bodies_ngo}
-                                    columns={publicBodiesNgoSegmentsColumns}
-                                    pagination={false}
-                                // footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddPublicBodiesSegment.bind(this)}><PlusOutlined />Add segment</Button>)}
-                                />
+                            <Table
+                                title={() => <>
+                                    <Typography style={{ ...tableTitleStyle }}>Public bodies & NGO segments</Typography>
+                                    <Typography style={{ ...tableDescriptionStyle }}>
+                                        You are creating several customer segments.
+                                    </Typography>
+                                </>}
+                                dataSource={this.props.customerSegments.public_bodies_ngo}
+                                columns={publicBodiesNgoSegmentsColumns}
+                                pagination={false}
+                            // footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={this.onAddPublicBodiesSegment.bind(this)}><PlusOutlined />Add segment</Button>)}
+                            />
                         </Col>
                     </Row>
                 </Col>
@@ -347,4 +354,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getCustomerSegmentProperties, getCustomerSegments, refreshPublicPlan, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState })(withRouter(PublicCustomerSegments));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getCustomerSegmentProperties, getCustomerSegments, refreshPublicPlan, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState, logout })(withRouter(PublicCustomerSegments));

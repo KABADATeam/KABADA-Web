@@ -39,15 +39,16 @@ function initState() {
 };
 
 function saveToStorage(authObject) {
-    var inFifteenMinutes = new Date(new Date().getTime() + 60 * 60 * 1000);
+    // var inFifteenMinutes = new Date(new Date().getTime() + 60 * 60 * 1000);
+    var expiresInDay = 1;
     Cookies.set('access_token', authObject.access_token, {
-        expires: inFifteenMinutes
+        expires: expiresInDay
     });
     Cookies.set('email', authObject.email, {
-        expires: inFifteenMinutes
+        expires: expiresInDay
     });
     Cookies.set('name', authObject.name, {
-        expires: inFifteenMinutes
+        expires: expiresInDay
     });
     // localStorage.setItem('access_token', authObject.access_token);
     // localStorage.setItem('email', authObject.email);

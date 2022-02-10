@@ -6,7 +6,9 @@ import { connect } from 'react-redux';
 import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview, getImage, getSelectedPlanDetails } from "../../../appStore/actions/planActions";
 import { getSelectedPlanActiveKey, getRisks } from '../../../appStore/actions/industryRiskAction';
+import { logout } from '../../../appStore/actions/authenticationActions';
 import { withRouter } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import TooltipComponent from '../../components/Tooltip';
 import TextHelper from '../../components/TextHelper';
 import IndustryDataComponent from '../components/IndustryDataComponent';
@@ -83,39 +85,44 @@ const financialTitleButtonPositionStyle = {
 }
 
 class PublicOverview extends React.Component {
-    
+
 
     onBackClick() {
         this.props.history.push(`/public-business-plans`);
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
-                this.props.history.push(`/`);
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
+                        this.props.getSelectedPlanOverview(this.props.businessPlan.id)
+                            .then(() => {
+                                if (this.props.businessPlan.overview.planImage)
+                                    this.props.getImage({ ...this.props.businessPlan, "planImage": this.props.businessPlan.overview.planImage });
+                            });
+                        this.props.getSelectedPlanDetails(this.props.businessPlan.id);
+                        this.props.getSelectedPlanActiveKey(this.props.businessPlan.id, () => {
+                            this.props.getRisks(this.props.industryRisk.activeKey)
+                        })
+                    });
+                }
             } else {
-                this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
-                    this.props.getSelectedPlanOverview(this.props.businessPlan.id)
-                        .then(() => {
-                            if (this.props.businessPlan.overview.planImage)
-                                this.props.getImage({ ...this.props.businessPlan, "planImage": this.props.businessPlan.overview.planImage });
-                        });
-                    this.props.getSelectedPlanDetails(this.props.businessPlan.id);
-                    this.props.getSelectedPlanActiveKey(this.props.businessPlan.id, () => {
-                        this.props.getRisks(this.props.industryRisk.activeKey)
-                    })
-                });
+                this.props.getSelectedPlanOverview(this.props.businessPlan.id)
+                    .then(() => {
+                        if (this.props.businessPlan.overview.planImage)
+                            this.props.getImage({ ...this.props.businessPlan, "planImage": this.props.businessPlan.overview.planImage });
+                    });
+                this.props.getSelectedPlanDetails(this.props.businessPlan.id);
+                this.props.getSelectedPlanActiveKey(this.props.businessPlan.id, () => {
+                    this.props.getRisks(this.props.industryRisk.activeKey)
+                })
             }
         } else {
-            this.props.getSelectedPlanOverview(this.props.businessPlan.id)
-                .then(() => {
-                    if (this.props.businessPlan.overview.planImage)
-                        this.props.getImage({ ...this.props.businessPlan, "planImage": this.props.businessPlan.overview.planImage });
-                });
-            this.props.getSelectedPlanDetails(this.props.businessPlan.id);
-            this.props.getSelectedPlanActiveKey(this.props.businessPlan.id, () => {
-                this.props.getRisks(this.props.industryRisk.activeKey)
-            })
+            this.props.logout()
+            this.props.history.push('/')
         }
     }
 
@@ -533,4 +540,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { refreshPublicPlan, getSelectedPlanOverview, getImage, getSelectedPlanDetails, getRisks, getSelectedPlanActiveKey })(withRouter(PublicOverview))
+export default connect(mapStateToProps, { refreshPublicPlan, getSelectedPlanOverview, getImage, getSelectedPlanDetails, getRisks, getSelectedPlanActiveKey, logout })(withRouter(PublicOverview))

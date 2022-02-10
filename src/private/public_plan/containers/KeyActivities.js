@@ -6,6 +6,8 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getKeyActivitiesList, getCategories } from "../../../appStore/actions/keyActivitiesAction";
+import { logout } from '../../../appStore/actions/authenticationActions';
+import Cookies from 'js-cookie';
 import ProductComponent from "../../public_plan/components/ProductComponent";
 import KeyActivityTypesModal from "../../components/key_activities/KeyActivityTypesModal";
 import AddKeyActivityModal from "../../components/key_activities/AddKeyActivityModal";
@@ -36,8 +38,8 @@ class KeyActivities extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activityCategoriesModalVisibility: false, 
-            addSubTypeModalVisibility: false, 
+            activityCategoriesModalVisibility: false,
+            addSubTypeModalVisibility: false,
             productID: null,
             item: null
         };
@@ -75,7 +77,7 @@ class KeyActivities extends React.Component {
     }
     openEditKeyActivityModal = (item) => {
         this.setState({
-            item: { ...item},
+            item: { ...item },
         })
     }
     onCloseEditKeyActivityModal = () => {
@@ -85,18 +87,23 @@ class KeyActivities extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
-                this.props.history.push(`/`);
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
+                        this.props.getKeyActivitiesList(this.props.businessPlan.id)
+                        this.props.getCategories()
+                    });
+                }
             } else {
-                this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
-                    this.props.getKeyActivitiesList(this.props.businessPlan.id)
-                    this.props.getCategories()
-                });                
+                this.props.getKeyActivitiesList(this.props.businessPlan.id)
+                this.props.getCategories()
             }
         } else {
-            this.props.getKeyActivitiesList(this.props.businessPlan.id)
-            this.props.getCategories()
+            this.props.logout()
+            this.props.history.push('/')
         }
     }
     render() {
@@ -136,22 +143,22 @@ class KeyActivities extends React.Component {
                             <ProductComponent data={item} onOpen={this.openCategoriesModal} onClose={this.closeCategoriesModal} getProductID={this.getProductID} onOpenEditModal={this.openEditKeyActivityModal} />
                         </List.Item>
                     )}
-                                        
+
                 />
                 {
-                        this.state.activityCategoriesModalVisibility === true ? 
-                            <KeyActivityTypesModal visibility={true} onClose={this.onCloseCategoriesModal} onOpen={this.openAddSubTypeModal}/>
-                            : null
+                    this.state.activityCategoriesModalVisibility === true ?
+                        <KeyActivityTypesModal visibility={true} onClose={this.onCloseCategoriesModal} onOpen={this.openAddSubTypeModal} />
+                        : null
                 }
                 {
-                        this.state.addSubTypeModalVisibility === true ? 
-                            <AddKeyActivityModal visibility={true} onClose={this.onCloseAddSubTypeModal} productID={this.state.productID}/>
-                            : null
+                    this.state.addSubTypeModalVisibility === true ?
+                        <AddKeyActivityModal visibility={true} onClose={this.onCloseAddSubTypeModal} productID={this.state.productID} />
+                        : null
                 }
                 {
-                        this.state.item !== null ? 
-                            <EditKeyActivityModal visibility={true} item={this.state.item} onClose={this.onCloseEditKeyActivityModal} productID={this.state.productID} />
-                            : null
+                    this.state.item !== null ?
+                        <EditKeyActivityModal visibility={true} item={this.state.item} onClose={this.onCloseEditKeyActivityModal} productID={this.state.productID} />
+                        : null
                 }
             </>
         );
@@ -166,4 +173,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, {refreshPublicPlan, getCategories, getKeyActivitiesList })(KeyActivities);
+export default connect(mapStateToProps, { refreshPublicPlan, getCategories, getKeyActivitiesList, logout })(KeyActivities);

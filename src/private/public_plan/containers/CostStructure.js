@@ -11,6 +11,8 @@ import CostCategoriesModal from "../../components/cost_structure/CostCategoriesM
 import EditCostModal from "../../public_plan/components/EditCostModal"
 import AddCostModal from "../../components/cost_structure/AddCostModal";
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
+import { logout } from '../../../appStore/actions/authenticationActions';
+import Cookies from 'js-cookie';
 import TooltipComponent from "../../components/Tooltip";
 import TextHelper from '../../components/TextHelper';
 
@@ -68,7 +70,7 @@ class CostStructure extends React.Component {
     openFixedCostCategories = () => {
         this.setState({
             costNumber: 1,
-            fixedCostNumber:1
+            fixedCostNumber: 1
         });
     }
     openVarCostCategories = () => {
@@ -80,21 +82,21 @@ class CostStructure extends React.Component {
     onCloseCostCategoriesModal = () => {
         this.setState({
             costNumber: null,
-            
+
         });
     };
     onEditFixedCost(item) {
         this.setState({
-            item: { ...item},
+            item: { ...item },
             fixedCostNumber: 1
         })
     }
     onEditVarCost(item) {
         this.setState({
-            item: { ...item},
+            item: { ...item },
             fixedCostNumber: 2
         })
-         
+
     }
     onCloseEditCostModal = () => {
         this.setState({
@@ -104,18 +106,24 @@ class CostStructure extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
-                this.props.history.push(`/`);
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
+                        this.props.getCostStructureList(this.props.businessPlan.id);
+                        this.props.getCategories();
+                    });
+                }
             } else {
-                this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
-                    this.props.getCostStructureList(this.props.businessPlan.id);
-                    this.props.getCategories();
-                });
+                this.props.getCostStructureList(this.props.businessPlan.id);
+                this.props.getCategories();
             }
         } else {
-            this.props.getCostStructureList(this.props.businessPlan.id);
-            this.props.getCategories();
+            this.props.logout()
+            this.props.history.push('/')
         }
     }
     render() {
@@ -146,7 +154,7 @@ class CostStructure extends React.Component {
                 render: (obj, record) => (
                     <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...defaultButtonStyle }} onClick={this.onEditFixedCost.bind(this, record)} >View</Button>
-                       {/* <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteFixedCost.bind(this, record)}><DeleteOutlined /></Button>*/}
+                        {/* <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteFixedCost.bind(this, record)}><DeleteOutlined /></Button>*/}
                     </Space>
                 ),
             }
@@ -178,7 +186,7 @@ class CostStructure extends React.Component {
                 render: (obj, record) => (
                     <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...defaultButtonStyle }} onClick={this.onEditVarCost.bind(this, record)} >View</Button>
-                       {/* <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteVariableCost.bind(this, record)} ><DeleteOutlined /></Button>*/}
+                        {/* <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteVariableCost.bind(this, record)} ><DeleteOutlined /></Button>*/}
                     </Space>
                 ),
             }
@@ -218,16 +226,16 @@ class CostStructure extends React.Component {
                         <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Fixed costs</Typography.Title>
-                                <TextHelper code="coststrucfixed" type="lefttext"/>
+                                <TextHelper code="coststrucfixed" type="lefttext" />
                             </div>
                         </Col>
                         <Col span={16}>
-                                <Table
-                                    dataSource={this.props.costs.fixed_costs}
-                                    columns={fixedCostsColumns}
-                                    pagination={false}
-                                   
-                                />
+                            <Table
+                                dataSource={this.props.costs.fixed_costs}
+                                columns={fixedCostsColumns}
+                                pagination={false}
+
+                            />
                         </Col>
                     </Row>
                     <Divider />
@@ -235,29 +243,29 @@ class CostStructure extends React.Component {
                         <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Variable costs</Typography.Title>
-                                <TextHelper code="coststrucvariable" type="lefttext"/>
+                                <TextHelper code="coststrucvariable" type="lefttext" />
                             </div>
                         </Col>
                         <Col span={16}>
-                                <Table
-                                    dataSource={this.props.costs.variable_costs}
-                                    columns={varCostsColumns}
-                                    pagination={false}
-                                />
+                            <Table
+                                dataSource={this.props.costs.variable_costs}
+                                columns={varCostsColumns}
+                                pagination={false}
+                            />
                         </Col>
                     </Row>
                 </Col>
 
-                    {
-                        this.state.costNumber !== null ? 
-                            <CostCategoriesModal visibility={true} number={this.state.fixedCostNumber} onClose={this.onCloseCostCategoriesModal} onOpen={this.openAddCostModal}/>
-                            : null
-                    }
-                    {
-                        this.state.item !== null ?
-                            <EditCostModal visibility={true} item={this.state.item} onClose={this.onCloseEditCostModal} number={this.state.fixedCostNumber}/>
-                            : null
-                    }                    
+                {
+                    this.state.costNumber !== null ?
+                        <CostCategoriesModal visibility={true} number={this.state.fixedCostNumber} onClose={this.onCloseCostCategoriesModal} onOpen={this.openAddCostModal} />
+                        : null
+                }
+                {
+                    this.state.item !== null ?
+                        <EditCostModal visibility={true} item={this.state.item} onClose={this.onCloseEditCostModal} number={this.state.fixedCostNumber} />
+                        : null
+                }
             </>
         );
     }
@@ -272,4 +280,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, {getSelectedPlanOverview, deleteFixedCost, deleteVariableCost, getCategories, getCostStructureList, refreshPlan, refreshPublicPlan, saveState, selectCostCategory})(CostStructure);
+export default connect(mapStateToProps, { getSelectedPlanOverview, deleteFixedCost, deleteVariableCost, getCategories, getCostStructureList, refreshPlan, refreshPublicPlan, saveState, selectCostCategory, logout })(CostStructure);

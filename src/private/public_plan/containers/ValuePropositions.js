@@ -10,7 +10,9 @@ import { getProducts, deleteProduct, saveState } from "../../../appStore/actions
 import EditProduct from "../components/EditProduct";
 import '../../../css/customTable.css';
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
+import { logout } from '../../../appStore/actions/authenticationActions';
 import TooltipComponent from '../../components/Tooltip';
+import Cookies from 'js-cookie';
 
 const { Text } = Typography;
 
@@ -75,18 +77,24 @@ class PublicValuePropositions extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.businessPlan.id === null) {
-            if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
-                this.props.history.push(`/`);
-            } else {
-                this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
-                    this.props.getProducts(this.props.businessPlan.id);
-                });
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPublicPlan(localStorage.getItem("public_plan"), () => {
+                        this.props.getProducts(this.props.businessPlan.id);
+                    });
 
+                }
+            } else {
+                this.props.getProducts(this.props.businessPlan.id);
             }
-        } else {
-            this.props.getProducts(this.props.businessPlan.id);
+        }else{
+            this.props.logout()
+            this.props.history.push('/')
         }
+
     }
 
     render() {
@@ -158,7 +166,7 @@ class PublicValuePropositions extends React.Component {
                             <div style={{ float: 'left', display: 'inline-flex', alignItems: 'center' }}>
                                 <Button icon={<ArrowLeftOutlined />} style={titleButtonStyle} onClick={() => this.onBackClick()}></Button>
                                 <Text style={{ ...titleTextStyle, marginLeft: "16px" }}>Value propositions</Text>
-                                <TooltipComponent code="vp1" type="title"/>
+                                <TooltipComponent code="vp1" type="title" />
                             </div>
                         </Col>
                     </Row>
@@ -186,7 +194,7 @@ class PublicValuePropositions extends React.Component {
                                             dataSource={data}
                                             columns={valuePropositionsColumns}
                                             pagination={false}
-                                            footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Text>Maximum products: {keyProductsCount}/3 <TooltipComponent code="vp2" type="text"/></Text></Space>)}
+                                            footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Text>Maximum products: {keyProductsCount}/3 <TooltipComponent code="vp2" type="text" /></Text></Space>)}
                                         />
                                     </Col>
                                 </Row>
@@ -205,4 +213,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, refreshPublicPlan, getProducts, deleteProduct, saveState })(PublicValuePropositions);
+export default connect(mapStateToProps, { getSelectedPlanOverview, refreshPublicPlan, getProducts, deleteProduct, saveState,logout })(PublicValuePropositions);

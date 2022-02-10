@@ -9,6 +9,8 @@ import EditSegmentModal from '../../public_plan/components/EditSegmentModal';
 import { refreshPublicPlan } from "../../../appStore/actions/refreshAction";
 import { getStreamTypes, getPrices, getRevenues, saveState, deleteRevenue } from "../../../appStore/actions/revenueStreamActions";
 import { getSelectedPlanOverview } from "../../../appStore/actions/planActions";
+import { logout } from '../../../appStore/actions/authenticationActions';
+import Cookies from 'js-cookie';
 import TooltipComponent from "../../components/Tooltip";
 import TextHelper from '../../components/TextHelper';
 
@@ -87,6 +89,7 @@ class PublicRevenueStreams extends React.Component {
 
 
     componentDidMount() {
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
         if (this.props.businessPlan.id === null) {
             if (localStorage.getItem("public_plan") === undefined || localStorage.getItem("public_plan") === null) {
                 this.props.history.push(`/`);
@@ -102,6 +105,10 @@ class PublicRevenueStreams extends React.Component {
             this.props.getStreamTypes();
             this.props.getPrices();
         }
+    }else{
+        this.props.logout()
+        this.props.history.push('/')
+    }
     }
 
     render() {
@@ -315,4 +322,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPublicPlan })(withRouter(PublicRevenueStreams));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPublicPlan, logout})(withRouter(PublicRevenueStreams));
