@@ -85,7 +85,7 @@ export const financialProjectionsReducer = (
                     const obj = {
                         cost_item_id: c_cost_items[index].cost_item_id,
                         price: c_cost_items[index].price === null ? 0 : c_cost_items[index].price,
-                        vat: c_cost_items[index].vat,
+                        vat: c_cost_items[index].vat === null ? action.payload.countryVats.standardRate:c_cost_items[index].vat,
                         first_expenses: c_cost_items[index].first_expenses !== null ? c_cost_items[index].first_expenses : 1,
                         monthly_expenses: c_cost_items[index].monthly_expenses
                     }

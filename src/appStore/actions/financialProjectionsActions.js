@@ -87,8 +87,10 @@ export const discardChanges = () => {
 
 export const setItemsForSave = (callback) => {
     return async (dispatch, getState) => {
+        const countryVats = getState().countryVats;
         dispatch({
-            type: 'SET_ITEMS_TO_SAVE'
+            type: 'SET_ITEMS_TO_SAVE',
+            payload: {countryVats: countryVats}
         })
         callback()
     }
