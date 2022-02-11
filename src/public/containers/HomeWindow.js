@@ -3,11 +3,11 @@ import SiteHeader from './SiteHeader';
 
 class HomeWindow extends React.Component {
 
-    render() {        
+    render() {
         return (
             <>
-                <SiteHeader />             
-            </>          
+                <SiteHeader />
+            </>
         );
     }
 }
