@@ -16,8 +16,10 @@ export const financialProjectionsReducer = (
         case 'FETCHING_INVESTMENT_SUCCESS':
             return { ...state, "period": action.payload.period, "payment_period": action.payload.payment_period }
         case 'FETCHING_FINANCIAL_PROJECTION_SUCCESS':
-            const fixed_costs = action.payload.fixed.map(obj => ({ ...obj, "key": obj.category_id }));
-            const variable_costs = action.payload.variable.map(obj => ({ ...obj, "key": obj.category_id }));
+            console.log('fixed_costs'+JSON.stringify(action.payload))
+            // console.log('variable_costs'+JSON.stringify(fixed_costs))
+            const fixed_costs = action.payload.fixed ? action.payload.fixed.map(obj => ({ ...obj, "key": obj.category_id })):[];
+            const variable_costs = action.payload.variable?action.payload.variable.map(obj => ({ ...obj, "key": obj.category_id })):[];
             const original_fixed = [...fixed_costs]
             const original_variable = [...variable_costs]
             //The flatMap() method returns a new array formed by applying a given callback function 
@@ -26,7 +28,7 @@ export const financialProjectionsReducer = (
             const variable_cost_items = variable_costs ? variable_costs.flatMap(v => v.types) : []
             const cost_items = [...fixed_cost_items, ...variable_cost_items]
             const original_cost_items = [...cost_items]
-            return { ...action.payload, "fixed": fixed_costs, "variable": variable_costs, "original_fixed": original_fixed, 'original_variable': original_variable, 'cost_items': cost_items, 'original_cost_items': original_cost_items, windows_state: 'hidden',save_cost_items: [] };
+            return { ...state, "fixed": fixed_costs, "variable": variable_costs, "original_fixed": original_fixed, 'original_variable': original_variable, 'cost_items': cost_items, 'original_cost_items': original_cost_items, windows_state: 'hidden',save_cost_items: [] };
         case 'FIXED_COSTS_UPDATE_SUCCESS':
             const fixed_costs_u = [...state.fixed]
             const cost_items_c = [...state.cost_items]
