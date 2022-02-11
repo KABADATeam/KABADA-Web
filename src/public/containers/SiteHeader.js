@@ -2,8 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col } from 'antd';
 import KabadaIcon from '../../private/components/KabadaIcon';
-import '../../css/Home.css'
-    ;
+import '../../css/Home.css';
 import HomeScreen from '../components/HomeScreen';
 
 const headerStyles = {

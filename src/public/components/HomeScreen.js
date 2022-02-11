@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-//import { useHistory } from "react-router";
+import React from 'react';
 import { Row, Col, Button, Divider, Card, Image } from 'antd';
 import '../../css/Home.css'
 import { FacebookFilled, InstagramOutlined, LinkedinFilled, TwitterOutlined } from '@ant-design/icons';
@@ -8,6 +7,8 @@ import { connect } from 'react-redux'
 import { getPosts } from '../../appStore/actions/homeAction';
 import { withRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import moment from 'moment'
+import { Link } from 'react-router-dom';
+
 
 const { Meta } = Card;
 
@@ -15,15 +16,30 @@ class HomeScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            postNumbers: 6
+            postNumbers: 6,
+            link: ''
         }
     }
     componentDidMount() {
         this.props.getPosts(() => {
             console.log(this.props.homeReducer)
-            console.log('labas')
-        });
 
+        });
+        this.checkLoginStatus()
+    }
+
+    checkLoginStatus = () => {
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            this.setState({
+                link: '/personal-business-plans'
+            })
+        } else {
+            this.setState({
+                link: '/login'
+            })
+
+
+        }
     }
 
     onClick = () => {
@@ -49,7 +65,9 @@ class HomeScreen extends React.Component {
                         <p style={{ marginTop: '5%' }}>Get organized and set up your business plan properly using our easy-to-use structured framework</p>
 
                         <Col span={12} >
-                            <Button onClick={() => this.onClick()} className='PrimaryButton' type="primary">Create business plan</Button>
+                            <Link to={this.state.link}>
+                                <Button onClick={() => this.checkLoginStatus()} className='PrimaryButton' type="primary">Create business plan</Button>
+                            </Link>
                         </Col>
                     </Col>
 
@@ -196,7 +214,7 @@ class HomeScreen extends React.Component {
                                 cover={<img alt="example" src={x.jetpack_featured_media_url} />}
                             >
                                 <a href={x.link}>
-                                    <h3>{x.slug}</h3>
+                                    <h3>{x.title.rendered}</h3>
 
                                 </a>
                                 <Meta title="" description={moment(x.date).format("YYYY/MM/DD")} />
@@ -362,7 +380,9 @@ class HomeScreen extends React.Component {
                     <Col offset={2} span={20} style={{ alignContent: 'center' }}><h1 className='getDown'>Set up your perfect business plan now</h1></Col>
 
                     <Col style={{ textAlign: 'center', marginBottom: '115px' }} offset={2} span={20}>
-                        <Button className='PrimaryButton' type="primary">Create Business Plan </Button>
+                        <Link to={this.state.link}>
+                            <Button onClick={() => this.checkLoginStatus()} className='PrimaryButton' type="primary">Create business plan</Button>
+                        </Link>
                     </Col>
                 </Row>
 
