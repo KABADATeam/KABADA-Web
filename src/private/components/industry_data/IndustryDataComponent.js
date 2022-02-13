@@ -57,9 +57,99 @@ class IndustryDataComponent extends PureComponent {
         this.companySize = [];
         this.dividerRef = [];
         this.testRef = React.createRef();
+        this.getAlert = this.getAlert.bind(this);
+    }
+    getAlert = async () => {
+        console.log('click');
+        const imgWidth = 53.3;
+        const pageHeight = 297;
+        const surviveCanvas = await html2canvas(this.survivalRate[0]);
+        const surviveHeight = surviveCanvas.height * imgWidth / surviveCanvas.width;
+        const chartCanvas = await html2canvas(this.bigIndustry[0]);
+        const chartCardHeight = chartCanvas.height * imgWidth / chartCanvas.width;
+        const doc = new jsPDF('p', 'mm', [297, 210]);
+        const dividerCanvas = await html2canvas(this.dividerRef[0]);
+        const dividerHeight = dividerCanvas.height * 170 / dividerCanvas.width;
+        const dividerElement = dividerCanvas.toDataURL('image/png');
+        doc.setFontSize(16);
+        doc.text(20, 20, 'Industry data');
+        doc.addImage(dividerElement, 'PNG', 20, 25, 170, dividerHeight);
+        for (var i = 0; i < this.survivalRate.length; i++) {
+            const canvas = await html2canvas(this.survivalRate[i]);
+            const dataElement = canvas.toDataURL('image/png');
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            const xPosition = 20 + i * 5 + i * imgWidth;
+            if (i === 0) {
+                doc.setFontSize(12)
+                doc.text(20, 35, 'Company Survival rate (3 year)')
+                doc.addImage(dataElement, 'PNG', xPosition, 40, imgWidth, imgHeight);
+            } else {
+                doc.addImage(dataElement, 'PNG', xPosition, 40, imgWidth, imgHeight);
+            }
+        }
+        doc.addImage(dividerElement, 'PNG', 20, 45 + surviveHeight, 170, dividerHeight);
+        for (var i = 0; i < this.bigIndustry.length; i++) {
+            const canvas = await html2canvas(this.bigIndustry[i]);
+            const dataElement = canvas.toDataURL('image/png');
+            console.log('height', canvas.height)
+            console.log('width', canvas.width)
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            const xPosition = 20 + i * 5 + i * imgWidth;
+            const yPosition = 60 + surviveHeight;
+            if (i === 0) {
+                doc.setFontSize(12)
+                doc.text(20, 55 + surviveHeight, 'How big is the industry?')
+                doc.addImage(dataElement, 'PNG', xPosition, yPosition, imgWidth, imgHeight);
+            } else if (i === 3) {
+                doc.addImage(dataElement, 'PNG', 20, yPosition + imgHeight + 5, imgWidth, imgHeight);
+            } else {
+                doc.addImage(dataElement, 'PNG', xPosition, yPosition, imgWidth, imgHeight);
+            }
+        }
+        doc.addImage(dividerElement, 'PNG', 20, 70 + surviveHeight + 2 * chartCardHeight, 170, dividerHeight);
+        doc.addPage();
+        for (var i = 0; i < this.costsProductivity.length; i++) {
+            const canvas = await html2canvas(this.costsProductivity[i]);
+            const dataElement = canvas.toDataURL('image/png');
+            console.log('height', canvas.height)
+            console.log('width', canvas.width)
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            const xPosition = 20 + i * 5 + i * imgWidth;
+            const yPosition = 25 + imgHeight;
+            if (i === 0) {
+                doc.setFontSize(12)
+                doc.text(20, 20, 'How big is labor costs and productivity?')
+                doc.addImage(dataElement, 'PNG', xPosition, 25, imgWidth, imgHeight);
+            } else if (i === 3) {
+                doc.addImage(dataElement, 'PNG', 20, yPosition + 5, imgWidth, imgHeight);
+            } else {
+                doc.addImage(dataElement, 'PNG', xPosition, 25, imgWidth, imgHeight);
+            }
+        }
+        doc.addImage(dividerElement, 'PNG', 20, 32.5 + chartCardHeight, 170, dividerHeight);
+        for (var i = 0; i < this.companySize.length; i++) {
+            const canvas = await html2canvas(this.companySize[i]);
+            const dataElement = canvas.toDataURL('image/png');
+            console.log('height', canvas.height)
+            console.log('width', canvas.width)
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            const xPosition = 20 + i * 5 + i * imgWidth;
+            const yPosition = 40 + imgHeight;
+            if (i === 0) {
+                doc.setFontSize(12)
+                doc.text(20, yPosition, 'How big are the companies in the industry?')
+                doc.addImage(dataElement, 'PNG', xPosition, yPosition + 5, imgWidth, imgHeight);
+            } else if (i === 3) {
+                doc.addImage(dataElement, 'PNG', 20, yPosition + 5, imgWidth, imgHeight);
+            } else {
+                doc.addImage(dataElement, 'PNG', xPosition, yPosition + 5 , imgWidth, imgHeight);
+            }
+        }
+        doc.addImage(dividerElement, 'PNG', 20, 50 + 2 * chartCardHeight, 170, dividerHeight);
+        doc.save('doc.pdf');
     }
 
-    downloadTestRef = async () => {
+    downloadPdfFile = async () => {
         console.log(this.survivalRate.length);
         console.log(this.bigIndustry.length);
         console.log(this.costsProductivity.length);
@@ -159,10 +249,14 @@ class IndustryDataComponent extends PureComponent {
         this.props.getCostsProductivity();
         this.props.getCompanySize();
     }
+    click() {
+        console.log('press');
+    }
     componentDidMount() {
         this.getChartsData();
         this.survivalRate[0] && this.survivalRate[0].focus();
         this.bigIndustry[0] && this.bigIndustry[0].focus();
+        this.props.setClick(this.getAlert);
     }
     render() {
         console.log(this.props.loading);
@@ -187,8 +281,7 @@ class IndustryDataComponent extends PureComponent {
                     <>
                         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
                             <Col>
-                                {/* <Button type="primary" onClick={this.downloadPDF}>Download industry data</Button> */}
-                                <Button type="primary" onClick={this.downloadTestRef}>Download ref</Button>
+                                <Button type="primary" onClick={this.downloadPdfFile}>Download industry data</Button>
                             </Col>
                         </Row>
                         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
@@ -384,11 +477,15 @@ class IndustryDataComponent extends PureComponent {
                                                                             <ArrowUpOutlined />
                                                                             <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.euActivitiesProgress}%</Text>
                                                                         </div>
-                                                                        :
+                                                                        : item.euActivitiesValue[1] - item.euActivitiesValue[0] < 0 ?
                                                                         <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
                                                                             <Text style={{ ...textStyleForEUAndTotal }}>{item.euActivitiesValue[1]}{item.unitOfMeasure}</Text>
                                                                             <ArrowDownOutlined />
                                                                             <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.euActivitiesProgress}%</Text>
+                                                                        </div>
+                                                                        : 
+                                                                        <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
+                                                                            <Text style={{ ...textStyleForEUAndTotal }}>No data</Text>
                                                                         </div>
                                                                     }
                                                                 </div>
