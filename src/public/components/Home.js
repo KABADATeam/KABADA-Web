@@ -1,10 +1,11 @@
 import React from 'react';
+import HomeScreen from './HomeScreen';
 
 class Home extends React.Component {
     render() {
         return (
             <div>
-                This is initial (home) page
+                <HomeScreen />
             </div>
         )
     }
