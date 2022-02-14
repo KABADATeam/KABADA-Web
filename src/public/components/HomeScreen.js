@@ -29,9 +29,10 @@ class HomeScreen extends React.Component {
     }
 
     checkLoginStatus = () => {
+        const id = 0;
         if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
             this.setState({
-                link: '/personal-business-plans'
+                link: `/personal-business-plans/${id}`
             })
         } else {
             this.setState({

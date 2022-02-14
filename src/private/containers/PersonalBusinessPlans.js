@@ -41,6 +41,8 @@ class PersonalBusinessPlans extends Component {
         this.setState({
             isVisible: false,
         });
+
+        this.props.history.push('/personal-business-plans/1')
     };
 
     componentDidMount() {
@@ -53,6 +55,13 @@ class PersonalBusinessPlans extends Component {
                     });
                 });
             this.props.getTooltips();
+
+            if (this.props.match.params.id == 0) {
+                this.setState({
+                    isVisible: true
+                })
+                console.log(this.state.isVisible)
+            }
         } else {
             this.props.logout()
             this.props.history.push('/')
@@ -121,4 +130,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getPlans, getSelectedPlan, getImage, getPlansOverview, getTooltips,logout})(withRouter(PersonalBusinessPlans));
+export default connect(mapStateToProps, { getPlans, getSelectedPlan, getImage, getPlansOverview, getTooltips, logout })(withRouter(PersonalBusinessPlans));

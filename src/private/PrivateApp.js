@@ -46,7 +46,7 @@ class PrivateApp extends React.Component {
     constructor(props) {
         super(props);
         if (window.location.hash === '#/login') {
-            window.location.replace("#/personal-business-plans");
+            window.location.replace("#/");
         }
     }
 
@@ -58,7 +58,7 @@ class PrivateApp extends React.Component {
                 <Switch>
                     <Route exact path="/" render={(props) => <MainWindow {...props}> <Home {...props} /> </MainWindow>} />
                     <Route exact path="/public-business-plans" render={(props) => <MainWindow {...props}> <PublicBusinessPlans {...props} /> </MainWindow>} />
-                    <Route exact path="/personal-business-plans" render={(props) => <MainWindow {...props}><PersonalBusinessPlans {...props} /> </MainWindow>} />
+                    <Route exact path="/personal-business-plans/:id?" render={(props) => <MainWindow {...props}><PersonalBusinessPlans {...props} /> </MainWindow>} />
                     <Route exact path="/user-settings" render={(props) => <MainWindow {...props}> <UserSettingsWindow {...props} /> </MainWindow>} />
                     <Route exact path="/swot" render={(props) => <MainWindow {...props}> <SwotWindow {...props} /> </MainWindow>} />
                     <Route exact path="/key-resources" render={(props) => <MainWindow {...props}> <KeyResources {...props} /> </MainWindow>} />
