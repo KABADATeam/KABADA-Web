@@ -298,7 +298,16 @@ class IndustryDataComponent extends PureComponent {
                                     <Typography.Title style={{ ...aboutTitleTextStyle }}>Company Survival rate (3 year)</Typography.Title>
                                 </Row>
                                 <List
-                                    grid={{ gutter: 16, column: 3 }}
+                                    //grid={{ gutter: 16, column: 3 }}
+                                    grid={{
+                                        gutter: 16,
+                                        xs: 1,
+                                        sm: 2,
+                                        md: 2,
+                                        lg: 2,
+                                        xl: 3,
+                                        xxl: 3,
+                                      }}
                                     style={{ marginTop: "14px" }}
                                     dataSource={this.props.survival.survival_rate_data}
                                     itemLayout='vertical'
@@ -354,7 +363,16 @@ class IndustryDataComponent extends PureComponent {
                                     <Typography.Title style={{ ...aboutTitleTextStyle }}>How big is the industry?</Typography.Title>
                                 </Row>
                                 <List
-                                    grid={{ gutter: 16, column: 3 }}
+                                    //grid={{ gutter: 16, column: 3 }}
+                                    grid={{
+                                        gutter: 16,
+                                        xs: 1,
+                                        sm: 2,
+                                        md: 2,
+                                        lg: 2,
+                                        xl: 3,
+                                        xxl: 3,
+                                      }}
                                     style={{ marginTop: "14px" }}
                                     dataSource={this.props.greatnessIndustry.greatness_industry_data}
                                     itemLayout='vertical'
@@ -540,7 +558,16 @@ class IndustryDataComponent extends PureComponent {
                                     <Typography.Title style={{ ...aboutTitleTextStyle }}>How big is labor costs and productivity?</Typography.Title>
                                 </Row>
                                 <List
-                                    grid={{ gutter: 16, column: 3 }}
+                                    //grid={{ gutter: 16, column: 3 }}
+                                    grid={{
+                                        gutter: 16,
+                                        xs: 1,
+                                        sm: 2,
+                                        md: 2,
+                                        lg: 2,
+                                        xl: 3,
+                                        xxl: 3,
+                                      }}
                                     style={{ marginTop: "14px" }}
                                     dataSource={this.props.costsProductivity.costs_productivity_data}
                                     itemLayout='vertical'
@@ -723,7 +750,16 @@ class IndustryDataComponent extends PureComponent {
                                     <Typography.Title style={{ ...aboutTitleTextStyle }}>How big are the companies in the industry?</Typography.Title>
                                 </Row>
                                 <List
-                                    grid={{ gutter: 16, column: 3 }}
+                                    //grid={{ gutter: 16, column: 3 }}
+                                    grid={{
+                                        gutter: 16,
+                                        xs: 1,
+                                        sm: 2,
+                                        md: 2,
+                                        lg: 2,
+                                        xl: 3,
+                                        xxl: 3,
+                                      }}
                                     style={{ marginTop: "14px" }}
                                     dataSource={this.props.companySize.company_size_data}
                                     itemLayout='vertical'
