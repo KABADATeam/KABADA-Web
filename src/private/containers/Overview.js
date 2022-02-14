@@ -133,6 +133,7 @@ class Overview extends React.Component {
             selectedImage: null
         }
         this.fileSelectRef = React.createRef();
+        //this.downloadPdf = React.createRef();
     }
     getActivityID = (nace, industryCode, activityCode) => {
         console.log(activityCode);
@@ -209,6 +210,10 @@ class Overview extends React.Component {
     onFileUpload = (e) => {
         this.fileSelectRef.current.click();
     }
+
+    // onDownloadPdf = () => {
+    //     this.downloadPdf.current.getAlert();
+    // }
 
     onBackClick() {
         this.props.history.push(`/personal-business-plans`);
@@ -332,6 +337,9 @@ class Overview extends React.Component {
                 </Menu.Item>
                 <Menu.Item key="3" onClick={this.downloadCashFlow}>
                     Download Cash Flow
+                </Menu.Item>
+                <Menu.Item key="4" onClick={() => {this.downloadPdf()}}>
+                    Download Industry data 
                 </Menu.Item>
             </Menu>
         );
@@ -929,7 +937,7 @@ class Overview extends React.Component {
                                 </Row>
                             </TabPane>
                             <TabPane tab="Industry data" key="2">
-                                <IndustryDataComponent />
+                                <IndustryDataComponent setClick={click => { this.downloadPdf = click}}/>
                             </TabPane>
                             <TabPane tab="Industry risks" key="3">
                                 <Row style={{ marginBottom: "50px", marginTop: "40px" }}>
