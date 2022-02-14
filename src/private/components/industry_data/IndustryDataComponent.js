@@ -142,7 +142,7 @@ class IndustryDataComponent extends PureComponent {
             } else if (i === 3) {
                 doc.addImage(dataElement, 'PNG', 20, yPosition + 5, imgWidth, imgHeight);
             } else {
-                doc.addImage(dataElement, 'PNG', xPosition, yPosition + 5 , imgWidth, imgHeight);
+                doc.addImage(dataElement, 'PNG', xPosition, yPosition + 5, imgWidth, imgHeight);
             }
         }
         doc.addImage(dividerElement, 'PNG', 20, 50 + 2 * chartCardHeight, 170, dividerHeight);
@@ -158,9 +158,9 @@ class IndustryDataComponent extends PureComponent {
         const imgWidth = 53.3;
         const pageHeight = 297;
         const surviveCanvas = await html2canvas(this.survivalRate[0]);
-        const surviveHeight = surviveCanvas.height * imgWidth / surviveCanvas.width;
-        const chartCanvas = await html2canvas(this.bigIndustry[0]);
-        const chartCardHeight = chartCanvas.height * imgWidth / chartCanvas.width;
+        const surviveHeight = surviveCanvas.height * imgWidth / surviveCanvas.width
+
+        const chartCardHeight = 601 * imgWidth / 394;
         const doc = new jsPDF('p', 'mm', [297, 210]);
         const dividerCanvas = await html2canvas(this.dividerRef[0]);
         const dividerHeight = dividerCanvas.height * 170 / dividerCanvas.width;
@@ -168,78 +168,86 @@ class IndustryDataComponent extends PureComponent {
         doc.setFontSize(16);
         doc.text(20, 20, 'Industry data');
         doc.addImage(dividerElement, 'PNG', 20, 25, 170, dividerHeight);
-        for (var i = 0; i < this.survivalRate.length; i++) {
-            const canvas = await html2canvas(this.survivalRate[i]);
-            const dataElement = canvas.toDataURL('image/png');
-            const imgHeight = canvas.height * imgWidth / canvas.width;
-            const xPosition = 20 + i * 5 + i * imgWidth;
-            if (i === 0) {
-                doc.setFontSize(12)
-                doc.text(20, 35, 'Company Survival rate (3 year)')
-                doc.addImage(dataElement, 'PNG', xPosition, 40, imgWidth, imgHeight);
-            } else {
-                doc.addImage(dataElement, 'PNG', xPosition, 40, imgWidth, imgHeight);
+        if (this.survivalRate.length !== 0) {
+            for (var i = 0; i < this.survivalRate.length; i++) {
+                const canvas = await html2canvas(this.survivalRate[i]);
+                const dataElement = canvas.toDataURL('image/png');
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                const xPosition = 20 + i * 5 + i * imgWidth;
+                if (i === 0) {
+                    doc.setFontSize(12)
+                    doc.text(20, 35, 'Company Survival rate (3 year)')
+                    doc.addImage(dataElement, 'PNG', xPosition, 40, imgWidth, imgHeight);
+                } else {
+                    doc.addImage(dataElement, 'PNG', xPosition, 40, imgWidth, imgHeight);
+                }
             }
+            doc.addImage(dividerElement, 'PNG', 20, 45 + surviveHeight, 170, dividerHeight);
         }
-        doc.addImage(dividerElement, 'PNG', 20, 45 + surviveHeight, 170, dividerHeight);
-        for (var i = 0; i < this.bigIndustry.length; i++) {
-            const canvas = await html2canvas(this.bigIndustry[i]);
-            const dataElement = canvas.toDataURL('image/png');
-            console.log('height', canvas.height)
-            console.log('width', canvas.width)
-            const imgHeight = canvas.height * imgWidth / canvas.width;
-            const xPosition = 20 + i * 5 + i * imgWidth;
-            const yPosition = 60 + surviveHeight;
-            if (i === 0) {
-                doc.setFontSize(12)
-                doc.text(20, 55 + surviveHeight, 'How big is the industry?')
-                doc.addImage(dataElement, 'PNG', xPosition, yPosition, imgWidth, imgHeight);
-            } else if (i === 3) {
-                doc.addImage(dataElement, 'PNG', 20, yPosition + imgHeight + 5, imgWidth, imgHeight);
-            } else {
-                doc.addImage(dataElement, 'PNG', xPosition, yPosition, imgWidth, imgHeight);
+        if (this.bigIndustry.length !== 0) {
+            for (var i = 0; i < this.bigIndustry.length; i++) {
+                const canvas = await html2canvas(this.bigIndustry[i]);
+                const dataElement = canvas.toDataURL('image/png');
+                console.log('height', canvas.height)
+                console.log('width', canvas.width)
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                const xPosition = 20 + i * 5 + i * imgWidth;
+                const yPosition = 60 + surviveHeight;
+                if (i === 0) {
+                    doc.setFontSize(12)
+                    doc.text(20, 55 + surviveHeight, 'How big is the industry?')
+                    doc.addImage(dataElement, 'PNG', xPosition, yPosition, imgWidth, imgHeight);
+                } else if (i === 3) {
+                    doc.addImage(dataElement, 'PNG', 20, yPosition + imgHeight + 5, imgWidth, imgHeight);
+                } else {
+                    doc.addImage(dataElement, 'PNG', xPosition, yPosition, imgWidth, imgHeight);
+                }
             }
+            doc.addImage(dividerElement, 'PNG', 20, 70 + surviveHeight + 2 * chartCardHeight, 170, dividerHeight);
+            doc.addPage();
         }
-        doc.addImage(dividerElement, 'PNG', 20, 70 + surviveHeight + 2 * chartCardHeight, 170, dividerHeight);
-        doc.addPage();
-        for (var i = 0; i < this.costsProductivity.length; i++) {
-            const canvas = await html2canvas(this.costsProductivity[i]);
-            const dataElement = canvas.toDataURL('image/png');
-            console.log('height', canvas.height)
-            console.log('width', canvas.width)
-            const imgHeight = canvas.height * imgWidth / canvas.width;
-            const xPosition = 20 + i * 5 + i * imgWidth;
-            const yPosition = 25 + imgHeight;
-            if (i === 0) {
-                doc.setFontSize(12)
-                doc.text(20, 20, 'How big is labor costs and productivity?')
-                doc.addImage(dataElement, 'PNG', xPosition, 25, imgWidth, imgHeight);
-            } else if (i === 3) {
-                doc.addImage(dataElement, 'PNG', 20, yPosition + 5, imgWidth, imgHeight);
-            } else {
-                doc.addImage(dataElement, 'PNG', xPosition, 25, imgWidth, imgHeight);
+        if (this.costsProductivity.length !== 0) {
+            for (var i = 0; i < this.costsProductivity.length; i++) {
+                const canvas = await html2canvas(this.costsProductivity[i]);
+                const dataElement = canvas.toDataURL('image/png');
+                console.log('height', canvas.height)
+                console.log('width', canvas.width)
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                const xPosition = 20 + i * 5 + i * imgWidth;
+                const yPosition = 25 + imgHeight;
+                if (i === 0) {
+                    doc.setFontSize(12)
+                    doc.text(20, 20, 'How big is labor costs and productivity?')
+                    doc.addImage(dataElement, 'PNG', xPosition, 25, imgWidth, imgHeight);
+                } else if (i === 3) {
+                    doc.addImage(dataElement, 'PNG', 20, yPosition + 5, imgWidth, imgHeight);
+                } else {
+                    doc.addImage(dataElement, 'PNG', xPosition, 25, imgWidth, imgHeight);
+                }
             }
+            doc.addImage(dividerElement, 'PNG', 20, 32.5 + chartCardHeight, 170, dividerHeight);
         }
-        doc.addImage(dividerElement, 'PNG', 20, 32.5 + chartCardHeight, 170, dividerHeight);
-        for (var i = 0; i < this.companySize.length; i++) {
-            const canvas = await html2canvas(this.companySize[i]);
-            const dataElement = canvas.toDataURL('image/png');
-            console.log('height', canvas.height)
-            console.log('width', canvas.width)
-            const imgHeight = canvas.height * imgWidth / canvas.width;
-            const xPosition = 20 + i * 5 + i * imgWidth;
-            const yPosition = 40 + imgHeight;
-            if (i === 0) {
-                doc.setFontSize(12)
-                doc.text(20, yPosition, 'How big are the companies in the industry?')
-                doc.addImage(dataElement, 'PNG', xPosition, yPosition + 5, imgWidth, imgHeight);
-            } else if (i === 3) {
-                doc.addImage(dataElement, 'PNG', 20, yPosition + 5, imgWidth, imgHeight);
-            } else {
-                doc.addImage(dataElement, 'PNG', xPosition, yPosition + 5 , imgWidth, imgHeight);
+        if (this.companySize.lenght !== 0) {
+            for (var i = 0; i < this.companySize.length; i++) {
+                const canvas = await html2canvas(this.companySize[i]);
+                const dataElement = canvas.toDataURL('image/png');
+                console.log('height', canvas.height)
+                console.log('width', canvas.width)
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                const xPosition = 20 + i * 5 + i * imgWidth;
+                const yPosition = 40 + imgHeight;
+                if (i === 0) {
+                    doc.setFontSize(12)
+                    doc.text(20, yPosition, 'How big are the companies in the industry?')
+                    doc.addImage(dataElement, 'PNG', xPosition, yPosition + 5, imgWidth, imgHeight);
+                } else if (i === 3) {
+                    doc.addImage(dataElement, 'PNG', 20, yPosition + 5, imgWidth, imgHeight);
+                } else {
+                    doc.addImage(dataElement, 'PNG', xPosition, yPosition + 5, imgWidth, imgHeight);
+                }
             }
+            doc.addImage(dividerElement, 'PNG', 20, 50 + 2 * chartCardHeight, 170, dividerHeight);
         }
-        doc.addImage(dividerElement, 'PNG', 20, 50 + 2 * chartCardHeight, 170, dividerHeight);
         doc.save('doc.pdf');
     }
 
@@ -341,7 +349,7 @@ class IndustryDataComponent extends PureComponent {
                             </Col>
                         </Row>
                         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-                            <Col>
+                            <Col span={24}>
                                 <Row>
                                     <Typography.Title style={{ ...aboutTitleTextStyle }}>How big is the industry?</Typography.Title>
                                 </Row>
@@ -478,15 +486,15 @@ class IndustryDataComponent extends PureComponent {
                                                                             <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.euActivitiesProgress}%</Text>
                                                                         </div>
                                                                         : item.euActivitiesValue[1] - item.euActivitiesValue[0] < 0 ?
-                                                                        <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
-                                                                            <Text style={{ ...textStyleForEUAndTotal }}>{item.euActivitiesValue[1]}{item.unitOfMeasure}</Text>
-                                                                            <ArrowDownOutlined />
-                                                                            <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.euActivitiesProgress}%</Text>
-                                                                        </div>
-                                                                        : 
-                                                                        <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
-                                                                            <Text style={{ ...textStyleForEUAndTotal }}>No data</Text>
-                                                                        </div>
+                                                                            <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
+                                                                                <Text style={{ ...textStyleForEUAndTotal }}>{item.euActivitiesValue[1]}{item.unitOfMeasure}</Text>
+                                                                                <ArrowDownOutlined />
+                                                                                <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.euActivitiesProgress}%</Text>
+                                                                            </div>
+                                                                            :
+                                                                            <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
+                                                                                <Text style={{ ...textStyleForEUAndTotal }}>No data</Text>
+                                                                            </div>
                                                                     }
                                                                 </div>
                                                             </Col>
@@ -710,98 +718,98 @@ class IndustryDataComponent extends PureComponent {
                             </Col>
                         </Row>
                         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-                            <Col span={24}>                            
+                            <Col span={24}>
                                 <Row>
-                                        <Typography.Title style={{ ...aboutTitleTextStyle }}>How big are the companies in the industry?</Typography.Title>
-                                </Row>                                
-                                    <List
-                                        grid={{ gutter: 16, column: 3 }}
-                                        style={{ marginTop: "14px" }}
-                                        dataSource={this.props.companySize.company_size_data}
-                                        itemLayout='vertical'
-                                        locale={defaultEmptyText}
-                                        renderItem={(item, index) => {
-                                            const data = {
-                                                labels: item.timeLabels,
-                                                datasets: [
-                                                    {
-                                                        label: item.geoTitle,
-                                                        data: item.activityValues,
-                                                        fill: false,
-                                                        backgroundColor: '#1890FF',
-                                                        borderColor: '#1890FF',
-                                                        pointStyle: 'rectRounded',
-                                                        pointRadius: 0,
-                                                        yAxisID: 'y'
-                                                    },
-                                                    {
-                                                        label: item.geoTitle + '(Total)',
-                                                        data: item.totalActivitiesValues,
-                                                        fill: false,
-                                                        backgroundColor: '#BFBFBF',
-                                                        borderColor: '#BFBFBF',
-                                                        pointStyle: 'rectRounded',
-                                                        pointRadius: 0,
-                                                        yAxisID: 'y1'
-                                                    }
-                                                ]
-                                            }
-                                            const options = {
-                                                responsive: true,
-                                                maintainAspectRatio: false,
-                                                scales: {
-                                                    y: {
-                                                        beginAtZero: true,
-                                                        type: 'linear',
-                                                        display: true,
-                                                        position: 'left'
-                                                    },
-                                                    y1: {
-                                                        beginAtZero: true,
-                                                        type: 'linear',
-                                                        display: true,
-                                                        position: 'right',
-                                                        grid: {
-                                                            drawOnChartArea: false,
-                                                        }
-                                                    }
+                                    <Typography.Title style={{ ...aboutTitleTextStyle }}>How big are the companies in the industry?</Typography.Title>
+                                </Row>
+                                <List
+                                    grid={{ gutter: 16, column: 3 }}
+                                    style={{ marginTop: "14px" }}
+                                    dataSource={this.props.companySize.company_size_data}
+                                    itemLayout='vertical'
+                                    locale={defaultEmptyText}
+                                    renderItem={(item, index) => {
+                                        const data = {
+                                            labels: item.timeLabels,
+                                            datasets: [
+                                                {
+                                                    label: item.geoTitle,
+                                                    data: item.activityValues,
+                                                    fill: false,
+                                                    backgroundColor: '#1890FF',
+                                                    borderColor: '#1890FF',
+                                                    pointStyle: 'rectRounded',
+                                                    pointRadius: 0,
+                                                    yAxisID: 'y'
                                                 },
-                                                tooltip: {
-                                                    enabled: false
+                                                {
+                                                    label: item.geoTitle + '(Total)',
+                                                    data: item.totalActivitiesValues,
+                                                    fill: false,
+                                                    backgroundColor: '#BFBFBF',
+                                                    borderColor: '#BFBFBF',
+                                                    pointStyle: 'rectRounded',
+                                                    pointRadius: 0,
+                                                    yAxisID: 'y1'
+                                                }
+                                            ]
+                                        }
+                                        const options = {
+                                            responsive: true,
+                                            maintainAspectRatio: false,
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true,
+                                                    type: 'linear',
+                                                    display: true,
+                                                    position: 'left'
                                                 },
-                                                plugins: {
-                                                    legend: {
-                                                        position: 'bottom',
-                                                        align: 'start',
-                                                        labels: {
-                                                            usePointStyle: true
-                                                        }
-                                                    },
-                                                    title: {
-                                                        display: true,
-                                                        text: item.variableTitle + ' over time',
-                                                        align: 'start',
-                                                        color: '#262626',
-                                                        padding: {
-                                                            bottom: 16
-                                                        },
-                                                        font: {
-                                                            weight: 600,
-                                                            size: 14
-                                                        }
+                                                y1: {
+                                                    beginAtZero: true,
+                                                    type: 'linear',
+                                                    display: true,
+                                                    position: 'right',
+                                                    grid: {
+                                                        drawOnChartArea: false,
+                                                    }
+                                                }
+                                            },
+                                            tooltip: {
+                                                enabled: false
+                                            },
+                                            plugins: {
+                                                legend: {
+                                                    position: 'bottom',
+                                                    align: 'start',
+                                                    labels: {
+                                                        usePointStyle: true
                                                     }
                                                 },
-                                                layout: {
+                                                title: {
+                                                    display: true,
+                                                    text: item.variableTitle + ' over time',
+                                                    align: 'start',
+                                                    color: '#262626',
                                                     padding: {
-                                                        bottom: 10,
+                                                        bottom: 16
+                                                    },
+                                                    font: {
+                                                        weight: 600,
+                                                        size: 14
                                                     }
-                                                },
-                                                color: '#262626'
-                                            };
-                                            return (
-                                                <List.Item >
-                                                    <div ref={ref => this.companySize[index] = ref}>
-                                                    <Card style={{borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
+                                                }
+                                            },
+                                            layout: {
+                                                padding: {
+                                                    bottom: 10,
+                                                }
+                                            },
+                                            color: '#262626'
+                                        };
+                                        return (
+                                            <List.Item >
+                                                <div ref={ref => this.companySize[index] = ref}>
+                                                    <Card style={{ borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
                                                         <Row>
                                                             <div>
                                                                 <Text style={{ ...textStyle }}>{item.variableTitle} {item.industry}</Text>
@@ -883,11 +891,11 @@ class IndustryDataComponent extends PureComponent {
                                                             <ChartjsLine data={data} options={options} style={{ width: 344, height: 331 }} />
                                                         </Row>
                                                     </Card>
-                                                    </div>
-                                                </List.Item>
-                                            )
-                                        }}
-                                    />
+                                                </div>
+                                            </List.Item>
+                                        )
+                                    }}
+                                />
                             </Col>
                         </Row>
                     </>
