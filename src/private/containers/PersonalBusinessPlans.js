@@ -73,33 +73,32 @@ class PersonalBusinessPlans extends Component {
         return (
             <Layout style={{ backgroundColor: '#F5F5F5' }}>
                 <Content>
-                    <Row wrap={false} justify="center" align="middle">
-                        <Col span={20}>
-                            <div style={{ display: "flex" }}>
-                                <Col span={12}>
-                                    <Title level={2} style={{ ...pageHeaderStyle }}>My business plans</Title>
-                                </Col>
-                                <Col span={12}>
-                                    <div style={{ float: "right", marginTop: "40px" }}>
-                                        <Button
-                                            type="text"
-                                            style={{ ...buttonStyle }}
-                                            size="large"
-                                        >
-                                            Import
-                                        </Button>
-                                        <Button
-                                            type="primary"
-                                            style={{ ...buttonStyle, marginLeft: 32 }}
-                                            size="large"
-                                            onClick={this.openModal.bind(this)}
-                                        >
-                                            Create Plan
-                                        </Button>
-                                    </div>
-                                </Col>
-
+                    <Row>
+                        <Col span={10} offset={2} >
+                            <Title level={2} style={{ ...pageHeaderStyle }}>My business plans</Title>
+                        </Col>
+                        <Col span={10}>
+                            <div style={{ float: "right", marginTop: "40px" }}>
+                                <Button
+                                    type="text"
+                                    style={{ ...buttonStyle }}
+                                    size="large"
+                                >
+                                    Import
+                                </Button>
+                                <Button
+                                    type="primary"
+                                    style={{ ...buttonStyle, marginLeft: 32 }}
+                                    size="large"
+                                    onClick={this.openModal.bind(this)}
+                                >
+                                    Create Plan
+                                </Button>
                             </div>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={20} offset={2}>
                             <Tabs activeKey={this.state.activeTab} onChange={this.changeTabKey}>
                                 <TabPane tab="All" key="1">
                                     <PlanElementComponent tabKey={this.state.activeTab} />
@@ -114,9 +113,9 @@ class PersonalBusinessPlans extends Component {
                                     <PlanElementComponent tabKey={this.state.activeTab} />
                                 </TabPane>
                             </Tabs>
-                            <NewBusinessPlanModal visibility={isVisible} handleClose={this.closeModal} />
                         </Col>
                     </Row>
+                    <NewBusinessPlanModal visibility={isVisible} handleClose={this.closeModal} />
                 </Content>
             </Layout>
 

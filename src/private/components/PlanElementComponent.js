@@ -51,23 +51,33 @@ class PlanElementComponent extends Component {
         )
 
         return (
-            <>
+            <>            
                 <List
                     style={{marginTop: '40px'}}
-                    grid={{ gutter: 16 }}
+                    //grid={{ gutter: 16, column: 4}}
+                    grid={{
+                        gutter: 16,
+                        xs: 1,
+                        sm: 2,
+                        md: 3,
+                        lg: 3,
+                        xl: 4,
+                        xxl: 4,
+                      }}
                     dataSource={dataSource}
                     renderItem={item => (
                         <List.Item onClick={this.onClick.bind(this, item)} style={{ cursor: 'pointer' }}>
                             <Card
                                 style={{
-                                    width: '282px', height: '236px', borderRadius: '8px', backgroundColor: '#FFFFFF',
+                                    borderRadius: '8px', backgroundColor: '#FFFFFF',
                                     backgroundImage: 'linear-gradient(to bottom, rgba(255, 255, 252, 0) 64.5%, rgba(255, 255, 255, 1) 35.5%), ' + (item.coverImage ? `url(${item.coverImage})` : `url(businessPlan.webp)`),
                                     objectFit: 'cover', backgroundSize: '100% auto', backgroundRepeat: 'no-repeat'
                                 }}
-                            >
+                            >   
                                 <Row>
                                     <PlanStatusTag planStatusValue={item.percentage} />
                                 </Row>
+                                {/* <Meta title={item.name} description={(new Date(item.dateCreated)).toLocaleDateString('lt-lt')}/> */}
                                 <Row style={{ marginTop: 131 }}>
                                     <Text ellipsis={true} style={{ ...planTitleTextStyle }}>{item.name}</Text>
                                 </Row>
@@ -78,7 +88,7 @@ class PlanElementComponent extends Component {
                         </List.Item>
                     )
                     }
-                />
+                />            
             </>
         )
     }
