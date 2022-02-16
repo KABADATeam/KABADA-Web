@@ -712,13 +712,11 @@ class Overview extends React.Component {
                                             <List.Item key='12'>
                                                 <List.Item.Meta
                                                     style={{ padding: '0px 20px 0px' }}
+                                                    avatar={this.props.businessPlan.assets_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
                                                     description={
                                                         <div>
-                                                            <Row>
-                                                                <Col span={1}>
-                                                                    {this.props.businessPlan.assets_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
-                                                                </Col>
-                                                                <Col span={11}>
+                                                            <Row>                    
+                                                                <Col span={12}>
                                                                     <div style={{ ...financialTitlePositionStyle }}>
                                                                         <Link to='/assets' style={canvasElementTextStyle}>Assets</Link>
                                                                     </div>
@@ -739,13 +737,11 @@ class Overview extends React.Component {
                                             <List.Item key='13'>
                                                 <List.Item.Meta
                                                     style={{ padding: '0px 20px 0px' }}
+                                                    avatar={this.props.businessPlan.fixed_and_variables_costs_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
                                                     description={
                                                         <div>
                                                             <Row>
-                                                                <Col span={1}>
-                                                                    {this.props.businessPlan.fixed_and_variables_costs_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
-                                                                </Col>
-                                                                <Col span={11}>
+                                                                <Col span={12}>
                                                                     <div style={{ ...financialTitlePositionStyle }}>
                                                                         <Link to="/fixed-and-variable-costs" style={canvasElementTextStyle}>Fixed and Variable Costs</Link>
                                                                     </div>
@@ -766,13 +762,11 @@ class Overview extends React.Component {
                                             <List.Item key='14'>
                                                 <List.Item.Meta
                                                     style={{ padding: '0px 20px 0px' }}
+                                                    avatar={this.props.businessPlan.sales_forecast_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
                                                     description={
                                                         <div>
                                                             <Row>
-                                                                <Col span={1}>
-                                                                    {this.props.businessPlan.sales_forecast_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
-                                                                </Col>
-                                                                <Col span={11}>
+                                                                <Col span={12}>
                                                                     <div style={{ ...financialTitlePositionStyle }}>
                                                                         <Link to="/sales-forecast" style={canvasElementTextStyle}>Sales Forecast</Link>
                                                                     </div>
@@ -793,13 +787,11 @@ class Overview extends React.Component {
                                             <List.Item key='15'>
                                                 <List.Item.Meta
                                                     style={{ padding: '0px 20px 0px' }}
+                                                    avatar={this.props.businessPlan.business_start_up_investments_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
                                                     description={
                                                         <div>
                                                             <Row>
-                                                                <Col span={1}>
-                                                                    {this.props.businessPlan.business_start_up_investments_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
-                                                                </Col>
-                                                                <Col span={11}>
+                                                                <Col span={12}>
                                                                     <div style={{ ...financialTitlePositionStyle }}>
                                                                         <Link to="/business-start-up-investments" style={canvasElementTextStyle}>Business start-up investments</Link>
                                                                     </div>
@@ -820,13 +812,11 @@ class Overview extends React.Component {
                                             <List.Item key='16'>
                                                 <List.Item.Meta
                                                     style={{ padding: '0px 20px 0px' }}
+                                                    avatar={this.props.businessPlan.assets_state === true && this.props.businessPlan.fixed_and_variables_costs_state === true && this.props.businessPlan.sales_forecast_state === true && this.props.businessPlan.business_start_up_investments_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
                                                     description={
                                                         <div>
                                                             <Row>
-                                                                <Col span={1}>
-                                                                    {this.props.businessPlan.assets_state === true && this.props.businessPlan.fixed_and_variables_costs_state === true && this.props.businessPlan.sales_forecast_state === true && this.props.businessPlan.business_start_up_investments_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
-                                                                </Col>
-                                                                <Col span={11}>
+                                                                <Col span={12}>
                                                                     <div style={{ ...financialTitlePositionStyle }}>
                                                                         <Link to="/cash-flow" style={canvasElementTextStyle}>Cash Flow</Link>
                                                                     </div>
