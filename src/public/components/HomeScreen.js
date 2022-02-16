@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Button, Divider, Card, Image } from 'antd';
+import { Row, Col, Button, Divider, Card, Image, List } from 'antd';
 import '../../css/Home.css'
 import { FacebookFilled, InstagramOutlined, LinkedinFilled, TwitterOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
@@ -9,14 +9,13 @@ import { withRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import moment from 'moment'
 import { Link } from 'react-router-dom';
 
-
 const { Meta } = Card;
 
 class HomeScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            postNumbers: 6,
+            showAllPost: false,
             link: ''
         }
     }
@@ -42,19 +41,20 @@ class HomeScreen extends React.Component {
 
         }
     }
-
     onClick = () => {
-        if (this.state.postNumbers === 6) {
+        if (this.state.showAllPost === false) {
             this.setState({
-                postNumbers: 0
+                showAllPost: true
             })
         } else {
             this.setState({
-                postNumbers: 6
+                showAllPost: false
             })
         }
     }
     render() {
+        const allPosts = this.props.homeReducer;
+        const fourPosts = this.props.homeReducer.slice(0,4);
         return (
             <>
 
@@ -200,77 +200,46 @@ class HomeScreen extends React.Component {
                     </Col>
                 </Row>
 
-                <Row justify="center" style={{ background: '#F5F5F5' }}>
+                <Row style={{ background: '#F5F5F5' }}>
 
                     <Col span={24} style={{ marginTop: '72px', marginBottom: '56px' }}>
                         <h2 className='h2Style' style={{ textAlign: 'center' }}>Resources to give you the </h2>
                         <h2 className='h2Style' style={{ textAlign: 'center' }}>inside track </h2>
                     </Col>
-                    {/* <Row justify="center"> */}
-                    {this.props.homeReducer.slice(this.state.postNumbers).map((x, index) => (
-                        <Col span={5} >
-                            <Card
-                                hoverable
-                                style={{ width: '14.6875vw', marginBottom: '15%' }}
-                                cover={<img alt="example" src={x.jetpack_featured_media_url} />}
-                            >
-                                <a href={x.link}>
-                                    <h3>{x.title.rendered}</h3>
+                    <Col span={20} offset={2}>
+                        <List
+                            grid={{
+                                gutter: 16,
+                                xs: 1,
+                                sm: 2,
+                                md: 3,
+                                lg: 3,
+                                xl: 4,
+                                xxl: 4,
+                            }}
+                            dataSource={this.state.showAllPost === false ? fourPosts : allPosts}
+                            renderItem={item => (
+                                <List.Item>
+                                    <Card
+                                        style={{
+                                            height: '292px', borderRadius: '8px', backgroundColor: '#FFFFFF'}}
+                                        cover={<img alt="" src={item.jetpack_featured_media_url} style={{ borderTopLeftRadius: '8px', borderTopRightRadius: '8px', width: '100%', height: '152px', objectFit: 'cover', backgroundSize: '100% auto', backgroundRepeat: 'no-repeat' }} />}
+                                    >
+                                        <a href={item.link}>
+                                            <h3>{item.title.rendered}</h3>
 
-                                </a>
-                                <Meta title="" description={moment(x.date).format("YYYY/MM/DD")} />
-                            </Card>
+                                        </a>
+                                        <Meta title='' description={moment(item.date).format("YYYY/MM/DD")} />
+                                    </Card>
+                                </List.Item>
+                            )}
+                        />
+                        <Col span={12} offset={11} style={{ marginTop: '66px', marginBottom: '88px' }}><Button onClick={() => this.onClick()} className='Archive'>{this.state.showAllPost === false ? 'Show More' : 'Show less'}</Button></Col>
+                    </Col>    
+                </Row>
 
-                        </Col>
-
-                    ))}
-                    {/* </Row> */}
-                    {/* <Col offset={4} span={4} >
-                    <Card
-                        hoverable
-                        style={{ width: '14.6875vw' }}
-                        cover={<img alt="example" src="Rectangle7.png" />}
-                    >
-                        <h3>KABADA: Why is it a more comprehensive assessment tool than the others?</h3>
-                        <Meta title="Europe Street beat" description="www.instagram.com" />
-                    </Card>
-
-                </Col>
-
-                <Col span={4} >
-                    <Card
-                        hoverable
-                        style={{ width: '14.6875vw' }}
-                        cover={<img alt="example" src="Rectangle1.png" />}
-                    >
-                        <h3>KABADA: Why is it a more comprehensive assessment tool than the others?</h3>
-                        <Meta title="Europe Street beat" description="www.instagram.com" />
-                    </Card>
-                </Col>
-
-                <Col span={4}>
-                    <Card
-                        hoverable
-                        style={{ width: '14.6875vw' }}
-                        cover={<img alt="example" src="Rectangle2.png" />}
-                    >
-                        <h3>KABADA: Why is it a more comprehensive assessment tool than the others?</h3>
-                        <Meta title="Europe Street beat" description="www.instagram.com" />
-                    </Card>
-                </Col>
-
-                <Col span={4}>
-                    <Card
-                        hoverable
-                        style={{ width: '14.6875vw' }}
-                        cover={<img alt="example" src="Rectangle3.png" />}
-                    >
-                        <h3>KABADA: Why is it a more comprehensive assessment tool than the others?</h3>
-                        <Meta title="Europe Street beat" description="www.instagram.com" />
-                    </Card>
-                </Col> */}
-
-                    <Col span={12} offset={11} style={{ marginTop: '66px', marginBottom: '88px' }}><Button onClick={() => this.onClick()} className='Archive'>{this.state.postNumbers === 6 ? 'Show More' : 'Show less'}</Button></Col>
+                <Row style={{ background: '#F5F5F5' }}>
+                    
                 </Row>
 
                 <div style={{ background: '#ffff', marginBottom: '200px' }}>
