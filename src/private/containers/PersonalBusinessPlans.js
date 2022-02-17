@@ -8,6 +8,7 @@ import NewBusinessPlanModal from "../components/NewBusinessPlanModal";
 import { getPlans, getSelectedPlan, getImage, getPlansOverview } from "../../appStore/actions/planActions";
 import { getTooltips } from '../../appStore/actions/tooltipsAction';
 import { logout } from '../../appStore/actions/authenticationActions';
+import { changeState } from '../../appStore/actions/homeAction'
 import Cookies from 'js-cookie';
 
 const { Title } = Typography;
@@ -41,8 +42,6 @@ class PersonalBusinessPlans extends Component {
         this.setState({
             isVisible: false,
         });
-
-        this.props.history.push('/personal-business-plans/1')
     };
 
     componentDidMount() {
@@ -52,16 +51,23 @@ class PersonalBusinessPlans extends Component {
                     this.props.personalPlans.forEach(plan => {
                         this.props.getImage(plan);
                         this.props.getPlansOverview(plan.id);
+
+
                     });
                 });
             this.props.getTooltips();
 
-            if (this.props.match.params.id == 0) {
-                this.setState({
-                    isVisible: true
-                })
-                console.log(this.state.isVisible)
-            }
+
+
+
+
+
+            this.setState({
+                isVisible: this.props.homeReducer
+            })
+
+
+
         } else {
             this.props.logout()
             this.props.history.push('/')
@@ -125,8 +131,9 @@ class PersonalBusinessPlans extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        personalPlans: state.personalBusinessPlans
+        personalPlans: state.personalBusinessPlans,
+        homeReducer: state.homeReducer.status
     };
 }
 
-export default connect(mapStateToProps, { getPlans, getSelectedPlan, getImage, getPlansOverview, getTooltips, logout })(withRouter(PersonalBusinessPlans));
+export default connect(mapStateToProps, { getPlans, getSelectedPlan, getImage, getPlansOverview, getTooltips, logout, changeState })(withRouter(PersonalBusinessPlans));

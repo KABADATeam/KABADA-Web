@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import { getPosts } from '../../appStore/actions/homeAction';
 import { withRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import moment from 'moment'
+import { changeState } from '../../appStore/actions/homeAction'
 import { Link } from 'react-router-dom';
 
 const { Meta } = Card;
@@ -28,11 +29,11 @@ class HomeScreen extends React.Component {
     }
 
     checkLoginStatus = () => {
-        const id = 0;
         if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
             this.setState({
-                link: `/personal-business-plans/${id}`
+                link: `/personal-business-plans`
             })
+            this.props.changeState(this.state.isVisible);
         } else {
             this.setState({
                 link: '/login'
@@ -54,7 +55,7 @@ class HomeScreen extends React.Component {
     }
     render() {
         const allPosts = this.props.homeReducer;
-        const fourPosts = this.props.homeReducer.slice(0,4);
+        const fourPosts = this.props.homeReducer.slice(0, 4);
         return (
             <>
 
@@ -222,7 +223,8 @@ class HomeScreen extends React.Component {
                                 <List.Item>
                                     <Card
                                         style={{
-                                            height: '292px', borderRadius: '8px', backgroundColor: '#FFFFFF'}}
+                                            height: '292px', borderRadius: '8px', backgroundColor: '#FFFFFF'
+                                        }}
                                         cover={<img alt="" src={item.jetpack_featured_media_url} style={{ borderTopLeftRadius: '8px', borderTopRightRadius: '8px', width: '100%', height: '152px', objectFit: 'cover', backgroundSize: '100% auto', backgroundRepeat: 'no-repeat' }} />}
                                     >
                                         <a href={item.link}>
@@ -235,11 +237,11 @@ class HomeScreen extends React.Component {
                             )}
                         />
                         <Col span={12} offset={11} style={{ marginTop: '66px', marginBottom: '88px' }}><Button onClick={() => this.onClick()} className='Archive'>{this.state.showAllPost === false ? 'Show More' : 'Show less'}</Button></Col>
-                    </Col>    
+                    </Col>
                 </Row>
 
                 <Row style={{ background: '#F5F5F5' }}>
-                    
+
                 </Row>
 
                 <div style={{ background: '#ffff', marginBottom: '200px' }}>
@@ -387,5 +389,5 @@ const mapStateToProps = (state) => {
 
 }
 
-export default connect(mapStateToProps, { getPosts })(withRouter(HomeScreen));
+export default connect(mapStateToProps, { getPosts, changeState })(withRouter(HomeScreen));
 

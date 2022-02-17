@@ -6,6 +6,9 @@ export const homeReducer = (state = { posts: [] }, action) => {
 
             return { ...state, "posts": posts };
 
+        case 'CHANGE_STATE_SUCCESS':
+            const status = action.payload
+            return { ...state, "status": status }
         default:
             return state
     }
