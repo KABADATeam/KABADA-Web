@@ -3,7 +3,7 @@ const getVariableShortTitle = (variable) => {
         let variableTitle = 'Persons employed'
         return variableTitle
     } else if (variable === 'V92110') {
-        let variableTitle = 'Gross operating turnover'
+        let variableTitle = 'Gross operating rate'
         return variableTitle
     } 
 }

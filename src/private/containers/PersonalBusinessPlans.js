@@ -89,6 +89,7 @@ class PersonalBusinessPlans extends Component {
                                     type="text"
                                     style={{ ...buttonStyle }}
                                     size="large"
+                                    hidden
                                 >
                                     Import
                                 </Button>

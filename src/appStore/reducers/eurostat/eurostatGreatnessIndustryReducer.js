@@ -1,6 +1,6 @@
 const getVariableShortTitle = (variable) => {
     if (variable === 'V11110') {
-        let variableTitle = 'Enterprices'
+        let variableTitle = 'Enterprises'
         return variableTitle
     } else if (variable === 'V12110') {
         let variableTitle = 'Turnover'

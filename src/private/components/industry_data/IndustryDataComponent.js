@@ -382,7 +382,7 @@ class IndustryDataComponent extends PureComponent {
                                             labels: item.timeLabels,
                                             datasets: [
                                                 {
-                                                    label: item.geoTitle,
+                                                    label: item.geoTitle + ' (industry)',
                                                     data: item.activityValues,
                                                     fill: false,
                                                     backgroundColor: '#1890FF',
@@ -392,7 +392,7 @@ class IndustryDataComponent extends PureComponent {
                                                     yAxisID: 'y'
                                                 },
                                                 {
-                                                    label: item.geoTitle + '(Total)',
+                                                    label: item.geoTitle + ' (total)',
                                                     data: item.totalActivitiesValues,
                                                     fill: false,
                                                     backgroundColor: '#BFBFBF',
@@ -462,7 +462,7 @@ class IndustryDataComponent extends PureComponent {
                                                         <Row>
                                                             <Text style={{ ...textStyle }}>{item.variableTitle} {item.industry}</Text>
                                                             {
-                                                                item.variableTitle === 'Enterprices' ? <TooltipComponent code='ovidbi1' type='text' />
+                                                                item.variableTitle === 'Enterprises' ? <TooltipComponent code='ovidbi1' type='text' />
                                                                     : item.variableTitle === 'Turnover' ? <TooltipComponent code='ovidbi2' type='text' />
                                                                         : item.variableTitle === 'Gross investment' ? <TooltipComponent code='ovidbi3' type='text' />
                                                                             : item.variableTitle === 'Employees in full time' ? <TooltipComponent code='ovidbi4' type='text' />
@@ -577,7 +577,7 @@ class IndustryDataComponent extends PureComponent {
                                             labels: item.timeLabels,
                                             datasets: [
                                                 {
-                                                    label: item.geoTitle,
+                                                    label: item.geoTitle + ' (industry)',
                                                     data: item.activityValues,
                                                     fill: false,
                                                     backgroundColor: '#1890FF',
@@ -587,7 +587,7 @@ class IndustryDataComponent extends PureComponent {
                                                     yAxisID: 'y'
                                                 },
                                                 {
-                                                    label: item.geoTitle + '(Total)',
+                                                    label: item.geoTitle + ' (total)',
                                                     data: item.totalActivitiesValues,
                                                     fill: false,
                                                     backgroundColor: '#BFBFBF',
@@ -693,18 +693,22 @@ class IndustryDataComponent extends PureComponent {
                                                             </Col>
                                                             <Col span={11}>
                                                                 <div style={{ float: 'right' }}>
-                                                                    {item.totalActivitiesValue[1] - item.euActivitiesValue[0] > 0 ?
+                                                                    {item.euActivitiesValue[1] - item.euActivitiesValue[0] > 0 ?
                                                                         <div style={{ ...numberStyleForEUAndTotal, color: '#389E0D' }}>
                                                                             <Text style={{ ...textStyleForEUAndTotal }}>{item.euActivitiesValue[1]}{item.unitOfMeasure}</Text>
                                                                             <ArrowUpOutlined />
                                                                             <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.euActivitiesProgress}%</Text>
                                                                         </div>
-                                                                        :
-                                                                        <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
-                                                                            <Text style={{ ...textStyleForEUAndTotal }}>{item.euActivitiesValue[1]}{item.unitOfMeasure}</Text>
-                                                                            <ArrowDownOutlined />
-                                                                            <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.euActivitiesProgress}%</Text>
-                                                                        </div>
+                                                                        : item.euActivitiesValue[1] - item.euActivitiesValue[0] < 0 ?
+                                                                            <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
+                                                                                <Text style={{ ...textStyleForEUAndTotal }}>{item.euActivitiesValue[1]}{item.unitOfMeasure}</Text>
+                                                                                <ArrowDownOutlined />
+                                                                                <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.euActivitiesProgress}%</Text>
+                                                                            </div>
+                                                                            :
+                                                                            <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
+                                                                                <Text style={{ ...textStyleForEUAndTotal }}>No data</Text>
+                                                                            </div>
                                                                     }
                                                                 </div>
                                                             </Col>
@@ -769,7 +773,7 @@ class IndustryDataComponent extends PureComponent {
                                             labels: item.timeLabels,
                                             datasets: [
                                                 {
-                                                    label: item.geoTitle,
+                                                    label: item.geoTitle + ' (industry)',
                                                     data: item.activityValues,
                                                     fill: false,
                                                     backgroundColor: '#1890FF',
@@ -779,7 +783,7 @@ class IndustryDataComponent extends PureComponent {
                                                     yAxisID: 'y'
                                                 },
                                                 {
-                                                    label: item.geoTitle + '(Total)',
+                                                    label: item.geoTitle + ' (total)',
                                                     data: item.totalActivitiesValues,
                                                     fill: false,
                                                     backgroundColor: '#BFBFBF',
@@ -884,18 +888,22 @@ class IndustryDataComponent extends PureComponent {
                                                             </Col>
                                                             <Col span={11}>
                                                                 <div style={{ float: 'right' }}>
-                                                                    {item.totalActivitiesValue[1] - item.euActivitiesValue[0] > 0 ?
+                                                                    {item.euActivitiesValue[1] - item.euActivitiesValue[0] > 0 ?
                                                                         <div style={{ ...numberStyleForEUAndTotal, color: '#389E0D' }}>
                                                                             <Text style={{ ...textStyleForEUAndTotal }}>{item.euActivitiesValue[1]}{item.unitOfMeasure}</Text>
                                                                             <ArrowUpOutlined />
                                                                             <Text style={{ color: '#389E0D', marginLeft: 7 }}>{item.euActivitiesProgress}%</Text>
                                                                         </div>
-                                                                        :
-                                                                        <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
-                                                                            <Text style={{ ...textStyleForEUAndTotal }}>{item.euActivitiesValue[1]}{item.unitOfMeasure}</Text>
-                                                                            <ArrowDownOutlined />
-                                                                            <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.euActivitiesProgress}%</Text>
-                                                                        </div>
+                                                                        : item.euActivitiesValue[1] - item.euActivitiesValue[0] < 0 ?
+                                                                            <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
+                                                                                <Text style={{ ...textStyleForEUAndTotal }}>{item.euActivitiesValue[1]}{item.unitOfMeasure}</Text>
+                                                                                <ArrowDownOutlined />
+                                                                                <Text style={{ color: '#CF1322', marginLeft: 7 }}>{item.euActivitiesProgress}%</Text>
+                                                                            </div>
+                                                                            :
+                                                                            <div style={{ ...numberStyleForEUAndTotal, color: '#CF1322' }}>
+                                                                                <Text style={{ ...textStyleForEUAndTotal }}>No data</Text>
+                                                                            </div>
                                                                     }
                                                                 </div>
                                                             </Col>

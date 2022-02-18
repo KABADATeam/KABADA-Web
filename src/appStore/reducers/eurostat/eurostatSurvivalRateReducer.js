@@ -43,7 +43,7 @@ export const eurostatSurvivalRateReducer = (
             const compareValue_ = Math.abs(Math.round(lastTwoValues_[1] - lastTwoValues_[0]));
             const viewObj_ = {
                 id: 3,
-                title: 'All industries in Europe',
+                title: 'All industries in European Union',
                 lastValue: lastTwoValues_,
                 compareValue: compareValue_
             }
