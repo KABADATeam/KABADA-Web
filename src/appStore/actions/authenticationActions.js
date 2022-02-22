@@ -37,11 +37,16 @@ export const googleLogin = (email, token) => {
     }
 };
 
-export const facebookLogin = (access_token) => {
+export const facebookLogin = (email, access_token) => {
     return async (dispatch, getState) => {
         dispatch({ type: 'LOADING', payload: true });
         try {
-            dispatch({ type: 'LOGIN_SUCCESS', payload: { 'access_token': access_token } });
+            const response = await kabadaAPI.post('api/auth/facebook', {'Email':email, 'FacebookToken':access_token})
+            dispatch({
+                type: 'LOGIN_SUCCESS',
+                payload: response.data
+            })
+            // dispatch({ type: 'LOGIN_SUCCESS', payload: { 'access_token': access_token } });
         } catch (error) {
             if (error.response === undefined) {
                 dispatch({ type: 'ERROR', payload: { message: 'Oopsie... System error. Try again, later' } });
