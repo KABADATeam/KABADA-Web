@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Button, Divider, Card, Image, List } from 'antd';
+import { Row, Col, Button, Divider, Card, Image, List, Typography } from 'antd';
 import '../../css/Home.css'
 import { FacebookFilled, InstagramOutlined, LinkedinFilled, TwitterOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
@@ -11,6 +11,9 @@ import { changeState } from '../../appStore/actions/homeAction'
 import { Link } from 'react-router-dom';
 
 const { Meta } = Card;
+
+
+const { Title, Paragraph } = Typography;
 
 class HomeScreen extends React.Component {
     constructor(props) {
@@ -61,7 +64,7 @@ class HomeScreen extends React.Component {
 
                 <Row style={{ marginTop: '77px' }}>
 
-                    <Col span={12} offset={2}  >
+                    <Col span={11} offset={2}  >
 
                         <h1 className='h1Style'>Start off your business on the right foot</h1>
                         <p style={{ marginTop: '5%' }}>Get organized and set up your business plan properly using our easy-to-use structured framework</p>
@@ -73,8 +76,7 @@ class HomeScreen extends React.Component {
                         </Col>
                     </Col>
 
-                    <Col span={5}>
-                        {/* <div className='regtengle'></div> */}
+                    <Col span={5} >
                         <img style={{ width: '196%' }} alt='main' src='Main.png' />
                     </Col>
 
@@ -84,7 +86,7 @@ class HomeScreen extends React.Component {
 
                     <Col span={12} offset={7} style={{ marginTop: '85px' }}  >
 
-                        <p className='secanP'>KABADA stands for Knowledge Alliance of Business
+                        <Paragraph className='secanP'>KABADA stands for Knowledge Alliance of Business
                             Idea Assessment: Digital Approach. It is a structured,
                             Web-based platform that purports to take the guesswork
                             out of business plan development. Informed by theoretical
@@ -92,7 +94,7 @@ class HomeScreen extends React.Component {
                             insights, the tool guides new entrepreneurs through every step of
                             the way, helping them understand where they stand, where and how
                             they might consider going, and what challenges and
-                            opportunities lie ahead.</p>
+                            opportunities lie ahead.</Paragraph>
 
 
                     </Col>
@@ -105,7 +107,7 @@ class HomeScreen extends React.Component {
 
                     <Col offset={2} span={10} style={{ marginTop: '85px' }}  >
 
-                        <h2>Do it all with KABADA</h2>
+                        <h2 className='h2Style'>Do it all with KABADA</h2>
 
                         <p style={{ width: '64%', marginBottom: '7%' }} className='pStyle'>Set up your perfect business plan from scratch. From the initial business idea to detailed financial projections, KABADA provides a way to plan and assess every aspect of your new enterprise.</p>
 
@@ -183,8 +185,8 @@ class HomeScreen extends React.Component {
                         <Divider style={{ color: 'red', background: "#D9D9D9" }} />
                     </Col>
                     <Col span={10} offset={2} style={{ marginTop: '60px' }}>
-                        <h2>Who is this tool for?</h2>
-                        <p className='pStyle'>Bring your audience data, marketing channels, and insights together so you can reach your goals faster—all from a single platform.</p>
+                        <h2 className='h2Style'>Who is this tool for?</h2>
+
                     </Col>
 
                     <Col span={10} style={{ marginTop: '60px', marginBottom: '115px' }} >
@@ -194,10 +196,7 @@ class HomeScreen extends React.Component {
                         <span className='whoIsSpan'>Business consultants </span>
                         <span className='whoIsSpan'>Development finance institutions and related </span>
                         <span className='whoIsSpan'>Other parties interested in the development of business ideas</span>
-                        <span className='whoIsSpan'>
-                            business consultants
-                            other parties interested in development of business ideas (pupils, unemployed,…)
-                        </span>
+
                     </Col>
                 </Row>
 
@@ -365,12 +364,14 @@ class HomeScreen extends React.Component {
                         <Image alt='EU' src='image46.png' />
 
                         <p className='secanP' style={{ textAlign: 'left' }}>The KABADA tool was developed as an Erasmus+ KA2 project No. 612542-EPP-1-2019-1-LV-EPPKA2-KA.</p>
+                        <p className='secanP' style={{ textAlign: 'left' }}>The information and views set out in this web-site are those of the authors and do not necessarily reflect the official opinion of the European Union. Neither the European Union institutions and bodies nor any person acting on their behalf may be held responsible for the use which may be made of the information contained therein.</p>
                     </Col>
                     <Col offset={3} style={{ background: '#262626', marginTop: '53px', height: '95px' }}>
-                        <FacebookFilled style={{ fontSize: '50px', color: '#ffff', padding: '10px' }} />
-                        <LinkedinFilled style={{ fontSize: '50px', color: '#ffff', padding: '10px' }} />
-                        <TwitterOutlined style={{ fontSize: '50px', color: '#ffff', padding: '10px' }} />
-                        <InstagramOutlined style={{ fontSize: '50px', color: '#ffff', padding: '23px 10px' }} />
+                        <a href='https://www.facebook.com/kabadaKA2/'><FacebookFilled style={{ fontSize: '50px', color: '#ffff', padding: '10px' }} /></a>
+                        <a href='https://www.linkedin.com/company/kabada-project/'><LinkedinFilled style={{ fontSize: '50px', color: '#ffff', padding: '10px' }} /></a>
+                        <a href='https://twitter.com/KabadaKa2'><TwitterOutlined style={{ fontSize: '50px', color: '#ffff', padding: '10px' }} /></a>
+                        <a href='https://www.instagram.com/kabada_erasmusplus_ka2/'><InstagramOutlined style={{ fontSize: '50px', color: '#ffff', padding: '10px' }} /></a>
+
                     </Col>
 
                 </Row>
