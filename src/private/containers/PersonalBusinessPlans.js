@@ -42,6 +42,8 @@ class PersonalBusinessPlans extends Component {
         this.setState({
             isVisible: false,
         });
+
+        this.props.changeState(true);
     };
 
     componentDidMount() {
@@ -56,10 +58,6 @@ class PersonalBusinessPlans extends Component {
                     });
                 });
             this.props.getTooltips();
-
-
-
-
 
 
             this.setState({

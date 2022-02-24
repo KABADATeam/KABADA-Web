@@ -36,7 +36,7 @@ class HomeScreen extends React.Component {
             this.setState({
                 link: `/personal-business-plans`
             })
-            this.props.changeState(this.state.isVisible);
+
         } else {
             this.setState({
                 link: '/login'
@@ -44,6 +44,9 @@ class HomeScreen extends React.Component {
 
 
         }
+    }
+    openPopup = () => {
+        this.props.changeState(false);
     }
     onClick = () => {
         if (this.state.showAllPost === false) {
@@ -59,6 +62,40 @@ class HomeScreen extends React.Component {
     render() {
         const allPosts = this.props.homeReducer;
         const fourPosts = this.props.homeReducer.slice(0, 4);
+
+        const Partners = [
+
+            {
+                id: 1,
+                imgPath: 'image36.png'
+            }, {
+                id: 2,
+                imgPath: 'image37.png'
+            }, {
+                id: 3,
+                imgPath: 'image38.png'
+            }, {
+                id: 4,
+                imgPath: 'image39.png'
+            }, {
+                id: 5,
+                imgPath: 'SETSlogo.png'
+            }, {
+                id: 6,
+                imgPath: 'IPS_logo.jpg'
+            }, {
+                id: 7,
+                imgPath: 'ArtSmart_Logo_eng.png'
+            }, {
+                id: 8,
+                imgPath: 'download.png'
+            },
+            {
+                id: 9,
+                imgPath: 'CSCS-logocscs.png'
+            }
+
+        ]
         return (
             <>
 
@@ -71,7 +108,7 @@ class HomeScreen extends React.Component {
 
                         <Col span={12} >
                             <Link to={this.state.link}>
-                                <Button onClick={() => this.checkLoginStatus()} className='PrimaryButton' type="primary">Create business plan</Button>
+                                <Button onClick={() => this.openPopup()} className='PrimaryButton' type="primary">Create business plan</Button>
                             </Link>
                         </Col>
                     </Col>
@@ -243,108 +280,38 @@ class HomeScreen extends React.Component {
 
                 </Row>
 
-                <div style={{ background: '#ffff', marginBottom: '200px' }}>
-                    <Row >
-                        <Col span={12} offset={9} style={{ marginTop: '72px', marginBottom: '56px' }}>
-                            <h2 className='h2Style' style={{ width: '486px', textAlign: 'center' }}>Partners</h2>
-                        </Col>
-                        <Col offset={4} span={4}>
-                            <Card
-                                className='card'
-                                hoverable
-                                style={{ width: ' 15.309446254071661vw', height: '97px', content: 'contents' }}
-                                cover={<img alt="example" src="image36.png" />}
-                            >
-                            </Card>
-                        </Col>
+                <Row style={{ background: '#ffff', marginBottom: '200px' }}>
+                    <Col span={24} style={{ marginTop: '72px', marginBottom: '56px' }}>
+                        <h2 className='h2Style' style={{ textAlign: 'center' }}>Partners </h2>
+                    </Col>
+                    <Col span={20} offset={2}>
+                        <List
+                            grid={{
+                                gutter: 60,
+                                xs: 1,
+                                sm: 2,
+                                md: 3,
+                                lg: 3,
+                                xl: 4,
+                                xxl: 4,
+                            }}
+                            dataSource={Partners}
+                            renderItem={item => (
+                                <List.Item>
+                                    <Card
+                                        style={{
+                                            height: '97px', borderRadius: '8px', backgroundColor: '#FFFFFF'
+                                        }}
+                                        cover={<img alt="" src={item.imgPath} style={{ width: ' 15.309446254071661vw', height: '80px', marginTop: '10px', marginLeft: '10px' }} />}
+                                    >
+                                    </Card>
+                                </List.Item>
+                            )}
+                        >
 
-                        <Col span={4}>
-                            <Card
-                                className='card'
-                                hoverable
-                                style={{ width: ' 15.309446254071661vw', height: '97px', content: 'contents' }}
-                                cover={<img style={{ marginTop: '9%' }} alt="example" src="image37.png" />}
-                            >
-                            </Card>
-                        </Col>
-
-                        <Col span={4}>
-                            <Card
-                                className='card'
-                                hoverable
-                                style={{ width: ' 15.309446254071661vw', height: '97px', content: 'contents' }}
-                                cover={<img style={{ marginTop: '9%' }} alt="example" src="image38.png" />}
-                            >
-                            </Card>
-                        </Col>
-
-                        <Col span={4}>
-                            <Card
-                                className='card'
-                                hoverable
-                                style={{ width: ' 15.309446254071661vw', height: '97px', content: 'contents' }}
-                                cover={<img style={{ marginTop: '14%' }} alt="example" src="image39.png" />}
-                            >
-                            </Card>
-                        </Col>
-                    </Row>
-
-                    <Row style={{ marginTop: '24px' }}>
-                        <Col offset={4} span={4}>
-                            <Card
-                                className='card'
-                                hoverable
-                                style={{ width: '15.309446254071661vw', height: '97px', content: 'contents' }}
-                                cover={<img style={{ width: '30%', marginLeft: '31%', marginTop: '3%' }} alt="example" src="SETSlogo.png" />}
-                            >
-                            </Card>
-                        </Col>
-
-                        <Col span={4}>
-                            <Card
-                                className='card'
-                                hoverable
-                                style={{ width: ' 15.309446254071661vw', height: '97px', content: 'contents' }}
-                                cover={<img style={{ marginTop: '1%' }} alt="example" src="IPS_logo.jpg" />}
-                            >
-                            </Card>
-                        </Col>
-
-                        <Col span={4}>
-                            <Card
-                                className='card'
-                                hoverable
-                                style={{ width: ' 15.309446254071661vw', height: '97px', content: 'contents' }}
-                                cover={<img style={{ marginTop: '9%' }} alt="example" src="ArtSmart_Logo_eng.png" />}
-                            >
-                            </Card>
-                        </Col>
-
-                        <Col span={4}>
-                            <Card
-                                className='card'
-                                hoverable
-                                style={{ width: ' 15.309446254071661vw', height: '97px', content: 'contents' }}
-                                cover={<img style={{ marginTop: '2%' }} alt="example" src="download.png" />}
-                            >
-                            </Card>
-                        </Col>
-                    </Row>
-
-                    <Row style={{ marginTop: '24px' }}>
-
-
-                        <Col span={4} offset={4}>
-                            <Card
-                                className='card'
-                                hoverable
-                                style={{ width: ' 15.309446254071661vw', height: '97px', content: 'contents' }}
-                                cover={<img style={{ marginTop: '2%', width: '28%', marginLeft: '32%' }} alt="example" src="CSCS-logocscs.png" />}
-                            >
-                            </Card>
-                        </Col>
-                    </Row>
-                </div>
+                        </List>
+                    </Col>
+                </Row>
 
 
                 <Row style={{ background: '#262626' }} >

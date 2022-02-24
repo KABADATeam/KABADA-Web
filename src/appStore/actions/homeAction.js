@@ -26,7 +26,7 @@ export const getPosts = (callback) => {
 
 export const changeState = (state) => {
     return async (dispatch, getState) => {
-        state = true;
+        state = !state;
         dispatch({ type: "CHANGE_STATE_SUCCESS", payload: state });
     }
 }   
