@@ -38,10 +38,9 @@ class Login extends React.Component {
 	};
 
 	responseFacebook = (response) => {
-		//console.log(response);
-		this.props.facebookLogin(response.accessToken);
+		console.log(response)
+		this.props.facebookLogin(response.email,response.accessToken);
 	};
-
 	onFinish = (values) => {
 		//this.setState({ submited: true });
 		this.props.login(values.username, values.password);
@@ -70,18 +69,22 @@ class Login extends React.Component {
 					initialValues={{ remember: false }}
 					onFinish={this.onFinish}
 				>
+				{/* autoLoad: false */}
 					<Form.Item {...tailLayout} style={{ marginBottom: '16px' }}>
 						<FacebookLogin
-							isDisabled={true}
-							appId={process.env.REACT_APP_FACEBOOK_APPID}
-							autoLoad={false}
+							// appId={process.env.REACT_APP_FACEBOOK_APPID}
+							appId={process.env.REACT_APP_FACEBOOK_APPID.toString()}
+							autoLoad={true}
 							fields="name, email, picture"
 							scope="public_profile"
-							callback={this.responseFacebook.bind(this)}
+							style={buttonStyle}
+							// callback={this.responseFacebook.bind(this)}
 							textButton=" Continue with Facebook"
 							cssClass="custom-facebook-button"
 							icon={<FacebookFilled />}
-							onClick={this.responseFacebook.bind(this)} />
+							onClick={this.facebookClicked}
+							callback={this.responseFacebook.bind(this)}
+							 />
 					</Form.Item>
 
 					<Form.Item {...tailLayout} >
