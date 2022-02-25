@@ -157,3 +157,16 @@ export const saveState = (planId, is_completed, callback) => {
         }
     }
 };
+
+export const getAIValues = (postObject) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true});
+        try {
+            const token = getState().user.access_token;
+            const response = await kabadaAPI.post('api/plans/predict', postObject, { headers: { Authorization: `Bearer ${token}` } })
+            console.log(response.data);
+        } finally {
+
+        }
+    }
+}
