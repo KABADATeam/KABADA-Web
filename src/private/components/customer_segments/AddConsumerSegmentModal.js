@@ -106,7 +106,7 @@ class AddConsumerSegmentModal extends Component {
         console.log('AI button work');
         console.log(this.props.businessPlan.id)
         const postObj = {
-            "location": null,
+            "location": '',
             "planId": this.props.businessPlan.id
         };
         this.props.getAIValues(postObj);

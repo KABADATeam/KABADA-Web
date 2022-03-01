@@ -13,7 +13,8 @@ export const customerSegmentReducer = (
         is_customer_segments_completed: false,
         consumers: [],
         business: [],
-        public_bodies_ngo: []
+        public_bodies_ngo: [],
+        aiPredict: null
     }, action) => {
     switch (action.type) {
         case 'SAVE_CONSUMER_SEGMENT_SUCCESS':
@@ -61,6 +62,9 @@ export const customerSegmentReducer = (
             return { ...state, "public_bodies_ngo": removedNgoSegment };
         case "SAVE_STATE_SUCCESS":
             return { ...state, "is_customer_segments_completed": action.payload };
+        case "GET_AI_PREDICT_SUCCESS": 
+            console.log(action.payload.plan)
+            return {...state, "aiPredict": action.payload.plan}
         default:
             return state;
     }
