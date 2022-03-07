@@ -20,9 +20,10 @@ class EditConsumerSegmentModal extends Component {
             segmentName: this.props.item.segment_name,
             ageGroup: this.props.item.age.map(e => e.id),
             genderType: this.props.item.gender.map(e => e.id),
-            educationType: this.props.item.education.map(e => e.id),
-            incomeType: this.props.item.income.map(e => e.id),
+            educationType: this.props.item.education.map(e => ({ id: e.id, title: e.title, tag: 0 })),
+            incomeType: this.props.item.income.map(e => ({ id: e.id, title: e.title, tag: 0 })),
             locationType: this.props.item.geographic_location.map(e => e.id),
+            edu: this.props.item.education
         }
     }
 
@@ -35,21 +36,24 @@ class EditConsumerSegmentModal extends Component {
     }
 
     onOK = () => {
+        const education = this.state.educationType.map(e => e.id);
+        const income = this.state.incomeType.map(e => e.id);
+
         const postObj = {
             "id": this.props.item.id,
             "business_plan_id": this.props.businessPlan.id,
             "age": this.state.ageGroup,
             "gender": this.state.genderType,
-            "education": this.state.educationType,
-            "income": this.state.incomeType,
+            "education": education,
+            "income": income,
             "geographic_location": this.state.locationType,
             "segment_name": this.state.segmentName
         };
 
         const selected_ages = this.props.categories.customer_segments_types.age_groups.filter((item) => this.state.ageGroup.some((field) => item.id === field));
         const selected_genders = this.props.categories.customer_segments_types.gender_types.filter((item) => this.state.genderType.some((field) => item.id === field));
-        const selected_educations = this.props.categories.customer_segments_types.education_types.filter((item) => this.state.educationType.some((field) => item.id === field));
-        const selected_incomes = this.props.categories.customer_segments_types.income_types.filter((item) => this.state.incomeType.some((field) => item.id === field));
+        const selected_educations = this.props.categories.customer_segments_types.education_types.filter((item) => education.some((field) => item.id === field));
+        const selected_incomes = this.props.categories.customer_segments_types.income_types.filter((item) => income.some((field) => item.id === field));
         const selected_locations = this.props.categories.customer_segments_types.geographic_locations.filter((item) => this.state.locationType.some((field) => item.id === field));
 
         const reducerObj = {
@@ -90,16 +94,46 @@ class EditConsumerSegmentModal extends Component {
     }
 
     onEducationTypeChange(value) {
-        console.log(value)
+        const educationTypeArray = []
+        for (var i = 0; i < value.length; i++) {
+            const education_type= this.props.categories.customer_segments_types.education_types.find((obj) => obj.id === value[i]);
+            console.log(education_type);
+            const new_obj = {
+                id: education_type.id,
+                title: education_type.title,
+                tag: 0
+            }
+            educationTypeArray.push(new_obj)
+        }
+        console.log(educationTypeArray)
         this.setState({
-            educationType: value
-        });
+            educationType: educationTypeArray
+        })
+        // console.log(new_education_obj)
+        // this.setState({
+        //     educationType: value
+        // });
     }
 
     onIncomeTypeChange(value) {
+        const incomeTypeArray = []
+        for (var i = 0; i < value.length; i++) {
+            const income_type= this.props.categories.customer_segments_types.income_types.find((obj) => obj.id === value[i]);
+            console.log(income_type);
+            const new_obj = {
+                id: income_type.id,
+                title: income_type.title,
+                tag: 0
+            }
+            incomeTypeArray.push(new_obj)
+        }
+        console.log(incomeTypeArray)
         this.setState({
-            incomeType: value
-        });
+            incomeType: incomeTypeArray
+        })
+        // this.setState({
+        //     incomeType: value
+        // });
     }
     onLocationTypeChange(value) {
         this.setState({
@@ -119,15 +153,30 @@ class EditConsumerSegmentModal extends Component {
         // };
         // this.props.getAIValues(postObj);
         const obj = this.props.customerSegments.aiPredict.custSegs.consumer;
-        // console.log(obj)
-        // const test = this.props.customerSegments.aiPredict.custSegs.consumer[1].education[1];
-        // console.log(test);
-        // console.log(this.props.item.education[0].id)
-        const findEl = obj.find((el) => el.education[1] === this.props.item.education[0].id)
-        console.log(findEl.education[0]);
+        console.log(obj)
+        const findEducation = obj.find((el) => el.education[1] === this.props.item.education[0].id)
+        const findIncome = obj.find((el) => el.income[1] === this.props.item.income[0].id)
+        console.log(findIncome)
 
+        const education_type = this.props.categories.customer_segments_types.education_types.find((obj) => obj.id === findEducation.education[0]);
+        const income_type = this.props.categories.customer_segments_types.income_types.find((obj) => obj.id === findIncome.income[0]);
+        console.log(education_type);
+        console.log(income_type)
+        const new_education_AI_obj = {
+            id: education_type.id,
+            title: education_type.title,
+            tag: 1
+        }
+        console.log(new_education_AI_obj);
+        const new_income_AI_obj = {
+            id: income_type.id,
+            title: income_type.title,
+            tag: 1
+        }
         this.setState({
-            educationType: [...this.state.educationType, findEl.education[0]]
+            educationType: [...this.state.educationType, new_education_AI_obj],
+            incomeType: [...this.state.incomeType, new_income_AI_obj]
+            //edu: [...this.state.edu, education_type_title]
         })
 
 
@@ -140,10 +189,11 @@ class EditConsumerSegmentModal extends Component {
         this.props.getAIValues(postObj);
     }
     render() {
-        console.log(this.state.educationType);
-        const edu = this.props.item.education.map(e => e.id);
-        console.log(edu)
-
+        console.log(this.state.educationType)
+        const education = this.state.educationType.map(e => e.id);
+        const income = this.state.incomeType.map(e => e.id);
+        const tag = this.state.educationType.map(e => e.tag)
+        console.log(tag)
 
         const ageGroupOptions = this.props.categories.customer_segments_types.age_groups.map((obj) =>
             <Option key={obj.id} value={obj.id}>{obj.title}</Option>
@@ -183,13 +233,16 @@ class EditConsumerSegmentModal extends Component {
                         </div>
                     }
                 >
+                    {/* <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose education" onChange={this.onEducationTypeChange.bind(this)} value={this.state.educationType} >
+                        {educationOptions}
+                    </Select> */}
                     <Form hideRequiredMark layout="vertical" id="editConsumerForm" name="editConsumerForm" onFinish={this.onOK}
                         initialValues={{
                             name: this.props.item.segment_name,
                             age: this.props.item.age.map(e => e.id),
                             gender: this.props.item.gender.map(e => e.id),
-                            education: this.props.item.education.map(e => e.id),
-                            income: this.props.item.income.map(e => e.id),
+                            //education: this.state.edu.map(e => e.id),
+                            //income: this.props.item.income.map(e => e.id),
                             geographicLocation: this.props.item.geographic_location.map(e => e.id),
                         }}
                     >
@@ -214,24 +267,81 @@ class EditConsumerSegmentModal extends Component {
                                 {genderOptions}
                             </Select>
                         </Form.Item>
-
-                        <Form.Item key="education" name="education" label="Education"
+                        {
+                            this.state.educationType.length > 0 ?
+                                <Form.Item key="education" label="Education"
+                                    rules={[{ required: true, message: 'Select education' }]}>
+                                    <Select
+                                        style={{ width: '100%', ...inputStyle }}
+                                        mode="multiple"
+                                        placeholder="Choose education"
+                                        onChange={this.onEducationTypeChange.bind(this)}
+                                        value={education}
+                                    >
+                                        {educationOptions}
+                                    </Select>
+                                </Form.Item>
+                                :
+                                <Form.Item key="education"  label="Education"
+                                    validateStatus="error"
+                                    help="Select education"
+                                    rules={[
+                                        {
+                                            validator: async (_, education) => {
+                                                if (!education || education.length < 1) {
+                                                    return Promise.reject(new Error('Select education'));
+                                                }
+                                            },
+                                        },
+                                    ]}
+                                >
+                                    <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose education" onChange={this.onEducationTypeChange.bind(this)} value={education}>
+                                        {educationOptions}
+                                    </Select>
+                                </Form.Item>
+                        }
+                        {/* <Form.Item key="education" name="education" label="Education"
                             rules={[{ required: true, message: 'Select education' }]}>
-                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose education" onChange={this.onEducationTypeChange.bind(this)} >
+                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose education" onChange={this.onEducationTypeChange.bind(this)} value={this.state.educationType}>
                                 {educationOptions}
                             </Select>
-                        </Form.Item>
-
-                        <Form.Item key="income" name="income" label="Income"
+                        </Form.Item> */}
+                        {
+                            this.state.incomeType.length > 0 ?
+                                <Form.Item key="income" label="Income"
+                                    rules={[{ required: true, message: 'Select income' }]}>
+                                    <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose income" onChange={this.onIncomeTypeChange.bind(this)} value={income} >
+                                        {incomeOptions}
+                                    </Select>
+                                </Form.Item>
+                                :
+                                <Form.Item key="income" label="Income"
+                                    validateStatus="error"
+                                    help="Select income"
+                                    rules={[
+                                        {
+                                            validator: async (_, income) => {
+                                                if (!income || income.length < 1) {
+                                                    return Promise.reject(new Error('Select income'));
+                                                }
+                                            },
+                                        },
+                                    ]}>
+                                    <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose income" onChange={this.onIncomeTypeChange.bind(this)} value={income}>
+                                        {incomeOptions}
+                                    </Select>
+                                </Form.Item>
+                        }
+                        {/* <Form.Item key="income" name="income" label="Income"
                             rules={[{ required: true, message: 'Select income' }]}>
                             <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose income" onChange={this.onIncomeTypeChange.bind(this)} >
                                 {incomeOptions}
                             </Select>
-                        </Form.Item>
+                        </Form.Item> */}
 
                         <Form.Item key="geographicLocation" name="geographicLocation" label="Geographic Location"
                             rules={[{ required: true, message: 'Select geographic location' }]}>
-                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose geographic location" onChange={this.onLocationTypeChange.bind(this)} >
+                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose geographic location" onChange={this.onLocationTypeChange.bind(this)} value={this.state.educationType}>
                                 {locationOptions}
                             </Select>
                         </Form.Item>
