@@ -63,7 +63,6 @@ export const customerSegmentReducer = (
         case "SAVE_STATE_SUCCESS":
             return { ...state, "is_customer_segments_completed": action.payload };
         case "GET_AI_PREDICT_SUCCESS": 
-            console.log(action.payload.plan)
             return {...state, "aiPredict": action.payload.plan}
         default:
             return state;

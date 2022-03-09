@@ -164,7 +164,6 @@ export const getAIValues = (postObject) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.post('api/plans/predict', postObject, { headers: { Authorization: `Bearer ${token}` } })
-            console.log(response.data);
             dispatch({ type: 'GET_AI_PREDICT_SUCCESS', payload: response.data});
         } finally {
 
