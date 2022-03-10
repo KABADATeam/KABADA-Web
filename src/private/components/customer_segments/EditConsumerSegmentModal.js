@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Button, Form, Space, Select, Radio, Input, Tag, Popover, Typography, Row } from 'antd';
 import '../../../css/customModal.css';
+import '../../../css/publicBusinessPlans.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { updateConsumerSegment, getAIValues } from "../../../appStore/actions/customerSegmentAction";
 
@@ -13,6 +14,20 @@ const inputStyle = {
     borderRadius: '4px',
     borderColor: '#BFBFBF',
 }
+function tagRender  (props) {
+    const { label, value, onClose } = props;
+    console.log(props)
+    return (
+      <Tag
+        color='green'
+        closable
+        onClose={onClose}
+        style={{ marginRight: 3 }}
+      >
+        {label}
+      </Tag>
+    );
+  }
 
 class EditConsumerSegmentModal extends Component {
     constructor(props) {
@@ -251,7 +266,9 @@ class EditConsumerSegmentModal extends Component {
         const education = this.state.educationType.map(e => e.id);
         const income = this.state.incomeType.map(e => e.id);
         const gender = this.state.genderType.map(e => e.id);
-
+        const educationColor = this.props.categories.customer_segments_types.education_types.map(e => ({label: e.title, value: e.id}))
+        const educationType = this.state.educationType.map(e => ({ id: e.id, title: e.title, tag: 0 }));
+        
         const ageGroupOptions = this.props.categories.customer_segments_types.age_groups.map((obj) =>
             <Option key={obj.id} value={obj.id}>{obj.title}</Option>
         );
@@ -278,25 +295,26 @@ class EditConsumerSegmentModal extends Component {
                         Consider adding “Self Pick-up” because Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
                     </Text>
                 </Row>
-                <Row style={{marginTop: '12px'}}>
+                <Row style={{ marginTop: '12px' }}>
                     <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
-                    <Button style={{marginLeft: '10px'}} onClick={this.hidePopover}>Cancel</Button>
+                    <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
                 </Row>
 
             </>
 
         )
+
         return (
             <>
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
                     title={<Space><ArrowLeftOutlined onClick={this.onBack} />Consumers
-                        <Popover 
-                            placement='topLeft' 
-                            title='AI Hint' 
-                            content={popoverContent} 
-                            overlayStyle={{ width: "328px" }} 
+                        <Popover
+                            placement='topLeft'
+                            title='AI Hint'
+                            content={popoverContent}
+                            overlayStyle={{ width: "328px" }}
                             trigger="click"
                             visible={this.state.popoverVisibility}
                             onVisibleChange={this.handlePopoverVisibilityChange}
@@ -336,10 +354,17 @@ class EditConsumerSegmentModal extends Component {
                             <Input style={{ width: '100%', ...inputStyle }} placeholder="Edit segment name"
                                 value={this.state.segmentName} onChange={(e) => this.onNameChange(e.target.value)} />
                         </Form.Item>
-                        <Form.Item key="age" name="age" label="Age group (years)"
-                            rules={[{ required: true, message: 'Select age group (years)' }]}>
-                            <Select style={{ width: '100%' }} mode="multiple" className='ant-select'
-                                placeholder="Select age group (years)" onChange={this.onAgeGroupChange.bind(this)} >
+                        <Form.Item
+                            key="age"
+                            name="age"
+                            label="Age group (years)"
+                            rules={[{ required: true, message: 'Select age group (years)' }]}
+                        >
+                            <Select
+                                mode="multiple"
+                                placeholder="Select age group (years)"
+                                onChange={this.onAgeGroupChange.bind(this)}
+                            >
                                 {ageGroupOptions}
                             </Select>
                         </Form.Item>
@@ -348,7 +373,6 @@ class EditConsumerSegmentModal extends Component {
                                 <Form.Item key="gender" label="Gender"
                                     rules={[{ required: true, message: 'Select gender' }]}>
                                     <Select
-                                        style={{ width: '100%', ...inputStyle }}
                                         mode="multiple"
                                         placeholder="Select gender"
                                         onChange={this.onGenderTypeChange.bind(this)}
@@ -358,7 +382,9 @@ class EditConsumerSegmentModal extends Component {
                                     </Select>
                                 </Form.Item>
                                 :
-                                <Form.Item key="gender" label="Gender"
+                                <Form.Item
+                                    key="gender"
+                                    label="Gender"
                                     validateStatus="error"
                                     help="Select gender"
                                     rules={[
@@ -372,7 +398,6 @@ class EditConsumerSegmentModal extends Component {
                                     ]}
                                 >
                                     <Select
-                                        style={{ width: '100%', ...inputStyle }}
                                         mode="multiple"
                                         placeholder="Select gender"
                                         onChange={this.onGenderTypeChange.bind(this)}
@@ -390,20 +415,25 @@ class EditConsumerSegmentModal extends Component {
                         </Form.Item> */}
                         {
                             this.state.educationType.length > 0 ?
-                                <Form.Item key="education" label="Education"
+                                <Form.Item
+                                    key="education"
+                                    label="Education"
                                     rules={[{ required: true, message: 'Select education' }]}>
                                     <Select
-                                        style={{ width: '100%', ...inputStyle }}
                                         mode="multiple"
                                         placeholder="Choose education"
+                                        //tagRender={tagRender}
                                         onChange={this.onEducationTypeChange.bind(this)}
                                         value={education}
+                                        //options={educationColor}
                                     >
                                         {educationOptions}
                                     </Select>
                                 </Form.Item>
                                 :
-                                <Form.Item key="education" label="Education"
+                                <Form.Item
+                                    key="education"
+                                    label="Education"
                                     validateStatus="error"
                                     help="Select education"
                                     rules={[
@@ -416,7 +446,7 @@ class EditConsumerSegmentModal extends Component {
                                         },
                                     ]}
                                 >
-                                    <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose education" onChange={this.onEducationTypeChange.bind(this)} value={education}>
+                                    <Select mode="multiple" placeholder="Choose education" onChange={this.onEducationTypeChange.bind(this)} value={education}>
                                         {educationOptions}
                                     </Select>
                                 </Form.Item>
@@ -429,14 +459,19 @@ class EditConsumerSegmentModal extends Component {
                         </Form.Item> */}
                         {
                             this.state.incomeType.length > 0 ?
-                                <Form.Item key="income" label="Income"
-                                    rules={[{ required: true, message: 'Select income' }]}>
-                                    <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose income" onChange={this.onIncomeTypeChange.bind(this)} value={income} >
+                                <Form.Item
+                                    key="income"
+                                    label="Income"
+                                    rules={[{ required: true, message: 'Select income' }]}
+                                >
+                                    <Select mode="multiple" placeholder="Choose income" onChange={this.onIncomeTypeChange.bind(this)} value={income} >
                                         {incomeOptions}
                                     </Select>
                                 </Form.Item>
                                 :
-                                <Form.Item key="income" label="Income"
+                                <Form.Item
+                                    key="income"
+                                    label="Income"
                                     validateStatus="error"
                                     help="Select income"
                                     rules={[
@@ -448,7 +483,7 @@ class EditConsumerSegmentModal extends Component {
                                             },
                                         },
                                     ]}>
-                                    <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose income" onChange={this.onIncomeTypeChange.bind(this)} value={income}>
+                                    <Select mode="multiple" placeholder="Choose income" onChange={this.onIncomeTypeChange.bind(this)} value={income}>
                                         {incomeOptions}
                                     </Select>
                                 </Form.Item>
@@ -460,9 +495,13 @@ class EditConsumerSegmentModal extends Component {
                             </Select>
                         </Form.Item> */}
 
-                        <Form.Item key="geographicLocation" name="geographicLocation" label="Geographic Location"
-                            rules={[{ required: true, message: 'Select geographic location' }]}>
-                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose geographic location" onChange={this.onLocationTypeChange.bind(this)} value={this.state.educationType}>
+                        <Form.Item
+                            key="geographicLocation"
+                            name="geographicLocation"
+                            label="Geographic Location"
+                            rules={[{ required: true, message: 'Select geographic location' }]}
+                        >
+                            <Select mode="multiple" placeholder="Choose geographic location" onChange={this.onLocationTypeChange.bind(this)} value={this.state.educationType}>
                                 {locationOptions}
                             </Select>
                         </Form.Item>

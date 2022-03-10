@@ -23,6 +23,7 @@ width: 100%;
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
+    line-height: 22px;
 }
 
 ::placeholder{
@@ -32,10 +33,14 @@ width: 100%;
 .ant-select-selection-placeholder{
     color: #8C8C8C!important;
 }
-
-.ant-select-selection-item{
-    padding-top: 4px!important;
+.ant-select-selection-overflow {
+    position: relative;
+    display: flex;
+    margin-left: 7px;
 }
+/* .ant-select-selection-item{
+    padding-top: 4px!important;
+} */
 
 .ant-dropdown-link{
     font-style: normal;
@@ -59,6 +64,7 @@ width: 100%;
 .ant-pagination-item {
     border-radius: 4px!important;
 }
+
 
 .site-layout-content {
     min-height: 280px;
