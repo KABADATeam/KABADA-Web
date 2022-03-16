@@ -14,20 +14,6 @@ const inputStyle = {
     borderRadius: '4px',
     borderColor: '#BFBFBF',
 }
-function tagRender  (props) {
-    const { label, value, onClose } = props;
-    console.log(props)
-    return (
-      <Tag
-        color='green'
-        closable
-        onClose={onClose}
-        style={{ marginRight: 3 }}
-      >
-        {label}
-      </Tag>
-    );
-  }
 
 class EditConsumerSegmentModal extends Component {
     constructor(props) {
@@ -39,7 +25,8 @@ class EditConsumerSegmentModal extends Component {
             educationType: this.props.item.education.map(e => ({ id: e.id, title: e.title, tag: 0 })),
             incomeType: this.props.item.income.map(e => ({ id: e.id, title: e.title, tag: 0 })),
             locationType: this.props.item.geographic_location.map(e => e.id),
-            popoverVisibility: false
+            popoverVisibility: false,
+            popeverText: []
         }
     }
 
@@ -98,6 +85,7 @@ class EditConsumerSegmentModal extends Component {
     }
 
     onAgeGroupChange(value) {
+        console.log('Age group value ', value)
         this.setState({
             ageGroup: value
         });
@@ -106,14 +94,33 @@ class EditConsumerSegmentModal extends Component {
     onGenderTypeChange(value) {
         const genderTypeArray = [];
         for (var i = 0; i < value.length; i++) {
-            const gender_type = this.props.categories.customer_segments_types.gender_types.find((obj) => obj.id === value[i]);
-            console.log(gender_type);
-            const new_obj = {
-                id: gender_type.id,
-                title: gender_type.title,
-                tag: 0
+            if (this.state.genderType[i] === undefined) {
+                const gender_type = this.props.categories.customer_segments_types.gender_types.find((obj) => obj.id === value[i]);
+                console.log(gender_type);
+                const new_obj = {
+                    id: gender_type.id,
+                    title: gender_type.title,
+                    tag: 0
+                }
+                genderTypeArray.push(new_obj)
+            } else {
+                const gender_type = this.state.genderType.find((obj) => obj.id === value[i]);
+                if (gender_type.tag === 0) {
+                    const new_obj = {
+                        id: gender_type.id,
+                        title: gender_type.title,
+                        tag: 0
+                    }
+                    genderTypeArray.push(new_obj);
+                } else if (gender_type.tag === 1) {
+                    const new_obj = {
+                        id: gender_type.id,
+                        title: gender_type.title,
+                        tag: 1
+                    }
+                    genderTypeArray.push(new_obj);
+                }
             }
-            genderTypeArray.push(new_obj)
         }
         this.setState({
             genderType: genderTypeArray
@@ -121,40 +128,73 @@ class EditConsumerSegmentModal extends Component {
     }
 
     onEducationTypeChange(value) {
-        const educationTypeArray = []
+        const educationTypeArray = [];
         for (var i = 0; i < value.length; i++) {
-            const education_type = this.props.categories.customer_segments_types.education_types.find((obj) => obj.id === value[i]);
-            const new_obj = {
-                id: education_type.id,
-                title: education_type.title,
-                tag: 0
+            if (this.state.educationType[i] === undefined) {
+                const education_type = this.props.categories.customer_segments_types.education_types.find((obj) => obj.id === value[i]);
+                const new_obj = {
+                    id: education_type.id,
+                    title: education_type.title,
+                    tag: 0
+                };
+                educationTypeArray.push(new_obj);
+            } else {
+                const education_type = this.state.educationType.find((obj) => obj.id === value[i]);
+                if (education_type.tag === 0) {
+                    const new_obj = {
+                        id: education_type.id,
+                        title: education_type.title,
+                        tag: 0
+                    }
+                    educationTypeArray.push(new_obj);
+                } else if (education_type.tag === 1) {
+                    const new_obj = {
+                        id: education_type.id,
+                        title: education_type.title,
+                        tag: 1
+                    }
+                    educationTypeArray.push(new_obj);
+                }
             }
-            educationTypeArray.push(new_obj)
-        }
+        };
         this.setState({
             educationType: educationTypeArray
-        })
+        });
     }
 
     onIncomeTypeChange(value) {
         const incomeTypeArray = []
         for (var i = 0; i < value.length; i++) {
-            const income_type = this.props.categories.customer_segments_types.income_types.find((obj) => obj.id === value[i]);
-            console.log(income_type);
-            const new_obj = {
-                id: income_type.id,
-                title: income_type.title,
-                tag: 0
+            if (this.state.incomeType[i] === undefined) {
+                const income_type = this.props.categories.customer_segments_types.income_types.find((obj) => obj.id === value[i]);
+                const new_obj = {
+                    id: income_type.id,
+                    title: income_type.title,
+                    tag: 0
+                };
+                incomeTypeArray.push(new_obj);
+            } else {
+                const income_type = this.state.incomeType.find((obj) => obj.id === value[i]);
+                if (income_type.tag === 0) {
+                    const new_obj = {
+                        id: income_type.id,
+                        title: income_type.title,
+                        tag: 0
+                    }
+                    incomeTypeArray.push(new_obj);
+                } else if (income_type.tag === 1) {
+                    const new_obj = {
+                        id: income_type.id,
+                        title: income_type.title,
+                        tag: 1
+                    }
+                    incomeTypeArray.push(new_obj);
+                }
             }
-            incomeTypeArray.push(new_obj)
-        }
-        console.log(incomeTypeArray)
+        };
         this.setState({
             incomeType: incomeTypeArray
-        })
-        // this.setState({
-        //     incomeType: value
-        // });
+        });
     }
     onLocationTypeChange(value) {
         this.setState({
@@ -184,10 +224,23 @@ class EditConsumerSegmentModal extends Component {
         const obj = this.props.customerSegments.aiPredict.custSegs.consumer;
         console.log('education ', this.props.item.education[0].id);
         console.log('income ', this.props.item.income[0].id);
-        const findEducation = obj.find((el) => el.education[1] === this.props.item.education[0].id)
-        const findIncome = obj.find((el) => el.income[1] === this.props.item.income[0].id)
-        const aiObject = obj.find((el) => el.education[0] === this.props.item.education[0].id || el.income[0] === this.props.item.income[0].id || el.education[1] === this.props.item.education[0].id)
-        console.log('Test ', aiObject)
+        const aiObject = obj.find((el) => el.education[0] === this.props.item.education[0].id || el.income[0] === this.props.item.income[0].id || el.education[1] === this.props.item.education[0].id);
+        const gender = this.state.genderType.map(e => e.id);
+        const genderAI = aiObject.gender;
+        const genderPredict = this.compareArray(genderAI, gender);
+        for (var i in genderPredict) {
+            const title = this.props.categories.customer_segments_types.gender_types.find((obj) => obj.id === genderPredict[i]).title;
+            const new_gender_type_obj = {
+                id: genderPredict[i],
+                title: title,
+                tag: 1
+            }
+            const popeverText = 'Gender';
+            this.setState({
+                genderType: [...this.state.genderType, new_gender_type_obj],
+                popeverText: [...this.state.popeverText, popeverText]
+            })
+        }
         const education = this.state.educationType.map(e => e.id);
         const educationAI = aiObject.education;
         const educationPredict = this.compareArray(educationAI, education);
@@ -198,6 +251,7 @@ class EditConsumerSegmentModal extends Component {
                 title: title,
                 tag: 1
             };
+
             this.setState({
                 educationType: [...this.state.educationType, new_education_type_obj],
             });
@@ -216,24 +270,7 @@ class EditConsumerSegmentModal extends Component {
                 incomeType: [...this.state.incomeType, new_income_type_obj],
             })
         }
-        const gender = this.state.genderType.map(e => e.id);
-        const genderAI = aiObject.gender;
-        const genderPredict = this.compareArray(genderAI, gender);
-        console.log('gender ', gender);
-        console.log('genderAi ', genderAI)
-        console.log(genderPredict)
-        for (var i in genderPredict) {
-            const title = this.props.categories.customer_segments_types.gender_types.find((obj) => obj.id === genderPredict[i]).title;
-            const new_gender_type_obj = {
-                id: genderPredict[i],
-                title: title,
-                tag: 1
-            }
-            console.log(new_gender_type_obj)
-            this.setState({
-                genderType: [...this.state.genderType, new_gender_type_obj],
-            })
-        }
+        
         this.hidePopover();
         // const education_type = this.props.categories.customer_segments_types.education_types.find((obj) => obj.id === findEducation.education[0]);
         // const income_type = this.props.categories.customer_segments_types.income_types.find((obj) => obj.id === findIncome.income[0]);
@@ -263,26 +300,25 @@ class EditConsumerSegmentModal extends Component {
         this.props.getAIValues(postObj);
     }
     render() {
+        console.log(this.state.popeverText);
         const education = this.state.educationType.map(e => e.id);
         const income = this.state.incomeType.map(e => e.id);
         const gender = this.state.genderType.map(e => e.id);
-        const educationColor = this.props.categories.customer_segments_types.education_types.map(e => ({label: e.title, value: e.id}))
-        const educationType = this.state.educationType.map(e => ({ id: e.id, title: e.title, tag: 0 }));
-        
+
         const ageGroupOptions = this.props.categories.customer_segments_types.age_groups.map((obj) =>
             <Option key={obj.id} value={obj.id}>{obj.title}</Option>
         );
 
         const genderOptions = this.props.categories.customer_segments_types.gender_types.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+            ({ label: obj.title, value: obj.id })
         );
 
         const educationOptions = this.props.categories.customer_segments_types.education_types.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+            ({ label: obj.title, value: obj.id })
         );
 
         const incomeOptions = this.props.categories.customer_segments_types.income_types.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+            ({ label: obj.title, value: obj.id })
         );
 
         const locationOptions = this.props.categories.customer_segments_types.geographic_locations.map((obj) =>
@@ -304,6 +340,116 @@ class EditConsumerSegmentModal extends Component {
 
         )
 
+        const genderTag = (props) => {
+            const { label, value, onClose } = props;
+            const tagColor = this.state.genderType.find(t => t.id === value);
+            if (tagColor.tag === 1) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#BAE7FF' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor.tag === 0) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor === undefined) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            }
+
+        }
+
+        const educationTag = (props) => {
+            const { label, value, onClose } = props;
+            const tagColor = this.state.educationType.find(t => t.id === value);
+            if (tagColor.tag === 1) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#BAE7FF' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor.tag === 0) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor === undefined) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            }
+        }
+
+        const incomeTag = (props) => {
+            const { label, value, onClose } = props;
+            const tagColor = this.state.incomeType.find(t => t.id === value);
+            if (tagColor.tag === 1) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#BAE7FF' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor.tag === 0) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor === undefined) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            }
+
+        }
+
         return (
             <>
                 <Modal
@@ -319,10 +465,16 @@ class EditConsumerSegmentModal extends Component {
                             visible={this.state.popoverVisibility}
                             onVisibleChange={this.handlePopoverVisibilityChange}
                         >
-                            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" >
-                                <rect width="28" height="28" rx="14" fill="#1990FE" />
-                                <path d="M22.7077 11.9719C22.1277 11.9719 21.9249 12.3878 21.876 12.4719H20.7385V9.5C20.7385 8.11937 19.6369 7 18.2769 7H9.41538C8.05538 7 6.95385 8.11937 6.95385 9.5V12.4719H5.81631C5.76738 12.4156 5.56462 11.9719 4.98462 11.9719C4.45969 11.9719 4 12.4006 4 12.9719C4 13.5438 4.46062 13.9437 4.98462 13.9437C5.56462 13.9437 5.76738 13.5281 5.81631 13.4719H6.95385V17.4438C6.95385 18.8244 8.056 19.9438 9.41538 19.9438L10.8923 19.9719V22.5966C10.8923 22.7281 10.9754 23 11.2615 23C11.3391 23 11.4153 22.9747 11.4799 22.9272L15.3231 19.9719L18.2769 19.9721C19.6363 19.9721 20.7385 18.8527 20.7385 17.4721V13.4719H21.8763C21.9262 13.5844 22.1292 13.9719 22.7077 13.9719C23.2326 13.9719 23.6923 13.5431 23.6923 13C23.6923 12.4281 23.2338 11.9719 22.7077 11.9719ZM18.7692 15C18.7692 15.5522 18.3283 16 17.7846 16H9.90769C9.36308 16 8.92308 15.5531 8.92308 15V11C8.92308 10.4478 9.364 10 9.90769 10H17.7846C18.3283 10 18.7692 10.4478 18.7692 11V15ZM10.8923 11.9719C10.3486 11.9719 9.90769 12.4197 9.90769 12.9719C9.90769 13.5241 10.3486 13.9719 10.8923 13.9719C11.436 13.9719 11.8769 13.5241 11.8769 12.9719C11.8769 12.4469 11.4369 11.9719 10.8923 11.9719ZM16.8 11.9719C16.2563 11.9719 15.8154 12.4197 15.8154 12.9719C15.8154 13.5241 16.2563 13.9719 16.8 13.9719C17.3437 13.9719 17.7846 13.5241 17.7846 12.9719C17.7846 12.4469 17.3446 11.9719 16.8 11.9719Z" fill="white" />
-                            </svg>
+                            <Button
+                                icon=
+                                {<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" >
+                                    <rect width="28" height="28" rx="14" fill="#1990FE" />
+                                    <path d="M22.7077 11.9719C22.1277 11.9719 21.9249 12.3878 21.876 12.4719H20.7385V9.5C20.7385 8.11937 19.6369 7 18.2769 7H9.41538C8.05538 7 6.95385 8.11937 6.95385 9.5V12.4719H5.81631C5.76738 12.4156 5.56462 11.9719 4.98462 11.9719C4.45969 11.9719 4 12.4006 4 12.9719C4 13.5438 4.46062 13.9437 4.98462 13.9437C5.56462 13.9437 5.76738 13.5281 5.81631 13.4719H6.95385V17.4438C6.95385 18.8244 8.056 19.9438 9.41538 19.9438L10.8923 19.9719V22.5966C10.8923 22.7281 10.9754 23 11.2615 23C11.3391 23 11.4153 22.9747 11.4799 22.9272L15.3231 19.9719L18.2769 19.9721C19.6363 19.9721 20.7385 18.8527 20.7385 17.4721V13.4719H21.8763C21.9262 13.5844 22.1292 13.9719 22.7077 13.9719C23.2326 13.9719 23.6923 13.5431 23.6923 13C23.6923 12.4281 23.2338 11.9719 22.7077 11.9719ZM18.7692 15C18.7692 15.5522 18.3283 16 17.7846 16H9.90769C9.36308 16 8.92308 15.5531 8.92308 15V11C8.92308 10.4478 9.364 10 9.90769 10H17.7846C18.3283 10 18.7692 10.4478 18.7692 11V15ZM10.8923 11.9719C10.3486 11.9719 9.90769 12.4197 9.90769 12.9719C9.90769 13.5241 10.3486 13.9719 10.8923 13.9719C11.436 13.9719 11.8769 13.5241 11.8769 12.9719C11.8769 12.4469 11.4369 11.9719 10.8923 11.9719ZM16.8 11.9719C16.2563 11.9719 15.8154 12.4197 15.8154 12.9719C15.8154 13.5241 16.2563 13.9719 16.8 13.9719C17.3437 13.9719 17.7846 13.5241 17.7846 12.9719C17.7846 12.4469 17.3446 11.9719 16.8 11.9719Z" fill="white" />
+                                </svg>
+                                }
+                                type="link"
+                                // shape="circle"
+                            />
                         </Popover>
                     </Space>}
                     visible={this.props.visibility}
@@ -377,9 +529,9 @@ class EditConsumerSegmentModal extends Component {
                                         placeholder="Select gender"
                                         onChange={this.onGenderTypeChange.bind(this)}
                                         value={gender}
-                                    >
-                                        {genderOptions}
-                                    </Select>
+                                        tagRender={genderTag}
+                                        options={genderOptions}
+                                    />
                                 </Form.Item>
                                 :
                                 <Form.Item
@@ -402,9 +554,9 @@ class EditConsumerSegmentModal extends Component {
                                         placeholder="Select gender"
                                         onChange={this.onGenderTypeChange.bind(this)}
                                         value={gender}
-                                    >
-                                        {genderOptions}
-                                    </Select>
+                                        tagRender={genderTag}
+                                        options={genderOptions}
+                                    />
                                 </Form.Item>
                         }
                         {/* <Form.Item key="gender" name="gender" label="Gender"
@@ -422,13 +574,11 @@ class EditConsumerSegmentModal extends Component {
                                     <Select
                                         mode="multiple"
                                         placeholder="Choose education"
-                                        //tagRender={tagRender}
                                         onChange={this.onEducationTypeChange.bind(this)}
                                         value={education}
-                                        //options={educationColor}
-                                    >
-                                        {educationOptions}
-                                    </Select>
+                                        tagRender={educationTag}
+                                        options={educationOptions}
+                                    />
                                 </Form.Item>
                                 :
                                 <Form.Item
@@ -446,9 +596,14 @@ class EditConsumerSegmentModal extends Component {
                                         },
                                     ]}
                                 >
-                                    <Select mode="multiple" placeholder="Choose education" onChange={this.onEducationTypeChange.bind(this)} value={education}>
-                                        {educationOptions}
-                                    </Select>
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Choose education"
+                                        onChange={this.onEducationTypeChange.bind(this)}
+                                        value={education}
+                                        tagRender={educationTag}
+                                        options={educationOptions}
+                                    />
                                 </Form.Item>
                         }
                         {/* <Form.Item key="education" name="education" label="Education"
@@ -464,9 +619,14 @@ class EditConsumerSegmentModal extends Component {
                                     label="Income"
                                     rules={[{ required: true, message: 'Select income' }]}
                                 >
-                                    <Select mode="multiple" placeholder="Choose income" onChange={this.onIncomeTypeChange.bind(this)} value={income} >
-                                        {incomeOptions}
-                                    </Select>
+                                    <Select 
+                                        mode="multiple" 
+                                        placeholder="Choose income" 
+                                        onChange={this.onIncomeTypeChange.bind(this)} 
+                                        value={income} 
+                                        tagRender={incomeTag} 
+                                        options={incomeOptions}
+                                    />
                                 </Form.Item>
                                 :
                                 <Form.Item
@@ -483,9 +643,14 @@ class EditConsumerSegmentModal extends Component {
                                             },
                                         },
                                     ]}>
-                                    <Select mode="multiple" placeholder="Choose income" onChange={this.onIncomeTypeChange.bind(this)} value={income}>
-                                        {incomeOptions}
-                                    </Select>
+                                    <Select 
+                                        mode="multiple" 
+                                        placeholder="Choose income" 
+                                        onChange={this.onIncomeTypeChange.bind(this)} 
+                                        value={income} 
+                                        tagRender={incomeTag}
+                                        options={incomeOptions}
+                                    />
                                 </Form.Item>
                         }
                         {/* <Form.Item key="income" name="income" label="Income"
