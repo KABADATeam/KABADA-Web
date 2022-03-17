@@ -174,3 +174,20 @@ export const getAIEditValues = (postObject, itemID) => {
         }
     }
 }
+
+export const getAIValues = (postObject, itemID) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true});
+        dispatch({ type: 'ERROR_AI_MESSAGE', payload: false});
+        dispatch({ type: 'RESET_AI_EDIT_PREDICT'});
+        try {
+            const token = getState().user.access_token;
+            const response = await kabadaAPI.post('api/plans/predict', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            dispatch({ type: 'GET_AI_PREDICT_SUCCESS', payload: { data: response.data, itemID: itemID, segments: getState().customerSegmentProperties}});
+        } catch {
+            dispatch({ type: 'ERROR_AI_MESSAGE', payload: true});
+        } finally {
+
+        }
+    }
+}

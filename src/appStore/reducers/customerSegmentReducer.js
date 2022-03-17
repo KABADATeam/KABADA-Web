@@ -27,6 +27,9 @@ export const customerSegmentReducer = (
         aiPredictEdit: null,
         aiPredictTextEdit: [],
         errorMessageEdit: false,
+        aiPredict: null,
+        aiPredictText: [],
+        errorMessage: false
     }, action) => {
     switch (action.type) {
         case 'SAVE_CONSUMER_SEGMENT_SUCCESS':
@@ -89,7 +92,7 @@ export const customerSegmentReducer = (
                 if (genderAIPredict.length > 0) {
                     const genderPredictArray = [];
                     const gender_types = action.payload.segments.customer_segments_types.gender_types;
-                    for (var i=0; i < genderAIPredict.length; i++) {
+                    for (var i = 0; i < genderAIPredict.length; i++) {
                         const genderTypesTitle = gender_types.find(g => g.id === genderAIPredict[i]);
                         genderPredictArray.push(genderTypesTitle);
                     }
@@ -103,7 +106,7 @@ export const customerSegmentReducer = (
                 if (educationAIPredict.length > 0) {
                     const educationPredictArray = [];
                     const education_types = action.payload.segments.customer_segments_types.education_types;
-                    for (var i=0; i < educationAIPredict.length; i++) {
+                    for (var i = 0; i < educationAIPredict.length; i++) {
                         const educationTypesTitle = education_types.find(e => e.id === educationAIPredict[i]);
                         educationPredictArray.push(educationTypesTitle);
                     }
@@ -117,7 +120,7 @@ export const customerSegmentReducer = (
                 if (incomeAIPredict.length > 0) {
                     const incomePredictArray = [];
                     const income_types = action.payload.segments.customer_segments_types.income_types;
-                    for (var i=0; i < incomeAIPredict.length; i++) {
+                    for (var i = 0; i < incomeAIPredict.length; i++) {
                         const incomeTypesTitle = income_types.find(e => e.id === incomeAIPredict[i]);
                         incomePredictArray.push(incomeTypesTitle);
                     }
@@ -142,15 +145,30 @@ export const customerSegmentReducer = (
                 "aiPredictEdit": action.payload.data.plan,
                 "aiPredictTextEdit": aiHintObject
             }
-            case "ERROR_AI_EDIT_MESSAGE":
-                console.log(action.payload);
-                return {...state, "errorMessageEdit": action.payload}
-            case "RESET_AI_EDIT_PREDICT":
-                console.log('RESET')
-                return {...state,
-                    "aiPredictEdit": null,
-                    "aiPredictTextEdit": [] 
-                }
+        case "ERROR_AI_EDIT_MESSAGE":
+            console.log(action.payload);
+            return { ...state, "errorMessageEdit": action.payload }
+        case "RESET_AI_EDIT_PREDICT":
+            return {
+                ...state,
+                "aiPredictEdit": null,
+                "aiPredictTextEdit": []
+            }
+        case "GET_AI_PREDICT_SUCCESS":
+            return {
+                ...state,
+            }
+        case "ERROR_AI_MESSAGE":
+            return {
+                ...state,
+                "errorMessage": action.payload
+            }
+        case "RESET_AI_PREDICT":
+            return {
+                ...state,
+                "aiPredict": null,
+                "aiPredictText": []
+            }
         default:
             return state;
     }
