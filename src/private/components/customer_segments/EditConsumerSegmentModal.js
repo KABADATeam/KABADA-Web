@@ -4,7 +4,7 @@ import { Modal, Button, Form, Space, Select, Radio, Input, Tag, Popover, Typogra
 import '../../../css/customModal.css';
 import '../../../css/publicBusinessPlans.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { updateConsumerSegment, getAIValues } from "../../../appStore/actions/customerSegmentAction";
+import { updateConsumerSegment, getAIEditValues } from "../../../appStore/actions/customerSegmentAction";
 
 const { Option } = Select;
 const { Text } = Typography
@@ -221,7 +221,7 @@ class EditConsumerSegmentModal extends Component {
         return newArray;
     }
     onAIButtonClick = () => {
-        const obj = this.props.customerSegments.aiPredict.custSegs.consumer;
+        const obj = this.props.customerSegments.aiPredictEdit.custSegs.consumer;
         console.log('education ', this.props.item.education[0].id);
         console.log('income ', this.props.item.income[0].id);
         const aiObject = obj.find((el) => el.education[0] === this.props.item.education[0].id || el.income[0] === this.props.item.income[0].id || el.education[1] === this.props.item.education[0].id);
@@ -235,10 +235,8 @@ class EditConsumerSegmentModal extends Component {
                 title: title,
                 tag: 1
             }
-            const popeverText = 'Gender';
             this.setState({
-                genderType: [...this.state.genderType, new_gender_type_obj],
-                popeverText: [...this.state.popeverText, popeverText]
+                genderType: [...this.state.genderType, new_gender_type_obj]
             })
         }
         const education = this.state.educationType.map(e => e.id);
@@ -297,10 +295,10 @@ class EditConsumerSegmentModal extends Component {
             "location": '',
             "planId": this.props.businessPlan.id
         };
-        this.props.getAIValues(postObj);
+        this.props.getAIEditValues(postObj, this.props.item.id);
     }
     render() {
-        console.log(this.state.popeverText);
+        console.log(this.props.customerSegments.aiPredictText);
         const education = this.state.educationType.map(e => e.id);
         const income = this.state.incomeType.map(e => e.id);
         const gender = this.state.genderType.map(e => e.id);
@@ -328,16 +326,28 @@ class EditConsumerSegmentModal extends Component {
             <>
                 <Row>
                     <Text>
-                        Consider adding “Self Pick-up” because Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+                    Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.aiPredictTextEdit.map((e, index) => 
+                    <Text key={index} > for "{e.type_title}" {e.predict.map((p,index) => <Text key={index}>{p.title}</Text>)}</Text>)}.
                     </Text>
+                    {/* Based on your input KABADA AI recommends that you consider adding for "Gender" male, for "Education" Primary. */}
                 </Row>
                 <Row style={{ marginTop: '12px' }}>
                     <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
                     <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
                 </Row>
-
             </>
-
+        )
+        const popoverContentError = (
+            <>
+                <Row>
+                    <Text>
+                        AI did not have predict
+                    </Text>
+                </Row>
+                <Row style={{ marginTop: '12px' }}>
+                    <Button onClick={this.hidePopover}>Cancel</Button>
+                </Row>
+            </>
         )
 
         const genderTag = (props) => {
@@ -459,7 +469,7 @@ class EditConsumerSegmentModal extends Component {
                         <Popover
                             placement='topLeft'
                             title='AI Hint'
-                            content={popoverContent}
+                            content={this.props.customerSegments.errorMessageEdit === false ? popoverContent : popoverContentError}
                             overlayStyle={{ width: "328px" }}
                             trigger="click"
                             visible={this.state.popoverVisibility}
@@ -685,5 +695,5 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { updateConsumerSegment, getAIValues })(EditConsumerSegmentModal);
+export default connect(mapStateToProps, { updateConsumerSegment, getAIEditValues })(EditConsumerSegmentModal);
 

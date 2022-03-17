@@ -8,13 +8,25 @@ export const customerSegmentPropertiesReducer = (
     }
 }
 
+const compareArray = (arrayAI, arrayState) => {
+    const newArray = []
+    for (var i in arrayAI) {
+        if (arrayState.indexOf(arrayAI[i]) === -1) {
+            newArray.push(arrayAI[i]);
+        }
+    }
+    return newArray;
+}
+
 export const customerSegmentReducer = (
     state = {
         is_customer_segments_completed: false,
         consumers: [],
         business: [],
         public_bodies_ngo: [],
-        aiPredict: null
+        aiPredictEdit: null,
+        aiPredictTextEdit: [],
+        errorMessageEdit: false,
     }, action) => {
     switch (action.type) {
         case 'SAVE_CONSUMER_SEGMENT_SUCCESS':
@@ -41,7 +53,7 @@ export const customerSegmentReducer = (
             const ngo_w_titles = public_bodies_ngo_w_k ? public_bodies_ngo_w_k.map(v => ({
                 ...v, ngo_types_titles: v.ngo_types.map(e => e.title).join(", ")
             })) : [];
-            return { ...state,"is_customer_segments_completed":is_completed, "consumers": consumers_w_titles, "business": business_w_titles, "public_bodies_ngo": ngo_w_titles };
+            return { ...state, "is_customer_segments_completed": is_completed, "consumers": consumers_w_titles, "business": business_w_titles, "public_bodies_ngo": ngo_w_titles };
         case "UPDATE_CONSUMER_SEGMENT_SUCCESS":
             const updatedConsumerSegment = state.consumers.map(x => x.id === action.payload.id ? action.payload : x);
             return { ...state, "consumers": updatedConsumerSegment };
@@ -62,8 +74,83 @@ export const customerSegmentReducer = (
             return { ...state, "public_bodies_ngo": removedNgoSegment };
         case "SAVE_STATE_SUCCESS":
             return { ...state, "is_customer_segments_completed": action.payload };
-        case "GET_AI_PREDICT_SUCCESS": 
-            return {...state, "aiPredict": action.payload.plan}
+        case "GET_AI_PREDICT_EDIT_SUCCESS":
+            console.log(action.payload.segments)
+            const aiHintText = [];
+            const aiHintObject = [];
+            const consumersObj = state.consumers.find(c => c.id === action.payload.itemID);
+            if (consumersObj !== undefined) {
+                const consumerGender = consumersObj.gender.map(c => c.id);
+                const consumerEducation = consumersObj.education.map(c => c.id);
+                const consumerIncome = consumersObj.income.map(c => c.id);
+                const consumersAIObjects = action.payload.data.plan.custSegs.consumer;
+                const consumerAIObject = consumersAIObjects.find((el) => el.education[0] === consumersObj.education[0].id || el.income[0] === consumersObj.income[0].id || el.education[1] === consumersObj.education[0].id);
+                const genderAIPredict = compareArray(consumerAIObject.gender, consumerGender);
+                if (genderAIPredict.length > 0) {
+                    const genderPredictArray = [];
+                    const gender_types = action.payload.segments.customer_segments_types.gender_types;
+                    for (var i=0; i < genderAIPredict.length; i++) {
+                        const genderTypesTitle = gender_types.find(g => g.id === genderAIPredict[i]);
+                        genderPredictArray.push(genderTypesTitle);
+                    }
+                    const new_obj = {
+                        type_title: 'Gender',
+                        predict: genderPredictArray
+                    }
+                    aiHintObject.push(new_obj);
+                }
+                const educationAIPredict = compareArray(consumerAIObject.education, consumerEducation);
+                if (educationAIPredict.length > 0) {
+                    const educationPredictArray = [];
+                    const education_types = action.payload.segments.customer_segments_types.education_types;
+                    for (var i=0; i < educationAIPredict.length; i++) {
+                        const educationTypesTitle = education_types.find(e => e.id === educationAIPredict[i]);
+                        educationPredictArray.push(educationTypesTitle);
+                    }
+                    const new_obj = {
+                        type_title: 'Education',
+                        predict: educationPredictArray
+                    }
+                    aiHintObject.push(new_obj);
+                }
+                const incomeAIPredict = compareArray(consumerAIObject.income, consumerIncome);
+                if (incomeAIPredict.length > 0) {
+                    const incomePredictArray = [];
+                    const income_types = action.payload.segments.customer_segments_types.income_types;
+                    for (var i=0; i < incomeAIPredict.length; i++) {
+                        const incomeTypesTitle = income_types.find(e => e.id === incomeAIPredict[i]);
+                        incomePredictArray.push(incomeTypesTitle);
+                    }
+                    const new_obj = {
+                        type_title: 'Income',
+                        predict: incomePredictArray
+                    }
+                    aiHintObject.push(new_obj);
+                }
+                // const type_title = aiHintObject.map((e,index) => e.type_title);
+                // const titles = small_title.map(e => e.title);
+                // for (var i = 0; i < type_title.length; i++){
+                //     const type_title_obj = aiHintObject.find(e => e.type_title === type_title[i]).predict;
+                //     console.log(type_title_obj);
+                //     const type_titles = type_title_obj.map(e => e.title);
+                //     console.log(type_titles)
+                // }
+            }
+
+            return {
+                ...state,
+                "aiPredictEdit": action.payload.data.plan,
+                "aiPredictTextEdit": aiHintObject
+            }
+            case "ERROR_AI_EDIT_MESSAGE":
+                console.log(action.payload);
+                return {...state, "errorMessageEdit": action.payload}
+            case "RESET_AI_EDIT_PREDICT":
+                console.log('RESET')
+                return {...state,
+                    "aiPredictEdit": null,
+                    "aiPredictTextEdit": [] 
+                }
         default:
             return state;
     }
