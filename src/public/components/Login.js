@@ -74,7 +74,7 @@ class Login extends React.Component {
 						<FacebookLogin
 							// appId={process.env.REACT_APP_FACEBOOK_APPID}
 							appId={process.env.REACT_APP_FACEBOOK_APPID.toString()}
-							autoLoad={true}
+							autoLoad={false}
 							fields="name, email, picture"
 							scope="public_profile"
 							style={buttonStyle}
@@ -82,8 +82,7 @@ class Login extends React.Component {
 							textButton=" Continue with Facebook"
 							cssClass="custom-facebook-button"
 							icon={<FacebookFilled />}
-							onClick={this.facebookClicked}
-							callback={this.responseFacebook.bind(this)}
+							// onClick={this.responseFacebook.bind(this)}
 							 />
 					</Form.Item>
 
