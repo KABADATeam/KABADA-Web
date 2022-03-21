@@ -222,9 +222,9 @@ class EditConsumerSegmentModal extends Component {
     }
     onAIButtonClick = () => {
         const obj = this.props.customerSegments.aiPredictEdit.custSegs.consumer;
-        console.log('education ', this.props.item.education[0].id);
+        console.log('id object ', this.props.item.id);
         console.log('income ', this.props.item.income[0].id);
-        const aiObject = obj.find((el) => el.education[0] === this.props.item.education[0].id || el.income[0] === this.props.item.income[0].id || el.education[1] === this.props.item.education[0].id);
+        const aiObject = obj.find((el) => el.id === this.props.item.id);
         const gender = this.state.genderType.map(e => e.id);
         const genderAI = aiObject.gender;
         const genderPredict = this.compareArray(genderAI, gender);
