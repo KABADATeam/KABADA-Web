@@ -11,7 +11,7 @@ import EditBusinessSegmentModal from '../components/customer_segments/EditBusine
 import AddPublicBodiesSegmentModal from '../components/customer_segments/AddPublicBodiesSegmentModal';
 import EditPublicBodiesSegmentModal from '../components/customer_segments/EditPublicBodiesSegmentModal';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getCustomerSegmentProperties, getCustomerSegments, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState } from "../../appStore/actions/customerSegmentAction";
+import { getCustomerSegmentProperties, getCustomerSegments, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState, getAIValues } from "../../appStore/actions/customerSegmentAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
 import TooltipComponent from "../components/Tooltip";
@@ -61,7 +61,8 @@ class CustomerSegments extends React.Component {
             item: null,
             consumerSegment: null,
             businessSegment: null,
-            publicBodiesSegment: null
+            publicBodiesSegment: null,
+            consumerEditSegment: null
         };
     }
 
@@ -69,10 +70,15 @@ class CustomerSegments extends React.Component {
         this.props.history.push(`/overview`);
     }
 
-    onAddConsumerSegment = () => {
+    onAddConsumerSegment() {
         this.setState({
             consumerSegment: true
         });
+        const postObj = {
+            "location": '',
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getAIValues(postObj, null, 'consumer');
     }
 
     onAddBusinessSegment = () => {
@@ -102,6 +108,7 @@ class CustomerSegments extends React.Component {
             consumerSegment: null,
             businessSegment: null,
             publicBodiesSegment: null,
+            consumerEditSegment: null, 
             item: null
         });
     };
@@ -121,8 +128,14 @@ class CustomerSegments extends React.Component {
     onEditConsumerSegment(item) {
         this.setState({
             item: { ...item },
-            consumerSegment: true
+            consumerEditSegment: true
         });
+        
+        const postObj = {
+            "location": 'custSegs::cosumers',
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getAIValues(postObj, item.id, 'consumer');
     }
 
     onEditBusinessSegment(item) {
@@ -312,7 +325,7 @@ class CustomerSegments extends React.Component {
                                 dataSource={this.props.customerSegments.consumers}
                                 columns={consumersSegmentsColumns}
                                 pagination={false}
-                                footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddConsumerSegment.bind(this)}><PlusOutlined />Add segment</Button></Space>)}
+                                footer={() => (<Button size="large" style={{ ...buttonStyle }} onClick={()=>this.onAddConsumerSegment()}><PlusOutlined />Add segment</Button>)}
                             />
 
                         </Col>
@@ -373,7 +386,7 @@ class CustomerSegments extends React.Component {
                 }
 
                 {
-                    this.state.item !== null && this.state.consumerSegment !== null ?
+                    this.state.item !== null && this.state.consumerEditSegment !== null ?
                         <EditConsumerSegmentModal visibility={true} item={this.state.item} onClose={this.onCloseEditSegmentModal} />
                         : null
                 }
@@ -416,4 +429,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, logout, getCustomerSegmentProperties, getCustomerSegments, refreshPlan, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState })(withRouter(CustomerSegments));
+export default connect(mapStateToProps, { getSelectedPlanOverview, logout, getCustomerSegmentProperties, getCustomerSegments, refreshPlan, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState, getAIValues })(withRouter(CustomerSegments));

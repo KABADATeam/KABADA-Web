@@ -4,7 +4,7 @@ import { Modal, Button, Form, Space, Select, Radio, Input, Tag, Popover, Typogra
 import '../../../css/customModal.css';
 import '../../../css/publicBusinessPlans.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { updateConsumerSegment, getAIEditValues } from "../../../appStore/actions/customerSegmentAction";
+import { updateConsumerSegment } from "../../../appStore/actions/customerSegmentAction";
 
 const { Option } = Select;
 const { Text } = Typography
@@ -251,7 +251,7 @@ class EditConsumerSegmentModal extends Component {
         return newArray;
     }
     onAIButtonClick = () => {
-        const obj = this.props.customerSegments.aiPredictEdit.custSegs.consumer;
+        const obj = this.props.customerSegments.aiPredict.custSegs.consumer;
         console.log('id object ', this.props.item.id);
         console.log('income ', this.props.item.income[0].id);
         const aiObject = obj.find((el) => el.id === this.props.item.id);
@@ -321,13 +321,7 @@ class EditConsumerSegmentModal extends Component {
 
 
     }
-    componentDidMount() {
-        const postObj = {
-            "location": 'custSegs::business',
-            "planId": this.props.businessPlan.id
-        };
-        this.props.getAIEditValues(postObj, this.props.item.id, 'consumer');
-    }
+    
     render() {
         console.log(this.props.customerSegments.aiPredictText);
         const education = this.state.educationType.map(e => e.id);
@@ -357,7 +351,7 @@ class EditConsumerSegmentModal extends Component {
             <>
                 <Row>
                     <Text>
-                        Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.aiPredictTextEdit.map((e, index) =>
+                        Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.aiPredictText.map((e, index) =>
                             <Text key={index} > for "{e.type_title}": {e.predict.map((p, index) => <Text key={index}>{p.title},</Text>)}</Text>)}.
                     </Text>
                     {/* Based on your input KABADA AI recommends that you consider adding for "Gender" male, for "Education" Primary. */}
@@ -725,5 +719,5 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { updateConsumerSegment, getAIEditValues })(EditConsumerSegmentModal);
+export default connect(mapStateToProps, { updateConsumerSegment })(EditConsumerSegmentModal);
 

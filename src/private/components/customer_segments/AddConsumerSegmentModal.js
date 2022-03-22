@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Modal, Button, Form, Space, Select, Radio, Input, Avatar, Row, Typography, Popover } from 'antd';
 import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { saveConsumerSegment, getAIValues } from "../../../appStore/actions/customerSegmentAction";
+import { saveConsumerSegment } from "../../../appStore/actions/customerSegmentAction";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -15,14 +15,17 @@ const inputStyle = {
 }
 
 class AddConsumerSegmentModal extends Component {
-    state = {
-        segmentName: null,
-        ageGroup: null,
-        genderType: null,
-        educationType: null,
-        incomeType: null,
-        locationType: null,
-        popoverVisibility: false,
+    constructor(props){
+        super(props);
+        this.state = {
+            segmentName: null,
+            ageGroup: null,
+            genderType: null,
+            educationType: null,
+            incomeType: null,
+            locationType: null,
+            popoverVisibility: false,
+        }
     }
 
     onCancel = () => {
@@ -34,11 +37,14 @@ class AddConsumerSegmentModal extends Component {
     }
 
     onOK = () => {
+        const education = this.state.educationType.map(e => e.id);
+        const income = this.state.incomeType.map(e => e.id);
+        const gender = this.state.genderType.map(e => e.id);
         const postObj = {
             "id": null,
             "business_plan_id": this.props.businessPlan.id,
             "age": this.state.ageGroup,
-            "gender": this.state.genderType,
+            "gender": gender,
             "education": this.state.educationType,
             "income": this.state.incomeType,
             "geographic_location": this.state.locationType,
@@ -133,13 +139,7 @@ class AddConsumerSegmentModal extends Component {
         console.log('AI button work');
         console.log(this.props.businessPlan.id)
     }
-    componentDidMount() {
-        const postObj = {
-            "location": null,
-            "planId": this.props.businessPlan.id
-        };
-        this.props.getAIValues(postObj, null);
-    }
+
 
     render() {
 
@@ -283,5 +283,5 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { saveConsumerSegment, getAIValues })(AddConsumerSegmentModal);
+export default connect(mapStateToProps, { saveConsumerSegment })(AddConsumerSegmentModal);
 
