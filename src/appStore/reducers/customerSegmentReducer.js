@@ -23,6 +23,7 @@ const generateAIHelpText = (selectedItem, predictsObj, segmentTypes) => {
     const predictObj = predictsObj.find(s => s.id === selectedItem.id);   
     const predictProperties = Object.getOwnPropertyNames(predictsObj.find(s => s.id === selectedItem.id));
     const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
+    console.log(segmentTypes);
     for (const property of filteredPredictProperties){
         const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(selectedItem, property).value;
         const selectedItemPropertyValues = selectedItemPropertyValuesObj.map(s => s.id);
@@ -30,6 +31,10 @@ const generateAIHelpText = (selectedItem, predictsObj, segmentTypes) => {
         const segmentType = property === 'education' ? segmentTypes.education_types    
                         : property === 'gender' ? segmentTypes.gender_types 
                         : property === 'income' ? segmentTypes.income_types 
+                        : property === 'age' ? segmentTypes.age_groups
+                        : property === 'geographic_location' ? segmentTypes.geographic_locations
+                        : property === 'company_size' ? segmentTypes.company_size_titles
+                        : property === 'business_type' ? segmentTypes.business_types
                         : null
         console.log(segmentType)
         const comparePropertiesValues = compareArray(predictObjPropertyValues, selectedItemPropertyValues);
@@ -119,8 +124,9 @@ export const customerSegmentReducer = (
             // const consumer = generateAIHelpText(action.payload.data.plan.custSegs, action.payload.segmentType);
             // console.log(consumer);
             const text = action.payload.segmentType === 'consumer' ? generateAIHelpText(state.consumers.find(c => c.id === action.payload.itemID), action.payload.data.plan.custSegs.consumer, action.payload.segments.customer_segments_types) 
-                : generateAIHelpText(state.business.find(c => c.id === action.payload.itemID), action.payload.data.plan.custSegs.business, action.payload.segments.customer_segments_types);
-            //console.log(text);
+                : action.payload.segmentType === 'business' ? generateAIHelpText(state.business.find(c => c.id === action.payload.itemID), action.payload.data.plan.custSegs.business, action.payload.segments.customer_segments_types)
+                : 'No text'
+            console.log(text);
             if (consumersObj !== undefined) {
                 const consumerGender = consumersObj.gender.map(c => c.id);
                 const consumerEducation = consumersObj.education.map(c => c.id);

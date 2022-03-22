@@ -24,7 +24,7 @@ class EditConsumerSegmentModal extends Component {
             genderType: this.props.item.gender.map(e => ({ id: e.id, title: e.title, tag: 0 })),
             educationType: this.props.item.education.map(e => ({ id: e.id, title: e.title, tag: 0 })),
             incomeType: this.props.item.income.map(e => ({ id: e.id, title: e.title, tag: 0 })),
-            locationType: this.props.item.geographic_location.map(e => e.id),
+            locationType: this.props.item.geographic_location.map(e => ({ id: e.id, title: e.title, tag: 0})),
             popoverVisibility: false,
             popeverText: []
         }
@@ -43,6 +43,7 @@ class EditConsumerSegmentModal extends Component {
         const education = this.state.educationType.map(e => e.id);
         const income = this.state.incomeType.map(e => e.id);
         const gender = this.state.genderType.map(e => e.id);
+        const location = this.state.locationType.map(e => e.id);
         const postObj = {
             "id": this.props.item.id,
             "business_plan_id": this.props.businessPlan.id,
@@ -50,7 +51,7 @@ class EditConsumerSegmentModal extends Component {
             "gender": gender,
             "education": education,
             "income": income,
-            "geographic_location": this.state.locationType,
+            "geographic_location": location,
             "segment_name": this.state.segmentName
         };
 
@@ -58,7 +59,7 @@ class EditConsumerSegmentModal extends Component {
         const selected_genders = this.props.categories.customer_segments_types.gender_types.filter((item) => gender.some((field) => item.id === field));
         const selected_educations = this.props.categories.customer_segments_types.education_types.filter((item) => education.some((field) => item.id === field));
         const selected_incomes = this.props.categories.customer_segments_types.income_types.filter((item) => income.some((field) => item.id === field));
-        const selected_locations = this.props.categories.customer_segments_types.geographic_locations.filter((item) => this.state.locationType.some((field) => item.id === field));
+        const selected_locations = this.props.categories.customer_segments_types.geographic_locations.filter((item) => location.some((field) => item.id === field));
 
         const reducerObj = {
             "id": this.props.item.id,
@@ -227,8 +228,37 @@ class EditConsumerSegmentModal extends Component {
         });
     }
     onLocationTypeChange(value) {
+        const locationTypeArray = [];
+        for (var i = 0; i < value.length; i++) {
+            if (this.state.locationType[i] === undefined) {
+                const location_type = this.props.categories.customer_segments_types.geographic_locations.find((obj) => obj.id === value[i]);
+                const new_obj = {
+                    id: location_type.id,
+                    title: location_type.title,
+                    tag: 0
+                };
+                locationTypeArray.push(new_obj);
+            } else {
+                const location_type = this.state.locationType.find((obj) => obj.id === value[i]);
+                if (location_type.tag === 0) {
+                    const new_obj = {
+                        id: location_type.id,
+                        title: location_type.title,
+                        tag: 0
+                    }
+                    locationTypeArray.push(new_obj);
+                } else if (location_type.tag === 1) {
+                    const new_obj = {
+                        id: location_type.id,
+                        title: location_type.title,
+                        tag: 1
+                    }
+                    locationTypeArray.push(new_obj);
+                }
+            }
+        };
         this.setState({
-            locationType: value
+            locationType: locationTypeArray
         })
     }
     handlePopoverVisibilityChange = (visible) => {
@@ -295,10 +325,26 @@ class EditConsumerSegmentModal extends Component {
             }
             newIncomeArray.push(new_income_type_obj);
         }
+        const location = this.state.locationType.map(e => e.id);
+        const locationAI = aiObject.geographic_location;
+        console.log(locationAI)
+        const locationPredict = this.compareArray(locationAI, location);
+        const newLocationArray = [...this.state.locationType];
+        console.log('location predict: ', locationPredict)
+        for (var i in locationPredict) {
+            const title = this.props.categories.customer_segments_types.geographic_location.find((obj) => obj.id === locationPredict[i]).title;
+            const new_location_obj = {
+                id: locationPredict[i],
+                title: title,
+                tag: 1
+            }
+            newLocationArray.push(new_location_obj);
+        }
         this.setState({
             genderType: newGenderArray,
             educationType: newEducationArray,
-            incomeType: newIncomeArray
+            incomeType: newIncomeArray,
+            locationType: newLocationArray
         })
         this.hidePopover();
         // const education_type = this.props.categories.customer_segments_types.education_types.find((obj) => obj.id === findEducation.education[0]);
