@@ -18,6 +18,40 @@ const compareArray = (arrayAI, arrayState) => {
     return newArray;
 }
 
+const generateAIHelpText = (selectedItem, predictsObj, segmentTypes) => {
+    const aiHintTextObject = [];
+    const predictObj = predictsObj.find(s => s.id === selectedItem.id);   
+    const predictProperties = Object.getOwnPropertyNames(predictsObj.find(s => s.id === selectedItem.id));
+    const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
+    for (const property of filteredPredictProperties){
+        const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(selectedItem, property).value;
+        const selectedItemPropertyValues = selectedItemPropertyValuesObj.map(s => s.id);
+        const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
+        const segmentType = property === 'education' ? segmentTypes.education_types    
+                        : property === 'gender' ? segmentTypes.gender_types 
+                        : property === 'income' ? segmentTypes.income_types 
+                        : null
+        console.log(segmentType)
+        const comparePropertiesValues = compareArray(predictObjPropertyValues, selectedItemPropertyValues);
+        console.log(comparePropertiesValues);
+        if (comparePropertiesValues.length > 0) {
+            const typePredictArray = []
+            const types = segmentType;
+            for (var i = 0; i < comparePropertiesValues.length; i++){
+                 const segment_type_title = types.find(t => t.id === comparePropertiesValues[i]);
+                 typePredictArray.push(segment_type_title);
+            }
+            const new_obj = {
+                type_title: property,
+                predict: typePredictArray
+            }
+            aiHintTextObject.push(new_obj);
+        }
+    }
+    console.log(aiHintTextObject)
+    return aiHintTextObject
+}
+
 export const customerSegmentReducer = (
     state = {
         is_customer_segments_completed: false,
@@ -77,17 +111,22 @@ export const customerSegmentReducer = (
             return { ...state, "public_bodies_ngo": removedNgoSegment };
         case "SAVE_STATE_SUCCESS":
             return { ...state, "is_customer_segments_completed": action.payload };
-        case "GET_AI_PREDICT_EDIT_SUCCESS":
-            console.log(action.payload.segments)
+        case "GET_AI_PREDICT_SUCCESS":
             const aiHintText = [];
             const aiHintObject = [];
             const consumersObj = state.consumers.find(c => c.id === action.payload.itemID);
+            // console.log(consumersObj);
+            // const consumer = generateAIHelpText(action.payload.data.plan.custSegs, action.payload.segmentType);
+            // console.log(consumer);
+            const text = action.payload.segmentType === 'consumer' ? generateAIHelpText(state.consumers.find(c => c.id === action.payload.itemID), action.payload.data.plan.custSegs.consumer, action.payload.segments.customer_segments_types) 
+                : generateAIHelpText(state.business.find(c => c.id === action.payload.itemID), action.payload.data.plan.custSegs.business, action.payload.segments.customer_segments_types);
+            //console.log(text);
             if (consumersObj !== undefined) {
                 const consumerGender = consumersObj.gender.map(c => c.id);
                 const consumerEducation = consumersObj.education.map(c => c.id);
                 const consumerIncome = consumersObj.income.map(c => c.id);
                 const consumersAIObjects = action.payload.data.plan.custSegs.consumer;
-                const consumerAIObject = consumersAIObjects.find((el) => el.education[0] === consumersObj.education[0].id || el.income[0] === consumersObj.income[0].id || el.education[1] === consumersObj.education[0].id);
+                const consumerAIObject = consumersAIObjects.find((el) => el.id === consumersObj.id);
                 const genderAIPredict = compareArray(consumerAIObject.gender, consumerGender);
                 if (genderAIPredict.length > 0) {
                     const genderPredictArray = [];
@@ -130,39 +169,16 @@ export const customerSegmentReducer = (
                     }
                     aiHintObject.push(new_obj);
                 }
-                // const type_title = aiHintObject.map((e,index) => e.type_title);
-                // const titles = small_title.map(e => e.title);
-                // for (var i = 0; i < type_title.length; i++){
-                //     const type_title_obj = aiHintObject.find(e => e.type_title === type_title[i]).predict;
-                //     console.log(type_title_obj);
-                //     const type_titles = type_title_obj.map(e => e.title);
-                //     console.log(type_titles)
-                // }
             }
 
             return {
                 ...state,
-                "aiPredictEdit": action.payload.data.plan,
-                "aiPredictTextEdit": aiHintObject
-            }
-        case "ERROR_AI_EDIT_MESSAGE":
-            console.log(action.payload);
-            return { ...state, "errorMessageEdit": action.payload }
-        case "RESET_AI_EDIT_PREDICT":
-            return {
-                ...state,
-                "aiPredictEdit": null,
-                "aiPredictTextEdit": []
-            }
-        case "GET_AI_PREDICT_SUCCESS":
-            return {
-                ...state,
+                "aiPredict": action.payload.data.plan,
+                "aiPredictText": aiHintObject
             }
         case "ERROR_AI_MESSAGE":
-            return {
-                ...state,
-                "errorMessage": action.payload
-            }
+            console.log(action.payload);
+            return { ...state, "errorMessage": action.payload }
         case "RESET_AI_PREDICT":
             return {
                 ...state,
