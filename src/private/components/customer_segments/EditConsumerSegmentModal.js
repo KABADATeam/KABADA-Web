@@ -20,7 +20,7 @@ class EditConsumerSegmentModal extends Component {
         super(props);
         this.state = {
             segmentName: this.props.item.segment_name,
-            ageGroup: this.props.item.age.map(e => e.id),
+            ageGroup: this.props.item.age.map(e => ({ id: e.id, title: e.title, tag: 0})),
             genderType: this.props.item.gender.map(e => ({ id: e.id, title: e.title, tag: 0 })),
             educationType: this.props.item.education.map(e => ({ id: e.id, title: e.title, tag: 0 })),
             incomeType: this.props.item.income.map(e => ({ id: e.id, title: e.title, tag: 0 })),
@@ -39,13 +39,14 @@ class EditConsumerSegmentModal extends Component {
     }
 
     onOK = () => {
+        const age = this.state.ageGroup.map(e => e.id);
         const education = this.state.educationType.map(e => e.id);
         const income = this.state.incomeType.map(e => e.id);
         const gender = this.state.genderType.map(e => e.id);
         const postObj = {
             "id": this.props.item.id,
             "business_plan_id": this.props.businessPlan.id,
-            "age": this.state.ageGroup,
+            "age": age,
             "gender": gender,
             "education": education,
             "income": income,
@@ -53,7 +54,7 @@ class EditConsumerSegmentModal extends Component {
             "segment_name": this.state.segmentName
         };
 
-        const selected_ages = this.props.categories.customer_segments_types.age_groups.filter((item) => this.state.ageGroup.some((field) => item.id === field));
+        const selected_ages = this.props.categories.customer_segments_types.age_groups.filter((item) => age.some((field) => item.id === field));
         const selected_genders = this.props.categories.customer_segments_types.gender_types.filter((item) => gender.some((field) => item.id === field));
         const selected_educations = this.props.categories.customer_segments_types.education_types.filter((item) => education.some((field) => item.id === field));
         const selected_incomes = this.props.categories.customer_segments_types.income_types.filter((item) => income.some((field) => item.id === field));
@@ -85,9 +86,38 @@ class EditConsumerSegmentModal extends Component {
     }
 
     onAgeGroupChange(value) {
-        console.log('Age group value ', value)
+        const ageGroupArray = [];
+        for (var i = 0; i < value.length; i++) {
+            if (this.state.ageGroup[i] === undefined) {
+                const age_group = this.props.categories.customer_segments_types.age_groups.find((obj) => obj.id === value[i]);
+                console.log(age_group);
+                const new_obj = {
+                    id: age_group.id,
+                    title: age_group.title,
+                    tag: 0
+                }
+                ageGroupArray.push(new_obj)
+            } else {
+                const age_group = this.state.ageGroup.find((obj) => obj.id === value[i]);
+                if (age_group.tag === 0) {
+                    const new_obj = {
+                        id: age_group.id,
+                        title: age_group.title,
+                        tag: 0
+                    }
+                    ageGroupArray.push(new_obj);
+                } else if (age_group.tag === 1) {
+                    const new_obj = {
+                        id: age_group.id,
+                        title: age_group.title,
+                        tag: 1
+                    }
+                    ageGroupArray.push(new_obj);
+                }
+            }
+        }
         this.setState({
-            ageGroup: value
+            ageGroup: ageGroupArray
         });
     }
 
@@ -228,6 +258,7 @@ class EditConsumerSegmentModal extends Component {
         const gender = this.state.genderType.map(e => e.id);
         const genderAI = aiObject.gender;
         const genderPredict = this.compareArray(genderAI, gender);
+        const newGenderArray = [...this.state.genderType];
         for (var i in genderPredict) {
             const title = this.props.categories.customer_segments_types.gender_types.find((obj) => obj.id === genderPredict[i]).title;
             const new_gender_type_obj = {
@@ -235,13 +266,12 @@ class EditConsumerSegmentModal extends Component {
                 title: title,
                 tag: 1
             }
-            this.setState({
-                genderType: [...this.state.genderType, new_gender_type_obj]
-            })
+            newGenderArray.push(new_gender_type_obj);
         }
         const education = this.state.educationType.map(e => e.id);
         const educationAI = aiObject.education;
         const educationPredict = this.compareArray(educationAI, education);
+        const newEducationArray = [...this.state.educationType];
         for (var i in educationPredict) {
             const title = this.props.categories.customer_segments_types.education_types.find((obj) => obj.id === educationPredict[i]).title;
             const new_education_type_obj = {
@@ -249,14 +279,13 @@ class EditConsumerSegmentModal extends Component {
                 title: title,
                 tag: 1
             };
-
-            this.setState({
-                educationType: [...this.state.educationType, new_education_type_obj],
-            });
+            newEducationArray.push(new_education_type_obj);
         }
         const income = this.state.incomeType.map(e => e.id);
         const incomeAI = aiObject.income;
         const incomePredict = this.compareArray(incomeAI, income);
+        const newIncomeArray = [...this.state.incomeType];
+        console.log('income predict: ', incomePredict)
         for (var i in incomePredict) {
             const title = this.props.categories.customer_segments_types.income_types.find((obj) => obj.id === incomePredict[i]).title;
             const new_income_type_obj = {
@@ -264,11 +293,13 @@ class EditConsumerSegmentModal extends Component {
                 title: title,
                 tag: 1
             }
-            this.setState({
-                incomeType: [...this.state.incomeType, new_income_type_obj],
-            })
+            newIncomeArray.push(new_income_type_obj);
         }
-        
+        this.setState({
+            genderType: newGenderArray,
+            educationType: newEducationArray,
+            incomeType: newIncomeArray
+        })
         this.hidePopover();
         // const education_type = this.props.categories.customer_segments_types.education_types.find((obj) => obj.id === findEducation.education[0]);
         // const income_type = this.props.categories.customer_segments_types.income_types.find((obj) => obj.id === findIncome.income[0]);
@@ -292,10 +323,10 @@ class EditConsumerSegmentModal extends Component {
     }
     componentDidMount() {
         const postObj = {
-            "location": '',
+            "location": 'custSegs::business',
             "planId": this.props.businessPlan.id
         };
-        this.props.getAIEditValues(postObj, this.props.item.id);
+        this.props.getAIEditValues(postObj, this.props.item.id, 'consumer');
     }
     render() {
         console.log(this.props.customerSegments.aiPredictText);
@@ -326,8 +357,8 @@ class EditConsumerSegmentModal extends Component {
             <>
                 <Row>
                     <Text>
-                    Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.aiPredictTextEdit.map((e, index) => 
-                    <Text key={index} > for "{e.type_title}" {e.predict.map((p,index) => <Text key={index}>{p.title}</Text>)}</Text>)}.
+                        Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.aiPredictTextEdit.map((e, index) =>
+                            <Text key={index} > for "{e.type_title}": {e.predict.map((p, index) => <Text key={index}>{p.title},</Text>)}</Text>)}.
                     </Text>
                     {/* Based on your input KABADA AI recommends that you consider adding for "Gender" male, for "Education" Primary. */}
                 </Row>
@@ -459,7 +490,6 @@ class EditConsumerSegmentModal extends Component {
             }
 
         }
-
         return (
             <>
                 <Modal
@@ -483,7 +513,7 @@ class EditConsumerSegmentModal extends Component {
                                 </svg>
                                 }
                                 type="link"
-                                // shape="circle"
+                            // shape="circle"
                             />
                         </Popover>
                     </Space>}
@@ -629,12 +659,12 @@ class EditConsumerSegmentModal extends Component {
                                     label="Income"
                                     rules={[{ required: true, message: 'Select income' }]}
                                 >
-                                    <Select 
-                                        mode="multiple" 
-                                        placeholder="Choose income" 
-                                        onChange={this.onIncomeTypeChange.bind(this)} 
-                                        value={income} 
-                                        tagRender={incomeTag} 
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Choose income"
+                                        onChange={this.onIncomeTypeChange.bind(this)}
+                                        value={income}
+                                        tagRender={incomeTag}
                                         options={incomeOptions}
                                     />
                                 </Form.Item>
@@ -653,11 +683,11 @@ class EditConsumerSegmentModal extends Component {
                                             },
                                         },
                                     ]}>
-                                    <Select 
-                                        mode="multiple" 
-                                        placeholder="Choose income" 
-                                        onChange={this.onIncomeTypeChange.bind(this)} 
-                                        value={income} 
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Choose income"
+                                        onChange={this.onIncomeTypeChange.bind(this)}
+                                        value={income}
                                         tagRender={incomeTag}
                                         options={incomeOptions}
                                     />
