@@ -91,7 +91,6 @@ class EditConsumerSegmentModal extends Component {
         for (var i = 0; i < value.length; i++) {
             if (this.state.ageGroup[i] === undefined) {
                 const age_group = this.props.categories.customer_segments_types.age_groups.find((obj) => obj.id === value[i]);
-                console.log(age_group);
                 const new_obj = {
                     id: age_group.id,
                     title: age_group.title,
@@ -573,9 +572,6 @@ class EditConsumerSegmentModal extends Component {
                         initialValues={{
                             name: this.props.item.segment_name,
                             age: this.props.item.age.map(e => e.id),
-                            //gender: this.props.item.gender.map(e => e.id),
-                            //education: this.state.edu.map(e => e.id),
-                            //income: this.props.item.income.map(e => e.id),
                             geographicLocation: this.props.item.geographic_location.map(e => e.id),
                         }}
                     >
