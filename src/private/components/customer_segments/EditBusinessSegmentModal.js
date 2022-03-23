@@ -34,37 +34,39 @@ class EditBusinessSegmentModal extends Component {
     }
 
     onOK = () => {
-        const type = this.state.type.map(e => e.id);
-        const size = this.state.companySize.map(e => e.id);
-        const location = this.state.locationType.map(e => e.id);
-        const postObj = {
-            "id": this.props.item.id,
-            "business_plan_id": this.props.businessPlan.id,
-            "business_type": type,
-            "company_size": size,
-            "geographic_location": location,
-            "segment_name": this.state.segmentName
-        };
+        const { segmentName, type, companySize, locationType } = this.state;
+        if (segmentName.length > 0 && type.length > 0 && companySize.length > 0 && locationType.length > 0) {
+            const business_type = type.map(e => e.id);
+            const company_size = companySize.map(e => e.id);
+            const location = locationType.map(e => e.id);
+            const postObj = {
+                "id": this.props.item.id,
+                "business_plan_id": this.props.businessPlan.id,
+                "business_type": business_type,
+                "company_size": company_size,
+                "geographic_location": location,
+                "segment_name": this.state.segmentName
+            };
 
-        const selected_types = this.props.categories.customer_segments_types.business_types.filter((item) => type.some((field) => item.id === field));
-        const selected_company_sizes = this.props.categories.customer_segments_types.company_sizes.filter((item) => size.some((field) => item.id === field));
-        const selected_locations = this.props.categories.customer_segments_types.geographic_locations.filter((item) => location.some((field) => item.id === field));
+            const selected_types = this.props.categories.customer_segments_types.business_types.filter((item) => business_type.some((field) => item.id === field));
+            const selected_company_sizes = this.props.categories.customer_segments_types.company_sizes.filter((item) => company_size.some((field) => item.id === field));
+            const selected_locations = this.props.categories.customer_segments_types.geographic_locations.filter((item) => location.some((field) => item.id === field));
 
-        const reducerObj = {
-            "id": this.props.item.id,
-            "key": this.props.item.id,
-            "business_type": selected_types,
-            "business_type_titles": selected_types.map(e => e.title).join(", "),
-            "company_size": selected_company_sizes,
-            "company_size_titles": selected_company_sizes.map(e => e.title).join(", "),
-            "geographic_location": selected_locations,
-            "location_titles": selected_locations.map(e => e.title).join(", "),
-            "segment_name": this.state.segmentName
-        };
+            const reducerObj = {
+                "id": this.props.item.id,
+                "key": this.props.item.id,
+                "business_type": selected_types,
+                "business_type_titles": selected_types.map(e => e.title).join(", "),
+                "company_size": selected_company_sizes,
+                "company_size_titles": selected_company_sizes.map(e => e.title).join(", "),
+                "geographic_location": selected_locations,
+                "location_titles": selected_locations.map(e => e.title).join(", "),
+                "segment_name": this.state.segmentName
+            };
+            this.props.updateBusinessSegment(postObj, reducerObj);
+            this.props.onClose()
+        }
 
-        this.props.updateBusinessSegment(postObj, reducerObj);
-
-        this.props.onClose();
     }
 
     onNameChange(value) {
@@ -356,7 +358,7 @@ class EditBusinessSegmentModal extends Component {
                             rules={
                                 [{ required: true, message: 'Type segment name' }]
                             }>
-                            <Input style={{ width: '100%', ...inputStyle }} placeholder="Edit segment name" 
+                            <Input style={{ width: '100%', ...inputStyle }} placeholder="Edit segment name"
                                 value={this.state.segmentName} onChange={(e) => this.onNameChange(e.target.value)} />
                         </Form.Item>
                         {
