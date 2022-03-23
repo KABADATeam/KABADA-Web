@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Form, Space, Select, Radio, Input, Avatar, Row, Typography, Popover } from 'antd';
+import { Modal, Button, Form, Space, Select, Radio, Input, Avatar, Row, Tag, Typography, Popover } from 'antd';
 import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { saveConsumerSegment } from "../../../appStore/actions/customerSegmentAction";
@@ -15,15 +15,15 @@ const inputStyle = {
 }
 
 class AddConsumerSegmentModal extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             segmentName: null,
-            ageGroup: null,
+            ageGroup: [],
             genderType: null,
-            educationType: null,
-            incomeType: null,
-            locationType: null,
+            educationType: [],
+            incomeType: [],
+            locationType: [],
             popoverVisibility: false,
         }
     }
@@ -37,25 +37,27 @@ class AddConsumerSegmentModal extends Component {
     }
 
     onOK = () => {
+        const age = this.state.ageGroup.map(e => e.id);
         const education = this.state.educationType.map(e => e.id);
         const income = this.state.incomeType.map(e => e.id);
         const gender = this.state.genderType.map(e => e.id);
+        const location = this.state.locationType.map(e => e.id);
         const postObj = {
             "id": null,
             "business_plan_id": this.props.businessPlan.id,
-            "age": this.state.ageGroup,
+            "age": age,
             "gender": gender,
-            "education": this.state.educationType,
-            "income": this.state.incomeType,
-            "geographic_location": this.state.locationType,
+            "education": education,
+            "income": income,
+            "geographic_location": location,
             "segment_name": this.state.segmentName
         };
 
-        const selected_ages = this.props.categories.customer_segments_types.age_groups.filter((item) => this.state.ageGroup.some((field) => item.id === field));
-        const selected_genders = this.props.categories.customer_segments_types.gender_types.filter((item) => this.state.genderType.some((field) => item.id === field));
-        const selected_educations = this.props.categories.customer_segments_types.education_types.filter((item) => this.state.educationType.some((field) => item.id === field));
-        const selected_incomes = this.props.categories.customer_segments_types.income_types.filter((item) => this.state.incomeType.some((field) => item.id === field));
-        const selected_locations = this.props.categories.customer_segments_types.geographic_locations.filter((item) => this.state.locationType.some((field) => item.id === field));
+        const selected_ages = this.props.categories.customer_segments_types.age_groups.filter((item) => age.some((field) => item.id === field));
+        const selected_genders = this.props.categories.customer_segments_types.gender_types.filter((item) => gender.some((field) => item.id === field));
+        const selected_educations = this.props.categories.customer_segments_types.education_types.filter((item) => education.some((field) => item.id === field));
+        const selected_incomes = this.props.categories.customer_segments_types.income_types.filter((item) => income.some((field) => item.id === field));
+        const selected_locations = this.props.categories.customer_segments_types.geographic_locations.filter((item) => location.some((field) => item.id === field));
 
         const reducerObj = {
             "age": selected_ages,
@@ -68,11 +70,7 @@ class AddConsumerSegmentModal extends Component {
             "location_titles": selected_locations.map(e => e.title).join(", "),
             "segment_name": this.state.segmentName
         }
-
-        console.log('Post obj:' + JSON.stringify(postObj))
-        console.log('Reducer obj:' + JSON.stringify(reducerObj))
         this.props.saveConsumerSegment(postObj, reducerObj);
-
         this.props.onClose();
     }
 
@@ -83,25 +81,95 @@ class AddConsumerSegmentModal extends Component {
     }
 
     onAgeGroupChange(value) {
+        const ageGroupArray = [];
+        console.log(value);
+        if (this.state.ageGroup === []) {
+            const age_group = this.props.categories.customer_segments_types.age_groups.find((obj) => obj.id === value[0]);
+            const new_obj = {
+                id: age_group.id,
+                title: age_group.title,
+                tag: 0
+            }
+            console.log(new_obj)
+            ageGroupArray.push(new_obj);
+        } else {
+            for (var i = 0; i < value.length; i++) {
+                console.log(this.state.ageGroup[i])
+                if (this.state.ageGroup[i] === undefined) {
+                    const age_group = this.props.categories.customer_segments_types.age_groups.find((obj) => obj.id === value[i]);
+                    const new_obj = {
+                        id: age_group.id,
+                        title: age_group.title,
+                        tag: 0
+                    }
+                    ageGroupArray.push(new_obj)
+                } else {
+                    const age_group = this.state.ageGroup.find((obj) => obj.id === value[i]);
+                    if (age_group.tag === 0) {
+                        const new_obj = {
+                            id: age_group.id,
+                            title: age_group.title,
+                            tag: 0
+                        }
+                        ageGroupArray.push(new_obj);
+                    } else if (age_group.tag === 1) {
+                        const new_obj = {
+                            id: age_group.id,
+                            title: age_group.title,
+                            tag: 1
+                        }
+                        ageGroupArray.push(new_obj);
+                    }
+                }
+            }
+        }
         this.setState({
-            ageGroup: value
+            ageGroup: ageGroupArray
         });
     }
 
     onGenderTypeChange(value) {
         const genderTypeArray = [];
-        console.log(this.state.genderType);
-        console.log(value)
         if (this.state.genderType === null) {
-            console.log(this.props.categories.customer_segments_types.gender_types)
+        
             const gender_type = this.props.categories.customer_segments_types.gender_types.find((obj) => obj.id === value[0]);
-            console.log(gender_type)
             const new_obj = {
                 id: gender_type.id,
                 title: gender_type.title,
                 tag: 0
             }
             genderTypeArray.push(new_obj);
+        } else {
+            console.log('when [] not 0 ')
+            for (var i = 0; i < value.length; i++) {
+                if (this.state.genderType[i] === undefined) {
+                    const gender_type = this.props.categories.customer_segments_types.gender_types.find((obj) => obj.id === value[i]);
+                    console.log(gender_type);
+                    const new_obj = {
+                        id: gender_type.id,
+                        title: gender_type.title,
+                        tag: 0
+                    }
+                    genderTypeArray.push(new_obj)
+                } else {
+                    const gender_type = this.state.genderType.find((obj) => obj.id === value[i]);
+                    if (gender_type.tag === 0) {
+                        const new_obj = {
+                            id: gender_type.id,
+                            title: gender_type.title,
+                            tag: 0
+                        }
+                        genderTypeArray.push(new_obj);
+                    } else if (gender_type.tag === 1) {
+                        const new_obj = {
+                            id: gender_type.id,
+                            title: gender_type.title,
+                            tag: 1
+                        }
+                        genderTypeArray.push(new_obj);
+                    }
+                }
+            }
         }
         console.log(genderTypeArray);
         this.setState({
@@ -110,19 +178,138 @@ class AddConsumerSegmentModal extends Component {
     }
 
     onEducationTypeChange(value) {
+        const educationTypeArray = [];
+        if (this.state.educationType === []) {
+            const education_type = this.props.categories.customer_segments_types.education_types.find((obj) => obj.id === value[0]);
+            console.log(education_type)
+            const new_obj = {
+                id: education_type.id,
+                title: education_type.title,
+                tag: 0
+            }
+            educationTypeArray.push(new_obj);
+        } else {
+            for (var i = 0; i < value.length; i++) {
+                if (this.state.educationType[i] === undefined) {
+                    const education_type = this.props.categories.customer_segments_types.education_types.find((obj) => obj.id === value[i]);
+                    const new_obj = {
+                        id: education_type.id,
+                        title: education_type.title,
+                        tag: 0
+                    };
+                    educationTypeArray.push(new_obj);
+                } else {
+                    const education_type = this.state.educationType.find((obj) => obj.id === value[i]);
+                    if (education_type.tag === 0) {
+                        const new_obj = {
+                            id: education_type.id,
+                            title: education_type.title,
+                            tag: 0
+                        }
+                        educationTypeArray.push(new_obj);
+                    } else if (education_type.tag === 1) {
+                        const new_obj = {
+                            id: education_type.id,
+                            title: education_type.title,
+                            tag: 1
+                        }
+                        educationTypeArray.push(new_obj);
+                    }
+                }
+            };
+        }
         this.setState({
-            educationType: value
+            educationType: educationTypeArray
         });
     }
 
     onIncomeTypeChange(value) {
+        const incomeTypeArray = [];
+        if (this.state.incomeType === []) {
+            const income_type = this.props.categories.customer_segments_types.income_types.find((obj) => obj.id === value[0]);
+            console.log(income_type)
+            const new_obj = {
+                id: income_type.id,
+                title: income_type.title,
+                tag: 0
+            }
+            incomeTypeArray.push(new_obj);
+        } else {
+            for (var i = 0; i < value.length; i++) {
+                if (this.state.incomeType[i] === undefined) {
+                    const income_type = this.props.categories.customer_segments_types.income_types.find((obj) => obj.id === value[i]);
+                    const new_obj = {
+                        id: income_type.id,
+                        title: income_type.title,
+                        tag: 0
+                    };
+                    incomeTypeArray.push(new_obj);
+                } else {
+                    const income_type = this.state.incomeType.find((obj) => obj.id === value[i]);
+                    if (income_type.tag === 0) {
+                        const new_obj = {
+                            id: income_type.id,
+                            title: income_type.title,
+                            tag: 0
+                        }
+                        incomeTypeArray.push(new_obj);
+                    } else if (income_type.tag === 1) {
+                        const new_obj = {
+                            id: income_type.id,
+                            title: income_type.title,
+                            tag: 1
+                        }
+                        incomeTypeArray.push(new_obj);
+                    }
+                }
+            };
+        }
         this.setState({
-            incomeType: value
+            incomeType: incomeTypeArray
         });
     }
     onLocationTypeChange(value) {
+        const locationTypeArray = [];
+        if (this.state.locationType === []) {
+            const location_type = this.props.categories.customer_segments_types.geographic_locations.find((obj) => obj.id === value[0]);
+            const new_obj = {
+                id: location_type.id,
+                title: location_type.title,
+                tag: 0
+            }
+            locationTypeArray.push(new_obj);
+        } else {
+            for (var i = 0; i < value.length; i++) {
+                if (this.state.locationType[i] === undefined) {
+                    const location_type = this.props.categories.customer_segments_types.geographic_locations.find((obj) => obj.id === value[i]);
+                    const new_obj = {
+                        id: location_type.id,
+                        title: location_type.title,
+                        tag: 0
+                    };
+                    locationTypeArray.push(new_obj);
+                } else {
+                    const location_type = this.state.locationType.find((obj) => obj.id === value[i]);
+                    if (location_type.tag === 0) {
+                        const new_obj = {
+                            id: location_type.id,
+                            title: location_type.title,
+                            tag: 0
+                        }
+                        locationTypeArray.push(new_obj);
+                    } else if (location_type.tag === 1) {
+                        const new_obj = {
+                            id: location_type.id,
+                            title: location_type.title,
+                            tag: 1
+                        }
+                        locationTypeArray.push(new_obj);
+                    }
+                }
+            };
+        }
         this.setState({
-            locationType: value
+            locationType: locationTypeArray
         })
     }
     handlePopoverVisibilityChange = (visible) => {
@@ -135,39 +322,122 @@ class AddConsumerSegmentModal extends Component {
             popoverVisibility: false
         })
     }
+    compareArray = (arrayAI, arrayState) => {
+        const newArray = []
+        for (var i in arrayAI) {
+            if (arrayState.indexOf(arrayAI[i]) === -1) {
+                newArray.push(arrayAI[i]);
+            }
+        }
+        return newArray;
+    }
     onAIButtonClick = () => {
-        console.log('AI button work');
-        console.log(this.props.businessPlan.id)
+        const obj = this.props.customerSegments.aiPredict.custSegs.consumer;
+        //console.log('id object ', this.props.item.id);
+        const aiObject = obj.find((el) => el.id === null);
+        console.log(aiObject);
+        const gender = this.state.genderType === null ? [] : this.state.genderType.map(e => e.id);
+        const genderAI = aiObject.gender;
+        console.log(genderAI);
+        const genderPredict = this.compareArray(genderAI, gender);
+        console.log(genderPredict);
+        const newGenderArray = this.state.genderType === null ? [] : [...this.state.genderType];
+        for (var i in genderPredict) {
+            const title = this.props.categories.customer_segments_types.gender_types.find((obj) => obj.id === genderPredict[i]).title;
+            const new_gender_type_obj = {
+                id: genderPredict[i],
+                title: title,
+                tag: 1
+            }
+            console.log(new_gender_type_obj)
+            newGenderArray.push(new_gender_type_obj);
+        }
+        // const education = this.state.educationType.map(e => e.id);
+        // const educationAI = aiObject.education;
+        // const educationPredict = this.compareArray(educationAI, education);
+        // const newEducationArray = [...this.state.educationType];
+        // for (var i in educationPredict) {
+        //     const title = this.props.categories.customer_segments_types.education_types.find((obj) => obj.id === educationPredict[i]).title;
+        //     const new_education_type_obj = {
+        //         id: educationPredict[i],
+        //         title: title,
+        //         tag: 1
+        //     };
+        //     newEducationArray.push(new_education_type_obj);
+        // }
+        // const income = this.state.incomeType.map(e => e.id);
+        // const incomeAI = aiObject.income;
+        // const incomePredict = this.compareArray(incomeAI, income);
+        // const newIncomeArray = [...this.state.incomeType];
+        // console.log('income predict: ', incomePredict)
+        // for (var i in incomePredict) {
+        //     const title = this.props.categories.customer_segments_types.income_types.find((obj) => obj.id === incomePredict[i]).title;
+        //     const new_income_type_obj = {
+        //         id: incomePredict[i],
+        //         title: title,
+        //         tag: 1
+        //     }
+        //     newIncomeArray.push(new_income_type_obj);
+        // }
+        // const location = this.state.locationType.map(e => e.id);
+        // const locationAI = aiObject.geographic_location;
+        // console.log(locationAI)
+        // const locationPredict = this.compareArray(locationAI, location);
+        // const newLocationArray = [...this.state.locationType];
+        // console.log('location predict: ', locationPredict)
+        // for (var i in locationPredict) {
+        //     const title = this.props.categories.customer_segments_types.geographic_location.find((obj) => obj.id === locationPredict[i]).title;
+        //     const new_location_obj = {
+        //         id: locationPredict[i],
+        //         title: title,
+        //         tag: 1
+        //     }
+        //     newLocationArray.push(new_location_obj);
+        // }
+        console.log(newGenderArray);
+        this.setState({
+            genderType: newGenderArray,
+            // educationType: newEducationArray,
+            // incomeType: newIncomeArray,
+            // locationType: newLocationArray
+        })
+        this.hidePopover();
     }
 
 
     render() {
+        console.log(this.state.genderType);
+        const age = this.state.ageGroup !== null ? this.state.ageGroup.map(e => e.id) : [];
+        const gender = this.state.genderType !== null ? this.state.genderType.map(e => e.id) : [];
+        const education = this.state.educationType !== null ? this.state.educationType.map(e => e.id) : [];
+        const income = this.state.incomeType.map(e => e.id);
+        const location = this.state.locationType.map(e => e.id);
 
         const ageGroupOptions = this.props.categories.customer_segments_types.age_groups.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+            ({ label: obj.title, value: obj.id })
         );
 
         const genderOptions = this.props.categories.customer_segments_types.gender_types.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+            ({ label: obj.title, value: obj.id })
         );
 
         const educationOptions = this.props.categories.customer_segments_types.education_types.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+            ({ label: obj.title, value: obj.id })
         );
 
         const incomeOptions = this.props.categories.customer_segments_types.income_types.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+            ({ label: obj.title, value: obj.id })
         );
 
         const locationOptions = this.props.categories.customer_segments_types.geographic_locations.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+            ({ label: obj.title, value: obj.id })
         );
         const popoverContent = (
             <>
                 <Row>
                     <Text>
                         Test
-                    {/* Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.aiPredictTextEdit.map((e, index) => 
+                        {/* Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.aiPredictTextEdit.map((e, index) => 
                     <Text key={index} > for "{e.type_title}" {e.predict.map((p,index) => <Text key={index}>{p.title}</Text>)}</Text>)}. */}
                     </Text>
                     {/* Based on your input KABADA AI recommends that you consider adding for "Gender" male, for "Education" Primary. */}
@@ -190,6 +460,167 @@ class AddConsumerSegmentModal extends Component {
                 </Row>
             </>
         )
+        const ageTag = (props) => {
+            const { label, value, onClose } = props;
+            const tagColor = this.state.ageGroup !== null ? this.state.ageGroup.find(t => t.id === value) : null;
+            if (tagColor === null) {
+
+            } else {
+                if (tagColor.tag === 1) {
+                    return (
+                        <Tag
+                            closable
+                            onClose={onClose}
+                            style={{ fontSize: '14px', lineHeight: '22px', background: '#BAE7FF' }}
+                        >
+                            {label}
+                        </Tag>
+                    );
+                } else if (tagColor.tag === 0) {
+                    return (
+                        <Tag
+                            closable
+                            onClose={onClose}
+                            style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                        >
+                            {label}
+                        </Tag>
+                    );
+                }
+            }
+        }
+        const genderTag = (props) => {
+            const { label, value, onClose } = props;
+            const tagColor = this.state.genderType !== null ? this.state.genderType.find(t => t.id === value) : null;
+            if (tagColor.tag === 1) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#BAE7FF' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor.tag === 0) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor === null) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            }
+            
+        }
+
+        const educationTag = (props) => {
+            const { label, value, onClose } = props;
+            const tagColor = this.state.educationType !== null ? this.state.educationType.find(t => t.id === value) : null;
+            if (tagColor.tag === 1) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#BAE7FF' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor.tag === 0) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor === null) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            }
+        }
+
+        const incomeTag = (props) => {
+            const { label, value, onClose } = props;
+            const tagColor = this.state.incomeType !== null ? this.state.incomeType.find(t => t.id === value) : null;
+            if (tagColor === null) {
+
+            } else {
+                if (tagColor.tag === 1) {
+                    return (
+                        <Tag
+                            closable
+                            onClose={onClose}
+                            style={{ fontSize: '14px', lineHeight: '22px', background: '#BAE7FF' }}
+                        >
+                            {label}
+                        </Tag>
+                    );
+                } else if (tagColor.tag === 0) {
+                    return (
+                        <Tag
+                            closable
+                            onClose={onClose}
+                            style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                        >
+                            {label}
+                        </Tag>
+                    );
+                }
+            }
+        }
+
+        const locationTag = (props) => {
+            const { label, value, onClose } = props;
+            const tagColor = this.state.locationType !== null ? this.state.locationType.find(t => t.id === value) : null;
+            if (tagColor === null) {
+
+            } else {
+                if (tagColor.tag === 1) {
+                    return (
+                        <Tag
+                            closable
+                            onClose={onClose}
+                            style={{ fontSize: '14px', lineHeight: '22px', background: '#BAE7FF' }}
+                        >
+                            {label}
+                        </Tag>
+                    );
+                } else if (tagColor.tag === 0) {
+                    return (
+                        <Tag
+                            closable
+                            onClose={onClose}
+                            style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                        >
+                            {label}
+                        </Tag>
+                    );
+                }
+            }
+        }
 
         return (
             <>
@@ -200,7 +631,8 @@ class AddConsumerSegmentModal extends Component {
                         <Popover
                             placement='topLeft'
                             title='AI Hint'
-                            content={this.props.customerSegments.errorMessage === false ? popoverContent : popoverContentError}
+                            content={popoverContent}
+                            // content={this.props.customerSegments.errorMessage === false ? popoverContent : popoverContentError}
                             overlayStyle={{ width: "328px" }}
                             trigger="click"
                             visible={this.state.popoverVisibility}
@@ -214,7 +646,7 @@ class AddConsumerSegmentModal extends Component {
                                 </svg>
                                 }
                                 type="link"
-                                // shape="circle"
+                            // shape="circle"
                             />
                         </Popover>
                     </Space>}
@@ -236,37 +668,102 @@ class AddConsumerSegmentModal extends Component {
                         </Form.Item>
                         <Form.Item key="age" name="age" label="Age group (years)"
                             rules={[{ required: true, message: 'Select age group (years)' }]}>
-                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Select age group (years)" onChange={this.onAgeGroupChange.bind(this)} >
-                                {ageGroupOptions}
-                            </Select>
+                            <Select 
+                                mode="multiple" 
+                                placeholder="Select age group (years)" 
+                                onChange={this.onAgeGroupChange.bind(this)} 
+                                value={age}
+                                tagRender={ageTag}
+                                options={ageGroupOptions}
+                            />
                         </Form.Item>
 
-                        <Form.Item key="gender" name="gender" label="Gender"
-                            rules={[{ required: true, message: 'Select gender' }]}>
-                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Select gender" onChange={this.onGenderTypeChange.bind(this)} >
-                                {genderOptions}
-                            </Select>
-                        </Form.Item>
+                        {
+                            this.state.genderType === null  ?
+                                <Form.Item key="gender" label="Gender"
+                                    rules={[{ required: true, message: 'Select gender' }]}>
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Select gender"
+                                        onChange={this.onGenderTypeChange.bind(this)}
+                                        value={gender}
+                                        tagRender={genderTag}
+                                        options={genderOptions}
+                                    />
+                                </Form.Item>
+                                : gender.length > 0 ?
+                                <Form.Item key="gender" label="Gender"
+                                    rules={[{ required: true, message: 'Select gender' }]}>
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Select gender"
+                                        onChange={this.onGenderTypeChange.bind(this)}
+                                        value={gender}
+                                        tagRender={genderTag}
+                                        options={genderOptions}
+                                    />
+                                </Form.Item>
+                                :
+                                <Form.Item
+                                    key="gender"
+                                    label="Gender"
+                                    validateStatus="error"
+                                    help="Select gender"
+                                    rules={[
+                                        {
+                                            validator: async (_, gender) => {
+                                                if (!gender || gender.length < 1) {
+                                                    return Promise.reject(new Error('Select gender'));
+                                                }
+                                            },
+                                        },
+                                    ]}
+                                >
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Select gender"
+                                        onChange={this.onGenderTypeChange.bind(this)}
+                                        value={gender}
+                                        tagRender={genderTag}
+                                        options={genderOptions}
+                                    />
+                                </Form.Item>
+                        }
 
                         <Form.Item key="education" name="education" label="Education"
                             rules={[{ required: true, message: 'Select education' }]}>
-                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose education" onChange={this.onEducationTypeChange.bind(this)} >
-                                {educationOptions}
-                            </Select>
+                            <Select
+                                mode="multiple"
+                                placeholder="Choose education"
+                                onChange={this.onEducationTypeChange.bind(this)}
+                                value={education}
+                                tagRender={educationTag}
+                                options={educationOptions}
+                            />
                         </Form.Item>
 
                         <Form.Item key="income" name="income" label="Income"
                             rules={[{ required: true, message: 'Select income' }]}>
-                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose income" onChange={this.onIncomeTypeChange.bind(this)} >
-                                {incomeOptions}
-                            </Select>
+                            <Select
+                                mode="multiple"
+                                placeholder="Choose income"
+                                onChange={this.onIncomeTypeChange.bind(this)}
+                                value={income}
+                                tagRender={incomeTag}
+                                options={incomeOptions}
+                            />
                         </Form.Item>
 
                         <Form.Item key="geographicLocation" name="geographicLocation" label="Geographic Location"
                             rules={[{ required: true, message: 'Select geographic location' }]}>
-                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose geographic location" onChange={this.onLocationTypeChange.bind(this)} >
-                                {locationOptions}
-                            </Select>
+                            <Select 
+                                mode="multiple" 
+                                placeholder="Choose geographic location" 
+                                onChange={this.onLocationTypeChange.bind(this)} 
+                                value={location}
+                                tagRender={locationTag}
+                                options={locationOptions}
+                            />
                         </Form.Item>
                     </Form>
                 </Modal>

@@ -19,43 +19,50 @@ const compareArray = (arrayAI, arrayState) => {
 }
 
 const generateAIHelpText = (selectedItem, predictsObj, segmentTypes) => {
+    console.log(selectedItem);
+    console.log(predictsObj);
+    console.log(segmentTypes)
     const aiHintTextObject = [];
-    const predictObj = predictsObj.find(s => s.id === selectedItem.id);   
-    const predictProperties = Object.getOwnPropertyNames(predictsObj.find(s => s.id === selectedItem.id));
-    const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
-    console.log(segmentTypes);
-    console.log(filteredPredictProperties);
-    for (const property of filteredPredictProperties){
-        const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(selectedItem, property).value;
-        const selectedItemPropertyValues = selectedItemPropertyValuesObj.map(s => s.id);
-        const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
-        const segmentType = property === 'education' ? segmentTypes.education_types    
-                        : property === 'gender' ? segmentTypes.gender_types 
-                        : property === 'income' ? segmentTypes.income_types 
+    if (selectedItem === null) {
+        const text = 'test'
+        return text
+    } else {
+        const predictObj = predictsObj.find(s => s.id === selectedItem.id);
+        const predictProperties = Object.getOwnPropertyNames(predictsObj.find(s => s.id === selectedItem.id));
+        const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
+        console.log(segmentTypes);
+        console.log(filteredPredictProperties);
+        for (const property of filteredPredictProperties) {
+            const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(selectedItem, property).value;
+            const selectedItemPropertyValues = selectedItemPropertyValuesObj.map(s => s.id);
+            const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
+            const segmentType = property === 'education' ? segmentTypes.education_types
+                : property === 'gender' ? segmentTypes.gender_types
+                    : property === 'income' ? segmentTypes.income_types
                         : property === 'age' ? segmentTypes.age_groups
-                        : property === 'geographic_location' ? segmentTypes.geographic_locations
-                        : property === 'company_size' ? segmentTypes.company_sizes
-                        : property === 'business_type' ? segmentTypes.business_types
-                        : null
-        console.log(segmentType)
-        const comparePropertiesValues = compareArray(predictObjPropertyValues, selectedItemPropertyValues);
-        console.log(comparePropertiesValues);
-        if (comparePropertiesValues.length > 0) {
-            const typePredictArray = []
-            const types = segmentType;
-            for (var i = 0; i < comparePropertiesValues.length; i++){
-                 const segment_type_title = types.find(t => t.id === comparePropertiesValues[i]);
-                 typePredictArray.push(segment_type_title);
+                            : property === 'geographic_location' ? segmentTypes.geographic_locations
+                                : property === 'company_size' ? segmentTypes.company_sizes
+                                    : property === 'business_type' ? segmentTypes.business_types
+                                        : null
+            console.log(segmentType)
+            const comparePropertiesValues = compareArray(predictObjPropertyValues, selectedItemPropertyValues);
+            console.log(comparePropertiesValues);
+            if (comparePropertiesValues.length > 0) {
+                const typePredictArray = []
+                const types = segmentType;
+                for (var i = 0; i < comparePropertiesValues.length; i++) {
+                    const segment_type_title = types.find(t => t.id === comparePropertiesValues[i]);
+                    typePredictArray.push(segment_type_title);
+                }
+                const new_obj = {
+                    type_title: property,
+                    predict: typePredictArray
+                }
+                aiHintTextObject.push(new_obj);
             }
-            const new_obj = {
-                type_title: property,
-                predict: typePredictArray
-            }
-            aiHintTextObject.push(new_obj);
         }
+        return aiHintTextObject
     }
-    console.log(aiHintTextObject)
-    return aiHintTextObject
 }
 
 export const customerSegmentReducer = (
@@ -117,15 +124,21 @@ export const customerSegmentReducer = (
             return { ...state, "is_customer_segments_completed": action.payload };
         case "GET_AI_PREDICT_SUCCESS":
             console.log(action.payload);
-            const text = action.payload.segmentType === 'consumer' ? generateAIHelpText(state.consumers.find(c => c.id === action.payload.itemID), action.payload.data.plan.custSegs.consumer, action.payload.segments.customer_segments_types) 
-                : action.payload.segmentType === 'business' ? generateAIHelpText(state.business.find(c => c.id === action.payload.itemID), action.payload.data.plan.custSegs.business, action.payload.segments.customer_segments_types)
-                : action.payload.segmentType === 'public_bodies_ngo' ? generateAIHelpText(state.public_bodies_ngo.find(c => c.id === action.payload.itemID), action.payload.data.plan.custSegs.publicNgo, action.payload.segments.customer_segments_types)
-                : 'No text'
+            console.log(state.consumers);
+            console.log(action.payload.data.plan);
+            console.log(action.payload.data.plan.custSegs.consumer)
+            const selectedConsumerItemID = action.payload.itemID === null ? null : state.consumers.find(c => c.id === action.payload.itemID);
+            const selectedBusinessItemID = action.payload.itemID === null ? null : state.business.find(c => c.id === action.payload.itemID);
+            const selectedNGOItemID = action.payload.itemID === null ? null : state.public_bodies_ngo.find(c => c.id === action.payload.itemID);
+            const text = action.payload.segmentType === 'consumer' ? generateAIHelpText(selectedConsumerItemID, action.payload.data.plan.custSegs.consumer, action.payload.segments.customer_segments_types)
+                : action.payload.segmentType === 'business' ? generateAIHelpText(selectedBusinessItemID, action.payload.data.plan.custSegs.business, action.payload.segments.customer_segments_types)
+                    : action.payload.segmentType === 'public_bodies_ngo' ? generateAIHelpText(selectedNGOItemID, action.payload.data.plan.custSegs.publicNgo, action.payload.segments.customer_segments_types)
+                        : 'No text'
             console.log(text);
             return {
                 ...state,
                 "aiPredict": action.payload.data.plan,
-                "predictText": text
+                //"predictText": text
             }
         case "ERROR_AI_MESSAGE":
             console.log(action.payload);
