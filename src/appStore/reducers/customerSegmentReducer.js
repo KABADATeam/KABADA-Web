@@ -116,70 +116,15 @@ export const customerSegmentReducer = (
         case "SAVE_STATE_SUCCESS":
             return { ...state, "is_customer_segments_completed": action.payload };
         case "GET_AI_PREDICT_SUCCESS":
-            const aiHintText = [];
-            const aiHintObject = [];
-            const consumersObj = state.consumers.find(c => c.id === action.payload.itemID);
-            // console.log(consumersObj);
-            // const consumer = generateAIHelpText(action.payload.data.plan.custSegs, action.payload.segmentType);
-            // console.log(consumer);
+            console.log(action.payload);
             const text = action.payload.segmentType === 'consumer' ? generateAIHelpText(state.consumers.find(c => c.id === action.payload.itemID), action.payload.data.plan.custSegs.consumer, action.payload.segments.customer_segments_types) 
                 : action.payload.segmentType === 'business' ? generateAIHelpText(state.business.find(c => c.id === action.payload.itemID), action.payload.data.plan.custSegs.business, action.payload.segments.customer_segments_types)
+                : action.payload.segmentType === 'public_bodies_ngo' ? generateAIHelpText(state.public_bodies_ngo.find(c => c.id === action.payload.itemID), action.payload.data.plan.custSegs.publicNgo, action.payload.segments.customer_segments_types)
                 : 'No text'
             console.log(text);
-            if (consumersObj !== undefined) {
-                const consumerGender = consumersObj.gender.map(c => c.id);
-                const consumerEducation = consumersObj.education.map(c => c.id);
-                const consumerIncome = consumersObj.income.map(c => c.id);
-                const consumersAIObjects = action.payload.data.plan.custSegs.consumer;
-                const consumerAIObject = consumersAIObjects.find((el) => el.id === consumersObj.id);
-                const genderAIPredict = compareArray(consumerAIObject.gender, consumerGender);
-                if (genderAIPredict.length > 0) {
-                    const genderPredictArray = [];
-                    const gender_types = action.payload.segments.customer_segments_types.gender_types;
-                    for (var i = 0; i < genderAIPredict.length; i++) {
-                        const genderTypesTitle = gender_types.find(g => g.id === genderAIPredict[i]);
-                        genderPredictArray.push(genderTypesTitle);
-                    }
-                    const new_obj = {
-                        type_title: 'Gender',
-                        predict: genderPredictArray
-                    }
-                    aiHintObject.push(new_obj);
-                }
-                const educationAIPredict = compareArray(consumerAIObject.education, consumerEducation);
-                if (educationAIPredict.length > 0) {
-                    const educationPredictArray = [];
-                    const education_types = action.payload.segments.customer_segments_types.education_types;
-                    for (var i = 0; i < educationAIPredict.length; i++) {
-                        const educationTypesTitle = education_types.find(e => e.id === educationAIPredict[i]);
-                        educationPredictArray.push(educationTypesTitle);
-                    }
-                    const new_obj = {
-                        type_title: 'Education',
-                        predict: educationPredictArray
-                    }
-                    aiHintObject.push(new_obj);
-                }
-                const incomeAIPredict = compareArray(consumerAIObject.income, consumerIncome);
-                if (incomeAIPredict.length > 0) {
-                    const incomePredictArray = [];
-                    const income_types = action.payload.segments.customer_segments_types.income_types;
-                    for (var i = 0; i < incomeAIPredict.length; i++) {
-                        const incomeTypesTitle = income_types.find(e => e.id === incomeAIPredict[i]);
-                        incomePredictArray.push(incomeTypesTitle);
-                    }
-                    const new_obj = {
-                        type_title: 'Income',
-                        predict: incomePredictArray
-                    }
-                    aiHintObject.push(new_obj);
-                }
-            }
-
             return {
                 ...state,
                 "aiPredict": action.payload.data.plan,
-                "aiPredictText": aiHintObject,
                 "predictText": text
             }
         case "ERROR_AI_MESSAGE":

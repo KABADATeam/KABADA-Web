@@ -425,7 +425,7 @@ class EditBusinessSegmentModal extends Component {
                         <Popover
                             placement='topLeft'
                             title='AI Hint'
-                            content={this.props.customerSegments.predictText !== [] ? popoverContent : popoverContentError}
+                            content={this.props.customerSegments.errorMessage === false ? popoverContent : popoverContentError}
                             overlayStyle={{ width: "328px" }}
                             trigger="click"
                             visible={this.state.popoverVisibility}

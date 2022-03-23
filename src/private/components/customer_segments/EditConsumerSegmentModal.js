@@ -552,7 +552,6 @@ class EditConsumerSegmentModal extends Component {
                                 </svg>
                                 }
                                 type="link"
-                            // shape="circle"
                             />
                         </Popover>
                     </Space>}
