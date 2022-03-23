@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Form, Space, Select, InputNumber, Input, Tag } from 'antd';
+import { Modal, Button, Form, Space, Select, InputNumber, Input, Tag, Popover, Row, Typography } from 'antd';
 import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { updateBusinessSegment } from "../../../appStore/actions/customerSegmentAction";
 
 const { Option } = Select;
+const { Text } = Typography;
 const inputStyle = {
     borderRadius: '4px',
     borderColor: '#BFBFBF',
@@ -22,6 +23,7 @@ class EditBusinessSegmentModal extends Component {
             //annualRevenue: this.props.item.annual_revenue,
             //budget: this.props.item.budget,
             locationType: this.props.item.geographic_location.map(e => ({ id: e.id, title: e.title, tag: 0 })),
+            popoverVisibility: false,
         }
     }
 
@@ -198,6 +200,59 @@ class EditBusinessSegmentModal extends Component {
         }
         return newArray;
     }
+    onAIButtonClick = () => {
+        const obj = this.props.customerSegments.aiPredict.custSegs.business;
+        console.log('id object ', this.props.item.id);
+        const aiObject = obj.find((el) => el.id === this.props.item.id);
+        const type = this.state.type.map(e => e.id);
+        const typeAI = aiObject.business_type;
+        const typePredict = this.compareArray(typeAI, type);
+        const newTypeArray = [...this.state.type];
+        for (var i in typePredict) {
+            const title = this.props.categories.customer_segments_types.business_types.find((obj) => obj.id === typePredict[i]).title;
+            const new_type_obj = {
+                id: typePredict[i],
+                title: title,
+                tag: 1
+            }
+            newTypeArray.push(new_type_obj);
+        }
+        const companySize = this.state.companySize.map(e => e.id);
+        const companySizeAI = aiObject.company_size;
+        console.log(companySizeAI);
+        const companySizePredict = this.compareArray(companySizeAI, companySize);
+        console.log(companySizePredict);
+        const newCompanySizeArray = [...this.state.companySize];
+        for (var i in companySizePredict) {
+            const title = this.props.categories.customer_segments_types.company_sizes.find((obj) => obj.id === companySizePredict[i]).title;
+            const new_company_size_obj = {
+                id: companySizePredict[i],
+                title: title,
+                tag: 1
+            };
+            newCompanySizeArray.push(new_company_size_obj);
+        }
+        const location = this.state.locationType.map(e => e.id);
+        const locationAI = aiObject.geographic_location;
+        const locationPredict = this.compareArray(locationAI, location);
+        const newLocationArray = [...this.state.locationType];
+        console.log('location predict: ', locationPredict)
+        for (var i in locationPredict) {
+            const title = this.props.categories.customer_segments_types.geographic_location.find((obj) => obj.id === locationPredict[i]).title;
+            const new_location_obj = {
+                id: locationPredict[i],
+                title: title,
+                tag: 1
+            }
+            newLocationArray.push(new_location_obj);
+        }
+        this.setState({
+            type: newTypeArray,
+            companySize: newCompanySizeArray,
+            locationType: newLocationArray
+        })
+        this.hidePopover();
+    }
     /*onBudgetChange(value) {
         this.setState({
             budget: value
@@ -226,6 +281,33 @@ class EditBusinessSegmentModal extends Component {
         const locationOptions = this.props.categories.customer_segments_types.geographic_locations.map((obj) =>
             ({ label: obj.title, value: obj.id })
         );
+        const popoverContent = (
+            <>
+                <Row>
+                    <Text>
+                        Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.predictText.map((e, index) =>
+                            <Text key={index} > for "{e.type_title}": {e.predict.map((p, index) => <Text key={index}>{p.title},</Text>)}</Text>)}.
+                    </Text>
+                    {/* Based on your input KABADA AI recommends that you consider adding for "Gender" male, for "Education" Primary. */}
+                </Row>
+                <Row style={{ marginTop: '12px' }}>
+                    <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
+                    <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
+                </Row>
+            </>
+        )
+        const popoverContentError = (
+            <>
+                <Row>
+                    <Text>
+                        AI did not have predict
+                    </Text>
+                </Row>
+                <Row style={{ marginTop: '12px' }}>
+                    <Button onClick={this.hidePopover}>Cancel</Button>
+                </Row>
+            </>
+        )
         const typeTag = (props) => {
             const { label, value, onClose } = props;
             const tagColor = this.state.type.find(t => t.id === value);
@@ -339,7 +421,28 @@ class EditBusinessSegmentModal extends Component {
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
-                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />Business Segments</Space>}
+                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />Business 
+                        <Popover
+                            placement='topLeft'
+                            title='AI Hint'
+                            content={this.props.customerSegments.predictText !== [] ? popoverContent : popoverContentError}
+                            overlayStyle={{ width: "328px" }}
+                            trigger="click"
+                            visible={this.state.popoverVisibility}
+                            onVisibleChange={this.handlePopoverVisibilityChange}
+                        >
+                            <Button
+                                icon=
+                                {<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" >
+                                    <rect width="28" height="28" rx="14" fill="#1990FE" />
+                                    <path d="M22.7077 11.9719C22.1277 11.9719 21.9249 12.3878 21.876 12.4719H20.7385V9.5C20.7385 8.11937 19.6369 7 18.2769 7H9.41538C8.05538 7 6.95385 8.11937 6.95385 9.5V12.4719H5.81631C5.76738 12.4156 5.56462 11.9719 4.98462 11.9719C4.45969 11.9719 4 12.4006 4 12.9719C4 13.5438 4.46062 13.9437 4.98462 13.9437C5.56462 13.9437 5.76738 13.5281 5.81631 13.4719H6.95385V17.4438C6.95385 18.8244 8.056 19.9438 9.41538 19.9438L10.8923 19.9719V22.5966C10.8923 22.7281 10.9754 23 11.2615 23C11.3391 23 11.4153 22.9747 11.4799 22.9272L15.3231 19.9719L18.2769 19.9721C19.6363 19.9721 20.7385 18.8527 20.7385 17.4721V13.4719H21.8763C21.9262 13.5844 22.1292 13.9719 22.7077 13.9719C23.2326 13.9719 23.6923 13.5431 23.6923 13C23.6923 12.4281 23.2338 11.9719 22.7077 11.9719ZM18.7692 15C18.7692 15.5522 18.3283 16 17.7846 16H9.90769C9.36308 16 8.92308 15.5531 8.92308 15V11C8.92308 10.4478 9.364 10 9.90769 10H17.7846C18.3283 10 18.7692 10.4478 18.7692 11V15ZM10.8923 11.9719C10.3486 11.9719 9.90769 12.4197 9.90769 12.9719C9.90769 13.5241 10.3486 13.9719 10.8923 13.9719C11.436 13.9719 11.8769 13.5241 11.8769 12.9719C11.8769 12.4469 11.4369 11.9719 10.8923 11.9719ZM16.8 11.9719C16.2563 11.9719 15.8154 12.4197 15.8154 12.9719C15.8154 13.5241 16.2563 13.9719 16.8 13.9719C17.3437 13.9719 17.7846 13.5241 17.7846 12.9719C17.7846 12.4469 17.3446 11.9719 16.8 11.9719Z" fill="white" />
+                                </svg>
+                                }
+                                type="link"
+                            // shape="circle"
+                            />
+                        </Popover>
+                    </Space>}
                     visible={this.props.visibility}
                     onCancel={this.onCancel}
                     footer={
@@ -489,6 +592,7 @@ const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
         categories: state.customerSegmentProperties,
+        customerSegments: state.customerSegments
     };
 }
 

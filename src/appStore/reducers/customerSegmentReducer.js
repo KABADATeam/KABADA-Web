@@ -24,6 +24,7 @@ const generateAIHelpText = (selectedItem, predictsObj, segmentTypes) => {
     const predictProperties = Object.getOwnPropertyNames(predictsObj.find(s => s.id === selectedItem.id));
     const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
     console.log(segmentTypes);
+    console.log(filteredPredictProperties);
     for (const property of filteredPredictProperties){
         const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(selectedItem, property).value;
         const selectedItemPropertyValues = selectedItemPropertyValuesObj.map(s => s.id);
@@ -33,7 +34,7 @@ const generateAIHelpText = (selectedItem, predictsObj, segmentTypes) => {
                         : property === 'income' ? segmentTypes.income_types 
                         : property === 'age' ? segmentTypes.age_groups
                         : property === 'geographic_location' ? segmentTypes.geographic_locations
-                        : property === 'company_size' ? segmentTypes.company_size_titles
+                        : property === 'company_size' ? segmentTypes.company_sizes
                         : property === 'business_type' ? segmentTypes.business_types
                         : null
         console.log(segmentType)
@@ -63,11 +64,9 @@ export const customerSegmentReducer = (
         consumers: [],
         business: [],
         public_bodies_ngo: [],
-        aiPredictEdit: null,
-        aiPredictTextEdit: [],
-        errorMessageEdit: false,
         aiPredict: null,
         aiPredictText: [],
+        predixtText: [],
         errorMessage: false
     }, action) => {
     switch (action.type) {
@@ -180,7 +179,8 @@ export const customerSegmentReducer = (
             return {
                 ...state,
                 "aiPredict": action.payload.data.plan,
-                "aiPredictText": aiHintObject
+                "aiPredictText": aiHintObject,
+                "predictText": text
             }
         case "ERROR_AI_MESSAGE":
             console.log(action.payload);
@@ -189,7 +189,8 @@ export const customerSegmentReducer = (
             return {
                 ...state,
                 "aiPredict": null,
-                "aiPredictText": []
+                "aiPredictText": [],
+                "predictText": []
             }
         default:
             return state;
