@@ -85,6 +85,11 @@ class CustomerSegments extends React.Component {
         this.setState({
             businessSegment: true
         });
+        const postObj = {
+            "location": 'custSegs::business',
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getAIValues(postObj, null, 'business');
     }
 
     onAddPublicBodiesSegment = () => {

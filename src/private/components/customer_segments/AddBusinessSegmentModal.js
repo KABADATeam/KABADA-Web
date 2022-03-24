@@ -1,21 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Form, Space, Select, InputNumber, Input} from 'antd';
+import { Modal, Button, Form, Space, Select, InputNumber, Input, Row, Tag, Popover, Typography } from 'antd';
 import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { saveBusinessSegment } from "../../../appStore/actions/customerSegmentAction";
 
 const { Option } = Select;
+const { Text } = Typography;
 
 const inputStyle = {
-    height: '40px', 
+    height: '40px',
     borderRadius: '4px',
-    borderColor: '#BFBFBF',
 }
 
 class AddBusinessSegmentModal extends Component {
     state = {
-        segmentName: null,
+        segmentName: '',
+        segmentNameError: false,
         type: null,
         companySize: null,
         locationType: null,
@@ -32,100 +33,442 @@ class AddBusinessSegmentModal extends Component {
     }
 
     onOK = () => {
+        const { type, companySize, locationType, segmentName } = this.state;
+        if (type !== null && companySize !== null && locationType !== null & type.length !== 0 && companySize.length !== 0 && locationType.length !== 0 && segmentName.length !== 0) {
+            const businessType = type.map(e => e.id);
+            const size = companySize.map(e => e.id);
+            const location = locationType.map(e => e.id);
+            const postObj = {
+                "id": null,
+                "segment_name": this.state.segmentName,
+                "business_plan_id": this.props.businessPlan.id,
+                "business_type": businessType,
+                "company_size": size,
+                "geographic_location": location
+            };
 
-        const postObj = {
-            "id": null,
-            "segment_name": this.state.segmentName,
-            "business_plan_id": this.props.businessPlan.id,
-            "business_type": this.state.type,
-            "company_size": this.state.companySize,
-            //"annual_revenue": this.state.annualRevenue,
-            //"budget": this.state.budget,
-            //"income": [],
-            "geographic_location": this.state.locationType
-        };
+            const selected_types = this.props.categories.customer_segments_types.business_types.filter((item) => businessType.some((field) => item.id === field));
+            const selected_company_sizes = this.props.categories.customer_segments_types.company_sizes.filter((item) => size.some((field) => item.id === field));
+            const selected_locations = this.props.categories.customer_segments_types.geographic_locations.filter((item) => location.some((field) => item.id === field));
 
-        const selected_types = this.props.categories.customer_segments_types.business_types.filter((item) => this.state.type.some((field) => item.id === field));
-        const selected_company_sizes = this.props.categories.customer_segments_types.company_sizes.filter((item) => this.state.companySize.some((field) => item.id === field));
-        const selected_locations = this.props.categories.customer_segments_types.geographic_locations.filter((item) => this.state.locationType.some((field) => item.id === field));
-
-        const reducerObj = {
-            "business_type": selected_types,
-            "business_type_titles": selected_types.map(e => e.title).join(", "),
-            "company_size": selected_company_sizes,
-            "company_size_titles": selected_company_sizes.map(e => e.title).join(", "),
-            //"annual_revenue": this.state.annualRevenue,
-            //"budget": this.state.budget,
-            //"income": [],
-            "geographic_location": selected_locations,
-            "location_titles": selected_locations.map(e => e.title).join(", "),
-            "segment_name": this.state.segmentName
-        };
-
-        console.log("Post obj:"+JSON.stringify(postObj))
-        console.log("Reducer obj:"+JSON.stringify(reducerObj))
-
-        this.props.saveBusinessSegment(postObj, reducerObj);
-
-        this.props.onClose();
+            const reducerObj = {
+                "business_type": selected_types,
+                "business_type_titles": selected_types.map(e => e.title).join(", "),
+                "company_size": selected_company_sizes,
+                "company_size_titles": selected_company_sizes.map(e => e.title).join(", "),
+                "geographic_location": selected_locations,
+                "location_titles": selected_locations.map(e => e.title).join(", "),
+                "segment_name": this.state.segmentName
+            };
+            this.props.saveBusinessSegment(postObj, reducerObj);
+            this.setState({
+                segmentNameError: false
+            })
+            this.props.onClose();
+        }
+        console.log('Nope');
+        this.setState({
+            segmentNameError: true,
+            type: type === null ? [] : type,
+            companySize: companySize === null ? [] : companySize,
+            locationType: locationType === null ? [] : locationType
+        })
     }
 
     onNameChange(value) {
         this.setState({
-            segmentName: value
+            segmentName: value,
+            segmentNameError: value.length !== 0 ? false : true
         })
     }
 
     onTypeChange(value) {
+        const typeArray = [];
+        if (this.state.type === null) {
+            const type = this.props.categories.customer_segments_types.business_types.find((obj) => obj.id === value[0]);
+            const new_obj = {
+                id: type.id,
+                title: type.title,
+                tag: 0
+            }
+            typeArray.push(new_obj);
+        } else {
+            for (var i = 0; i < value.length; i++) {
+                if (this.state.type[i] === undefined) {
+                    const type = this.props.categories.customer_segments_types.business_types.find((obj) => obj.id === value[i]);
+                    const new_obj = {
+                        id: type.id,
+                        title: type.title,
+                        tag: 0
+                    }
+                    typeArray.push(new_obj)
+                } else {
+                    const type = this.state.type.find((obj) => obj.id === value[i]);
+                    if (type.tag === 0) {
+                        const new_obj = {
+                            id: type.id,
+                            title: type.title,
+                            tag: 0
+                        }
+                        typeArray.push(new_obj);
+                    } else if (type.tag === 1) {
+                        const new_obj = {
+                            id: type.id,
+                            title: type.title,
+                            tag: 1
+                        }
+                        typeArray.push(new_obj);
+                    }
+                }
+            }
+        }
         this.setState({
-            type: value
+            type: typeArray
         });
     }
 
     onCompanySizeChange(value) {
+        const companySizeArray = [];
+        if (this.state.companySize === null) {
+            const companySize = this.props.categories.customer_segments_types.company_sizes.find((obj) => obj.id === value[0]);
+            const new_obj = {
+                id: companySize.id,
+                title: companySize.title,
+                tag: 0
+            }
+            companySizeArray.push(new_obj);
+        } else {
+            for (var i = 0; i < value.length; i++) {
+                if (this.state.companySize[i] === undefined) {
+                    const companySize = this.props.categories.customer_segments_types.company_sizes.find((obj) => obj.id === value[i]);
+                    const new_obj = {
+                        id: companySize.id,
+                        title: companySize.title,
+                        tag: 0
+                    }
+                    companySizeArray.push(new_obj)
+                } else {
+                    const companySize = this.state.companySize.find((obj) => obj.id === value[i]);
+                    if (companySize.tag === 0) {
+                        const new_obj = {
+                            id: companySize.id,
+                            title: companySize.title,
+                            tag: 0
+                        }
+                        companySizeArray.push(new_obj);
+                    } else if (companySize.tag === 1) {
+                        const new_obj = {
+                            id: companySize.id,
+                            title: companySize.title,
+                            tag: 1
+                        }
+                        companySizeArray.push(new_obj);
+                    }
+                }
+            }
+        }
+        console.log(companySizeArray)
         this.setState({
-            companySize: value
+            companySize: companySizeArray
         });
     }
 
     onLocationTypeChange(value) {
+        const locationTypeArray = [];
+        if (this.state.locationType === null) {
+            const location_type = this.props.categories.customer_segments_types.geographic_locations.find((obj) => obj.id === value[0]);
+            const new_obj = {
+                id: location_type.id,
+                title: location_type.title,
+                tag: 0
+            }
+            locationTypeArray.push(new_obj);
+        } else {
+            for (var i = 0; i < value.length; i++) {
+                if (this.state.locationType[i] === undefined) {
+                    const location_type = this.props.categories.customer_segments_types.geographic_locations.find((obj) => obj.id === value[i]);
+                    const new_obj = {
+                        id: location_type.id,
+                        title: location_type.title,
+                        tag: 0
+                    };
+                    locationTypeArray.push(new_obj);
+                } else {
+                    const location_type = this.state.locationType.find((obj) => obj.id === value[i]);
+                    if (location_type.tag === 0) {
+                        const new_obj = {
+                            id: location_type.id,
+                            title: location_type.title,
+                            tag: 0
+                        }
+                        locationTypeArray.push(new_obj);
+                    } else if (location_type.tag === 1) {
+                        const new_obj = {
+                            id: location_type.id,
+                            title: location_type.title,
+                            tag: 1
+                        }
+                        locationTypeArray.push(new_obj);
+                    }
+                }
+            };
+        }
         this.setState({
-            locationType: value
+            locationType: locationTypeArray
         })
     }
-    /*
-    onBudgetChange(value) {
+    handlePopoverVisibilityChange = (visible) => {
         this.setState({
-            budget: value
+            popoverVisibility: visible
         })
     }
-
-    onAnnualRevenueChange(value) {
+    hidePopover = () => {
         this.setState({
-            annualRevenue: value
+            popoverVisibility: false
         })
-    }*/
-
+    }
+    compareArray = (arrayAI, arrayState) => {
+        const newArray = []
+        for (var i in arrayAI) {
+            if (arrayState.indexOf(arrayAI[i]) === -1) {
+                newArray.push(arrayAI[i]);
+            }
+        }
+        return newArray;
+    }
+    onAIButtonClick = () => {
+        const obj = this.props.customerSegments.aiPredict.custSegs.business;
+        const aiObject = obj.find((el) => el.id === null);
+        const type = this.state.type === null ? [] : this.state.type.map(e => e.id);
+        const typeAI = aiObject.business_type;
+        const typePredict = this.compareArray(typeAI, type);
+        const newTypeArray = this.state.type === null ? [] : [...this.state.type];
+        for (var i in typePredict) {
+            const title = this.props.categories.customer_segments_types.business_types.find((obj) => obj.id === typePredict[i]).title;
+            const new_type_obj = {
+                id: typePredict[i],
+                title: title,
+                tag: 1
+            }
+            newTypeArray.push(new_type_obj);
+        }
+        const companySize = this.state.companySize === null ? [] : this.state.companySize.map(e => e.id);
+        const companySizeAI = aiObject.company_size;
+        const companySizePredict = this.compareArray(companySizeAI, companySize);
+        const newCompanySizeArray = this.state.companySize === null ? [] : [...this.state.companySize];
+        for (var i in companySizePredict) {
+            const title = this.props.categories.customer_segments_types.company_sizes.find((obj) => obj.id === companySizePredict[i]).title;
+            const new_company_size_obj = {
+                id: companySizePredict[i],
+                title: title,
+                tag: 1
+            };
+            newCompanySizeArray.push(new_company_size_obj);
+        }
+        const location = this.state.locationType === null ? [] : this.state.locationType.map(e => e.id);
+        const locationAI = aiObject.geographic_location;
+        const locationPredict = this.compareArray(locationAI, location);
+        const newLocationArray = this.state.locationType === null ? [] : [...this.state.locationType];
+        for (var i in locationPredict) {
+            const title = this.props.categories.customer_segments_types.geographic_locations.find((obj) => obj.id === locationPredict[i]).title;
+            const new_location_obj = {
+                id: locationPredict[i],
+                title: title,
+                tag: 1
+            }
+            newLocationArray.push(new_location_obj);
+        }
+        console.log(newTypeArray);
+        console.log(newCompanySizeArray)
+        console.log(newLocationArray);
+        this.setState({
+            type: newTypeArray.length === 0 ? null : newTypeArray,
+            companySize: newCompanySizeArray.length === 0 ? null : newCompanySizeArray,
+            locationType: newLocationArray.length === 0 ? null : newLocationArray
+        })
+        this.hidePopover();
+    }
     render() {
-
+        const type = this.state.type !== null ? this.state.type.map(e => e.id) : [];
+        const size = this.state.companySize !== null ? this.state.companySize.map(e => e.id) : [];
+        const location = this.state.locationType !== null ? this.state.locationType.map(e => e.id) : [];
+        console.log(type);
+        console.log(size);
+        console.log(location);
         const typeOptions = this.props.categories.customer_segments_types.business_types.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+            ({ label: obj.title, value: obj.id })
         );
 
         const companySizeOptions = this.props.categories.customer_segments_types.company_sizes.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+            ({ label: obj.title, value: obj.id })
         );
 
         const locationOptions = this.props.categories.customer_segments_types.geographic_locations.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+            ({ label: obj.title, value: obj.id })
         );
+        const popoverContent = (
+            <>
+                <Row>
+                    <Text>
+                        text
+                        {/* Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.predictText.map((e, index) =>
+                            <Text key={index} > for "{e.type_title}": {e.predict.map((p, index) => <Text key={index}>{p.title},</Text>)}</Text>)}. */}
+                    </Text>
+                    {/* Based on your input KABADA AI recommends that you consider adding for "Gender" male, for "Education" Primary. */}
+                </Row>
+                <Row style={{ marginTop: '12px' }}>
+                    <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
+                    <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
+                </Row>
+            </>
+        )
+        const popoverContentError = (
+            <>
+                <Row>
+                    <Text>
+                        AI did not have predict
+                    </Text>
+                </Row>
+                <Row style={{ marginTop: '12px' }}>
+                    <Button onClick={this.hidePopover}>Cancel</Button>
+                </Row>
+            </>
+        )
+        const typeTag = (props) => {
+            const { label, value, onClose } = props;
+            const tagColor = this.state.type !== null ? this.state.type.find(t => t.id === value) : null;
+            if (tagColor.tag === 1) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#BAE7FF' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor.tag === 0) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor === undefined) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            }
+
+        }
+        const companySizeTag = (props) => {
+            const { label, value, onClose } = props;
+            const tagColor = this.state.companySize !== null ? this.state.companySize.find(t => t.id === value) : null;
+            if (tagColor.tag === 1) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#BAE7FF' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor.tag === 0) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor === undefined) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            }
+
+        }
+        const locationTag = (props) => {
+            const { label, value, onClose } = props;
+            const tagColor = this.state.locationType !== null ? this.state.locationType.find(t => t.id === value) : null;
+            if (tagColor.tag === 1) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#BAE7FF' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor.tag === 0) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor === undefined) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            }
+
+        }
 
         return (
             <>
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
-                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />Business Segments</Space>}
+                    title={<Space><ArrowLeftOutlined onClick={this.onBack} />Business
+                        <Popover
+                            placement='topLeft'
+                            title='AI Hint'
+                            content={this.props.customerSegments.errorMessage === false ? popoverContent : popoverContentError}
+                            overlayStyle={{ width: "328px" }}
+                            trigger="click"
+                            visible={this.state.popoverVisibility}
+                            onVisibleChange={this.handlePopoverVisibilityChange}
+                        >
+                            <Button
+                                icon=
+                                {<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" >
+                                    <rect width="28" height="28" rx="14" fill="#1990FE" />
+                                    <path d="M22.7077 11.9719C22.1277 11.9719 21.9249 12.3878 21.876 12.4719H20.7385V9.5C20.7385 8.11937 19.6369 7 18.2769 7H9.41538C8.05538 7 6.95385 8.11937 6.95385 9.5V12.4719H5.81631C5.76738 12.4156 5.56462 11.9719 4.98462 11.9719C4.45969 11.9719 4 12.4006 4 12.9719C4 13.5438 4.46062 13.9437 4.98462 13.9437C5.56462 13.9437 5.76738 13.5281 5.81631 13.4719H6.95385V17.4438C6.95385 18.8244 8.056 19.9438 9.41538 19.9438L10.8923 19.9719V22.5966C10.8923 22.7281 10.9754 23 11.2615 23C11.3391 23 11.4153 22.9747 11.4799 22.9272L15.3231 19.9719L18.2769 19.9721C19.6363 19.9721 20.7385 18.8527 20.7385 17.4721V13.4719H21.8763C21.9262 13.5844 22.1292 13.9719 22.7077 13.9719C23.2326 13.9719 23.6923 13.5431 23.6923 13C23.6923 12.4281 23.2338 11.9719 22.7077 11.9719ZM18.7692 15C18.7692 15.5522 18.3283 16 17.7846 16H9.90769C9.36308 16 8.92308 15.5531 8.92308 15V11C8.92308 10.4478 9.364 10 9.90769 10H17.7846C18.3283 10 18.7692 10.4478 18.7692 11V15ZM10.8923 11.9719C10.3486 11.9719 9.90769 12.4197 9.90769 12.9719C9.90769 13.5241 10.3486 13.9719 10.8923 13.9719C11.436 13.9719 11.8769 13.5241 11.8769 12.9719C11.8769 12.4469 11.4369 11.9719 10.8923 11.9719ZM16.8 11.9719C16.2563 11.9719 15.8154 12.4197 15.8154 12.9719C15.8154 13.5241 16.2563 13.9719 16.8 13.9719C17.3437 13.9719 17.7846 13.5241 17.7846 12.9719C17.7846 12.4469 17.3446 11.9719 16.8 11.9719Z" fill="white" />
+                                </svg>
+                                }
+                                type="link"
+                            />
+                        </Popover>
+                    </Space>}
                     visible={this.props.visibility}
                     onCancel={this.onCancel}
                     footer={
@@ -136,43 +479,197 @@ class AddBusinessSegmentModal extends Component {
                     }
                 >
                     <Form hideRequiredMark layout="vertical" id="addBusinessSegmentForm" name="addBusinessSegmentForm" onFinish={this.onOK.bind(this)}>
-                        <Form.Item key="name" name="name" label="Segment name"
-                        rules={
-                            [{ required: true, message: 'Type segment name' }]
-                        }>
-                            <Input style={{width: '100%', ...inputStyle}} placeholder="Add segment name" onChange={(e) => this.onNameChange(e.target.value)}/>
-                        </Form.Item>
-                        <Form.Item key="type" name="type" label="Type"
+                        {
+                            this.state.segmentNameError === false ?
+                                <Form.Item key="name" label="Segment name">
+                                    <Input style={{ width: '100%', ...inputStyle }} placeholder="Add segment name" onChange={(e) => this.onNameChange(e.target.value)} />
+                                </Form.Item>
+                                :
+                                <Form.Item key="name" label="Segment name"
+                                    validateStatus="error"
+                                    help='Type segment name'
+                                >
+                                    <Input style={{ width: '100%', ...inputStyle }} placeholder="Add segment name" onChange={(e) => this.onNameChange(e.target.value)} />
+                                </Form.Item>
+                        }
+
+
+                        {
+                            this.state.type === null ?
+                                <Form.Item key="type" label="Type"
+                                    rules={[{ required: true, message: 'Select business type' }]}>
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Select type"
+                                        onChange={this.onTypeChange.bind(this)}
+                                        value={type}
+                                        tagRender={typeTag}
+                                        options={typeOptions}
+                                    />
+                                </Form.Item>
+                                : type.length > 0 ?
+                                    <Form.Item key="type" label="Type"
+                                        rules={[{ required: true, message: 'Select business type' }]}>
+                                        <Select
+                                            mode="multiple"
+                                            placeholder="Select type"
+                                            onChange={this.onTypeChange.bind(this)}
+                                            value={type}
+                                            tagRender={typeTag}
+                                            options={typeOptions}
+                                        />
+                                    </Form.Item>
+                                    :
+                                    <Form.Item
+                                        key="type"
+                                        label="Type"
+                                        validateStatus="error"
+                                        help="Select type"
+                                        rules={[
+                                            {
+                                                validator: async (_, type) => {
+                                                    if (!type || type.length < 1) {
+                                                        return Promise.reject(new Error('Select type'));
+                                                    }
+                                                },
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            mode="multiple"
+                                            placeholder="Select type"
+                                            onChange={this.onTypeChange.bind(this)}
+                                            value={type}
+                                            tagRender={typeTag}
+                                            options={typeOptions}
+                                        />
+                                    </Form.Item>
+                        }
+                        {/* <Form.Item key="type" name="type" label="Type"
                             rules={[{ required: true, message: 'Select business type' }]}>
                             <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Select type" onChange={this.onTypeChange.bind(this)} >
                                 {typeOptions}
                             </Select>
-                        </Form.Item>
+                        </Form.Item> */}
 
-                        <Form.Item key="size" name="size" label="Company size"
+                        {/* <Form.Item key="size" name="size" label="Company size"
                             rules={[{ required: true, message: 'Select company size' }]}>
                             <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Select company size" onChange={this.onCompanySizeChange.bind(this)} >
                                 {companySizeOptions}
                             </Select>
-                        </Form.Item>
+                        </Form.Item> */}
+                        {
+                            this.state.companySize === null ?
+                                <Form.Item key="size" label="Company size"
+                                    rules={[{ required: true, message: 'Select company size' }]}>
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Select company size"
+                                        onChange={this.onCompanySizeChange.bind(this)}
+                                        value={size}
+                                        tagRender={companySizeTag}
+                                        options={companySizeOptions}
+                                    />
+                                </Form.Item>
+                                : size.length > 0 ?
+                                    <Form.Item key="size" label="Company size"
+                                        rules={[{ required: true, message: 'Select company size' }]}>
+                                        <Select
+                                            mode="multiple"
+                                            placeholder="Select company size"
+                                            onChange={this.onCompanySizeChange.bind(this)}
+                                            value={size}
+                                            tagRender={companySizeTag}
+                                            options={companySizeOptions}
+                                        />
+                                    </Form.Item>
+                                    :
+                                    <Form.Item
+                                        key="size"
+                                        label="Company size"
+                                        validateStatus="error"
+                                        help="Select company size"
+                                        rules={[
+                                            {
+                                                validator: async (_, size) => {
+                                                    if (!size || size.length < 1) {
+                                                        return Promise.reject(new Error('Select company size'));
+                                                    }
+                                                },
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            mode="multiple"
+                                            placeholder="Select company size"
+                                            onChange={this.onCompanySizeChange.bind(this)}
+                                            value={size}
+                                            tagRender={companySizeTag}
+                                            options={companySizeOptions}
+                                        />
+                                    </Form.Item>
 
-                        {/* <Form.Item key="annualRevenue" name="annualRevenue" label="Annual revenue"
-                            rules={[{ required: true, message: 'Enter annual revenue in Euros' }]}>
-                            <InputNumber size="large" style={inputStyle} onChange={this.onAnnualRevenueChange.bind(this)} placeholder="Enter annual revenue in Euros" />
-                        </Form.Item>
+                        }
 
-                        <Form.Item key="budget" name="budget" label="Budget"
-                            rules={[{ required: true, message: 'Enter budget in Euros' }]}>
-                            <InputNumber size="large" style={inputStyle} placeholder="Enter budget in Euros" onChange={this.onBudgetChange.bind(this)} />
-                        </Form.Item>
-                        */}
+                        {
+                            this.state.locationType === null ?
+                                <Form.Item key="geographicLocation" label="Geographic Location"
+                                    rules={[{ required: true, message: 'Choose geographic location' }]}>
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Choose geographic location"
+                                        onChange={this.onLocationTypeChange.bind(this)}
+                                        value={location}
+                                        tagRender={locationTag}
+                                        options={locationOptions}
+                                    />
+                                </Form.Item>
+                                : location.length > 0 ?
+                                    <Form.Item key="geographicLocation" label="Geographic Location"
+                                        rules={[{ required: true, message: 'Choose geographic location' }]}>
+                                        <Select
+                                            mode="multiple"
+                                            placeholder="Choose geographic location"
+                                            onChange={this.onLocationTypeChange.bind(this)}
+                                            value={location}
+                                            tagRender={locationTag}
+                                            options={locationOptions}
+                                        />
+                                    </Form.Item>
+                                    :
+                                    <Form.Item
+                                        key="geographicLocation"
+                                        label="Geographic Location"
+                                        validateStatus="error"
+                                        help="Choose geographic location"
+                                        rules={[
+                                            {
+                                                validator: async (_, geographicLocation) => {
+                                                    if (!geographicLocation || geographicLocation.length < 1) {
+                                                        return Promise.reject(new Error('Choose geographic location'));
+                                                    }
+                                                },
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            mode="multiple"
+                                            placeholder="Choose geographic location"
+                                            onChange={this.onLocationTypeChange.bind(this)}
+                                            value={location}
+                                            tagRender={locationTag}
+                                            options={locationOptions}
+                                        />
+                                    </Form.Item>
+                        }
 
-                        <Form.Item key="geographicLocation" name="geographicLocation" label="Geographic Location"
+                        {/* <Form.Item key="geographicLocation" name="geographicLocation" label="Geographic Location"
                             rules={[{ required: true, message: 'Choose geographic location' }]}>
                             <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose geographic location" onChange={this.onLocationTypeChange.bind(this)} >
                                 {locationOptions}
                             </Select>
-                        </Form.Item>
+                        </Form.Item> */}
+
                     </Form>
                 </Modal>
             </>
@@ -184,6 +681,7 @@ const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
         categories: state.customerSegmentProperties,
+        customerSegments: state.customerSegments
     };
 }
 
