@@ -95,7 +95,6 @@ class AddConsumerSegmentModal extends Component {
 
     onAgeGroupChange(value) {
         const ageGroupArray = [];
-        console.log(value);
         if (this.state.ageGroup === null) {
             const age_group = this.props.categories.customer_segments_types.age_groups.find((obj) => obj.id === value[0]);
             const new_obj = {
@@ -103,7 +102,6 @@ class AddConsumerSegmentModal extends Component {
                 title: age_group.title,
                 tag: 0
             }
-            console.log(new_obj)
             ageGroupArray.push(new_obj);
         } else {
             for (var i = 0; i < value.length; i++) {
@@ -182,7 +180,6 @@ class AddConsumerSegmentModal extends Component {
                 }
             }
         }
-        console.log(genderTypeArray);
         this.setState({
             genderType: genderTypeArray
         });
@@ -389,7 +386,6 @@ class AddConsumerSegmentModal extends Component {
         const incomeAI = aiObject.income;
         const incomePredict = this.compareArray(incomeAI, income);
         const newIncomeArray = this.state.incomeType === null ? [] : [...this.state.incomeType];
-        console.log('income predict: ', incomePredict)
         for (var i in incomePredict) {
             const title = this.props.categories.customer_segments_types.income_types.find((obj) => obj.id === incomePredict[i]).title;
             const new_income_type_obj = {
@@ -453,9 +449,8 @@ class AddConsumerSegmentModal extends Component {
             <>
                 <Row>
                     <Text>
-                        Test
-                        {/* Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.aiPredictTextEdit.map((e, index) => 
-                    <Text key={index} > for "{e.type_title}" {e.predict.map((p,index) => <Text key={index}>{p.title}</Text>)}</Text>)}. */}
+                    Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.predictText.map((e, index) =>
+                            <Text key={index} > for "{e.type_title}": {e.predict.map((p, index) => <Text key={index}>{p.title},</Text>)}</Text>)}.
                     </Text>
                     {/* Based on your input KABADA AI recommends that you consider adding for "Gender" male, for "Education" Primary. */}
                 </Row>
@@ -469,7 +464,7 @@ class AddConsumerSegmentModal extends Component {
             <>
                 <Row>
                     <Text>
-                        AI did not have predict
+                    Based on the current information KABADA AI did not have any suggestions.
                     </Text>
                 </Row>
                 <Row style={{ marginTop: '12px' }}>
@@ -666,8 +661,8 @@ class AddConsumerSegmentModal extends Component {
                         <Popover
                             placement='topLeft'
                             title='AI Hint'
-                            content={popoverContent}
-                            // content={this.props.customerSegments.errorMessage === false ? popoverContent : popoverContentError}
+                            //content={popoverContent}
+                            content={this.props.customerSegments.errorMessage === false ? popoverContent : popoverContentError}
                             overlayStyle={{ width: "328px" }}
                             trigger="click"
                             visible={this.state.popoverVisibility}

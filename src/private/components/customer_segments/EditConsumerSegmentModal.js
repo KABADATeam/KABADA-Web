@@ -368,7 +368,7 @@ class EditConsumerSegmentModal extends Component {
     }
     
     render() {
-        console.log(this.props.customerSegments.aiPredictText);
+        console.log(this.props.customerSegments.predictText);
         const education = this.state.educationType.map(e => e.id);
         const income = this.state.incomeType.map(e => e.id);
         const gender = this.state.genderType.map(e => e.id);
@@ -396,7 +396,7 @@ class EditConsumerSegmentModal extends Component {
             <>
                 <Row>
                     <Text>
-                        Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.aiPredictText.map((e, index) =>
+                        Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.predictText.map((e, index) =>
                             <Text key={index} > for "{e.type_title}": {e.predict.map((p, index) => <Text key={index}>{p.title},</Text>)}</Text>)}.
                     </Text>
                     {/* Based on your input KABADA AI recommends that you consider adding for "Gender" male, for "Education" Primary. */}
@@ -538,7 +538,7 @@ class EditConsumerSegmentModal extends Component {
                         <Popover
                             placement='topLeft'
                             title='AI Hint'
-                            content={this.props.customerSegments.errorMessageEdit === false ? popoverContent : popoverContentError}
+                            content={this.props.customerSegments.errorMessage === false ? popoverContent : popoverContentError}
                             overlayStyle={{ width: "328px" }}
                             trigger="click"
                             visible={this.state.popoverVisibility}
