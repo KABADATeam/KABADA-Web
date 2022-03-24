@@ -77,108 +77,54 @@ class EditBusinessSegmentModal extends Component {
         })
     }
 
-    onTypeChange(value) {
-        const typeArray = [];
+    addSelectedValue = (value, state, segment_type) => {
+        const resultArray = [];
         for (var i = 0; i < value.length; i++) {
-            if (this.state.type[i] === undefined) {
-                const type = this.props.categories.customer_segments_types.business_types.find((obj) => obj.id === value[i]);
+            if (state[i] === undefined) {
+                const type = segment_type.find((obj) => obj.id === value[i]);
                 const new_obj = {
                     id: type.id,
                     title: type.title,
                     tag: 0
                 }
-                typeArray.push(new_obj)
+                resultArray.push(new_obj)
             } else {
-                const type = this.state.type.find((obj) => obj.id === value[i]);
+                const type = state.find((obj) => obj.id === value[i]);
                 if (type.tag === 0) {
                     const new_obj = {
                         id: type.id,
                         title: type.title,
                         tag: 0
                     }
-                    typeArray.push(new_obj);
+                    resultArray.push(new_obj);
                 } else if (type.tag === 1) {
                     const new_obj = {
                         id: type.id,
                         title: type.title,
                         tag: 1
                     }
-                    typeArray.push(new_obj);
+                    resultArray.push(new_obj);
                 }
             }
         }
+        return resultArray;
+    }
+
+    onTypeChange(value) {  
         this.setState({
-            type: typeArray
+            type: this.addSelectedValue(value, this.state.type, this.props.categories.customer_segments_types.business_types)
         });
     }
 
     onCompanySizeChange(value) {
-        const sizeArray = [];
-        for (var i = 0; i < value.length; i++) {
-            if (this.state.companySize[i] === undefined) {
-                const companySize = this.props.categories.customer_segments_types.company_sizes.find((obj) => obj.id === value[i]);
-                const new_obj = {
-                    id: companySize.id,
-                    title: companySize.title,
-                    tag: 0
-                }
-                sizeArray.push(new_obj)
-            } else {
-                const companySize = this.state.companySize.find((obj) => obj.id === value[i]);
-                if (companySize.tag === 0) {
-                    const new_obj = {
-                        id: companySize.id,
-                        title: companySize.title,
-                        tag: 0
-                    }
-                    sizeArray.push(new_obj);
-                } else if (companySize.tag === 1) {
-                    const new_obj = {
-                        id: companySize.id,
-                        title: companySize.title,
-                        tag: 1
-                    }
-                    sizeArray.push(new_obj);
-                }
-            }
-        }
         this.setState({
-            companySize: sizeArray
+            companySize: this.addSelectedValue(value, this.state.companySize, this.props.categories.customer_segments_types.company_sizes)
         });
     }
 
     onLocationTypeChange(value) {
-        const locationTypeArray = [];
-        for (var i = 0; i < value.length; i++) {
-            if (this.state.locationType[i] === undefined) {
-                const location_type = this.props.categories.customer_segments_types.geographic_locations.find((obj) => obj.id === value[i]);
-                const new_obj = {
-                    id: location_type.id,
-                    title: location_type.title,
-                    tag: 0
-                };
-                locationTypeArray.push(new_obj);
-            } else {
-                const location_type = this.state.locationType.find((obj) => obj.id === value[i]);
-                if (location_type.tag === 0) {
-                    const new_obj = {
-                        id: location_type.id,
-                        title: location_type.title,
-                        tag: 0
-                    }
-                    locationTypeArray.push(new_obj);
-                } else if (location_type.tag === 1) {
-                    const new_obj = {
-                        id: location_type.id,
-                        title: location_type.title,
-                        tag: 1
-                    }
-                    locationTypeArray.push(new_obj);
-                }
-            }
-        };
         this.setState({
-            locationType: locationTypeArray
+            locationType: this.addSelectedValue(value, this.state.locationType, this.props.categories.customer_segments_types.geographic_locations)
         })
     }
     handlePopoverVisibilityChange = (visible) => {
