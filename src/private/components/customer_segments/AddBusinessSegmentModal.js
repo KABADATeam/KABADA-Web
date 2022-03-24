@@ -65,14 +65,15 @@ class AddBusinessSegmentModal extends Component {
                 segmentNameError: false
             })
             this.props.onClose();
+        } else {
+            console.log('Nope');
+            this.setState({
+                segmentNameError: true,
+                type: type === null ? [] : type,
+                companySize: companySize === null ? [] : companySize,
+                locationType: locationType === null ? [] : locationType
+            })
         }
-        console.log('Nope');
-        this.setState({
-            segmentNameError: true,
-            type: type === null ? [] : type,
-            companySize: companySize === null ? [] : companySize,
-            locationType: locationType === null ? [] : locationType
-        })
     }
 
     onNameChange(value) {
@@ -81,140 +82,63 @@ class AddBusinessSegmentModal extends Component {
             segmentNameError: value.length !== 0 ? false : true
         })
     }
-
-    onTypeChange(value) {
-        const typeArray = [];
-        if (this.state.type === null) {
-            const type = this.props.categories.customer_segments_types.business_types.find((obj) => obj.id === value[0]);
+    selectedValue = (value, state, segment_type) => {
+        const resultArray = [];
+        if (state === null) {
+            const type = segment_type.find((obj) => obj.id === value[0]);
             const new_obj = {
                 id: type.id,
                 title: type.title,
                 tag: 0
             }
-            typeArray.push(new_obj);
+            resultArray.push(new_obj);
         } else {
             for (var i = 0; i < value.length; i++) {
-                if (this.state.type[i] === undefined) {
-                    const type = this.props.categories.customer_segments_types.business_types.find((obj) => obj.id === value[i]);
+                if (state[i] === undefined) {
+                    const type = segment_type.find((obj) => obj.id === value[i]);
                     const new_obj = {
                         id: type.id,
                         title: type.title,
                         tag: 0
                     }
-                    typeArray.push(new_obj)
+                    resultArray.push(new_obj)
                 } else {
-                    const type = this.state.type.find((obj) => obj.id === value[i]);
+                    const type = state.find((obj) => obj.id === value[i]);
                     if (type.tag === 0) {
                         const new_obj = {
                             id: type.id,
                             title: type.title,
                             tag: 0
                         }
-                        typeArray.push(new_obj);
+                        resultArray.push(new_obj);
                     } else if (type.tag === 1) {
                         const new_obj = {
                             id: type.id,
                             title: type.title,
                             tag: 1
                         }
-                        typeArray.push(new_obj);
+                        resultArray.push(new_obj);
                     }
                 }
             }
         }
+        return resultArray;
+    }
+    onTypeChange(value) {
         this.setState({
-            type: typeArray
+            type: this.selectedValue(value, this.state.type, this.props.categories.customer_segments_types.business_types)
         });
     }
 
     onCompanySizeChange(value) {
-        const companySizeArray = [];
-        if (this.state.companySize === null) {
-            const companySize = this.props.categories.customer_segments_types.company_sizes.find((obj) => obj.id === value[0]);
-            const new_obj = {
-                id: companySize.id,
-                title: companySize.title,
-                tag: 0
-            }
-            companySizeArray.push(new_obj);
-        } else {
-            for (var i = 0; i < value.length; i++) {
-                if (this.state.companySize[i] === undefined) {
-                    const companySize = this.props.categories.customer_segments_types.company_sizes.find((obj) => obj.id === value[i]);
-                    const new_obj = {
-                        id: companySize.id,
-                        title: companySize.title,
-                        tag: 0
-                    }
-                    companySizeArray.push(new_obj)
-                } else {
-                    const companySize = this.state.companySize.find((obj) => obj.id === value[i]);
-                    if (companySize.tag === 0) {
-                        const new_obj = {
-                            id: companySize.id,
-                            title: companySize.title,
-                            tag: 0
-                        }
-                        companySizeArray.push(new_obj);
-                    } else if (companySize.tag === 1) {
-                        const new_obj = {
-                            id: companySize.id,
-                            title: companySize.title,
-                            tag: 1
-                        }
-                        companySizeArray.push(new_obj);
-                    }
-                }
-            }
-        }
-        console.log(companySizeArray)
         this.setState({
-            companySize: companySizeArray
+            companySize: this.selectedValue(value, this.state.companySize, this.props.categories.customer_segments_types.company_sizes)
         });
     }
 
     onLocationTypeChange(value) {
-        const locationTypeArray = [];
-        if (this.state.locationType === null) {
-            const location_type = this.props.categories.customer_segments_types.geographic_locations.find((obj) => obj.id === value[0]);
-            const new_obj = {
-                id: location_type.id,
-                title: location_type.title,
-                tag: 0
-            }
-            locationTypeArray.push(new_obj);
-        } else {
-            for (var i = 0; i < value.length; i++) {
-                if (this.state.locationType[i] === undefined) {
-                    const location_type = this.props.categories.customer_segments_types.geographic_locations.find((obj) => obj.id === value[i]);
-                    const new_obj = {
-                        id: location_type.id,
-                        title: location_type.title,
-                        tag: 0
-                    };
-                    locationTypeArray.push(new_obj);
-                } else {
-                    const location_type = this.state.locationType.find((obj) => obj.id === value[i]);
-                    if (location_type.tag === 0) {
-                        const new_obj = {
-                            id: location_type.id,
-                            title: location_type.title,
-                            tag: 0
-                        }
-                        locationTypeArray.push(new_obj);
-                    } else if (location_type.tag === 1) {
-                        const new_obj = {
-                            id: location_type.id,
-                            title: location_type.title,
-                            tag: 1
-                        }
-                        locationTypeArray.push(new_obj);
-                    }
-                }
-            };
-        }
         this.setState({
-            locationType: locationTypeArray
+            locationType: this.selectedValue(value, this.state.locationType, this.props.categories.customer_segments_types.geographic_locations)
         })
     }
     handlePopoverVisibilityChange = (visible) => {
@@ -278,9 +202,6 @@ class AddBusinessSegmentModal extends Component {
             }
             newLocationArray.push(new_location_obj);
         }
-        console.log(newTypeArray);
-        console.log(newCompanySizeArray)
-        console.log(newLocationArray);
         this.setState({
             type: newTypeArray.length === 0 ? null : newTypeArray,
             companySize: newCompanySizeArray.length === 0 ? null : newCompanySizeArray,
@@ -292,9 +213,6 @@ class AddBusinessSegmentModal extends Component {
         const type = this.state.type !== null ? this.state.type.map(e => e.id) : [];
         const size = this.state.companySize !== null ? this.state.companySize.map(e => e.id) : [];
         const location = this.state.locationType !== null ? this.state.locationType.map(e => e.id) : [];
-        console.log(type);
-        console.log(size);
-        console.log(location);
         const typeOptions = this.props.categories.customer_segments_types.business_types.map((obj) =>
             ({ label: obj.title, value: obj.id })
         );
