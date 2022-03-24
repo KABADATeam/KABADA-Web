@@ -20,11 +20,11 @@ class EditConsumerSegmentModal extends Component {
         super(props);
         this.state = {
             segmentName: this.props.item.segment_name,
-            ageGroup: this.props.item.age.map(e => ({ id: e.id, title: e.title, tag: 0})),
+            ageGroup: this.props.item.age.map(e => ({ id: e.id, title: e.title, tag: 0 })),
             genderType: this.props.item.gender.map(e => ({ id: e.id, title: e.title, tag: 0 })),
             educationType: this.props.item.education.map(e => ({ id: e.id, title: e.title, tag: 0 })),
             incomeType: this.props.item.income.map(e => ({ id: e.id, title: e.title, tag: 0 })),
-            locationType: this.props.item.geographic_location.map(e => ({ id: e.id, title: e.title, tag: 0})),
+            locationType: this.props.item.geographic_location.map(e => ({ id: e.id, title: e.title, tag: 0 })),
             popoverVisibility: false,
             popeverText: []
         }
@@ -39,45 +39,49 @@ class EditConsumerSegmentModal extends Component {
     }
 
     onOK = () => {
-        const age = this.state.ageGroup.map(e => e.id);
-        const education = this.state.educationType.map(e => e.id);
-        const income = this.state.incomeType.map(e => e.id);
-        const gender = this.state.genderType.map(e => e.id);
-        const location = this.state.locationType.map(e => e.id);
-        const postObj = {
-            "id": this.props.item.id,
-            "business_plan_id": this.props.businessPlan.id,
-            "age": age,
-            "gender": gender,
-            "education": education,
-            "income": income,
-            "geographic_location": location,
-            "segment_name": this.state.segmentName
-        };
+        const { ageGroup, educationType, genderType, incomeType, locationType } = this.state;
+        if (ageGroup.length !== 0 && educationType.length !== 0 && incomeType.length !== 0 && genderType.length !== 0 && locationType.length !== 0) {
+            const age = this.state.ageGroup.map(e => e.id);
+            const education = this.state.educationType.map(e => e.id);
+            const income = this.state.incomeType.map(e => e.id);
+            const gender = this.state.genderType.map(e => e.id);
+            const location = this.state.locationType.map(e => e.id);
+            const postObj = {
+                "id": this.props.item.id,
+                "business_plan_id": this.props.businessPlan.id,
+                "age": age,
+                "gender": gender,
+                "education": education,
+                "income": income,
+                "geographic_location": location,
+                "segment_name": this.state.segmentName
+            };
 
-        const selected_ages = this.props.categories.customer_segments_types.age_groups.filter((item) => age.some((field) => item.id === field));
-        const selected_genders = this.props.categories.customer_segments_types.gender_types.filter((item) => gender.some((field) => item.id === field));
-        const selected_educations = this.props.categories.customer_segments_types.education_types.filter((item) => education.some((field) => item.id === field));
-        const selected_incomes = this.props.categories.customer_segments_types.income_types.filter((item) => income.some((field) => item.id === field));
-        const selected_locations = this.props.categories.customer_segments_types.geographic_locations.filter((item) => location.some((field) => item.id === field));
+            const selected_ages = this.props.categories.customer_segments_types.age_groups.filter((item) => age.some((field) => item.id === field));
+            const selected_genders = this.props.categories.customer_segments_types.gender_types.filter((item) => gender.some((field) => item.id === field));
+            const selected_educations = this.props.categories.customer_segments_types.education_types.filter((item) => education.some((field) => item.id === field));
+            const selected_incomes = this.props.categories.customer_segments_types.income_types.filter((item) => income.some((field) => item.id === field));
+            const selected_locations = this.props.categories.customer_segments_types.geographic_locations.filter((item) => location.some((field) => item.id === field));
 
-        const reducerObj = {
-            "id": this.props.item.id,
-            "key": this.props.item.id,
-            "age": selected_ages,
-            "age_titles": selected_ages.map(e => e.title).join(", "),
-            "gender": selected_genders,
-            "gender_titles": selected_genders.map(e => e.title).join(", "),
-            "education": selected_educations,
-            "income": selected_incomes,
-            "geographic_location": selected_locations,
-            "location_titles": selected_locations.map(e => e.title).join(", "),
-            "segment_name": this.state.segmentName
-        };
+            const reducerObj = {
+                "id": this.props.item.id,
+                "key": this.props.item.id,
+                "age": selected_ages,
+                "age_titles": selected_ages.map(e => e.title).join(", "),
+                "gender": selected_genders,
+                "gender_titles": selected_genders.map(e => e.title).join(", "),
+                "education": selected_educations,
+                "income": selected_incomes,
+                "geographic_location": selected_locations,
+                "location_titles": selected_locations.map(e => e.title).join(", "),
+                "segment_name": this.state.segmentName
+            };
 
-        this.props.updateConsumerSegment(postObj, reducerObj);
+            this.props.updateConsumerSegment(postObj, reducerObj);
 
-        this.props.onClose();
+            this.props.onClose();
+        }
+
     }
 
     onNameChange(value) {
@@ -366,9 +370,70 @@ class EditConsumerSegmentModal extends Component {
 
 
     }
+    generateAIHelpText = (selectedItem, predictsObj, segmentTypes) => {
+        const aiHintTextObject = [];
+        if (selectedItem === null) {
+            const predictObj = predictsObj.find(s => s.id === null);
+            const predictProperties = Object.getOwnPropertyNames(predictObj);
+            const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
+            for (const property of filteredPredictProperties) {
+                const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
+                const propertyType = property === 'education' ? segmentTypes.education_types
+                    : property === 'gender' ? segmentTypes.gender_types
+                        : property === 'income' ? segmentTypes.income_types
+                            : property === 'age' ? segmentTypes.age_groups
+                                : property === 'geographic_location' ? segmentTypes.geographic_locations
+                                    : property === 'company_size' ? segmentTypes.company_sizes
+                                        : property === 'business_type' ? segmentTypes.business_types
+                                            : null
+                const typePredictArray = [];
+                for (var i = 0; i < predictObjPropertyValues.length; i++) {
+                    const propertyTypeTitle = propertyType.find(p => p.id === predictObjPropertyValues[i])
+                    typePredictArray.push(propertyTypeTitle);
+                }
     
+                const new_obj = {
+                    type_title: property.charAt(0).toUpperCase() + property.slice(1),
+                    predict: typePredictArray
+                }
+                aiHintTextObject.push(new_obj);
+            }
+            return aiHintTextObject
+        } else {
+            const predictObj = predictsObj.find(s => s.id === selectedItem.id);
+            const predictProperties = Object.getOwnPropertyNames(predictsObj.find(s => s.id === selectedItem.id));
+            const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
+            for (const property of filteredPredictProperties) {
+                const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(selectedItem, property).value;
+                const selectedItemPropertyValues = selectedItemPropertyValuesObj.map(s => s.id);
+                const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
+                const propertyType = property === 'education' ? segmentTypes.education_types
+                    : property === 'gender' ? segmentTypes.gender_types
+                        : property === 'income' ? segmentTypes.income_types
+                            : property === 'age' ? segmentTypes.age_groups
+                                : property === 'geographic_location' ? segmentTypes.geographic_locations
+                                    : property === 'company_size' ? segmentTypes.company_sizes
+                                        : property === 'business_type' ? segmentTypes.business_types
+                                            : null
+                const comparePropertiesValues = this.compareArray(predictObjPropertyValues, selectedItemPropertyValues);
+                if (comparePropertiesValues.length > 0) {
+                    const typePredictArray = []
+                    for (var i = 0; i < comparePropertiesValues.length; i++) {
+                        const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[i]);
+                        typePredictArray.push(propertyTypeTitle);
+                    }
+                    const new_obj = {
+                        type_title: property.charAt(0).toUpperCase() + property.slice(1),
+                        predict: typePredictArray
+                    }
+                    aiHintTextObject.push(new_obj);
+                }
+            }
+            console.log(aiHintTextObject);
+            return aiHintTextObject
+        }
+    }
     render() {
-        console.log(this.props.customerSegments.predictText);
         const education = this.state.educationType.map(e => e.id);
         const income = this.state.incomeType.map(e => e.id);
         const gender = this.state.genderType.map(e => e.id);

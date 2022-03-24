@@ -40,7 +40,7 @@ class AddConsumerSegmentModal extends Component {
         const { ageGroup, educationType, incomeType, genderType, locationType } = this.state;
         console.log(this.state)
         if (ageGroup !== null && educationType !== null && incomeType !== null && genderType !== null && locationType !== null &&
-            ageGroup.length !== 0 && educationType.length !== null && incomeType.length !== 0 && genderType.length !== 0 && locationType.length !== 0) {
+            ageGroup.length !== 0 && educationType.length !== 0 && incomeType.length !== 0 && genderType.length !== 0 && locationType.length !== 0) {
             const age = ageGroup.map(e => e.id);
             const education = educationType.map(e => e.id);
             const income = incomeType.map(e => e.id);
