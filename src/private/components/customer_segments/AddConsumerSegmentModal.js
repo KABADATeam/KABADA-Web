@@ -19,11 +19,11 @@ class AddConsumerSegmentModal extends Component {
         super(props);
         this.state = {
             segmentName: null,
-            ageGroup: [],
+            ageGroup: null,
             genderType: null,
-            educationType: [],
-            incomeType: [],
-            locationType: [],
+            educationType: null,
+            incomeType: null,
+            locationType: null,
             popoverVisibility: false,
         }
     }
@@ -37,41 +37,54 @@ class AddConsumerSegmentModal extends Component {
     }
 
     onOK = () => {
-        const age = this.state.ageGroup.map(e => e.id);
-        const education = this.state.educationType.map(e => e.id);
-        const income = this.state.incomeType.map(e => e.id);
-        const gender = this.state.genderType.map(e => e.id);
-        const location = this.state.locationType.map(e => e.id);
-        const postObj = {
-            "id": null,
-            "business_plan_id": this.props.businessPlan.id,
-            "age": age,
-            "gender": gender,
-            "education": education,
-            "income": income,
-            "geographic_location": location,
-            "segment_name": this.state.segmentName
-        };
+        const { ageGroup, educationType, incomeType, genderType, locationType } = this.state;
+        console.log(this.state)
+        if (ageGroup !== null && educationType !== null && incomeType !== null && genderType !== null && locationType !== null &&
+            ageGroup.length !== 0 && educationType.length !== null && incomeType.length !== 0 && genderType.length !== 0 && locationType.length !== 0) {
+            const age = ageGroup.map(e => e.id);
+            const education = educationType.map(e => e.id);
+            const income = incomeType.map(e => e.id);
+            const gender = genderType.map(e => e.id);
+            const location = locationType.map(e => e.id);
+            const postObj = {
+                "id": null,
+                "business_plan_id": this.props.businessPlan.id,
+                "age": age,
+                "gender": gender,
+                "education": education,
+                "income": income,
+                "geographic_location": location,
+                "segment_name": this.state.segmentName
+            };
 
-        const selected_ages = this.props.categories.customer_segments_types.age_groups.filter((item) => age.some((field) => item.id === field));
-        const selected_genders = this.props.categories.customer_segments_types.gender_types.filter((item) => gender.some((field) => item.id === field));
-        const selected_educations = this.props.categories.customer_segments_types.education_types.filter((item) => education.some((field) => item.id === field));
-        const selected_incomes = this.props.categories.customer_segments_types.income_types.filter((item) => income.some((field) => item.id === field));
-        const selected_locations = this.props.categories.customer_segments_types.geographic_locations.filter((item) => location.some((field) => item.id === field));
+            const selected_ages = this.props.categories.customer_segments_types.age_groups.filter((item) => age.some((field) => item.id === field));
+            const selected_genders = this.props.categories.customer_segments_types.gender_types.filter((item) => gender.some((field) => item.id === field));
+            const selected_educations = this.props.categories.customer_segments_types.education_types.filter((item) => education.some((field) => item.id === field));
+            const selected_incomes = this.props.categories.customer_segments_types.income_types.filter((item) => income.some((field) => item.id === field));
+            const selected_locations = this.props.categories.customer_segments_types.geographic_locations.filter((item) => location.some((field) => item.id === field));
 
-        const reducerObj = {
-            "age": selected_ages,
-            "age_titles": selected_ages.map(e => e.title).join(", "),
-            "gender": selected_genders,
-            "gender_titles": selected_genders.map(e => e.title).join(", "),
-            "education": selected_educations,
-            "income": selected_incomes,
-            "geographic_location": selected_locations,
-            "location_titles": selected_locations.map(e => e.title).join(", "),
-            "segment_name": this.state.segmentName
+            const reducerObj = {
+                "age": selected_ages,
+                "age_titles": selected_ages.map(e => e.title).join(", "),
+                "gender": selected_genders,
+                "gender_titles": selected_genders.map(e => e.title).join(", "),
+                "education": selected_educations,
+                "income": selected_incomes,
+                "geographic_location": selected_locations,
+                "location_titles": selected_locations.map(e => e.title).join(", "),
+                "segment_name": this.state.segmentName
+            }
+            this.props.saveConsumerSegment(postObj, reducerObj);
+            this.props.onClose();
+        } else {
+            this.setState({
+                ageGroup: ageGroup === null ? [] : ageGroup,
+                genderType: genderType === null ? [] : genderType,
+                educationType: educationType === null ? [] : educationType,
+                incomeType: incomeType === null ? [] : incomeType,
+                locationType: locationType === null ? [] : locationType
+            })
         }
-        this.props.saveConsumerSegment(postObj, reducerObj);
-        this.props.onClose();
     }
 
     onNameChange(value) {
@@ -83,7 +96,7 @@ class AddConsumerSegmentModal extends Component {
     onAgeGroupChange(value) {
         const ageGroupArray = [];
         console.log(value);
-        if (this.state.ageGroup === []) {
+        if (this.state.ageGroup === null) {
             const age_group = this.props.categories.customer_segments_types.age_groups.find((obj) => obj.id === value[0]);
             const new_obj = {
                 id: age_group.id,
@@ -131,7 +144,6 @@ class AddConsumerSegmentModal extends Component {
     onGenderTypeChange(value) {
         const genderTypeArray = [];
         if (this.state.genderType === null) {
-        
             const gender_type = this.props.categories.customer_segments_types.gender_types.find((obj) => obj.id === value[0]);
             const new_obj = {
                 id: gender_type.id,
@@ -140,7 +152,6 @@ class AddConsumerSegmentModal extends Component {
             }
             genderTypeArray.push(new_obj);
         } else {
-            console.log('when [] not 0 ')
             for (var i = 0; i < value.length; i++) {
                 if (this.state.genderType[i] === undefined) {
                     const gender_type = this.props.categories.customer_segments_types.gender_types.find((obj) => obj.id === value[i]);
@@ -179,9 +190,8 @@ class AddConsumerSegmentModal extends Component {
 
     onEducationTypeChange(value) {
         const educationTypeArray = [];
-        if (this.state.educationType === []) {
+        if (this.state.educationType === null) {
             const education_type = this.props.categories.customer_segments_types.education_types.find((obj) => obj.id === value[0]);
-            console.log(education_type)
             const new_obj = {
                 id: education_type.id,
                 title: education_type.title,
@@ -225,9 +235,8 @@ class AddConsumerSegmentModal extends Component {
 
     onIncomeTypeChange(value) {
         const incomeTypeArray = [];
-        if (this.state.incomeType === []) {
+        if (this.state.incomeType === null) {
             const income_type = this.props.categories.customer_segments_types.income_types.find((obj) => obj.id === value[0]);
-            console.log(income_type)
             const new_obj = {
                 id: income_type.id,
                 title: income_type.title,
@@ -270,7 +279,7 @@ class AddConsumerSegmentModal extends Component {
     }
     onLocationTypeChange(value) {
         const locationTypeArray = [];
-        if (this.state.locationType === []) {
+        if (this.state.locationType === null) {
             const location_type = this.props.categories.customer_segments_types.geographic_locations.find((obj) => obj.id === value[0]);
             const new_obj = {
                 id: location_type.id,
@@ -333,14 +342,25 @@ class AddConsumerSegmentModal extends Component {
     }
     onAIButtonClick = () => {
         const obj = this.props.customerSegments.aiPredict.custSegs.consumer;
-        //console.log('id object ', this.props.item.id);
         const aiObject = obj.find((el) => el.id === null);
-        console.log(aiObject);
+        const age = this.state.ageGroup === null ? [] : this.state.ageGroup.map(e => e.id);
+        const ageAI = aiObject.age;
+        const agePredict = this.compareArray(ageAI, age);
+        const newAgeGroupArray = this.state.ageGroup === null ? [] : [...this.state.ageGroup];
+        for (var i in agePredict) {
+            const title = this.props.categories.customer_segments_types.age_groups.find((obj) => obj.id === agePredict[i]).title;
+            const new_age_group_obj = {
+                id: agePredict[i],
+                title: title,
+                tag: 1
+            }
+            console.log(new_age_group_obj)
+            newAgeGroupArray.push(new_age_group_obj);
+        }
+
         const gender = this.state.genderType === null ? [] : this.state.genderType.map(e => e.id);
         const genderAI = aiObject.gender;
-        console.log(genderAI);
         const genderPredict = this.compareArray(genderAI, gender);
-        console.log(genderPredict);
         const newGenderArray = this.state.genderType === null ? [] : [...this.state.genderType];
         for (var i in genderPredict) {
             const title = this.props.categories.customer_segments_types.gender_types.find((obj) => obj.id === genderPredict[i]).title;
@@ -352,66 +372,63 @@ class AddConsumerSegmentModal extends Component {
             console.log(new_gender_type_obj)
             newGenderArray.push(new_gender_type_obj);
         }
-        // const education = this.state.educationType.map(e => e.id);
-        // const educationAI = aiObject.education;
-        // const educationPredict = this.compareArray(educationAI, education);
-        // const newEducationArray = [...this.state.educationType];
-        // for (var i in educationPredict) {
-        //     const title = this.props.categories.customer_segments_types.education_types.find((obj) => obj.id === educationPredict[i]).title;
-        //     const new_education_type_obj = {
-        //         id: educationPredict[i],
-        //         title: title,
-        //         tag: 1
-        //     };
-        //     newEducationArray.push(new_education_type_obj);
-        // }
-        // const income = this.state.incomeType.map(e => e.id);
-        // const incomeAI = aiObject.income;
-        // const incomePredict = this.compareArray(incomeAI, income);
-        // const newIncomeArray = [...this.state.incomeType];
-        // console.log('income predict: ', incomePredict)
-        // for (var i in incomePredict) {
-        //     const title = this.props.categories.customer_segments_types.income_types.find((obj) => obj.id === incomePredict[i]).title;
-        //     const new_income_type_obj = {
-        //         id: incomePredict[i],
-        //         title: title,
-        //         tag: 1
-        //     }
-        //     newIncomeArray.push(new_income_type_obj);
-        // }
-        // const location = this.state.locationType.map(e => e.id);
-        // const locationAI = aiObject.geographic_location;
-        // console.log(locationAI)
-        // const locationPredict = this.compareArray(locationAI, location);
-        // const newLocationArray = [...this.state.locationType];
-        // console.log('location predict: ', locationPredict)
-        // for (var i in locationPredict) {
-        //     const title = this.props.categories.customer_segments_types.geographic_location.find((obj) => obj.id === locationPredict[i]).title;
-        //     const new_location_obj = {
-        //         id: locationPredict[i],
-        //         title: title,
-        //         tag: 1
-        //     }
-        //     newLocationArray.push(new_location_obj);
-        // }
-        console.log(newGenderArray);
+        const education = this.state.educationType === null ? [] : this.state.educationType.map(e => e.id);
+        const educationAI = aiObject.education;
+        const educationPredict = this.compareArray(educationAI, education);
+        const newEducationArray = this.state.educationType === null ? [] : [...this.state.educationType];
+        for (var i in educationPredict) {
+            const title = this.props.categories.customer_segments_types.education_types.find((obj) => obj.id === educationPredict[i]).title;
+            const new_education_type_obj = {
+                id: educationPredict[i],
+                title: title,
+                tag: 1
+            };
+            newEducationArray.push(new_education_type_obj);
+        }
+        const income = this.state.incomeType === null ? [] : this.state.incomeType.map(e => e.id);
+        const incomeAI = aiObject.income;
+        const incomePredict = this.compareArray(incomeAI, income);
+        const newIncomeArray = this.state.incomeType === null ? [] : [...this.state.incomeType];
+        console.log('income predict: ', incomePredict)
+        for (var i in incomePredict) {
+            const title = this.props.categories.customer_segments_types.income_types.find((obj) => obj.id === incomePredict[i]).title;
+            const new_income_type_obj = {
+                id: incomePredict[i],
+                title: title,
+                tag: 1
+            }
+            newIncomeArray.push(new_income_type_obj);
+        }
+        const location = this.state.locationType === null ? [] : this.state.locationType.map(e => e.id);
+        const locationAI = aiObject.geographic_location;
+        const locationPredict = this.compareArray(locationAI, location);
+        const newLocationArray = this.state.locationType === null ? [] : [...this.state.locationType];
+        for (var i in locationPredict) {
+            const title = this.props.categories.customer_segments_types.geographic_locations.find((obj) => obj.id === locationPredict[i]).title;
+            const new_location_obj = {
+                id: locationPredict[i],
+                title: title,
+                tag: 1
+            }
+            newLocationArray.push(new_location_obj);
+        }
         this.setState({
-            genderType: newGenderArray,
-            // educationType: newEducationArray,
-            // incomeType: newIncomeArray,
-            // locationType: newLocationArray
+            ageGroup: newAgeGroupArray.length === 0 ? null : newAgeGroupArray,
+            genderType: newGenderArray.length === 0 ? null : newGenderArray,
+            educationType: newEducationArray.length === 0 ? null : newEducationArray,
+            incomeType: newIncomeArray.length === 0 ? null : newIncomeArray,
+            locationType: newLocationArray.length === 0 ? null : newLocationArray
         })
         this.hidePopover();
     }
 
 
     render() {
-        console.log(this.state.genderType);
         const age = this.state.ageGroup !== null ? this.state.ageGroup.map(e => e.id) : [];
         const gender = this.state.genderType !== null ? this.state.genderType.map(e => e.id) : [];
         const education = this.state.educationType !== null ? this.state.educationType.map(e => e.id) : [];
-        const income = this.state.incomeType.map(e => e.id);
-        const location = this.state.locationType.map(e => e.id);
+        const income = this.state.incomeType !== null ? this.state.incomeType.map(e => e.id) : [];
+        const location = this.state.locationType !== null ? this.state.locationType.map(e => e.id) : [];
 
         const ageGroupOptions = this.props.categories.customer_segments_types.age_groups.map((obj) =>
             ({ label: obj.title, value: obj.id })
@@ -463,30 +480,36 @@ class AddConsumerSegmentModal extends Component {
         const ageTag = (props) => {
             const { label, value, onClose } = props;
             const tagColor = this.state.ageGroup !== null ? this.state.ageGroup.find(t => t.id === value) : null;
-            if (tagColor === null) {
-
-            } else {
-                if (tagColor.tag === 1) {
-                    return (
-                        <Tag
-                            closable
-                            onClose={onClose}
-                            style={{ fontSize: '14px', lineHeight: '22px', background: '#BAE7FF' }}
-                        >
-                            {label}
-                        </Tag>
-                    );
-                } else if (tagColor.tag === 0) {
-                    return (
-                        <Tag
-                            closable
-                            onClose={onClose}
-                            style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
-                        >
-                            {label}
-                        </Tag>
-                    );
-                }
+            if (tagColor.tag === 1) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#BAE7FF' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor.tag === 0) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor === null) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
             }
         }
         const genderTag = (props) => {
@@ -523,7 +546,7 @@ class AddConsumerSegmentModal extends Component {
                     </Tag>
                 );
             }
-            
+
         }
 
         const educationTag = (props) => {
@@ -565,60 +588,72 @@ class AddConsumerSegmentModal extends Component {
         const incomeTag = (props) => {
             const { label, value, onClose } = props;
             const tagColor = this.state.incomeType !== null ? this.state.incomeType.find(t => t.id === value) : null;
-            if (tagColor === null) {
-
-            } else {
-                if (tagColor.tag === 1) {
-                    return (
-                        <Tag
-                            closable
-                            onClose={onClose}
-                            style={{ fontSize: '14px', lineHeight: '22px', background: '#BAE7FF' }}
-                        >
-                            {label}
-                        </Tag>
-                    );
-                } else if (tagColor.tag === 0) {
-                    return (
-                        <Tag
-                            closable
-                            onClose={onClose}
-                            style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
-                        >
-                            {label}
-                        </Tag>
-                    );
-                }
+            if (tagColor.tag === 1) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#BAE7FF' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor.tag === 0) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor === null) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
             }
         }
 
         const locationTag = (props) => {
             const { label, value, onClose } = props;
             const tagColor = this.state.locationType !== null ? this.state.locationType.find(t => t.id === value) : null;
-            if (tagColor === null) {
-
-            } else {
-                if (tagColor.tag === 1) {
-                    return (
-                        <Tag
-                            closable
-                            onClose={onClose}
-                            style={{ fontSize: '14px', lineHeight: '22px', background: '#BAE7FF' }}
-                        >
-                            {label}
-                        </Tag>
-                    );
-                } else if (tagColor.tag === 0) {
-                    return (
-                        <Tag
-                            closable
-                            onClose={onClose}
-                            style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
-                        >
-                            {label}
-                        </Tag>
-                    );
-                }
+            if (tagColor.tag === 1) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#BAE7FF' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor.tag === 0) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor === null) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
             }
         }
 
@@ -666,20 +701,73 @@ class AddConsumerSegmentModal extends Component {
                             }>
                             <Input style={{ width: '100%', ...inputStyle }} placeholder="Add segment name" onChange={(e) => this.onNameChange(e.target.value)} />
                         </Form.Item>
-                        <Form.Item key="age" name="age" label="Age group (years)"
+
+                        {
+                            this.state.ageGroup === null ?
+                                <Form.Item key="age" label="Age group (years)"
+                                    rules={[{ required: true, message: 'Select age group (years)' }]}>
+                                    <Select
+                                        mode="multiple"
+                                        placeholder='Select age group (years)'
+                                        onChange={this.onAgeGroupChange.bind(this)}
+                                        value={age}
+                                        tagRender={ageTag}
+                                        options={ageGroupOptions}
+                                    />
+                                </Form.Item>
+                                : age.length > 0 ?
+                                    <Form.Item key="age" label="Age group (years)"
+                                        rules={[{ required: true, message: 'Select age group (years)' }]}>
+                                        <Select
+                                            mode="multiple"
+                                            placeholder="Select age group (years)"
+                                            onChange={this.onAgeGroupChange.bind(this)}
+                                            value={age}
+                                            tagRender={ageTag}
+                                            options={ageGroupOptions}
+                                        />
+                                    </Form.Item>
+                                    :
+                                    <Form.Item
+                                        key="age"
+                                        label="Age group (years)"
+                                        validateStatus="error"
+                                        help="Select age group (years)"
+                                        rules={[
+                                            {
+                                                validator: async (_, age) => {
+                                                    if (!age || age.length < 1) {
+                                                        return Promise.reject(new Error('Select age group (years)'));
+                                                    }
+                                                },
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            mode="multiple"
+                                            placeholder="Select age group (years)"
+                                            onChange={this.onAgeGroupChange.bind(this)}
+                                            value={age}
+                                            tagRender={ageTag}
+                                            options={ageGroupOptions}
+                                        />
+                                    </Form.Item>
+                        }
+
+                        {/* <Form.Item key="age" name="age" label="Age group (years)"
                             rules={[{ required: true, message: 'Select age group (years)' }]}>
-                            <Select 
-                                mode="multiple" 
-                                placeholder="Select age group (years)" 
-                                onChange={this.onAgeGroupChange.bind(this)} 
+                            <Select
+                                mode="multiple"
+                                placeholder="Select age group (years)"
+                                onChange={this.onAgeGroupChange.bind(this)}
                                 value={age}
                                 tagRender={ageTag}
                                 options={ageGroupOptions}
                             />
-                        </Form.Item>
+                        </Form.Item> */}
 
                         {
-                            this.state.genderType === null  ?
+                            this.state.genderType === null ?
                                 <Form.Item key="gender" label="Gender"
                                     rules={[{ required: true, message: 'Select gender' }]}>
                                     <Select
@@ -692,57 +780,101 @@ class AddConsumerSegmentModal extends Component {
                                     />
                                 </Form.Item>
                                 : gender.length > 0 ?
-                                <Form.Item key="gender" label="Gender"
-                                    rules={[{ required: true, message: 'Select gender' }]}>
-                                    <Select
-                                        mode="multiple"
-                                        placeholder="Select gender"
-                                        onChange={this.onGenderTypeChange.bind(this)}
-                                        value={gender}
-                                        tagRender={genderTag}
-                                        options={genderOptions}
-                                    />
-                                </Form.Item>
-                                :
-                                <Form.Item
-                                    key="gender"
-                                    label="Gender"
-                                    validateStatus="error"
-                                    help="Select gender"
-                                    rules={[
-                                        {
-                                            validator: async (_, gender) => {
-                                                if (!gender || gender.length < 1) {
-                                                    return Promise.reject(new Error('Select gender'));
-                                                }
+                                    <Form.Item key="gender" label="Gender"
+                                        rules={[{ required: true, message: 'Select gender' }]}>
+                                        <Select
+                                            mode="multiple"
+                                            placeholder="Select gender"
+                                            onChange={this.onGenderTypeChange.bind(this)}
+                                            value={gender}
+                                            tagRender={genderTag}
+                                            options={genderOptions}
+                                        />
+                                    </Form.Item>
+                                    :
+                                    <Form.Item
+                                        key="gender"
+                                        label="Gender"
+                                        validateStatus="error"
+                                        help="Select gender"
+                                        rules={[
+                                            {
+                                                validator: async (_, gender) => {
+                                                    if (!gender || gender.length < 1) {
+                                                        return Promise.reject(new Error('Select gender'));
+                                                    }
+                                                },
                                             },
-                                        },
-                                    ]}
-                                >
-                                    <Select
-                                        mode="multiple"
-                                        placeholder="Select gender"
-                                        onChange={this.onGenderTypeChange.bind(this)}
-                                        value={gender}
-                                        tagRender={genderTag}
-                                        options={genderOptions}
-                                    />
-                                </Form.Item>
+                                        ]}
+                                    >
+                                        <Select
+                                            mode="multiple"
+                                            placeholder="Select gender"
+                                            onChange={this.onGenderTypeChange.bind(this)}
+                                            value={gender}
+                                            tagRender={genderTag}
+                                            options={genderOptions}
+                                        />
+                                    </Form.Item>
                         }
 
-                        <Form.Item key="education" name="education" label="Education"
-                            rules={[{ required: true, message: 'Select education' }]}>
-                            <Select
-                                mode="multiple"
-                                placeholder="Choose education"
-                                onChange={this.onEducationTypeChange.bind(this)}
-                                value={education}
-                                tagRender={educationTag}
-                                options={educationOptions}
-                            />
-                        </Form.Item>
+                        {
+                            this.state.educationType === null ?
+                                <Form.Item
+                                    key="education"
+                                    label="Education"
+                                    rules={[{ required: true, message: 'Select education' }]}>
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Choose education"
+                                        onChange={this.onEducationTypeChange.bind(this)}
+                                        value={education}
+                                        tagRender={educationTag}
+                                        options={educationOptions}
+                                    />
+                                </Form.Item>
+                                : education.length > 0 ?
+                                    <Form.Item
+                                        key="education"
+                                        label="Education"
+                                        rules={[{ required: true, message: 'Select education' }]}>
+                                        <Select
+                                            mode="multiple"
+                                            placeholder="Choose education"
+                                            onChange={this.onEducationTypeChange.bind(this)}
+                                            value={education}
+                                            tagRender={educationTag}
+                                            options={educationOptions}
+                                        />
+                                    </Form.Item>
+                                    :
+                                    <Form.Item
+                                        key="education"
+                                        label="Education"
+                                        validateStatus="error"
+                                        help="Select education"
+                                        rules={[
+                                            {
+                                                validator: async (_, education) => {
+                                                    if (!education || education.length < 1) {
+                                                        return Promise.reject(new Error('Select education'));
+                                                    }
+                                                },
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            mode="multiple"
+                                            placeholder="Choose education"
+                                            onChange={this.onEducationTypeChange.bind(this)}
+                                            value={education}
+                                            tagRender={educationTag}
+                                            options={educationOptions}
+                                        />
+                                    </Form.Item>
+                        }
 
-                        <Form.Item key="income" name="income" label="Income"
+                        {/* <Form.Item key="income" name="income" label="Income"
                             rules={[{ required: true, message: 'Select income' }]}>
                             <Select
                                 mode="multiple"
@@ -752,19 +884,127 @@ class AddConsumerSegmentModal extends Component {
                                 tagRender={incomeTag}
                                 options={incomeOptions}
                             />
-                        </Form.Item>
+                        </Form.Item> */}
 
-                        <Form.Item key="geographicLocation" name="geographicLocation" label="Geographic Location"
+                        {
+                            this.state.incomeType === null ?
+                                <Form.Item
+                                    key="income"
+                                    label="Income"
+                                    rules={[{ required: true, message: 'Select income' }]}
+                                >
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Choose income"
+                                        onChange={this.onIncomeTypeChange.bind(this)}
+                                        value={income}
+                                        tagRender={incomeTag}
+                                        options={incomeOptions}
+                                    />
+                                </Form.Item>
+                                : income.length > 0 ?
+                                    <Form.Item
+                                        key="income"
+                                        label="Income"
+                                        rules={[{ required: true, message: 'Select income' }]}
+                                    >
+                                        <Select
+                                            mode="multiple"
+                                            placeholder="Choose income"
+                                            onChange={this.onIncomeTypeChange.bind(this)}
+                                            value={income}
+                                            tagRender={incomeTag}
+                                            options={incomeOptions}
+                                        />
+                                    </Form.Item>
+                                    :
+                                    <Form.Item
+                                        key="income"
+                                        label="Income"
+                                        validateStatus="error"
+                                        help="Select income"
+                                        rules={[
+                                            {
+                                                validator: async (_, income) => {
+                                                    if (!income || income.length < 1) {
+                                                        return Promise.reject(new Error('Select income'));
+                                                    }
+                                                },
+                                            },
+                                        ]}>
+                                        <Select
+                                            mode="multiple"
+                                            placeholder="Choose income"
+                                            onChange={this.onIncomeTypeChange.bind(this)}
+                                            value={income}
+                                            tagRender={incomeTag}
+                                            options={incomeOptions}
+                                        />
+                                    </Form.Item>
+                        }
+
+                        {/* <Form.Item key="geographicLocation" name="geographicLocation" label="Geographic Location"
                             rules={[{ required: true, message: 'Select geographic location' }]}>
-                            <Select 
-                                mode="multiple" 
-                                placeholder="Choose geographic location" 
-                                onChange={this.onLocationTypeChange.bind(this)} 
+                            <Select
+                                mode="multiple"
+                                placeholder="Choose geographic location"
+                                onChange={this.onLocationTypeChange.bind(this)}
                                 value={location}
                                 tagRender={locationTag}
                                 options={locationOptions}
                             />
-                        </Form.Item>
+                        </Form.Item> */}
+                        {
+                            this.state.locationType === null ?
+                                <Form.Item key="geographicLocation" label="Geographic Location"
+                                    rules={[{ required: true, message: 'Choose geographic location' }]}>
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Choose geographic location"
+                                        onChange={this.onLocationTypeChange.bind(this)}
+                                        value={location}
+                                        tagRender={locationTag}
+                                        options={locationOptions}
+                                    />
+                                </Form.Item>
+                                : location.length > 0 ?
+                                    <Form.Item key="geographicLocation" label="Geographic Location"
+                                        rules={[{ required: true, message: 'Choose geographic location' }]}>
+                                        <Select
+                                            mode="multiple"
+                                            placeholder="Choose geographic location"
+                                            onChange={this.onLocationTypeChange.bind(this)}
+                                            value={location}
+                                            tagRender={locationTag}
+                                            options={locationOptions}
+                                        />
+                                    </Form.Item>
+                                    :
+                                    <Form.Item
+                                        key="geographicLocation"
+                                        label="Geographic Location"
+                                        validateStatus="error"
+                                        help="Choose geographic location"
+                                        rules={[
+                                            {
+                                                validator: async (_, geographicLocation) => {
+                                                    if (!geographicLocation || geographicLocation.length < 1) {
+                                                        return Promise.reject(new Error('Choose geographic location'));
+                                                    }
+                                                },
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            mode="multiple"
+                                            placeholder="Choose geographic location"
+                                            onChange={this.onLocationTypeChange.bind(this)}
+                                            value={location}
+                                            tagRender={locationTag}
+                                            options={locationOptions}
+                                        />
+                                    </Form.Item>
+                        }
                     </Form>
                 </Modal>
             </>
