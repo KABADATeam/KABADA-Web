@@ -19,7 +19,10 @@ class AddPublicBodiesSegmentModal extends Component {
         segmentName: '',
         segmentNameError: false,
         ngoType: [],
-        ngoTypeError: false
+        ngoTypeError: false,
+        popoverText: 'first',
+        popoverType: true,
+        popoverTextObject: []
     }
 
     onCancel = () => {
@@ -113,9 +116,23 @@ class AddPublicBodiesSegmentModal extends Component {
         });
     }
     handlePopoverVisibilityChange = (visible) => {
-        this.setState({
-            popoverVisibility: visible
-        })
+        console.log('Opp');
+        if (this.props.customerSegments.aiPredict === null) {
+            console.log('AiPredict nera')
+            this.setState({
+                popoverVisibility: visible,
+                popoverType: false
+            })
+        } else {
+            const text = this.generateAIHelpText(this.props.customerSegments.aiPredict.custSegs.publicNgo, this.props.categories.customer_segments_types)
+            console.log(text);
+            this.setState({
+                popoverVisibility: visible,
+                popoverTextObject: text
+            })
+        }
+
+
     }
     hidePopover = () => {
         this.setState({
@@ -131,32 +148,99 @@ class AddPublicBodiesSegmentModal extends Component {
         }
         return newArray;
     }
-    onAIButtonClick = () => {
-        const obj = this.props.customerSegments.aiPredict.custSegs.publicNgo;
-        console.log(obj);
-        if (obj !== undefined){
-            const aiObject = obj.find((el) => el.id === null);
-        const ngoType = this.state.ngoType.map(e => e.id);
-        const ngoTypeAI = aiObject.business_type;
-        const ngoTypePredict = this.compareArray(ngoTypeAI, ngoType);
-        const newNgoTypeArray = [...this.state.ngoType];
-        console.log(newNgoTypeArray)
-        for (var i in ngoTypePredict) {
-            const title = this.props.categories.customer_segments_types.ngo_types.find((obj) => obj.id === ngoTypePredict[i]).title;
-            const new_ngo_type_obj = {
-                id: ngoTypePredict[i],
-                title: title,
-                tag: 1
+    generateAIHelpText = (predictsObj, segmentTypes) => {
+        const aiHintTextObject = [];
+        console.log(this.state.ngoType);
+        console.log(predictsObj);
+        if (this.state.ngoType.length === 0) {
+            const predictObj = predictsObj.find(s => s.id === null);
+            console.log('Rastas obj ', predictObj)
+            const predictProperties = Object.getOwnPropertyNames(predictObj);
+            console.log('Visi properties ', predictProperties)
+            const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
+            for (const property of filteredPredictProperties) {
+                const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
+                const propertyType = property === 'business_type' ? segmentTypes.ngo_types : null;
+                let propertiesValuesString = ''
+                for (var i = 0; i < predictObjPropertyValues.length; i++) {
+                    const propertyTypeTitle = propertyType.find(p => p.id === predictObjPropertyValues[i]);
+                    propertiesValuesString += i === predictObjPropertyValues.length - 1 ? propertyTypeTitle.title + '' : propertyTypeTitle.title + ', '
+                }
+                const new_obj = {
+                    type_title: property === 'business_type' ? 'Type' : property,
+                    text: propertiesValuesString
+                }
+                aiHintTextObject.push(new_obj);
             }
-            newNgoTypeArray.push(new_ngo_type_obj);
+            return aiHintTextObject
+        } else {
+            console.log('ngo ne 0')
+            const predictObj = predictsObj.find(s => s.id === null);
+            console.log(predictObj)
+            const predictProperties = Object.getOwnPropertyNames(predictsObj.find(s => s.id === null));
+            console.log(predictProperties)
+            console.log(this.state.ngoType)
+            const item = {
+                "business_type": this.state.ngoType
+            }
+            const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
+            for (const property of filteredPredictProperties) {
+                console.log(property);
+                console.log(item)
+                const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(item, property).value;
+                const selectedItemPropertyValues = selectedItemPropertyValuesObj.map(s => s.id);
+                console.log(selectedItemPropertyValues);
+                const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
+                console.log(predictObjPropertyValues);
+                const propertyType = property === 'business_type' ? segmentTypes.ngo_types : null;
+                const comparePropertiesValues = this.compareArray(predictObjPropertyValues, selectedItemPropertyValues);
+                console.log(comparePropertiesValues);
+                let propertiesValuesString = ''
+                if (comparePropertiesValues.length > 0) {
+                    const typePredictArray = []
+                    for (var i = 0; i < comparePropertiesValues.length; i++) {
+                        const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[i]);
+                        propertiesValuesString += i === predictObjPropertyValues.length - 1 ? propertyTypeTitle.title + '' : propertyTypeTitle.title + ', '
+                        typePredictArray.push(propertyTypeTitle);
+                    }
+                    console.log(propertiesValuesString);
+                    const new_obj = {
+                        type_title: property.charAt(0).toUpperCase() + property.slice(1),
+                        text: propertiesValuesString
+                    }
+                    aiHintTextObject.push(new_obj);
+                }
+            }
+            return aiHintTextObject
         }
-        this.setState({
-            ngoType: newNgoTypeArray,
-            ngoTypeError: newNgoTypeArray.length !== 0 ? false: true,
-        })
+    }
+    onAIButtonClick = () => {
+        if (this.props.customerSegments.aiPredict !== null) {
+            const obj = this.props.customerSegments.aiPredict.custSegs.publicNgo;
+            console.log(obj);
+            if (obj !== undefined) {
+                const aiObject = obj.find((el) => el.id === null);
+                const ngoType = this.state.ngoType.map(e => e.id);
+                const ngoTypeAI = aiObject.business_type;
+                const ngoTypePredict = this.compareArray(ngoTypeAI, ngoType);
+                const newNgoTypeArray = [...this.state.ngoType];
+                console.log(newNgoTypeArray)
+                for (var i in ngoTypePredict) {
+                    const title = this.props.categories.customer_segments_types.ngo_types.find((obj) => obj.id === ngoTypePredict[i]).title;
+                    const new_ngo_type_obj = {
+                        id: ngoTypePredict[i],
+                        title: title,
+                        tag: 1
+                    }
+                    newNgoTypeArray.push(new_ngo_type_obj);
+                }
+                this.setState({
+                    ngoType: newNgoTypeArray,
+                    ngoTypeError: newNgoTypeArray.length !== 0 ? false : true,
+                })
+            }
+        }
         this.hidePopover();
-        }
-        
     }
 
     render() {
@@ -166,30 +250,38 @@ class AddPublicBodiesSegmentModal extends Component {
         );
         const popoverContent = (
             <>
-                <Row>
-                    <Text>
-                        Text
-                        {/* Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.predictText.map((e, index) =>
-                            <Text key={index} > for "{e.type_title}": {e.predict.map((p, index) => <Text key={index}>{p.title},</Text>)}</Text>)}. */}
-                    </Text>
-                    {/* Based on your input KABADA AI recommends that you consider adding for "Gender" male, for "Education" Primary. */}
-                </Row>
-                <Row style={{ marginTop: '12px' }}>
-                    <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
-                    <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
-                </Row>
-            </>
-        )
-        const popoverContentError = (
-            <>
-                <Row>
-                    <Text>
-                        AI did not have predict
-                    </Text>
-                </Row>
-                <Row style={{ marginTop: '12px' }}>
-                    <Button onClick={this.hidePopover}>Cancel</Button>
-                </Row>
+                {
+                    this.state.popoverType === false ?
+                        <>
+                            <Row>
+                                <Text>
+                                    Based on the current information KABADA AI did not have any suggestions.
+                                </Text>
+                            </Row>
+                            <Row style={{ marginTop: '12px' }}>
+                                <Button onClick={this.hidePopover}>Cancel</Button>
+                            </Row>
+                        </>
+                        :
+                        <>
+                            <Row>
+                                {
+                                    this.state.popoverTextObject.length === 0 ?
+                                        <Text>Based on the current information KABADA AI thinks that everything looks good.</Text>
+                                        :
+                                        <Text>
+                                            Based on your input KABADA AI recommends that you consider adding {this.state.popoverTextObject.map((e, index) =>
+                                                <Text key={index} > for "{e.type_title}": {e.text}</Text>)}.
+                                        </Text>
+                                }
+
+                            </Row>
+                            <Row style={{ marginTop: '12px' }}>
+                                <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
+                                <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
+                            </Row>
+                        </>
+                }
             </>
         )
         const ngoTag = (props) => {
@@ -237,7 +329,7 @@ class AddPublicBodiesSegmentModal extends Component {
                         <Popover
                             placement='topLeft'
                             title='AI Hint'
-                            content={this.props.customerSegments.errorMessage === false ? popoverContent : popoverContentError}
+                            content={popoverContent}
                             overlayStyle={{ width: "328px" }}
                             trigger="click"
                             visible={this.state.popoverVisibility}
@@ -279,7 +371,7 @@ class AddPublicBodiesSegmentModal extends Component {
                         }
                         {
                             this.state.ngoTypeError === false ?
-                            <Form.Item key="type" label="Type">
+                                <Form.Item key="type" label="Type">
                                     <Select
                                         mode="multiple"
                                         placeholder="Select type"
