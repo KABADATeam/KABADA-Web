@@ -10,7 +10,6 @@ const { Text } = Typography;
 
 const inputStyle = {
     borderRadius: '4px',
-    borderColor: '#BFBFBF',
     height: '40px'
 };
 
@@ -19,8 +18,12 @@ class EditPublicBodiesSegmentModal extends Component {
         super(props);
         this.state = {
             segmentName: this.props.item.segment_name,
+            segmentNameError: false,
             ngoType: this.props.item.ngo_types.map(e => ({ id: e.id, title: e.title, tag: 0 })),
-            popoverVisibility: false
+            ngoTypeError: false, 
+            popoverVisibility: false,
+            popoverType: 'no predict',
+            popoverTextObject: []
         }
     }
 
@@ -34,33 +37,39 @@ class EditPublicBodiesSegmentModal extends Component {
 
     onOK = () => {
         const { segmentName, ngoType } = this.state;
-        if (segmentName.length > 0 && ngoType.length > 0){
+        if (segmentName.length > 0 && ngoType.length > 0) {
             const ngo_Type = this.state.ngoType.map(e => e.id);
-        const postObj = {
-            "id": this.props.item.id,
-            "business_plan_id": this.props.businessPlan.id,
-            "ngo_types": ngo_Type,
-            "segment_name": this.state.segmentName
-        };
+            const postObj = {
+                "id": this.props.item.id,
+                "business_plan_id": this.props.businessPlan.id,
+                "ngo_types": ngo_Type,
+                "segment_name": this.state.segmentName
+            };
 
-        const selected_ngo_types = this.props.categories.customer_segments_types.ngo_types.filter((item) => ngo_Type.some((field) => item.id === field));
+            const selected_ngo_types = this.props.categories.customer_segments_types.ngo_types.filter((item) => ngo_Type.some((field) => item.id === field));
 
-        const reducerObj = {
-            "id": this.props.item.id,
-            "key": this.props.item.id,
-            "ngo_types": selected_ngo_types,
-            "ngo_types_titles": selected_ngo_types.map(e => e.title).join(", "),
-            "segment_name": this.state.segmentName
-        };
+            const reducerObj = {
+                "id": this.props.item.id,
+                "key": this.props.item.id,
+                "ngo_types": selected_ngo_types,
+                "ngo_types_titles": selected_ngo_types.map(e => e.title).join(", "),
+                "segment_name": this.state.segmentName
+            };
 
-        this.props.updateNgoSegment(postObj, reducerObj);
-        this.props.onClose();
-        }  
+            this.props.updateNgoSegment(postObj, reducerObj);
+            this.props.onClose();
+        } else {
+            this.setState({
+                segmentNameError: segmentName.length === 0 ? true : false,
+                ngoTypeError: ngoType.length === 0 ? true : false
+            })
+        }
     }
 
     onNameChange(value) {
         this.setState({
-            segmentName: value
+            segmentName: value,
+            segmentNameError: value.length !== 0 ? false : true
         })
     }
 
@@ -95,13 +104,31 @@ class EditPublicBodiesSegmentModal extends Component {
             }
         }
         this.setState({
-            ngoType: ngoTypeArray
+            ngoType: ngoTypeArray,
+            ngoTypeError: ngoTypeArray.length !== 0 ? false : true
         });
     }
     handlePopoverVisibilityChange = (visible) => {
-        this.setState({
-            popoverVisibility: visible
-        })
+        if (this.props.customerSegments.aiPredict === null) {
+            this.setState({
+                popoverVisibility: visible,
+                popoverType: 'no predict'
+            })
+        } else {
+            const text = this.generateAIHelpText(this.props.item, this.props.customerSegments.aiPredict.custSegs.publicNgo, this.props.categories.customer_segments_types);
+            if (text === undefined) {
+                this.setState({
+                    popoverVisibility: visible,
+                    popoverType: 'no predict',
+                })
+            } else {
+                this.setState({
+                    popoverVisibility: visible,
+                    popoverType: 'is predict',
+                    popoverTextObject: text
+                })
+            }
+        }
     }
     hidePopover = () => {
         this.setState({
@@ -116,6 +143,48 @@ class EditPublicBodiesSegmentModal extends Component {
             }
         }
         return newArray;
+    }
+    generateAIHelpText = (selectedItem, predictsObj, segmentTypes) => {
+        const aiHintTextObject = [];
+        if (predictsObj !== undefined) {
+            const predictObj = predictsObj.find(s => s.id === selectedItem.id);
+            if (predictObj !== undefined) {
+                const predictProperties = Object.getOwnPropertyNames(predictsObj.find(s => s.id === selectedItem.id));
+                const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
+                for (const property of filteredPredictProperties) {
+                    const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(selectedItem, property).value;
+                    const selectedItemPropertyValues = selectedItemPropertyValuesObj.map(s => s.id);
+                    const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
+                    const propertyType = property === 'business_type' ? segmentTypes.ngo_types : null;
+                    const comparePropertiesValues = this.compareArray(predictObjPropertyValues, selectedItemPropertyValues);
+                    let propertiesValuesString = '';
+                    if (comparePropertiesValues.length > 0) {
+                        const typePredictArray = []
+                        for (var i = 0; i < comparePropertiesValues.length; i++) {
+                            const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[i]);
+                            propertiesValuesString += i === predictObjPropertyValues.length - 1 ? propertyTypeTitle.title + '' : propertyTypeTitle.title + ', '
+                            typePredictArray.push(propertyTypeTitle);
+                        }
+                        const new_obj = {
+                            type_title: property.charAt(0).toUpperCase() + property.slice(1),
+                            text: propertiesValuesString
+                        }
+                        aiHintTextObject.push(new_obj);
+                    }
+                }
+                return aiHintTextObject
+            } else {
+                this.setState({
+                    popoverType: 'no predict',
+                })
+            }
+
+        } else {
+            this.setState({
+                popoverType: 'no predict',
+            })
+        }
+
     }
     onAIButtonClick = () => {
         const obj = this.props.customerSegments.aiPredict.custSegs.publicNgo;
@@ -145,31 +214,41 @@ class EditPublicBodiesSegmentModal extends Component {
         );
         const popoverContent = (
             <>
-                <Row>
-                    <Text>
-                        Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.predictText.map((e, index) =>
-                            <Text key={index} > for "{e.type_title}": {e.predict.map((p, index) => <Text key={index}>{p.title},</Text>)}</Text>)}.
-                    </Text>
-                    {/* Based on your input KABADA AI recommends that you consider adding for "Gender" male, for "Education" Primary. */}
-                </Row>
-                <Row style={{ marginTop: '12px' }}>
-                    <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
-                    <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
-                </Row>
+                {
+                    this.state.popoverType === 'no predict' ?
+                        <>
+                            <Row>
+                                <Text>
+                                    Based on the current information KABADA AI did not have any suggestions.
+                                </Text>
+                            </Row>
+                            <Row style={{ marginTop: '12px' }}>
+                                <Button onClick={this.hidePopover}>Cancel</Button>
+                            </Row>
+                        </>
+                        :
+                        <>
+                            <Row>
+                                {
+                                    this.state.popoverTextObject.length === 0 ?
+                                        <Text>Based on the current information KABADA AI thinks that everything looks good.</Text>
+                                        :
+                                        <Text>
+                                            Based on your input KABADA AI recommends that you consider adding {this.state.popoverTextObject.map((e, index) =>
+                                                <Text key={index} > for "{e.type_title}": {e.text}</Text>)}.
+                                        </Text>
+                                }
+
+                            </Row>
+                            <Row style={{ marginTop: '12px' }}>
+                                <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
+                                <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
+                            </Row>
+                        </>
+                }
             </>
         )
-        const popoverContentError = (
-            <>
-                <Row>
-                    <Text>
-                        AI did not have predict
-                    </Text>
-                </Row>
-                <Row style={{ marginTop: '12px' }}>
-                    <Button onClick={this.hidePopover}>Cancel</Button>
-                </Row>
-            </>
-        )
+
         const ngoTag = (props) => {
             const { label, value, onClose } = props;
             const tagColor = this.state.ngoType.find(t => t.id === value);
@@ -208,7 +287,7 @@ class EditPublicBodiesSegmentModal extends Component {
         }
         return (
             // Public bodies & NGO segments
-            <> 
+            <>
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
@@ -216,7 +295,7 @@ class EditPublicBodiesSegmentModal extends Component {
                         <Popover
                             placement='topLeft'
                             title='AI Hint'
-                            content={this.props.customerSegments.errorMessage === false ? popoverContent : popoverContentError}
+                            content={popoverContent}
                             overlayStyle={{ width: "328px" }}
                             trigger="click"
                             visible={this.state.popoverVisibility}
@@ -242,28 +321,23 @@ class EditPublicBodiesSegmentModal extends Component {
                         </div>
                     }
                 >
-                    <Form hideRequiredMark layout="vertical" id="editPublicBodiesNgoForm" name="editPublicBodiesNgoForm" onFinish={this.onOK}
-                        initialValues={{
-                            name: this.props.item.segment_name
-                        }}>
-                        <Form.Item
-                            key="name"
-                            name="name"
-                            label="Segment name"
-                            rules={
-                                [{ required: true, message: 'Type segment name' }]
-                            }>
-                            <Input
-                                style={{ width: '100%', ...inputStyle }}
-                                placeholder="Edit segment name"
-                                value={this.state.segmentName}
-                                onChange={(e) => this.onNameChange(e.target.value)}
-                            />
-                        </Form.Item>
+                    <Form hideRequiredMark layout="vertical" id="editPublicBodiesNgoForm" name="editPublicBodiesNgoForm" onFinish={this.onOK}>
                         {
-                            this.state.ngoType.length > 0 ?
-                            <Form.Item key="type" label="Type"
-                                    rules={[{ required: true, message: 'Select type' }]}>
+                            this.state.segmentNameError === false ?
+                                <Form.Item key="name" label="Segment name">
+                                    <Input style={{...inputStyle}} placeholder="Add segment name" value={this.state.segmentName} onChange={(e) => this.onNameChange(e.target.value)} />
+                                </Form.Item>
+                                :
+                                <Form.Item key="name" label="Segment name"
+                                    validateStatus="error"
+                                    help='Type segment name'
+                                >
+                                    <Input style={{...inputStyle}} placeholder="Add segment name" value={this.state.segmentName} onChange={(e) => this.onNameChange(e.target.value)} />
+                                </Form.Item>
+                        }
+                        {
+                            this.state.ngoTypeError === false ?
+                                <Form.Item key="type" label="Type">
                                     <Select
                                         mode="multiple"
                                         placeholder="Select type"
@@ -279,15 +353,6 @@ class EditPublicBodiesSegmentModal extends Component {
                                     label="Type"
                                     validateStatus="error"
                                     help="Select type"
-                                    rules={[
-                                        {
-                                            validator: async (_, type) => {
-                                                if (!type || type.length < 1) {
-                                                    return Promise.reject(new Error('Select type'));
-                                                }
-                                            },
-                                        },
-                                    ]}
                                 >
                                     <Select
                                         mode="multiple"
@@ -299,7 +364,6 @@ class EditPublicBodiesSegmentModal extends Component {
                                     />
                                 </Form.Item>
                         }
-                        
                     </Form>
                 </Modal>
             </>
