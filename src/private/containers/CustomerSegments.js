@@ -100,7 +100,7 @@ class CustomerSegments extends React.Component {
             "location": 'custSegs::business',
             "planId": this.props.businessPlan.id
         };
-        this.props.getAIValues(postObj, null, 'business');
+        this.props.getAIValues(postObj, null, 'publicNgo');
     }
 
     onCloseAddSegmentModal = () => {

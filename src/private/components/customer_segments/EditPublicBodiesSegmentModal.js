@@ -34,28 +34,28 @@ class EditPublicBodiesSegmentModal extends Component {
 
     onOK = () => {
         const { segmentName, ngoType } = this.state;
-        if (segmentName.length > 0 && ngoType.length > 0){
+        if (segmentName.length > 0 && ngoType.length > 0) {
             const ngo_Type = this.state.ngoType.map(e => e.id);
-        const postObj = {
-            "id": this.props.item.id,
-            "business_plan_id": this.props.businessPlan.id,
-            "ngo_types": ngo_Type,
-            "segment_name": this.state.segmentName
-        };
+            const postObj = {
+                "id": this.props.item.id,
+                "business_plan_id": this.props.businessPlan.id,
+                "ngo_types": ngo_Type,
+                "segment_name": this.state.segmentName
+            };
 
-        const selected_ngo_types = this.props.categories.customer_segments_types.ngo_types.filter((item) => ngo_Type.some((field) => item.id === field));
+            const selected_ngo_types = this.props.categories.customer_segments_types.ngo_types.filter((item) => ngo_Type.some((field) => item.id === field));
 
-        const reducerObj = {
-            "id": this.props.item.id,
-            "key": this.props.item.id,
-            "ngo_types": selected_ngo_types,
-            "ngo_types_titles": selected_ngo_types.map(e => e.title).join(", "),
-            "segment_name": this.state.segmentName
-        };
+            const reducerObj = {
+                "id": this.props.item.id,
+                "key": this.props.item.id,
+                "ngo_types": selected_ngo_types,
+                "ngo_types_titles": selected_ngo_types.map(e => e.title).join(", "),
+                "segment_name": this.state.segmentName
+            };
 
-        this.props.updateNgoSegment(postObj, reducerObj);
-        this.props.onClose();
-        }  
+            this.props.updateNgoSegment(postObj, reducerObj);
+            this.props.onClose();
+        }
     }
 
     onNameChange(value) {
@@ -145,17 +145,33 @@ class EditPublicBodiesSegmentModal extends Component {
         );
         const popoverContent = (
             <>
-                <Row>
-                    <Text>
-                        Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.predictText.map((e, index) =>
-                            <Text key={index} > for "{e.type_title}": {e.predict.map((p, index) => <Text key={index}>{p.title},</Text>)}</Text>)}.
-                    </Text>
-                    {/* Based on your input KABADA AI recommends that you consider adding for "Gender" male, for "Education" Primary. */}
-                </Row>
-                <Row style={{ marginTop: '12px' }}>
-                    <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
-                    <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
-                </Row>
+                {
+                    this.props.customerSegments.predictText === 'No text' ?
+                        <>
+                          <Row>
+                                <Text>
+                                    Based on the current information KABADA AI did not have any suggestions.
+                                </Text>
+                            </Row>
+                            <Row style={{ marginTop: '12px' }}>
+                                <Button onClick={this.hidePopover}>Cancel</Button>
+                            </Row>  
+                        </>
+                        :
+                        <>
+                            <Row>
+                                <Text>Test
+                                    {/* Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.predictText.map((e, index) =>
+                            <Text key={index} > for "{e.type_title}": {e.predict.map((p, index) => <Text key={index}>{p.title},</Text>)}</Text>)}. */}
+                                </Text>
+                                {/* Based on your input KABADA AI recommends that you consider adding for "Gender" male, for "Education" Primary. */}
+                            </Row>
+                            <Row style={{ marginTop: '12px' }}>
+                                <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
+                                <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
+                            </Row>
+                        </>
+                }
             </>
         )
         const popoverContentError = (
@@ -208,7 +224,7 @@ class EditPublicBodiesSegmentModal extends Component {
         }
         return (
             // Public bodies & NGO segments
-            <> 
+            <>
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
@@ -216,7 +232,7 @@ class EditPublicBodiesSegmentModal extends Component {
                         <Popover
                             placement='topLeft'
                             title='AI Hint'
-                            content={this.props.customerSegments.errorMessage === false ? popoverContent : popoverContentError}
+                            content={popoverContent}
                             overlayStyle={{ width: "328px" }}
                             trigger="click"
                             visible={this.state.popoverVisibility}
@@ -262,7 +278,7 @@ class EditPublicBodiesSegmentModal extends Component {
                         </Form.Item>
                         {
                             this.state.ngoType.length > 0 ?
-                            <Form.Item key="type" label="Type"
+                                <Form.Item key="type" label="Type"
                                     rules={[{ required: true, message: 'Select type' }]}>
                                     <Select
                                         mode="multiple"
@@ -299,7 +315,7 @@ class EditPublicBodiesSegmentModal extends Component {
                                     />
                                 </Form.Item>
                         }
-                        
+
                     </Form>
                 </Modal>
             </>

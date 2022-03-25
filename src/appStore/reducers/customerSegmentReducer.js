@@ -143,7 +143,7 @@ export const customerSegmentReducer = (
             const selectedNGOItemID = action.payload.itemID === null ? null : state.public_bodies_ngo.find(c => c.id === action.payload.itemID);
             const text = action.payload.segmentType === 'consumer' ? generateAIHelpText(selectedConsumerItemID, action.payload.data.plan.custSegs.consumer, action.payload.segments.customer_segments_types)
                 : action.payload.segmentType === 'business' ? generateAIHelpText(selectedBusinessItemID, action.payload.data.plan.custSegs.business, action.payload.segments.customer_segments_types)
-                    : action.payload.segmentType === 'public_bodies_ngo' ? generateAIHelpText(selectedNGOItemID, action.payload.data.plan.custSegs.publicNgo, action.payload.segments.customer_segments_types)
+                    : action.payload.segmentType === 'publicNgo' ? generateAIHelpText(selectedNGOItemID, action.payload.data.plan.custSegs.publicNgo, action.payload.segments.customer_segments_types)
                         : 'No text'
             console.log('text ', text);
             return {
