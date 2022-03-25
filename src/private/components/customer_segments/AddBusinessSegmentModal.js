@@ -17,11 +17,12 @@ class AddBusinessSegmentModal extends Component {
     state = {
         segmentName: '',
         segmentNameError: false,
-        type: null,
-        companySize: null,
-        locationType: null,
-        //annualRevenue: null,
-        //budget: null,
+        type: [],
+        typeError: false,
+        companySize: [],
+        companySizeError: false,
+        locationType: [],
+        locationTypeError: false
     }
 
     onCancel = () => {
@@ -34,7 +35,7 @@ class AddBusinessSegmentModal extends Component {
 
     onOK = () => {
         const { type, companySize, locationType, segmentName } = this.state;
-        if (type !== null && companySize !== null && locationType !== null & type.length !== 0 && companySize.length !== 0 && locationType.length !== 0 && segmentName.length !== 0) {
+        if (type.length !== 0 && companySize.length !== 0 && locationType.length !== 0 && segmentName.length !== 0) {
             const businessType = type.map(e => e.id);
             const size = companySize.map(e => e.id);
             const location = locationType.map(e => e.id);
@@ -62,16 +63,20 @@ class AddBusinessSegmentModal extends Component {
             };
             this.props.saveBusinessSegment(postObj, reducerObj);
             this.setState({
-                segmentNameError: false
+                segmentNameError: false,
+                typeError: false,
+                companySizeError: false,
+                locationTypeError: false
             })
             this.props.onClose();
         } else {
             console.log('Nope');
+            console.log(type);
             this.setState({
-                segmentNameError: true,
-                type: type === null ? [] : type,
-                companySize: companySize === null ? [] : companySize,
-                locationType: locationType === null ? [] : locationType
+                segmentNameError: segmentName.length === 0 ? true : false,
+                typeError: type.length === 0 ? true : false,
+                companySizeError: companySize.length === 0 ? true : false,
+                locationTypeError: locationType.length === 0 ? true : false
             })
         }
     }
@@ -125,20 +130,27 @@ class AddBusinessSegmentModal extends Component {
         return resultArray;
     }
     onTypeChange(value) {
+        console.log(value);
+        const type_value = this.addSelectedValue(value, this.state.type, this.props.categories.customer_segments_types.business_types);
         this.setState({
-            type: this.addSelectedValue(value, this.state.type, this.props.categories.customer_segments_types.business_types)
+            type: type_value,
+            typeError: type_value.length !== 0 ? false : true
         });
     }
 
     onCompanySizeChange(value) {
+        const company_size_value = this.addSelectedValue(value, this.state.companySize, this.props.categories.customer_segments_types.company_sizes);
         this.setState({
-            companySize: this.addSelectedValue(value, this.state.companySize, this.props.categories.customer_segments_types.company_sizes)
+            companySize: company_size_value,
+            companySizeError: company_size_value.length !== 0 ? false : true
         });
     }
 
     onLocationTypeChange(value) {
+        const location_type_value = this.addSelectedValue(value, this.state.locationType, this.props.categories.customer_segments_types.geographic_locations);
         this.setState({
-            locationType: this.addSelectedValue(value, this.state.locationType, this.props.categories.customer_segments_types.geographic_locations)
+            locationType: location_type_value,
+            locationTypeError: location_type_value.length !== 0 ? false : true
         })
     }
     handlePopoverVisibilityChange = (visible) => {
@@ -166,6 +178,7 @@ class AddBusinessSegmentModal extends Component {
         const type = this.state.type === null ? [] : this.state.type.map(e => e.id);
         const typeAI = aiObject.business_type;
         const typePredict = this.compareArray(typeAI, type);
+        console.log(typePredict)
         const newTypeArray = this.state.type === null ? [] : [...this.state.type];
         for (var i in typePredict) {
             const title = this.props.categories.customer_segments_types.business_types.find((obj) => obj.id === typePredict[i]).title;
@@ -203,9 +216,12 @@ class AddBusinessSegmentModal extends Component {
             newLocationArray.push(new_location_obj);
         }
         this.setState({
-            type: newTypeArray.length === 0 ? null : newTypeArray,
-            companySize: newCompanySizeArray.length === 0 ? null : newCompanySizeArray,
-            locationType: newLocationArray.length === 0 ? null : newLocationArray
+            type: newTypeArray.length === 0 ? [] : newTypeArray,
+            typeError: newTypeArray.length === 0 ? true: false,
+            companySize: newCompanySizeArray.length === 0 ? [] : newCompanySizeArray,
+            companySizeError: newCompanySizeArray.length === 0 ? true : false,
+            locationType: newLocationArray.length === 0 ? [] : newLocationArray,
+            locationTypeError: newLocationArray.length === 0 ? true : false
         })
         this.hidePopover();
     }
@@ -410,12 +426,9 @@ class AddBusinessSegmentModal extends Component {
                                     <Input style={{ width: '100%', ...inputStyle }} placeholder="Add segment name" onChange={(e) => this.onNameChange(e.target.value)} />
                                 </Form.Item>
                         }
-
-
                         {
-                            this.state.type === null ?
-                                <Form.Item key="type" label="Type"
-                                    rules={[{ required: true, message: 'Select business type' }]}>
+                            this.state.typeError === false ?
+                                <Form.Item key="type" label="Type">
                                     <Select
                                         mode="multiple"
                                         placeholder="Select type"
@@ -425,61 +438,28 @@ class AddBusinessSegmentModal extends Component {
                                         options={typeOptions}
                                     />
                                 </Form.Item>
-                                : type.length > 0 ?
-                                    <Form.Item key="type" label="Type"
-                                        rules={[{ required: true, message: 'Select business type' }]}>
-                                        <Select
-                                            mode="multiple"
-                                            placeholder="Select type"
-                                            onChange={this.onTypeChange.bind(this)}
-                                            value={type}
-                                            tagRender={typeTag}
-                                            options={typeOptions}
-                                        />
-                                    </Form.Item>
-                                    :
-                                    <Form.Item
-                                        key="type"
-                                        label="Type"
-                                        validateStatus="error"
-                                        help="Select type"
-                                        rules={[
-                                            {
-                                                validator: async (_, type) => {
-                                                    if (!type || type.length < 1) {
-                                                        return Promise.reject(new Error('Select type'));
-                                                    }
-                                                },
-                                            },
-                                        ]}
-                                    >
-                                        <Select
-                                            mode="multiple"
-                                            placeholder="Select type"
-                                            onChange={this.onTypeChange.bind(this)}
-                                            value={type}
-                                            tagRender={typeTag}
-                                            options={typeOptions}
-                                        />
-                                    </Form.Item>
+                                :
+                                <Form.Item
+                                    key="type"
+                                    label="Type"
+                                    validateStatus="error"
+                                    help="Select type"
+                                >
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Select type"
+                                        onChange={this.onTypeChange.bind(this)}
+                                        value={type}
+                                        tagRender={typeTag}
+                                        options={typeOptions}
+                                    />
+                                </Form.Item>
                         }
-                        {/* <Form.Item key="type" name="type" label="Type"
-                            rules={[{ required: true, message: 'Select business type' }]}>
-                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Select type" onChange={this.onTypeChange.bind(this)} >
-                                {typeOptions}
-                            </Select>
-                        </Form.Item> */}
 
-                        {/* <Form.Item key="size" name="size" label="Company size"
-                            rules={[{ required: true, message: 'Select company size' }]}>
-                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Select company size" onChange={this.onCompanySizeChange.bind(this)} >
-                                {companySizeOptions}
-                            </Select>
-                        </Form.Item> */}
+
                         {
-                            this.state.companySize === null ?
-                                <Form.Item key="size" label="Company size"
-                                    rules={[{ required: true, message: 'Select company size' }]}>
+                            this.state.companySizeError === false ?
+                                <Form.Item key="size" label="Company size">
                                     <Select
                                         mode="multiple"
                                         placeholder="Select company size"
@@ -489,50 +469,28 @@ class AddBusinessSegmentModal extends Component {
                                         options={companySizeOptions}
                                     />
                                 </Form.Item>
-                                : size.length > 0 ?
-                                    <Form.Item key="size" label="Company size"
-                                        rules={[{ required: true, message: 'Select company size' }]}>
-                                        <Select
-                                            mode="multiple"
-                                            placeholder="Select company size"
-                                            onChange={this.onCompanySizeChange.bind(this)}
-                                            value={size}
-                                            tagRender={companySizeTag}
-                                            options={companySizeOptions}
-                                        />
-                                    </Form.Item>
-                                    :
-                                    <Form.Item
-                                        key="size"
-                                        label="Company size"
-                                        validateStatus="error"
-                                        help="Select company size"
-                                        rules={[
-                                            {
-                                                validator: async (_, size) => {
-                                                    if (!size || size.length < 1) {
-                                                        return Promise.reject(new Error('Select company size'));
-                                                    }
-                                                },
-                                            },
-                                        ]}
-                                    >
-                                        <Select
-                                            mode="multiple"
-                                            placeholder="Select company size"
-                                            onChange={this.onCompanySizeChange.bind(this)}
-                                            value={size}
-                                            tagRender={companySizeTag}
-                                            options={companySizeOptions}
-                                        />
-                                    </Form.Item>
+                                :
+                                <Form.Item
+                                    key="size"
+                                    label="Company size"
+                                    validateStatus="error"
+                                    help="Select company size"
+                                >
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Select company size"
+                                        onChange={this.onCompanySizeChange.bind(this)}
+                                        value={size}
+                                        tagRender={companySizeTag}
+                                        options={companySizeOptions}
+                                    />
+                                </Form.Item>
 
                         }
 
                         {
-                            this.state.locationType === null ?
-                                <Form.Item key="geographicLocation" label="Geographic Location"
-                                    rules={[{ required: true, message: 'Choose geographic location' }]}>
+                            this.state.locationTypeError === false ?
+                                <Form.Item key="geographicLocation" label="Geographic Location">
                                     <Select
                                         mode="multiple"
                                         placeholder="Choose geographic location"
@@ -542,52 +500,23 @@ class AddBusinessSegmentModal extends Component {
                                         options={locationOptions}
                                     />
                                 </Form.Item>
-                                : location.length > 0 ?
-                                    <Form.Item key="geographicLocation" label="Geographic Location"
-                                        rules={[{ required: true, message: 'Choose geographic location' }]}>
-                                        <Select
-                                            mode="multiple"
-                                            placeholder="Choose geographic location"
-                                            onChange={this.onLocationTypeChange.bind(this)}
-                                            value={location}
-                                            tagRender={locationTag}
-                                            options={locationOptions}
-                                        />
-                                    </Form.Item>
-                                    :
-                                    <Form.Item
-                                        key="geographicLocation"
-                                        label="Geographic Location"
-                                        validateStatus="error"
-                                        help="Choose geographic location"
-                                        rules={[
-                                            {
-                                                validator: async (_, geographicLocation) => {
-                                                    if (!geographicLocation || geographicLocation.length < 1) {
-                                                        return Promise.reject(new Error('Choose geographic location'));
-                                                    }
-                                                },
-                                            },
-                                        ]}
-                                    >
-                                        <Select
-                                            mode="multiple"
-                                            placeholder="Choose geographic location"
-                                            onChange={this.onLocationTypeChange.bind(this)}
-                                            value={location}
-                                            tagRender={locationTag}
-                                            options={locationOptions}
-                                        />
-                                    </Form.Item>
+                                :
+                                <Form.Item
+                                    key="geographicLocation"
+                                    label="Geographic Location"
+                                    validateStatus="error"
+                                    help="Choose geographic location"
+                                >
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Choose geographic location"
+                                        onChange={this.onLocationTypeChange.bind(this)}
+                                        value={location}
+                                        tagRender={locationTag}
+                                        options={locationOptions}
+                                    />
+                                </Form.Item>
                         }
-
-                        {/* <Form.Item key="geographicLocation" name="geographicLocation" label="Geographic Location"
-                            rules={[{ required: true, message: 'Choose geographic location' }]}>
-                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose geographic location" onChange={this.onLocationTypeChange.bind(this)} >
-                                {locationOptions}
-                            </Select>
-                        </Form.Item> */}
-
                     </Form>
                 </Modal>
             </>
