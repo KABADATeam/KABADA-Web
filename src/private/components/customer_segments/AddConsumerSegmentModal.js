@@ -8,6 +8,7 @@ import { saveConsumerSegment } from "../../../appStore/actions/customerSegmentAc
 const { Option } = Select;
 const { Text } = Typography;
 
+
 const inputStyle = {
     height: '40px',
     borderRadius: '4px',
@@ -25,6 +26,12 @@ class AddConsumerSegmentModal extends Component {
             incomeType: null,
             locationType: null,
             popoverVisibility: false,
+            ageGroupError: false,
+            genderTypeError: false,
+            educationTypeError: false,
+            locationTypeError: false,
+            incomeTypeError: false,
+            segmentNameError: false
         }
     }
 
@@ -37,8 +44,8 @@ class AddConsumerSegmentModal extends Component {
     }
 
     onOK = () => {
-        const { ageGroup, educationType, incomeType, genderType, locationType } = this.state;
-        console.log(this.state)
+        const { ageGroup, educationType, incomeType, genderType, locationType, segmentName } = this.state;
+        // console.log(this.state)
         if (ageGroup !== null && educationType !== null && incomeType !== null && genderType !== null && locationType !== null &&
             ageGroup.length !== 0 && educationType.length !== 0 && incomeType.length !== 0 && genderType.length !== 0 && locationType.length !== 0) {
             const age = ageGroup.map(e => e.id);
@@ -75,21 +82,37 @@ class AddConsumerSegmentModal extends Component {
                 "segment_name": this.state.segmentName
             }
             this.props.saveConsumerSegment(postObj, reducerObj);
+
             this.props.onClose();
+            console.log(ageGroup)
         } else {
             this.setState({
-                ageGroup: ageGroup === null ? [] : ageGroup,
-                genderType: genderType === null ? [] : genderType,
-                educationType: educationType === null ? [] : educationType,
-                incomeType: incomeType === null ? [] : incomeType,
-                locationType: locationType === null ? [] : locationType
+                // ageGroup: ageGroup === null ? [] : ageGroup,
+                // genderType: genderType === null ? [] : genderType,
+                // educationType: educationType === null ? [] : educationType,
+                // incomeType: incomeType === null ? [] : incomeType,
+                // locationType: locationType === null ? [] : locationType,
+                ageGroupError: ageGroup === null || ageGroup.length === 0 ? true : false,
+                genderTypeError: genderType === null || genderType.length === 0 ? true : false,
+                educationTypeError: educationType === null || educationType.length === 0 ? true : false,
+                locationTypeError: locationType === null || locationType.length === 0 ? true : false,
+                incomeTypeError: incomeType === null || incomeType.length === 0 ? true : false,
+                segmentNameError: segmentName === null || segmentName.length === 0 ? true : false,
             })
+
+            console.log(ageGroup)
+        }
+    }
+    customeError = () => {
+        if (this.state.ageGroup === null) {
+            this.setState()
         }
     }
 
     onNameChange(value) {
         this.setState({
-            segmentName: value
+            segmentName: value,
+            segmentNameError: value.lenght < 2 ? true : false
         })
     }
 
@@ -102,7 +125,13 @@ class AddConsumerSegmentModal extends Component {
                 title: age_group.title,
                 tag: 0
             }
+
+            this.setState({
+                ageGroupError: this.state.ageGroup === null ? true : false,
+            });
             ageGroupArray.push(new_obj);
+
+
         } else {
             for (var i = 0; i < value.length; i++) {
                 console.log(this.state.ageGroup[i])
@@ -133,10 +162,15 @@ class AddConsumerSegmentModal extends Component {
                     }
                 }
             }
+
+
         }
         this.setState({
             ageGroup: ageGroupArray
         });
+        this.setState({
+            ageGroupError: false
+        })
     }
 
     onGenderTypeChange(value) {
@@ -148,6 +182,9 @@ class AddConsumerSegmentModal extends Component {
                 title: gender_type.title,
                 tag: 0
             }
+            this.setState({
+                genderTypeError: true
+            });
             genderTypeArray.push(new_obj);
         } else {
             for (var i = 0; i < value.length; i++) {
@@ -183,6 +220,9 @@ class AddConsumerSegmentModal extends Component {
         this.setState({
             genderType: genderTypeArray
         });
+        this.setState({
+            genderTypeError: false
+        });
     }
 
     onEducationTypeChange(value) {
@@ -194,6 +234,7 @@ class AddConsumerSegmentModal extends Component {
                 title: education_type.title,
                 tag: 0
             }
+
             educationTypeArray.push(new_obj);
         } else {
             for (var i = 0; i < value.length; i++) {
@@ -228,6 +269,9 @@ class AddConsumerSegmentModal extends Component {
         this.setState({
             educationType: educationTypeArray
         });
+        this.setState({
+            educationTypeError: false
+        });
     }
 
     onIncomeTypeChange(value) {
@@ -239,6 +283,7 @@ class AddConsumerSegmentModal extends Component {
                 title: income_type.title,
                 tag: 0
             }
+
             incomeTypeArray.push(new_obj);
         } else {
             for (var i = 0; i < value.length; i++) {
@@ -273,6 +318,9 @@ class AddConsumerSegmentModal extends Component {
         this.setState({
             incomeType: incomeTypeArray
         });
+        this.setState({
+            incomeTypeError: false
+        });
     }
     onLocationTypeChange(value) {
         const locationTypeArray = [];
@@ -283,6 +331,7 @@ class AddConsumerSegmentModal extends Component {
                 title: location_type.title,
                 tag: 0
             }
+
             locationTypeArray.push(new_obj);
         } else {
             for (var i = 0; i < value.length; i++) {
@@ -317,6 +366,10 @@ class AddConsumerSegmentModal extends Component {
         this.setState({
             locationType: locationTypeArray
         })
+
+        this.setState({
+            locationTypeError: false
+        });
     }
     handlePopoverVisibilityChange = (visible) => {
         this.setState({
@@ -419,7 +472,9 @@ class AddConsumerSegmentModal extends Component {
     }
 
 
+
     render() {
+
         const age = this.state.ageGroup !== null ? this.state.ageGroup.map(e => e.id) : [];
         const gender = this.state.genderType !== null ? this.state.genderType.map(e => e.id) : [];
         const education = this.state.educationType !== null ? this.state.educationType.map(e => e.id) : [];
@@ -449,7 +504,7 @@ class AddConsumerSegmentModal extends Component {
             <>
                 <Row>
                     <Text>
-                    Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.predictText.map((e, index) =>
+                        Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.predictText.map((e, index) =>
                             <Text key={index} > for "{e.type_title}": {e.predict.map((p, index) => <Text key={index}>{p.title},</Text>)}</Text>)}.
                     </Text>
                     {/* Based on your input KABADA AI recommends that you consider adding for "Gender" male, for "Education" Primary. */}
@@ -464,7 +519,7 @@ class AddConsumerSegmentModal extends Component {
             <>
                 <Row>
                     <Text>
-                    Based on the current information KABADA AI did not have any suggestions.
+                        Based on the current information KABADA AI did not have any suggestions.
                     </Text>
                 </Row>
                 <Row style={{ marginTop: '12px' }}>
@@ -691,255 +746,91 @@ class AddConsumerSegmentModal extends Component {
                 >
                     <Form hideRequiredMark layout="vertical" id="addConsumerForm" name="addConsumerForm" onFinish={this.onOK}>
                         <Form.Item key="name" name="name" label="Segment Name"
-                            rules={
-                                [{ required: true, message: 'Type segment name' }]
-                            }>
+                            validateStatus={this.state.segmentNameError === true ? "error" : "Success"}
+                            help={this.state.segmentNameError && "Add segment name"}
+                        >
                             <Input style={{ width: '100%', ...inputStyle }} placeholder="Add segment name" onChange={(e) => this.onNameChange(e.target.value)} />
                         </Form.Item>
 
                         {
-                            this.state.ageGroup === null ?
-                                <Form.Item key="age" label="Age group (years)"
-                                    rules={[{ required: true, message: 'Select age group (years)' }]}>
-                                    <Select
-                                        mode="multiple"
-                                        placeholder='Select age group (years)'
-                                        onChange={this.onAgeGroupChange.bind(this)}
-                                        value={age}
-                                        tagRender={ageTag}
-                                        options={ageGroupOptions}
-                                    />
-                                </Form.Item>
-                                : age.length > 0 ?
-                                    <Form.Item key="age" label="Age group (years)"
-                                        rules={[{ required: true, message: 'Select age group (years)' }]}>
-                                        <Select
-                                            mode="multiple"
-                                            placeholder="Select age group (years)"
-                                            onChange={this.onAgeGroupChange.bind(this)}
-                                            value={age}
-                                            tagRender={ageTag}
-                                            options={ageGroupOptions}
-                                        />
-                                    </Form.Item>
-                                    :
-                                    <Form.Item
-                                        key="age"
-                                        label="Age group (years)"
-                                        validateStatus="error"
-                                        help="Select age group (years)"
-                                        rules={[
-                                            {
-                                                validator: async (_, age) => {
-                                                    if (!age || age.length < 1) {
-                                                        return Promise.reject(new Error('Select age group (years)'));
-                                                    }
-                                                },
-                                            },
-                                        ]}
-                                    >
-                                        <Select
-                                            mode="multiple"
-                                            placeholder="Select age group (years)"
-                                            onChange={this.onAgeGroupChange.bind(this)}
-                                            value={age}
-                                            tagRender={ageTag}
-                                            options={ageGroupOptions}
-                                        />
-                                    </Form.Item>
-                        }
 
-                        {/* <Form.Item key="age" name="age" label="Age group (years)"
-                            rules={[{ required: true, message: 'Select age group (years)' }]}>
-                            <Select
-                                mode="multiple"
-                                placeholder="Select age group (years)"
-                                onChange={this.onAgeGroupChange.bind(this)}
-                                value={age}
-                                tagRender={ageTag}
-                                options={ageGroupOptions}
-                            />
-                        </Form.Item> */}
+                            <Form.Item key="age" label="Age group (years)"
+                                validateStatus={this.state.ageGroupError === true ? "error" : "Success"}
+                                help={this.state.ageGroupError && "Select age group (years)"}
+                            >
+                                <Select
+                                    mode="multiple"
+                                    placeholder='Select age group (years)'
+                                    onChange={this.onAgeGroupChange.bind(this)}
+                                    value={age}
+                                    tagRender={ageTag}
+                                    options={ageGroupOptions}
+                                />
+                            </Form.Item>
 
-                        {
-                            this.state.genderType === null ?
-                                <Form.Item key="gender" label="Gender"
-                                    rules={[{ required: true, message: 'Select gender' }]}>
-                                    <Select
-                                        mode="multiple"
-                                        placeholder="Select gender"
-                                        onChange={this.onGenderTypeChange.bind(this)}
-                                        value={gender}
-                                        tagRender={genderTag}
-                                        options={genderOptions}
-                                    />
-                                </Form.Item>
-                                : gender.length > 0 ?
-                                    <Form.Item key="gender" label="Gender"
-                                        rules={[{ required: true, message: 'Select gender' }]}>
-                                        <Select
-                                            mode="multiple"
-                                            placeholder="Select gender"
-                                            onChange={this.onGenderTypeChange.bind(this)}
-                                            value={gender}
-                                            tagRender={genderTag}
-                                            options={genderOptions}
-                                        />
-                                    </Form.Item>
-                                    :
-                                    <Form.Item
-                                        key="gender"
-                                        label="Gender"
-                                        validateStatus="error"
-                                        help="Select gender"
-                                        rules={[
-                                            {
-                                                validator: async (_, gender) => {
-                                                    if (!gender || gender.length < 1) {
-                                                        return Promise.reject(new Error('Select gender'));
-                                                    }
-                                                },
-                                            },
-                                        ]}
-                                    >
-                                        <Select
-                                            mode="multiple"
-                                            placeholder="Select gender"
-                                            onChange={this.onGenderTypeChange.bind(this)}
-                                            value={gender}
-                                            tagRender={genderTag}
-                                            options={genderOptions}
-                                        />
-                                    </Form.Item>
                         }
 
                         {
-                            this.state.educationType === null ?
-                                <Form.Item
-                                    key="education"
-                                    label="Education"
-                                    rules={[{ required: true, message: 'Select education' }]}>
-                                    <Select
-                                        mode="multiple"
-                                        placeholder="Choose education"
-                                        onChange={this.onEducationTypeChange.bind(this)}
-                                        value={education}
-                                        tagRender={educationTag}
-                                        options={educationOptions}
-                                    />
-                                </Form.Item>
-                                : education.length > 0 ?
-                                    <Form.Item
-                                        key="education"
-                                        label="Education"
-                                        rules={[{ required: true, message: 'Select education' }]}>
-                                        <Select
-                                            mode="multiple"
-                                            placeholder="Choose education"
-                                            onChange={this.onEducationTypeChange.bind(this)}
-                                            value={education}
-                                            tagRender={educationTag}
-                                            options={educationOptions}
-                                        />
-                                    </Form.Item>
-                                    :
-                                    <Form.Item
-                                        key="education"
-                                        label="Education"
-                                        validateStatus="error"
-                                        help="Select education"
-                                        rules={[
-                                            {
-                                                validator: async (_, education) => {
-                                                    if (!education || education.length < 1) {
-                                                        return Promise.reject(new Error('Select education'));
-                                                    }
-                                                },
-                                            },
-                                        ]}
-                                    >
-                                        <Select
-                                            mode="multiple"
-                                            placeholder="Choose education"
-                                            onChange={this.onEducationTypeChange.bind(this)}
-                                            value={education}
-                                            tagRender={educationTag}
-                                            options={educationOptions}
-                                        />
-                                    </Form.Item>
+                            <Form.Item
+                                key="gender"
+                                label="Gender"
+                                validateStatus={this.state.genderTypeError ? "error" : "Success"}
+                                help={this.state.genderTypeError && "Select gender"}
+                            >
+                                <Select
+                                    mode="multiple"
+                                    placeholder="Select gender"
+                                    onChange={this.onGenderTypeChange.bind(this)}
+                                    value={gender}
+                                    tagRender={genderTag}
+                                    options={genderOptions}
+                                />
+                            </Form.Item>
                         }
-
-                        {/* <Form.Item key="income" name="income" label="Income"
-                            rules={[{ required: true, message: 'Select income' }]}>
-                            <Select
-                                mode="multiple"
-                                placeholder="Choose income"
-                                onChange={this.onIncomeTypeChange.bind(this)}
-                                value={income}
-                                tagRender={incomeTag}
-                                options={incomeOptions}
-                            />
-                        </Form.Item> */}
 
                         {
-                            this.state.incomeType === null ?
-                                <Form.Item
-                                    key="income"
-                                    label="Income"
-                                    rules={[{ required: true, message: 'Select income' }]}
-                                >
-                                    <Select
-                                        mode="multiple"
-                                        placeholder="Choose income"
-                                        onChange={this.onIncomeTypeChange.bind(this)}
-                                        value={income}
-                                        tagRender={incomeTag}
-                                        options={incomeOptions}
-                                    />
-                                </Form.Item>
-                                : income.length > 0 ?
-                                    <Form.Item
-                                        key="income"
-                                        label="Income"
-                                        rules={[{ required: true, message: 'Select income' }]}
-                                    >
-                                        <Select
-                                            mode="multiple"
-                                            placeholder="Choose income"
-                                            onChange={this.onIncomeTypeChange.bind(this)}
-                                            value={income}
-                                            tagRender={incomeTag}
-                                            options={incomeOptions}
-                                        />
-                                    </Form.Item>
-                                    :
-                                    <Form.Item
-                                        key="income"
-                                        label="Income"
-                                        validateStatus="error"
-                                        help="Select income"
-                                        rules={[
-                                            {
-                                                validator: async (_, income) => {
-                                                    if (!income || income.length < 1) {
-                                                        return Promise.reject(new Error('Select income'));
-                                                    }
-                                                },
-                                            },
-                                        ]}>
-                                        <Select
-                                            mode="multiple"
-                                            placeholder="Choose income"
-                                            onChange={this.onIncomeTypeChange.bind(this)}
-                                            value={income}
-                                            tagRender={incomeTag}
-                                            options={incomeOptions}
-                                        />
-                                    </Form.Item>
+
+                            <Form.Item
+                                key="education"
+                                label="Education"
+                                validateStatus={this.state.educationTypeError ? "error" : "Success"}
+                                help={this.state.educationTypeError && "Select education"}
+                            >
+                                <Select
+                                    mode="multiple"
+                                    placeholder="Choose education"
+                                    onChange={this.onEducationTypeChange.bind(this)}
+                                    value={education}
+                                    tagRender={educationTag}
+                                    options={educationOptions}
+                                />
+                            </Form.Item>
                         }
 
-                        {/* <Form.Item key="geographicLocation" name="geographicLocation" label="Geographic Location"
-                            rules={[{ required: true, message: 'Select geographic location' }]}>
+
+
+                        {
+                            <Form.Item
+                                key="income"
+                                label="Income"
+                                validateStatus={this.state.incomeTypeError ? "error" : "Success"}
+                                help={this.state.incomeTypeError && "Select income"}>
+                                <Select
+                                    mode="multiple"
+                                    placeholder="Choose income"
+                                    onChange={this.onIncomeTypeChange.bind(this)}
+                                    value={income}
+                                    tagRender={incomeTag}
+                                    options={incomeOptions}
+                                />
+                            </Form.Item>
+                        }
+
+                        <Form.Item
+                            key="geographicLocation"
+                            label="Geographic Location"
+                            validateStatus={this.state.locationTypeError ? "error" : "Success"}
+                            help={this.state.locationTypeError && "Choose geographic location"}>
                             <Select
                                 mode="multiple"
                                 placeholder="Choose geographic location"
@@ -948,60 +839,10 @@ class AddConsumerSegmentModal extends Component {
                                 tagRender={locationTag}
                                 options={locationOptions}
                             />
-                        </Form.Item> */}
-                        {
-                            this.state.locationType === null ?
-                                <Form.Item key="geographicLocation" label="Geographic Location"
-                                    rules={[{ required: true, message: 'Choose geographic location' }]}>
-                                    <Select
-                                        mode="multiple"
-                                        placeholder="Choose geographic location"
-                                        onChange={this.onLocationTypeChange.bind(this)}
-                                        value={location}
-                                        tagRender={locationTag}
-                                        options={locationOptions}
-                                    />
-                                </Form.Item>
-                                : location.length > 0 ?
-                                    <Form.Item key="geographicLocation" label="Geographic Location"
-                                        rules={[{ required: true, message: 'Choose geographic location' }]}>
-                                        <Select
-                                            mode="multiple"
-                                            placeholder="Choose geographic location"
-                                            onChange={this.onLocationTypeChange.bind(this)}
-                                            value={location}
-                                            tagRender={locationTag}
-                                            options={locationOptions}
-                                        />
-                                    </Form.Item>
-                                    :
-                                    <Form.Item
-                                        key="geographicLocation"
-                                        label="Geographic Location"
-                                        validateStatus="error"
-                                        help="Choose geographic location"
-                                        rules={[
-                                            {
-                                                validator: async (_, geographicLocation) => {
-                                                    if (!geographicLocation || geographicLocation.length < 1) {
-                                                        return Promise.reject(new Error('Choose geographic location'));
-                                                    }
-                                                },
-                                            },
-                                        ]}
-                                    >
-                                        <Select
-                                            mode="multiple"
-                                            placeholder="Choose geographic location"
-                                            onChange={this.onLocationTypeChange.bind(this)}
-                                            value={location}
-                                            tagRender={locationTag}
-                                            options={locationOptions}
-                                        />
-                                    </Form.Item>
-                        }
-                    </Form>
-                </Modal>
+                        </Form.Item>
+
+                    </Form >
+                </Modal >
             </>
         )
     }
