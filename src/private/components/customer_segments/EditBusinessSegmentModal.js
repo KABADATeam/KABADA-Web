@@ -22,7 +22,7 @@ class EditBusinessSegmentModal extends Component {
             companySize: this.props.item.company_size.map(e => ({ id: e.id, title: e.title, tag: 0 })),
             locationType: this.props.item.geographic_location.map(e => ({ id: e.id, title: e.title, tag: 0 })),
             popoverVisibility: false,
-            popoverType: 'no predict', 
+            popoverType: 'no predict',
             popoverTextObject: []
         }
     }
@@ -171,10 +171,8 @@ class EditBusinessSegmentModal extends Component {
             "company_size": this.state.companySize,
             "geographic_location": this.state.locationType
         }
-        console.log(predictsObj)
         if (predictsObj !== undefined) {
             const predictObj = predictsObj.find(s => s.id === selectedItem.id);
-
             if (predictObj !== undefined) {
                 const predictProperties = Object.getOwnPropertyNames(predictsObj.find(s => s.id === selectedItem.id));
                 const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
@@ -199,7 +197,7 @@ class EditBusinessSegmentModal extends Component {
                             text: propertiesValuesString
                         }
                         aiHintTextObject.push(new_obj);
-                    } else if (comparePropertiesValues.length === 1){
+                    } else if (comparePropertiesValues.length === 1) {
                         const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[0]);
                         propertiesValuesString = propertyTypeTitle.title;
                         const new_obj = {
@@ -316,23 +314,31 @@ class EditBusinessSegmentModal extends Component {
                                             <Text>Based on the current information KABADA AI thinks that everything looks good.</Text>
                                             :
                                             <Text>
-                                                Based on your input KABADA AI recommends that you consider adding {this.state.popoverTextObject.map((e, index) =>
-                                                    <Text key={index} > for "{e.type_title}": {e.text}</Text>)}.
+                                                Based on your input KABADA AI recommends that you consider adding {this.state.popoverTextObject.map((e, index) => {
+                                                    if (index + 1 === this.state.popoverTextObject.length) {
+                                                        return (
+                                                            <Text key={index} > for "{e.type_title}": {e.text}</Text>
+                                                        )
+                                                    } else {
+                                                        return (
+                                                            <Text key={index} > for "{e.type_title}": {e.text};</Text>
+                                                        )
+                                                    }
+                                                })}.
                                             </Text>
                                     }
-
                                 </Row>
                                 <Row style={{ marginTop: '12px' }}>
                                     {
                                         this.state.popoverTextObject.length === 0 ?
-                                        <Button onClick={this.hidePopover}>Cancel</Button>
-                                        :
-                                        <>
-                                            <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
-                                            <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
-                                        </>
+                                            <Button onClick={this.hidePopover}>Cancel</Button>
+                                            :
+                                            <>
+                                                <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
+                                                <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
+                                            </>
                                     }
-                                    
+
                                 </Row>
                             </Row>
                         </>

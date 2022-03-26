@@ -149,57 +149,66 @@ class AddPublicBodiesSegmentModal extends Component {
         }
         return newArray;
     }
-
     generateAIHelpText = (predictsObj, segmentTypes) => {
         const aiHintTextObject = [];
-        if (this.state.ngoType.length === 0) {
+        const selectedItem = {
+            "business_type": this.state.ngoType,
+        }
+        console.log(predictsObj)
+        if (predictsObj !== undefined) {
             const predictObj = predictsObj.find(s => s.id === null);
-            const predictProperties = Object.getOwnPropertyNames(predictObj);
-            const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
-            for (const property of filteredPredictProperties) {
-                const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
-                const propertyType = property === 'business_type' ? segmentTypes.ngo_types : null;
-                let propertiesValuesString = ''
-                for (var i = 0; i < predictObjPropertyValues.length; i++) {
-                    const propertyTypeTitle = propertyType.find(p => p.id === predictObjPropertyValues[i]);
-                    propertiesValuesString += i === predictObjPropertyValues.length - 1 ? propertyTypeTitle.title + '' : propertyTypeTitle.title + ', '
+
+            if (predictObj !== undefined) {
+                const predictProperties = Object.getOwnPropertyNames(predictsObj.find(s => s.id === null));
+                const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
+                for (const property of filteredPredictProperties) {
+                    const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(selectedItem, property).value;
+                    const selectedItemPropertyValues = selectedItemPropertyValuesObj.map(s => s.id);
+                    const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
+                    const propertyType = property === 'business_type' ? segmentTypes.ngo_types : segmentTypes.ngo_types;
+                    const comparePropertiesValues = this.compareArray(predictObjPropertyValues, selectedItemPropertyValues);
+                    console.log(comparePropertiesValues);
+                    console.log(comparePropertiesValues.length);
+                    let propertiesValuesString = '';
+                    if (comparePropertiesValues.length > 1) {
+                        console.log(comparePropertiesValues);
+                        for (var i = 0; i < comparePropertiesValues.length; i++) {
+                            const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[i]);
+                            propertiesValuesString += i === predictObjPropertyValues.length - 1 ? propertyTypeTitle.title + '' : propertyTypeTitle.title + ', '
+                            console.log(propertiesValuesString);
+                        }
+                        //property.charAt(0).toUpperCase() + property.slice(1),
+                        const new_obj = {
+                            type_title: property === 'business_type' ? 'Type' : property,
+                            text: propertiesValuesString
+                        }
+                        aiHintTextObject.push(new_obj);
+                    } else if (comparePropertiesValues.length === 1) {
+                        const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[0]);
+                        propertiesValuesString = propertyTypeTitle.title + '';
+                        console.log(propertiesValuesString);
+                        const new_obj = {
+                            type_title: property === 'business_type' ? 'Type' : property ,
+                            text: propertiesValuesString
+                        }
+                        aiHintTextObject.push(new_obj);
+                    } else {
+                        this.setState({
+                            popoverType: 'no predict',
+                        })
+                    }
                 }
-                const new_obj = {
-                    type_title: property === 'business_type' ? 'Type' : property,
-                    text: propertiesValuesString
-                }
-                aiHintTextObject.push(new_obj);
+                return aiHintTextObject
+            } else {
+                this.setState({
+                    popoverType: 'no predict',
+                })
             }
-            return aiHintTextObject
+
         } else {
-            const predictObj = predictsObj.find(s => s.id === null);
-            const predictProperties = Object.getOwnPropertyNames(predictsObj.find(s => s.id === null));
-            const item = {
-                "business_type": this.state.ngoType
-            }
-            const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
-            for (const property of filteredPredictProperties) {
-                const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(item, property).value;
-                const selectedItemPropertyValues = selectedItemPropertyValuesObj.map(s => s.id);
-                const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
-                const propertyType = property === 'business_type' ? segmentTypes.ngo_types : null;
-                const comparePropertiesValues = this.compareArray(predictObjPropertyValues, selectedItemPropertyValues);
-                let propertiesValuesString = ''
-                if (comparePropertiesValues.length > 0) {
-                    const typePredictArray = []
-                    for (var i = 0; i < comparePropertiesValues.length; i++) {
-                        const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[i]);
-                        propertiesValuesString += i === predictObjPropertyValues.length - 1 ? propertyTypeTitle.title + '' : propertyTypeTitle.title + ', '
-                        typePredictArray.push(propertyTypeTitle);
-                    }
-                    const new_obj = {
-                        type_title: property.charAt(0).toUpperCase() + property.slice(1),
-                        text: propertiesValuesString
-                    }
-                    aiHintTextObject.push(new_obj);
-                }
-            }
-            return aiHintTextObject
+            this.setState({
+                popoverType: 'no predict',
+            })
         }
     }
 
@@ -258,23 +267,31 @@ class AddPublicBodiesSegmentModal extends Component {
                                             <Text>Based on the current information KABADA AI thinks that everything looks good.</Text>
                                             :
                                             <Text>
-                                                Based on your input KABADA AI recommends that you consider adding {this.state.popoverTextObject.map((e, index) =>
-                                                    <Text key={index} > for "{e.type_title}": {e.text}</Text>)}.
+                                                Based on your input KABADA AI recommends that you consider adding {this.state.popoverTextObject.map((e, index) => {
+                                                    if (index + 1 === this.state.popoverTextObject.length) {
+                                                        return (
+                                                            <Text key={index} > for "{e.type_title}": {e.text}</Text>
+                                                        )
+                                                    } else {
+                                                        return (
+                                                            <Text key={index} > for "{e.type_title}": {e.text};</Text>
+                                                        )
+                                                    }
+                                                })}.
                                             </Text>
                                     }
-
                                 </Row>
                                 <Row style={{ marginTop: '12px' }}>
                                     {
                                         this.state.popoverTextObject.length === 0 ?
-                                        <Button onClick={this.hidePopover}>Cancel</Button>
-                                        :
-                                        <>
-                                            <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
-                                            <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
-                                        </>
+                                            <Button onClick={this.hidePopover}>Cancel</Button>
+                                            :
+                                            <>
+                                                <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
+                                                <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
+                                            </>
                                     }
-                                    
+
                                 </Row>
                             </Row>
                         </>

@@ -207,12 +207,8 @@ class EditConsumerSegmentModal extends Component {
             "income": this.state.incomeType,
             "geographic_location": this.state.locationType
         }
-        console.log(predictsObj);
-        console.log(segmentTypes)
-        console.log(selectedItem)
         if (predictsObj !== undefined) {
             const predictObj = predictsObj.find(s => s.id === selectedItem.id);
-            console.log(predictObj)
             if (predictObj !== undefined) {
                 const predictProperties = Object.getOwnPropertyNames(predictsObj.find(s => s.id === selectedItem.id));
                 const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
@@ -253,17 +249,13 @@ class EditConsumerSegmentModal extends Component {
                         })
                     }
                 }
-                console.log(aiHintTextObject)
                 return aiHintTextObject
             } else {
-                console.log('test1')
                 this.setState({
                     popoverType: 'no predict',
                 })
             }
-
         } else {
-            console.log('test2')
             this.setState({
                 popoverType: 'no predict',
             })
@@ -387,23 +379,31 @@ class EditConsumerSegmentModal extends Component {
                                             <Text>Based on the current information KABADA AI thinks that everything looks good.</Text>
                                             :
                                             <Text>
-                                                Based on your input KABADA AI recommends that you consider adding {this.state.popoverTextObject.map((e, index) =>
-                                                    <Text key={index} > for "{e.type_title}": {e.text}</Text>)}.
+                                                Based on your input KABADA AI recommends that you consider adding {this.state.popoverTextObject.map((e, index) => {
+                                                    if (index + 1 === this.state.popoverTextObject.length) {
+                                                        return (
+                                                            <Text key={index} > for "{e.type_title}": {e.text}</Text>
+                                                        )
+                                                    } else {
+                                                        return (
+                                                            <Text key={index} > for "{e.type_title}": {e.text};</Text>
+                                                        )
+                                                    }
+                                                })}.
                                             </Text>
                                     }
-
                                 </Row>
                                 <Row style={{ marginTop: '12px' }}>
                                     {
                                         this.state.popoverTextObject.length === 0 ?
-                                        <Button onClick={this.hidePopover}>Cancel</Button>
-                                        :
-                                        <>
-                                            <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
-                                            <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
-                                        </>
+                                            <Button onClick={this.hidePopover}>Cancel</Button>
+                                            :
+                                            <>
+                                                <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
+                                                <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
+                                            </>
                                     }
-                                    
+
                                 </Row>
                             </Row>
                         </>

@@ -15,26 +15,24 @@ const inputStyle = {
 }
 
 class AddConsumerSegmentModal extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            segmentName: '',
-            ageGroup: [],
-            genderType: [],
-            educationType: [],
-            incomeType: [],
-            locationType: [],
-            popoverVisibility: false,
-            ageGroupError: false,
-            genderTypeError: false,
-            educationTypeError: false,
-            locationTypeError: false,
-            incomeTypeError: false,
-            segmentNameError: false,
-            popoverType: 'no predict', 
-            popoverTextObject: []
-        }
+    state = {
+        segmentName: '',
+        ageGroup: [],
+        genderType: [],
+        educationType: [],
+        incomeType: [],
+        locationType: [],
+        popoverVisibility: false,
+        ageGroupError: false,
+        genderTypeError: false,
+        educationTypeError: false,
+        locationTypeError: false,
+        incomeTypeError: false,
+        segmentNameError: false,
+        popoverType: 'no predict',
+        popoverTextObject: []
     }
+
 
     onCancel = () => {
         this.props.onClose();
@@ -46,7 +44,7 @@ class AddConsumerSegmentModal extends Component {
 
     onOK = () => {
         const { ageGroup, educationType, incomeType, genderType, locationType, segmentName } = this.state;
-        if (ageGroup.length !== 0 && educationType.length !== 0 && incomeType.length !== 0 && genderType.length !== 0 && locationType.length !== 0 && segmentName.length !== 0 ) {
+        if (ageGroup.length !== 0 && educationType.length !== 0 && incomeType.length !== 0 && genderType.length !== 0 && locationType.length !== 0 && segmentName.length !== 0) {
             const age = ageGroup.map(e => e.id);
             const education = educationType.map(e => e.id);
             const income = incomeType.map(e => e.id);
@@ -153,7 +151,7 @@ class AddConsumerSegmentModal extends Component {
         }
         return resultArray;
     }
-    
+
     onAgeGroupChange(value) {
         this.setState({
             ageGroup: this.addSelectedValue(value, this.state.ageGroup, this.props.categories.customer_segments_types.age_groups),
@@ -277,6 +275,7 @@ class AddConsumerSegmentModal extends Component {
                         })
                     }
                 }
+                console.log(aiHintTextObject)
                 return aiHintTextObject
             } else {
                 this.setState({
@@ -360,31 +359,31 @@ class AddConsumerSegmentModal extends Component {
             newLocationArray.push(new_location_obj);
         }
         this.setState({
-            ageGroup: newAgeGroupArray.length === 0 ? null : newAgeGroupArray,
+            ageGroup: newAgeGroupArray.length === 0 ? [] : newAgeGroupArray,
             ageGroupError: newAgeGroupArray.length === 0 && this.state.ageGroupError === false ? false
-                                : newAgeGroupArray.length > 0 && this.state.ageGroupError === false ? false
-                                : newAgeGroupArray.length > 0 && this.state.ageGroupError === true ? false
-                                : true,
-            genderType: newGenderArray.length === 0 ? null : newGenderArray,
+                : newAgeGroupArray.length > 0 && this.state.ageGroupError === false ? false
+                    : newAgeGroupArray.length > 0 && this.state.ageGroupError === true ? false
+                        : true,
+            genderType: newGenderArray.length === 0 ? [] : newGenderArray,
             genderTypeError: newGenderArray.length === 0 && this.state.genderTypeError === false ? false
-                                : newGenderArray.length > 0 && this.state.genderTypeError === false ? false
-                                : newGenderArray.length > 0 && this.state.genderTypeError === true ? false
-                                : true,
-            educationType: newEducationArray.length === 0 ? null : newEducationArray,
-            educationTypeError: newEducationArray.length === 0 && this.state.educationTypeError === false ? false 
-                                : newEducationArray.length > 0 && this.state.educationTypeError === false ? false
-                                : newEducationArray.length > 0 && this.state.educationTypeError === true ? false
-                                : true,
-            incomeType: newIncomeArray.length === 0 ? null : newIncomeArray,
-            incomeTypeError: newIncomeArray.length === 0 && this.state.incomeTypeError === false ? false 
-                                : newIncomeArray.length > 0 && this.state.incomeTypeError === false ? false
-                                : newIncomeArray.length > 0 && this.state.incomeTypeError === true ? false
-                                : true,
-            locationType: newLocationArray.length === 0 ? null : newLocationArray,
-            locationTypeError: newLocationArray.length === 0 && this.state.locationTypeError === false ? false 
-                                : newLocationArray.length > 0 && this.state.locationTypeError === false ? false 
-                                : newLocationArray.length > 0 && this.state.locationTypeError === true ? false 
-                                : true,
+                : newGenderArray.length > 0 && this.state.genderTypeError === false ? false
+                    : newGenderArray.length > 0 && this.state.genderTypeError === true ? false
+                        : true,
+            educationType: newEducationArray.length === 0 ? [] : newEducationArray,
+            educationTypeError: newEducationArray.length === 0 && this.state.educationTypeError === false ? false
+                : newEducationArray.length > 0 && this.state.educationTypeError === false ? false
+                    : newEducationArray.length > 0 && this.state.educationTypeError === true ? false
+                        : true,
+            incomeType: newIncomeArray.length === 0 ? [] : newIncomeArray,
+            incomeTypeError: newIncomeArray.length === 0 && this.state.incomeTypeError === false ? false
+                : newIncomeArray.length > 0 && this.state.incomeTypeError === false ? false
+                    : newIncomeArray.length > 0 && this.state.incomeTypeError === true ? false
+                        : true,
+            locationType: newLocationArray.length === 0 ? [] : newLocationArray,
+            locationTypeError: newLocationArray.length === 0 && this.state.locationTypeError === false ? false
+                : newLocationArray.length > 0 && this.state.locationTypeError === false ? false
+                    : newLocationArray.length > 0 && this.state.locationTypeError === true ? false
+                        : true,
         })
         this.hidePopover();
     }
@@ -439,23 +438,31 @@ class AddConsumerSegmentModal extends Component {
                                             <Text>Based on the current information KABADA AI thinks that everything looks good.</Text>
                                             :
                                             <Text>
-                                                Based on your input KABADA AI recommends that you consider adding {this.state.popoverTextObject.map((e, index) =>
-                                                    <Text key={index} > for "{e.type_title}": {e.text}</Text>)}.
+                                                Based on your input KABADA AI recommends that you consider adding {this.state.popoverTextObject.map((e, index) => {
+                                                    if (index + 1 === this.state.popoverTextObject.length) {
+                                                        return (
+                                                            <Text key={index} > for "{e.type_title}": {e.text}</Text>
+                                                        )
+                                                    } else {
+                                                        return (
+                                                            <Text key={index} > for "{e.type_title}": {e.text};</Text>
+                                                        )
+                                                    }
+                                                })}.
                                             </Text>
                                     }
-
                                 </Row>
                                 <Row style={{ marginTop: '12px' }}>
                                     {
                                         this.state.popoverTextObject.length === 0 ?
-                                        <Button onClick={this.hidePopover}>Cancel</Button>
-                                        :
-                                        <>
-                                            <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
-                                            <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
-                                        </>
+                                            <Button onClick={this.hidePopover}>Cancel</Button>
+                                            :
+                                            <>
+                                                <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
+                                                <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
+                                            </>
                                     }
-                                    
+
                                 </Row>
                             </Row>
                         </>
@@ -683,69 +690,69 @@ class AddConsumerSegmentModal extends Component {
                             help={this.state.segmentNameError && "Add segment name"}
                         >
                             <Input style={{ width: '100%', ...inputStyle }} placeholder="Add segment name" onChange={(e) => this.onNameChange(e.target.value)} />
-                        </Form.Item>                        
+                        </Form.Item>
 
-                            <Form.Item key="age" label="Age group (years)"
-                                validateStatus={this.state.ageGroupError === true ? "error" : "Success"}
-                                help={this.state.ageGroupError && "Select age group (years)"}
-                            >
-                                <Select
-                                    mode="multiple"
-                                    placeholder='Select age group (years)'
-                                    onChange={this.onAgeGroupChange.bind(this)}
-                                    value={age}
-                                    tagRender={ageTag}
-                                    options={ageGroupOptions}
-                                />
-                            </Form.Item>
-                        
-                            <Form.Item
-                                key="gender"
-                                label="Gender"
-                                validateStatus={this.state.genderTypeError ? "error" : "Success"}
-                                help={this.state.genderTypeError && "Select gender"}
-                            >
-                                <Select
-                                    mode="multiple"
-                                    placeholder="Select gender"
-                                    onChange={this.onGenderTypeChange.bind(this)}
-                                    value={gender}
-                                    tagRender={genderTag}
-                                    options={genderOptions}
-                                />
-                            </Form.Item>
+                        <Form.Item key="age" label="Age group (years)"
+                            validateStatus={this.state.ageGroupError === true ? "error" : "Success"}
+                            help={this.state.ageGroupError && "Select age group (years)"}
+                        >
+                            <Select
+                                mode="multiple"
+                                placeholder='Select age group (years)'
+                                onChange={this.onAgeGroupChange.bind(this)}
+                                value={age}
+                                tagRender={ageTag}
+                                options={ageGroupOptions}
+                            />
+                        </Form.Item>
 
-                            <Form.Item
-                                key="education"
-                                label="Education"
-                                validateStatus={this.state.educationTypeError ? "error" : "Success"}
-                                help={this.state.educationTypeError && "Select education"}
-                            >
-                                <Select
-                                    mode="multiple"
-                                    placeholder="Choose education"
-                                    onChange={this.onEducationTypeChange.bind(this)}
-                                    value={education}
-                                    tagRender={educationTag}
-                                    options={educationOptions}
-                                />
-                            </Form.Item>
-                        
-                            <Form.Item
-                                key="income"
-                                label="Income"
-                                validateStatus={this.state.incomeTypeError ? "error" : "Success"}
-                                help={this.state.incomeTypeError && "Select income"}>
-                                <Select
-                                    mode="multiple"
-                                    placeholder="Choose income"
-                                    onChange={this.onIncomeTypeChange.bind(this)}
-                                    value={income}
-                                    tagRender={incomeTag}
-                                    options={incomeOptions}
-                                />
-                            </Form.Item>
-                        
+                        <Form.Item
+                            key="gender"
+                            label="Gender"
+                            validateStatus={this.state.genderTypeError ? "error" : "Success"}
+                            help={this.state.genderTypeError && "Select gender"}
+                        >
+                            <Select
+                                mode="multiple"
+                                placeholder="Select gender"
+                                onChange={this.onGenderTypeChange.bind(this)}
+                                value={gender}
+                                tagRender={genderTag}
+                                options={genderOptions}
+                            />
+                        </Form.Item>
+
+                        <Form.Item
+                            key="education"
+                            label="Education"
+                            validateStatus={this.state.educationTypeError ? "error" : "Success"}
+                            help={this.state.educationTypeError && "Select education"}
+                        >
+                            <Select
+                                mode="multiple"
+                                placeholder="Choose education"
+                                onChange={this.onEducationTypeChange.bind(this)}
+                                value={education}
+                                tagRender={educationTag}
+                                options={educationOptions}
+                            />
+                        </Form.Item>
+
+                        <Form.Item
+                            key="income"
+                            label="Income"
+                            validateStatus={this.state.incomeTypeError ? "error" : "Success"}
+                            help={this.state.incomeTypeError && "Select income"}>
+                            <Select
+                                mode="multiple"
+                                placeholder="Choose income"
+                                onChange={this.onIncomeTypeChange.bind(this)}
+                                value={income}
+                                tagRender={incomeTag}
+                                options={incomeOptions}
+                            />
+                        </Form.Item>
+
 
                         <Form.Item
                             key="geographicLocation"

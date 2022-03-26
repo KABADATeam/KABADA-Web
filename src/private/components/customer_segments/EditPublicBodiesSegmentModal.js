@@ -17,10 +17,11 @@ class EditPublicBodiesSegmentModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            id: this.props.item.id,
             segmentName: this.props.item.segment_name,
             segmentNameError: false,
             ngoType: this.props.item.ngo_types.map(e => ({ id: e.id, title: e.title, tag: 0 })),
-            ngoTypeError: false, 
+            ngoTypeError: false,
             popoverVisibility: false,
             popoverType: 'no predict',
             popoverTextObject: []
@@ -115,7 +116,7 @@ class EditPublicBodiesSegmentModal extends Component {
                 popoverType: 'no predict'
             })
         } else {
-            const text = this.generateAIHelpText(this.props.item, this.props.customerSegments.aiPredict.custSegs.publicNgo, this.props.categories.customer_segments_types);
+            const text = this.generateAIHelpText(this.props.customerSegments.aiPredict.custSegs.publicNgo, this.props.categories.customer_segments_types);
             if (text === undefined) {
                 this.setState({
                     popoverVisibility: visible,
@@ -144,10 +145,16 @@ class EditPublicBodiesSegmentModal extends Component {
         }
         return newArray;
     }
-    generateAIHelpText = (selectedItem, predictsObj, segmentTypes) => {
+    generateAIHelpText = (predictsObj, segmentTypes) => {
         const aiHintTextObject = [];
+        const selectedItem = {
+            "id": this.state.id,
+            "business_type": this.state.ngoType,
+        }
+        console.log(predictsObj)
         if (predictsObj !== undefined) {
             const predictObj = predictsObj.find(s => s.id === selectedItem.id);
+
             if (predictObj !== undefined) {
                 const predictProperties = Object.getOwnPropertyNames(predictsObj.find(s => s.id === selectedItem.id));
                 const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
@@ -155,21 +162,37 @@ class EditPublicBodiesSegmentModal extends Component {
                     const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(selectedItem, property).value;
                     const selectedItemPropertyValues = selectedItemPropertyValuesObj.map(s => s.id);
                     const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
-                    const propertyType = property === 'business_type' ? segmentTypes.ngo_types : null;
+                    const propertyType = property === 'business_type' ? segmentTypes.ngo_types : segmentTypes.ngo_types;
                     const comparePropertiesValues = this.compareArray(predictObjPropertyValues, selectedItemPropertyValues);
+                    console.log(comparePropertiesValues);
+                    console.log(comparePropertiesValues.length);
                     let propertiesValuesString = '';
-                    if (comparePropertiesValues.length > 0) {
-                        const typePredictArray = []
+                    if (comparePropertiesValues.length > 1) {
+                        console.log(comparePropertiesValues);
                         for (var i = 0; i < comparePropertiesValues.length; i++) {
                             const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[i]);
                             propertiesValuesString += i === predictObjPropertyValues.length - 1 ? propertyTypeTitle.title + '' : propertyTypeTitle.title + ', '
-                            typePredictArray.push(propertyTypeTitle);
+                            console.log(propertiesValuesString);
                         }
+                        //property.charAt(0).toUpperCase() + property.slice(1),
                         const new_obj = {
-                            type_title: property.charAt(0).toUpperCase() + property.slice(1),
+                            type_title: property === 'business_type' ? 'Type' : property,
                             text: propertiesValuesString
                         }
                         aiHintTextObject.push(new_obj);
+                    } else if (comparePropertiesValues.length === 1) {
+                        const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[0]);
+                        propertiesValuesString = propertyTypeTitle.title + '';
+                        console.log(propertiesValuesString);
+                        const new_obj = {
+                            type_title: property === 'business_type' ? 'Type' : property ,
+                            text: propertiesValuesString
+                        }
+                        aiHintTextObject.push(new_obj);
+                    } else {
+                        this.setState({
+                            popoverType: 'no predict',
+                        })
                     }
                 }
                 return aiHintTextObject
@@ -184,7 +207,6 @@ class EditPublicBodiesSegmentModal extends Component {
                 popoverType: 'no predict',
             })
         }
-
     }
     onAIButtonClick = () => {
         const obj = this.props.customerSegments.aiPredict.custSegs.publicNgo;
@@ -234,11 +256,19 @@ class EditPublicBodiesSegmentModal extends Component {
                                         <Text>Based on the current information KABADA AI thinks that everything looks good.</Text>
                                         :
                                         <Text>
-                                            Based on your input KABADA AI recommends that you consider adding {this.state.popoverTextObject.map((e, index) =>
-                                                <Text key={index} > for "{e.type_title}": {e.text}</Text>)}.
+                                            Based on your input KABADA AI recommends that you consider adding {this.state.popoverTextObject.map((e, index) => {
+                                                if (index + 1 === this.state.popoverTextObject.length) {
+                                                    return (
+                                                        <Text key={index} > for "{e.type_title}": {e.text}</Text>
+                                                    )
+                                                } else {
+                                                    return (
+                                                        <Text key={index} > for "{e.type_title}": {e.text};</Text>
+                                                    )
+                                                }
+                                            })}.
                                         </Text>
                                 }
-
                             </Row>
                             <Row style={{ marginTop: '12px' }}>
                                 <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
@@ -325,14 +355,14 @@ class EditPublicBodiesSegmentModal extends Component {
                         {
                             this.state.segmentNameError === false ?
                                 <Form.Item key="name" label="Segment name">
-                                    <Input style={{...inputStyle}} placeholder="Add segment name" value={this.state.segmentName} onChange={(e) => this.onNameChange(e.target.value)} />
+                                    <Input style={{ ...inputStyle }} placeholder="Add segment name" value={this.state.segmentName} onChange={(e) => this.onNameChange(e.target.value)} />
                                 </Form.Item>
                                 :
                                 <Form.Item key="name" label="Segment name"
                                     validateStatus="error"
                                     help='Type segment name'
                                 >
-                                    <Input style={{...inputStyle}} placeholder="Add segment name" value={this.state.segmentName} onChange={(e) => this.onNameChange(e.target.value)} />
+                                    <Input style={{ ...inputStyle }} placeholder="Add segment name" value={this.state.segmentName} onChange={(e) => this.onNameChange(e.target.value)} />
                                 </Form.Item>
                         }
                         {

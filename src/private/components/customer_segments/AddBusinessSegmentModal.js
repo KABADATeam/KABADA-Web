@@ -22,9 +22,9 @@ class AddBusinessSegmentModal extends Component {
         companySize: [],
         companySizeError: false,
         locationType: [],
-        locationTypeError: false, 
+        locationTypeError: false,
         popoverVisibility: false,
-        popoverType: 'no predict', 
+        popoverType: 'no predict',
         popoverTextObject: []
     }
 
@@ -229,7 +229,7 @@ class AddBusinessSegmentModal extends Component {
                             text: propertiesValuesString
                         }
                         aiHintTextObject.push(new_obj);
-                    } else if (comparePropertiesValues.length === 1){
+                    } else if (comparePropertiesValues.length === 1) {
                         const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[0]);
                         propertiesValuesString = propertyTypeTitle.title + '';
                         console.log(propertiesValuesString);
@@ -256,8 +256,8 @@ class AddBusinessSegmentModal extends Component {
                 popoverType: 'no predict',
             })
         }
-
     }
+    
     onAIButtonClick = () => {
         const obj = this.props.customerSegments.aiPredict.custSegs.business;
         const aiObject = obj.find((el) => el.id === null);
@@ -307,7 +307,7 @@ class AddBusinessSegmentModal extends Component {
             type: newTypeArray.length === 0 ? [] : newTypeArray,
             typeError: newTypeArray.length === 0 && this.state.typeError === false ? false : newTypeArray.length > 0 && this.state.typeError === false ? false : newTypeArray.length > 0 && this.state.typeError === true ? false : true,
             companySize: newCompanySizeArray.length === 0 ? [] : newCompanySizeArray,
-            companySizeError: newCompanySizeArray.length === 0 && this.state.locationTypeError === false ? false : newCompanySizeArray.length > 0 && this.state.locationTypeError === false ? false: newCompanySizeArray.length > 0 && this.state.locationTypeError === true ? false: true,
+            companySizeError: newCompanySizeArray.length === 0 && this.state.locationTypeError === false ? false : newCompanySizeArray.length > 0 && this.state.locationTypeError === false ? false : newCompanySizeArray.length > 0 && this.state.locationTypeError === true ? false : true,
             locationType: newLocationArray.length === 0 ? [] : newLocationArray,
             locationTypeError: newLocationArray.length === 0 && this.state.locationTypeError === false ? false : newLocationArray.length > 0 && this.state.locationTypeError === false ? false : newLocationArray.length > 0 && this.state.locationTypeError === true ? false : true,
         })
@@ -351,23 +351,31 @@ class AddBusinessSegmentModal extends Component {
                                             <Text>Based on the current information KABADA AI thinks that everything looks good.</Text>
                                             :
                                             <Text>
-                                                Based on your input KABADA AI recommends that you consider adding {this.state.popoverTextObject.map((e, index) =>
-                                                    <Text key={index} > for "{e.type_title}": {e.text}</Text>)}.
+                                                Based on your input KABADA AI recommends that you consider adding {this.state.popoverTextObject.map((e, index) => {
+                                                    if (index + 1 === this.state.popoverTextObject.length) {
+                                                        return (
+                                                            <Text key={index} > for "{e.type_title}": {e.text}</Text>
+                                                        )
+                                                    } else {
+                                                        return (
+                                                            <Text key={index} > for "{e.type_title}": {e.text};</Text>
+                                                        )
+                                                    }
+                                                })}.
                                             </Text>
                                     }
-
                                 </Row>
                                 <Row style={{ marginTop: '12px' }}>
                                     {
                                         this.state.popoverTextObject.length === 0 ?
-                                        <Button onClick={this.hidePopover}>Cancel</Button>
-                                        :
-                                        <>
-                                            <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
-                                            <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
-                                        </>
+                                            <Button onClick={this.hidePopover}>Cancel</Button>
+                                            :
+                                            <>
+                                                <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
+                                                <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
+                                            </>
                                     }
-                                    
+
                                 </Row>
                             </Row>
                         </>
