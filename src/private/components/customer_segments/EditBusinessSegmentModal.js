@@ -20,11 +20,10 @@ class EditBusinessSegmentModal extends Component {
             segmentName: this.props.item.segment_name,
             type: this.props.item.business_type.map(e => ({ id: e.id, title: e.title, tag: 0 })),
             companySize: this.props.item.company_size.map(e => ({ id: e.id, title: e.title, tag: 0 })),
-            //annualRevenue: this.props.item.annual_revenue,
-            //budget: this.props.item.budget,
             locationType: this.props.item.geographic_location.map(e => ({ id: e.id, title: e.title, tag: 0 })),
             popoverVisibility: false,
-            popoverType: 'no predict'
+            popoverType: 'no predict', 
+            popoverTextObject: []
         }
     }
 
@@ -188,28 +187,23 @@ class EditBusinessSegmentModal extends Component {
                             : property === 'business_type' ? segmentTypes.business_types
                                 : null
                     const comparePropertiesValues = this.compareArray(predictObjPropertyValues, selectedItemPropertyValues);
-                    console.log(comparePropertiesValues);
-                    console.log(comparePropertiesValues.length);
                     let propertiesValuesString = '';
                     if (comparePropertiesValues.length > 1) {
-                        console.log(comparePropertiesValues);
                         for (var i = 0; i < comparePropertiesValues.length; i++) {
                             const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[i]);
-                            propertiesValuesString += i === predictObjPropertyValues.length - 1 ? propertyTypeTitle.title + '' : propertyTypeTitle.title + ', '
-                            console.log(propertiesValuesString);
+                            propertiesValuesString += i === predictObjPropertyValues.length - 1 ? propertyTypeTitle.title + '' : propertyTypeTitle.title + ', ';
                         }
                         //property.charAt(0).toUpperCase() + property.slice(1),
                         const new_obj = {
-                            type_title: property === 'business_type' ? 'Type' : property === 'company_size' ? 'Company size' : property === 'geographic_location' ? 'Geographic location' : null,
+                            type_title: property === 'business_type' ? 'Type' : property === 'company_size' ? 'Company size' : property === 'geographic_location' ? 'Geographic location' : property,
                             text: propertiesValuesString
                         }
                         aiHintTextObject.push(new_obj);
                     } else if (comparePropertiesValues.length === 1){
                         const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[0]);
                         propertiesValuesString = propertyTypeTitle.title;
-                        console.log(propertiesValuesString);
                         const new_obj = {
-                            type_title: property === 'business_type' ? 'Type' : property === 'company_size' ? 'Company size' : property === 'geographic_location' ? 'Geographic location' : null,
+                            type_title: property === 'business_type' ? 'Type' : property === 'company_size' ? 'Company size' : property === 'geographic_location' ? 'Geographic location' : property,
                             text: propertiesValuesString
                         }
                         aiHintTextObject.push(new_obj);
@@ -235,7 +229,6 @@ class EditBusinessSegmentModal extends Component {
     }
     onAIButtonClick = () => {
         const obj = this.props.customerSegments.aiPredict.custSegs.business;
-        console.log('id object ', this.props.item.id);
         const aiObject = obj.find((el) => el.id === this.props.item.id);
         const type = this.state.type.map(e => e.id);
         const typeAI = aiObject.business_type;
@@ -252,9 +245,7 @@ class EditBusinessSegmentModal extends Component {
         }
         const companySize = this.state.companySize.map(e => e.id);
         const companySizeAI = aiObject.company_size;
-        console.log(companySizeAI);
         const companySizePredict = this.compareArray(companySizeAI, companySize);
-        console.log(companySizePredict);
         const newCompanySizeArray = [...this.state.companySize];
         for (var i in companySizePredict) {
             const title = this.props.categories.customer_segments_types.company_sizes.find((obj) => obj.id === companySizePredict[i]).title;
@@ -269,7 +260,6 @@ class EditBusinessSegmentModal extends Component {
         const locationAI = aiObject.geographic_location;
         const locationPredict = this.compareArray(locationAI, location);
         const newLocationArray = [...this.state.locationType];
-        console.log('location predict: ', locationPredict)
         for (var i in locationPredict) {
             const title = this.props.categories.customer_segments_types.geographic_location.find((obj) => obj.id === locationPredict[i]).title;
             const new_location_obj = {
@@ -286,17 +276,6 @@ class EditBusinessSegmentModal extends Component {
         })
         this.hidePopover();
     }
-    /*onBudgetChange(value) {
-        this.setState({
-            budget: value
-        })
-    }
-
-    onAnnualRevenueChange(value) {
-        this.setState({
-            annualRevenue: value
-        })
-    }*/
 
 
     render() {
@@ -508,8 +487,7 @@ class EditBusinessSegmentModal extends Component {
                         </Form.Item>
                         {
                             this.state.type.length > 0 ?
-                                <Form.Item key="type" label="Type"
-                                    rules={[{ required: true, message: 'Select business type' }]}>
+                                <Form.Item key="type" label="Type">
                                     <Select
                                         mode="multiple"
                                         placeholder="Select type"
@@ -525,15 +503,6 @@ class EditBusinessSegmentModal extends Component {
                                     label="Type"
                                     validateStatus="error"
                                     help="Select type"
-                                    rules={[
-                                        {
-                                            validator: async (_, type) => {
-                                                if (!type || type.length < 1) {
-                                                    return Promise.reject(new Error('Select type'));
-                                                }
-                                            },
-                                        },
-                                    ]}
                                 >
                                     <Select
                                         mode="multiple"
@@ -547,8 +516,7 @@ class EditBusinessSegmentModal extends Component {
                         }
                         {
                             this.state.companySize.length > 0 ?
-                                <Form.Item key="size" label="Company size"
-                                    rules={[{ required: true, message: 'Select company size' }]}>
+                                <Form.Item key="size" label="Company size">
                                     <Select
                                         mode="multiple"
                                         placeholder="Select type"
@@ -564,15 +532,6 @@ class EditBusinessSegmentModal extends Component {
                                     label="Company size"
                                     validateStatus="error"
                                     help="Select company size"
-                                    rules={[
-                                        {
-                                            validator: async (_, size) => {
-                                                if (!size || size.length < 1) {
-                                                    return Promise.reject(new Error('Select company size'));
-                                                }
-                                            },
-                                        },
-                                    ]}
                                 >
                                     <Select
                                         mode="multiple"
@@ -586,8 +545,7 @@ class EditBusinessSegmentModal extends Component {
                         }
                         {
                             this.state.locationType.length > 0 ?
-                                <Form.Item key="geographicLocation" label="Geographic Location"
-                                    rules={[{ required: true, message: 'Choose geographic location' }]}>
+                                <Form.Item key="geographicLocation" label="Geographic Location">
                                     <Select
                                         mode="multiple"
                                         placeholder="Choose geographic location"
@@ -603,15 +561,6 @@ class EditBusinessSegmentModal extends Component {
                                     label="Geographic Location"
                                     validateStatus="error"
                                     help="Choose geographic location"
-                                    rules={[
-                                        {
-                                            validator: async (_, geographicLocation) => {
-                                                if (!geographicLocation || geographicLocation.length < 1) {
-                                                    return Promise.reject(new Error('Choose geographic location'));
-                                                }
-                                            },
-                                        },
-                                    ]}
                                 >
                                     <Select
                                         mode="multiple"

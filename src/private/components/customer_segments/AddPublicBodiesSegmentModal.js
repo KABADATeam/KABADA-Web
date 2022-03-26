@@ -11,7 +11,6 @@ const { Text } = Typography;
 const inputStyle = {
     height: '40px',
     borderRadius: '4px',
-    borderColor: '#BFBFBF',
 }
 
 class AddPublicBodiesSegmentModal extends Component {
@@ -101,6 +100,7 @@ class AddPublicBodiesSegmentModal extends Component {
         }
         return resultArray;
     }
+
     onNameChange(value) {
         this.setState({
             segmentName: value,
@@ -115,6 +115,7 @@ class AddPublicBodiesSegmentModal extends Component {
             ngoTypeError: ngo_type_value.length !== 0 ? false : true
         });
     }
+
     handlePopoverVisibilityChange = (visible) => {
         console.log('Opp');
         if (this.props.customerSegments.aiPredict === null) {
@@ -131,14 +132,14 @@ class AddPublicBodiesSegmentModal extends Component {
                 popoverTextObject: text
             })
         }
-
-
     }
+
     hidePopover = () => {
         this.setState({
             popoverVisibility: false
         })
     }
+
     compareArray = (arrayAI, arrayState) => {
         const newArray = []
         for (var i in arrayAI) {
@@ -148,15 +149,12 @@ class AddPublicBodiesSegmentModal extends Component {
         }
         return newArray;
     }
+
     generateAIHelpText = (predictsObj, segmentTypes) => {
         const aiHintTextObject = [];
-        console.log(this.state.ngoType);
-        console.log(predictsObj);
         if (this.state.ngoType.length === 0) {
             const predictObj = predictsObj.find(s => s.id === null);
-            console.log('Rastas obj ', predictObj)
             const predictProperties = Object.getOwnPropertyNames(predictObj);
-            console.log('Visi properties ', predictProperties)
             const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
             for (const property of filteredPredictProperties) {
                 const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
@@ -174,27 +172,18 @@ class AddPublicBodiesSegmentModal extends Component {
             }
             return aiHintTextObject
         } else {
-            console.log('ngo ne 0')
             const predictObj = predictsObj.find(s => s.id === null);
-            console.log(predictObj)
             const predictProperties = Object.getOwnPropertyNames(predictsObj.find(s => s.id === null));
-            console.log(predictProperties)
-            console.log(this.state.ngoType)
             const item = {
                 "business_type": this.state.ngoType
             }
             const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
             for (const property of filteredPredictProperties) {
-                console.log(property);
-                console.log(item)
                 const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(item, property).value;
                 const selectedItemPropertyValues = selectedItemPropertyValuesObj.map(s => s.id);
-                console.log(selectedItemPropertyValues);
                 const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
-                console.log(predictObjPropertyValues);
                 const propertyType = property === 'business_type' ? segmentTypes.ngo_types : null;
                 const comparePropertiesValues = this.compareArray(predictObjPropertyValues, selectedItemPropertyValues);
-                console.log(comparePropertiesValues);
                 let propertiesValuesString = ''
                 if (comparePropertiesValues.length > 0) {
                     const typePredictArray = []
@@ -203,7 +192,6 @@ class AddPublicBodiesSegmentModal extends Component {
                         propertiesValuesString += i === predictObjPropertyValues.length - 1 ? propertyTypeTitle.title + '' : propertyTypeTitle.title + ', '
                         typePredictArray.push(propertyTypeTitle);
                     }
-                    console.log(propertiesValuesString);
                     const new_obj = {
                         type_title: property.charAt(0).toUpperCase() + property.slice(1),
                         text: propertiesValuesString
@@ -214,17 +202,16 @@ class AddPublicBodiesSegmentModal extends Component {
             return aiHintTextObject
         }
     }
+
     onAIButtonClick = () => {
         if (this.props.customerSegments.aiPredict !== null) {
             const obj = this.props.customerSegments.aiPredict.custSegs.publicNgo;
-            console.log(obj);
             if (obj !== undefined) {
                 const aiObject = obj.find((el) => el.id === null);
                 const ngoType = this.state.ngoType.map(e => e.id);
                 const ngoTypeAI = aiObject.business_type;
                 const ngoTypePredict = this.compareArray(ngoTypeAI, ngoType);
                 const newNgoTypeArray = [...this.state.ngoType];
-                console.log(newNgoTypeArray)
                 for (var i in ngoTypePredict) {
                     const title = this.props.categories.customer_segments_types.ngo_types.find((obj) => obj.id === ngoTypePredict[i]).title;
                     const new_ngo_type_obj = {
@@ -236,7 +223,7 @@ class AddPublicBodiesSegmentModal extends Component {
                 }
                 this.setState({
                     ngoType: newNgoTypeArray,
-                    ngoTypeError: newNgoTypeArray.length !== 0 ? false : true,
+                    ngoTypeError: newNgoTypeArray.length === 0 && this.state.ngoTypeError === false ? false : newNgoTypeArray.length > 0 && this.state.ngoTypeError === false ? false : newNgoTypeArray.length > 0 && this.state.ngoTypeError === true ? false : true,
                 })
             }
         }
