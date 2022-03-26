@@ -238,7 +238,7 @@ class AddPublicBodiesSegmentModal extends Component {
         const popoverContent = (
             <>
                 {
-                    this.state.popoverType === false ?
+                    this.state.popoverType === 'no predict' ?
                         <>
                             <Row>
                                 <Text>
@@ -252,20 +252,30 @@ class AddPublicBodiesSegmentModal extends Component {
                         :
                         <>
                             <Row>
-                                {
-                                    this.state.popoverTextObject.length === 0 ?
-                                        <Text>Based on the current information KABADA AI thinks that everything looks good.</Text>
-                                        :
-                                        <Text>
-                                            Based on your input KABADA AI recommends that you consider adding {this.state.popoverTextObject.map((e, index) =>
-                                                <Text key={index} > for "{e.type_title}": {e.text}</Text>)}.
-                                        </Text>
-                                }
+                                <Row>
+                                    {
+                                        this.state.popoverTextObject.length === 0 ?
+                                            <Text>Based on the current information KABADA AI thinks that everything looks good.</Text>
+                                            :
+                                            <Text>
+                                                Based on your input KABADA AI recommends that you consider adding {this.state.popoverTextObject.map((e, index) =>
+                                                    <Text key={index} > for "{e.type_title}": {e.text}</Text>)}.
+                                            </Text>
+                                    }
 
-                            </Row>
-                            <Row style={{ marginTop: '12px' }}>
-                                <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
-                                <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
+                                </Row>
+                                <Row style={{ marginTop: '12px' }}>
+                                    {
+                                        this.state.popoverTextObject.length === 0 ?
+                                        <Button onClick={this.hidePopover}>Cancel</Button>
+                                        :
+                                        <>
+                                            <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
+                                            <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
+                                        </>
+                                    }
+                                    
+                                </Row>
                             </Row>
                         </>
                 }
