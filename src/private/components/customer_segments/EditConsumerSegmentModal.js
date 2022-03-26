@@ -19,6 +19,7 @@ class EditConsumerSegmentModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            id: this.props.item.id,
             segmentName: this.props.item.segment_name,
             ageGroup: this.props.item.age.map(e => ({ id: e.id, title: e.title, tag: 0 })),
             genderType: this.props.item.gender.map(e => ({ id: e.id, title: e.title, tag: 0 })),
@@ -26,7 +27,8 @@ class EditConsumerSegmentModal extends Component {
             incomeType: this.props.item.income.map(e => ({ id: e.id, title: e.title, tag: 0 })),
             locationType: this.props.item.geographic_location.map(e => ({ id: e.id, title: e.title, tag: 0 })),
             popoverVisibility: false,
-            popeverText: []
+            popoverType: 'no predict',
+            popoverTextObject: []
         }
     }
 
@@ -90,185 +92,96 @@ class EditConsumerSegmentModal extends Component {
         })
     }
 
-    onAgeGroupChange(value) {
-        const ageGroupArray = [];
+    addSelectedValue = (value, state, segment_type) => {
+        const resultArray = [];
         for (var i = 0; i < value.length; i++) {
-            if (this.state.ageGroup[i] === undefined) {
-                const age_group = this.props.categories.customer_segments_types.age_groups.find((obj) => obj.id === value[i]);
+            if (state[i] === undefined) {
+                const type = segment_type.find((obj) => obj.id === value[i]);
                 const new_obj = {
-                    id: age_group.id,
-                    title: age_group.title,
+                    id: type.id,
+                    title: type.title,
                     tag: 0
                 }
-                ageGroupArray.push(new_obj)
+                resultArray.push(new_obj)
             } else {
-                const age_group = this.state.ageGroup.find((obj) => obj.id === value[i]);
-                if (age_group.tag === 0) {
+                const type = state.find((obj) => obj.id === value[i]);
+                if (type.tag === 0) {
                     const new_obj = {
-                        id: age_group.id,
-                        title: age_group.title,
+                        id: type.id,
+                        title: type.title,
                         tag: 0
                     }
-                    ageGroupArray.push(new_obj);
-                } else if (age_group.tag === 1) {
+                    resultArray.push(new_obj);
+                } else if (type.tag === 1) {
                     const new_obj = {
-                        id: age_group.id,
-                        title: age_group.title,
+                        id: type.id,
+                        title: type.title,
                         tag: 1
                     }
-                    ageGroupArray.push(new_obj);
+                    resultArray.push(new_obj);
                 }
             }
         }
+        console.log(resultArray)
+        return resultArray;
+    }
+
+    onAgeGroupChange(value) {
         this.setState({
-            ageGroup: ageGroupArray
+            ageGroup: this.addSelectedValue(value, this.state.ageGroup, this.props.categories.customer_segments_types.age_groups)
         });
     }
 
     onGenderTypeChange(value) {
-        const genderTypeArray = [];
-        for (var i = 0; i < value.length; i++) {
-            if (this.state.genderType[i] === undefined) {
-                const gender_type = this.props.categories.customer_segments_types.gender_types.find((obj) => obj.id === value[i]);
-                console.log(gender_type);
-                const new_obj = {
-                    id: gender_type.id,
-                    title: gender_type.title,
-                    tag: 0
-                }
-                genderTypeArray.push(new_obj)
-            } else {
-                const gender_type = this.state.genderType.find((obj) => obj.id === value[i]);
-                if (gender_type.tag === 0) {
-                    const new_obj = {
-                        id: gender_type.id,
-                        title: gender_type.title,
-                        tag: 0
-                    }
-                    genderTypeArray.push(new_obj);
-                } else if (gender_type.tag === 1) {
-                    const new_obj = {
-                        id: gender_type.id,
-                        title: gender_type.title,
-                        tag: 1
-                    }
-                    genderTypeArray.push(new_obj);
-                }
-            }
-        }
         this.setState({
-            genderType: genderTypeArray
+            genderType: this.addSelectedValue(value, this.state.genderType, this.props.categories.customer_segments_types.gender_types)
         });
     }
 
     onEducationTypeChange(value) {
-        const educationTypeArray = [];
-        for (var i = 0; i < value.length; i++) {
-            if (this.state.educationType[i] === undefined) {
-                const education_type = this.props.categories.customer_segments_types.education_types.find((obj) => obj.id === value[i]);
-                const new_obj = {
-                    id: education_type.id,
-                    title: education_type.title,
-                    tag: 0
-                };
-                educationTypeArray.push(new_obj);
-            } else {
-                const education_type = this.state.educationType.find((obj) => obj.id === value[i]);
-                if (education_type.tag === 0) {
-                    const new_obj = {
-                        id: education_type.id,
-                        title: education_type.title,
-                        tag: 0
-                    }
-                    educationTypeArray.push(new_obj);
-                } else if (education_type.tag === 1) {
-                    const new_obj = {
-                        id: education_type.id,
-                        title: education_type.title,
-                        tag: 1
-                    }
-                    educationTypeArray.push(new_obj);
-                }
-            }
-        };
         this.setState({
-            educationType: educationTypeArray
+            educationType: this.addSelectedValue(value, this.state.educationType, this.props.categories.customer_segments_types.education_types)
         });
     }
 
     onIncomeTypeChange(value) {
-        const incomeTypeArray = []
-        for (var i = 0; i < value.length; i++) {
-            if (this.state.incomeType[i] === undefined) {
-                const income_type = this.props.categories.customer_segments_types.income_types.find((obj) => obj.id === value[i]);
-                const new_obj = {
-                    id: income_type.id,
-                    title: income_type.title,
-                    tag: 0
-                };
-                incomeTypeArray.push(new_obj);
-            } else {
-                const income_type = this.state.incomeType.find((obj) => obj.id === value[i]);
-                if (income_type.tag === 0) {
-                    const new_obj = {
-                        id: income_type.id,
-                        title: income_type.title,
-                        tag: 0
-                    }
-                    incomeTypeArray.push(new_obj);
-                } else if (income_type.tag === 1) {
-                    const new_obj = {
-                        id: income_type.id,
-                        title: income_type.title,
-                        tag: 1
-                    }
-                    incomeTypeArray.push(new_obj);
-                }
-            }
-        };
         this.setState({
-            incomeType: incomeTypeArray
+            incomeType: this.addSelectedValue(value, this.state.incomeType, this.props.categories.customer_segments_types.income_types)
         });
     }
+
     onLocationTypeChange(value) {
-        const locationTypeArray = [];
-        for (var i = 0; i < value.length; i++) {
-            if (this.state.locationType[i] === undefined) {
-                const location_type = this.props.categories.customer_segments_types.geographic_locations.find((obj) => obj.id === value[i]);
-                const new_obj = {
-                    id: location_type.id,
-                    title: location_type.title,
-                    tag: 0
-                };
-                locationTypeArray.push(new_obj);
-            } else {
-                const location_type = this.state.locationType.find((obj) => obj.id === value[i]);
-                if (location_type.tag === 0) {
-                    const new_obj = {
-                        id: location_type.id,
-                        title: location_type.title,
-                        tag: 0
-                    }
-                    locationTypeArray.push(new_obj);
-                } else if (location_type.tag === 1) {
-                    const new_obj = {
-                        id: location_type.id,
-                        title: location_type.title,
-                        tag: 1
-                    }
-                    locationTypeArray.push(new_obj);
-                }
-            }
-        };
         this.setState({
-            locationType: locationTypeArray
+            locationType: this.addSelectedValue(value, this.state.locationType, this.props.categories.customer_segments_types.geographic_locations)
         })
     }
+
     handlePopoverVisibilityChange = (visible) => {
-        this.setState({
-            popoverVisibility: visible
-        })
+        console.log(this.props.customerSegments.aiPredict)
+        if (this.props.customerSegments.aiPredict === null) {
+            console.log('if')
+            this.setState({
+                popoverVisibility: visible,
+                popoverType: 'no predict'
+            })
+        } else {
+            const text = this.generateAIHelpText(this.props.customerSegments.aiPredict.custSegs.consumer, this.props.categories.customer_segments_types);
+            console.log(text);
+            if (text === undefined) {
+                this.setState({
+                    popoverVisibility: visible,
+                    popoverType: 'no predict',
+                })
+            } else {
+                this.setState({
+                    popoverVisibility: visible,
+                    popoverType: 'is predict',
+                    popoverTextObject: text
+                })
+            }
+        }
     }
+
     hidePopover = () => {
         this.setState({
             popoverVisibility: false
@@ -283,10 +196,82 @@ class EditConsumerSegmentModal extends Component {
         }
         return newArray;
     }
+
+    generateAIHelpText = (predictsObj, segmentTypes) => {
+        const aiHintTextObject = [];
+        const selectedItem = {
+            "id": this.state.id,
+            "age": this.state.ageGroup,
+            "gender": this.state.genderType,
+            "education": this.state.educationType,
+            "income": this.state.incomeType,
+            "geographic_location": this.state.locationType
+        }
+        console.log(predictsObj);
+        console.log(segmentTypes)
+        console.log(selectedItem)
+        if (predictsObj !== undefined) {
+            const predictObj = predictsObj.find(s => s.id === selectedItem.id);
+            console.log(predictObj)
+            if (predictObj !== undefined) {
+                const predictProperties = Object.getOwnPropertyNames(predictsObj.find(s => s.id === selectedItem.id));
+                const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
+                for (const property of filteredPredictProperties) {
+                    const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(selectedItem, property).value;
+                    const selectedItemPropertyValues = selectedItemPropertyValuesObj.map(s => s.id);
+                    const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
+                    const propertyType = property === 'education' ? segmentTypes.education_types
+                        : property === 'gender' ? segmentTypes.gender_types
+                            : property === 'income' ? segmentTypes.income_types
+                                : property === 'age' ? segmentTypes.age_groups
+                                    : property === 'geographic_location' ? segmentTypes.geographic_locations
+                                        : null
+                    const comparePropertiesValues = this.compareArray(predictObjPropertyValues, selectedItemPropertyValues);
+                    let propertiesValuesString = '';
+                    if (comparePropertiesValues.length > 1) {
+                        for (var i = 0; i < comparePropertiesValues.length; i++) {
+                            const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[i]);
+                            propertiesValuesString += i === predictObjPropertyValues.length - 1 ? propertyTypeTitle.title + '' : propertyTypeTitle.title + ', ';
+                        }
+                        //property.charAt(0).toUpperCase() + property.slice(1),
+                        const new_obj = {
+                            type_title: property === 'geographic_location' ? 'Geographic location' : property.charAt(0).toUpperCase() + property.slice(1),
+                            text: propertiesValuesString
+                        }
+                        aiHintTextObject.push(new_obj);
+                    } else if (comparePropertiesValues.length === 1) {
+                        const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[0]);
+                        propertiesValuesString = propertyTypeTitle.title;
+                        const new_obj = {
+                            type_title: property === 'geographic_location' ? 'Geographic location' : property.charAt(0).toUpperCase() + property.slice(1),
+                            text: propertiesValuesString
+                        }
+                        aiHintTextObject.push(new_obj);
+                    } else {
+                        this.setState({
+                            popoverType: 'no predict',
+                        })
+                    }
+                }
+                console.log(aiHintTextObject)
+                return aiHintTextObject
+            } else {
+                console.log('test1')
+                this.setState({
+                    popoverType: 'no predict',
+                })
+            }
+
+        } else {
+            console.log('test2')
+            this.setState({
+                popoverType: 'no predict',
+            })
+        }
+    }
+
     onAIButtonClick = () => {
         const obj = this.props.customerSegments.aiPredict.custSegs.consumer;
-        console.log('id object ', this.props.item.id);
-        console.log('income ', this.props.item.income[0].id);
         const aiObject = obj.find((el) => el.id === this.props.item.id);
         const gender = this.state.genderType.map(e => e.id);
         const genderAI = aiObject.gender;
@@ -318,7 +303,6 @@ class EditConsumerSegmentModal extends Component {
         const incomeAI = aiObject.income;
         const incomePredict = this.compareArray(incomeAI, income);
         const newIncomeArray = [...this.state.incomeType];
-        console.log('income predict: ', incomePredict)
         for (var i in incomePredict) {
             const title = this.props.categories.customer_segments_types.income_types.find((obj) => obj.id === incomePredict[i]).title;
             const new_income_type_obj = {
@@ -330,10 +314,8 @@ class EditConsumerSegmentModal extends Component {
         }
         const location = this.state.locationType.map(e => e.id);
         const locationAI = aiObject.geographic_location;
-        console.log(locationAI)
         const locationPredict = this.compareArray(locationAI, location);
         const newLocationArray = [...this.state.locationType];
-        console.log('location predict: ', locationPredict)
         for (var i in locationPredict) {
             const title = this.props.categories.customer_segments_types.geographic_location.find((obj) => obj.id === locationPredict[i]).title;
             const new_location_obj = {
@@ -343,6 +325,10 @@ class EditConsumerSegmentModal extends Component {
             }
             newLocationArray.push(new_location_obj);
         }
+        console.log(newGenderArray);
+        console.log(newEducationArray)
+        console.log(newIncomeArray);
+        console.log(newLocationArray);
         this.setState({
             genderType: newGenderArray,
             educationType: newEducationArray,
@@ -350,96 +336,17 @@ class EditConsumerSegmentModal extends Component {
             locationType: newLocationArray
         })
         this.hidePopover();
-        // const education_type = this.props.categories.customer_segments_types.education_types.find((obj) => obj.id === findEducation.education[0]);
-        // const income_type = this.props.categories.customer_segments_types.income_types.find((obj) => obj.id === findIncome.income[0]);
-        // const new_education_AI_obj = {
-        //     id: education_type.id,
-        //     title: education_type.title,
-        //     tag: 1
-        // }
-        // const new_income_AI_obj = {
-        //     id: income_type.id,
-        //     title: income_type.title,
-        //     tag: 1
-        // }
-        // this.setState({
-        //     educationType: [...this.state.educationType, new_education_AI_obj],
-        //     incomeType: [...this.state.incomeType, new_income_AI_obj]
-        //     //edu: [...this.state.edu, education_type_title]
-        // })
-
-
     }
-    generateAIHelpText = (selectedItem, predictsObj, segmentTypes) => {
-        const aiHintTextObject = [];
-        if (selectedItem === null) {
-            const predictObj = predictsObj.find(s => s.id === null);
-            const predictProperties = Object.getOwnPropertyNames(predictObj);
-            const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
-            for (const property of filteredPredictProperties) {
-                const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
-                const propertyType = property === 'education' ? segmentTypes.education_types
-                    : property === 'gender' ? segmentTypes.gender_types
-                        : property === 'income' ? segmentTypes.income_types
-                            : property === 'age' ? segmentTypes.age_groups
-                                : property === 'geographic_location' ? segmentTypes.geographic_locations
-                                    : property === 'company_size' ? segmentTypes.company_sizes
-                                        : property === 'business_type' ? segmentTypes.business_types
-                                            : null
-                const typePredictArray = [];
-                for (var i = 0; i < predictObjPropertyValues.length; i++) {
-                    const propertyTypeTitle = propertyType.find(p => p.id === predictObjPropertyValues[i])
-                    typePredictArray.push(propertyTypeTitle);
-                }
-    
-                const new_obj = {
-                    type_title: property.charAt(0).toUpperCase() + property.slice(1),
-                    predict: typePredictArray
-                }
-                aiHintTextObject.push(new_obj);
-            }
-            return aiHintTextObject
-        } else {
-            const predictObj = predictsObj.find(s => s.id === selectedItem.id);
-            const predictProperties = Object.getOwnPropertyNames(predictsObj.find(s => s.id === selectedItem.id));
-            const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
-            for (const property of filteredPredictProperties) {
-                const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(selectedItem, property).value;
-                const selectedItemPropertyValues = selectedItemPropertyValuesObj.map(s => s.id);
-                const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
-                const propertyType = property === 'education' ? segmentTypes.education_types
-                    : property === 'gender' ? segmentTypes.gender_types
-                        : property === 'income' ? segmentTypes.income_types
-                            : property === 'age' ? segmentTypes.age_groups
-                                : property === 'geographic_location' ? segmentTypes.geographic_locations
-                                    : property === 'company_size' ? segmentTypes.company_sizes
-                                        : property === 'business_type' ? segmentTypes.business_types
-                                            : null
-                const comparePropertiesValues = this.compareArray(predictObjPropertyValues, selectedItemPropertyValues);
-                if (comparePropertiesValues.length > 0) {
-                    const typePredictArray = []
-                    for (var i = 0; i < comparePropertiesValues.length; i++) {
-                        const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[i]);
-                        typePredictArray.push(propertyTypeTitle);
-                    }
-                    const new_obj = {
-                        type_title: property.charAt(0).toUpperCase() + property.slice(1),
-                        predict: typePredictArray
-                    }
-                    aiHintTextObject.push(new_obj);
-                }
-            }
-            console.log(aiHintTextObject);
-            return aiHintTextObject
-        }
-    }
+
     render() {
+        const age = this.state.ageGroup.map(e => e.id);
         const education = this.state.educationType.map(e => e.id);
         const income = this.state.incomeType.map(e => e.id);
         const gender = this.state.genderType.map(e => e.id);
+        const location = this.state.locationType.map(e => e.id);
 
         const ageGroupOptions = this.props.categories.customer_segments_types.age_groups.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+            ({ label: obj.title, value: obj.id })
         );
 
         const genderOptions = this.props.categories.customer_segments_types.gender_types.map((obj) =>
@@ -455,35 +362,91 @@ class EditConsumerSegmentModal extends Component {
         );
 
         const locationOptions = this.props.categories.customer_segments_types.geographic_locations.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+            ({ label: obj.title, value: obj.id })
         );
         const popoverContent = (
             <>
-                <Row>
-                    <Text>
-                        Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.predictText.map((e, index) =>
-                            <Text key={index} > for "{e.type_title}": {e.predict.map((p, index) => <Text key={index}>{p.title},</Text>)}</Text>)}.
-                    </Text>
-                    {/* Based on your input KABADA AI recommends that you consider adding for "Gender" male, for "Education" Primary. */}
-                </Row>
-                <Row style={{ marginTop: '12px' }}>
-                    <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
-                    <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
-                </Row>
+                {
+                    this.state.popoverType === 'no predict' ?
+                        <>
+                            <Row>
+                                <Text>
+                                    Based on the current information KABADA AI did not have any suggestions.
+                                </Text>
+                            </Row>
+                            <Row style={{ marginTop: '12px' }}>
+                                <Button onClick={this.hidePopover}>Cancel</Button>
+                            </Row>
+                        </>
+                        :
+                        <>
+                            <Row>
+                                <Row>
+                                    {
+                                        this.state.popoverTextObject.length === 0 ?
+                                            <Text>Based on the current information KABADA AI thinks that everything looks good.</Text>
+                                            :
+                                            <Text>
+                                                Based on your input KABADA AI recommends that you consider adding {this.state.popoverTextObject.map((e, index) =>
+                                                    <Text key={index} > for "{e.type_title}": {e.text}</Text>)}.
+                                            </Text>
+                                    }
+
+                                </Row>
+                                <Row style={{ marginTop: '12px' }}>
+                                    {
+                                        this.state.popoverTextObject.length === 0 ?
+                                        <Button onClick={this.hidePopover}>Cancel</Button>
+                                        :
+                                        <>
+                                            <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
+                                            <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
+                                        </>
+                                    }
+                                    
+                                </Row>
+                            </Row>
+                        </>
+                }
             </>
         )
-        const popoverContentError = (
-            <>
-                <Row>
-                    <Text>
-                        AI did not have predict
-                    </Text>
-                </Row>
-                <Row style={{ marginTop: '12px' }}>
-                    <Button onClick={this.hidePopover}>Cancel</Button>
-                </Row>
-            </>
-        )
+
+        const ageTag = (props) => {
+            const { label, value, onClose } = props;
+            const tagColor = this.state.ageGroup.find(t => t.id === value);
+            if (tagColor.tag === 1) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#BAE7FF' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor.tag === 0) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor === undefined) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            }
+
+        }
 
         const genderTag = (props) => {
             const { label, value, onClose } = props;
@@ -592,6 +555,41 @@ class EditConsumerSegmentModal extends Component {
                     </Tag>
                 );
             }
+        }
+        const locationTag = (props) => {
+            const { label, value, onClose } = props;
+            const tagColor = this.state.locationType.find(t => t.id === value);
+            if (tagColor.tag === 1) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#BAE7FF' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor.tag === 0) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            } else if (tagColor === undefined) {
+                return (
+                    <Tag
+                        closable
+                        onClose={onClose}
+                        style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                    >
+                        {label}
+                    </Tag>
+                );
+            }
 
         }
         return (
@@ -603,7 +601,7 @@ class EditConsumerSegmentModal extends Component {
                         <Popover
                             placement='topLeft'
                             title='AI Hint'
-                            content={this.props.customerSegments.errorMessage === false ? popoverContent : popoverContentError}
+                            content={popoverContent}
                             overlayStyle={{ width: "328px" }}
                             trigger="click"
                             visible={this.state.popoverVisibility}
@@ -629,9 +627,7 @@ class EditConsumerSegmentModal extends Component {
                         </div>
                     }
                 >
-                    {/* <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose education" onChange={this.onEducationTypeChange.bind(this)} value={this.state.educationType} >
-                        {educationOptions}
-                    </Select> */}
+
                     <Form hideRequiredMark layout="vertical" id="editConsumerForm" name="editConsumerForm" onFinish={this.onOK}
                         initialValues={{
                             name: this.props.item.segment_name,
@@ -646,24 +642,39 @@ class EditConsumerSegmentModal extends Component {
                             <Input style={{ width: '100%', ...inputStyle }} placeholder="Edit segment name"
                                 value={this.state.segmentName} onChange={(e) => this.onNameChange(e.target.value)} />
                         </Form.Item>
-                        <Form.Item
-                            key="age"
-                            name="age"
-                            label="Age group (years)"
-                            rules={[{ required: true, message: 'Select age group (years)' }]}
-                        >
-                            <Select
-                                mode="multiple"
-                                placeholder="Select age group (years)"
-                                onChange={this.onAgeGroupChange.bind(this)}
-                            >
-                                {ageGroupOptions}
-                            </Select>
-                        </Form.Item>
+
+                        {
+                            this.state.ageGroup.length > 0 ?
+                                <Form.Item key="age" label="Age group (years)">
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Select age group (years)"
+                                        onChange={this.onAgeGroupChange.bind(this)}
+                                        value={age}
+                                        tagRender={ageTag}
+                                        options={ageGroupOptions}
+                                    />
+                                </Form.Item>
+                                :
+                                <Form.Item
+                                    key="age"
+                                    label="Age group (years)"
+                                    validateStatus='error'
+                                    help='Select age group (years)'
+                                >
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Select age group (years)"
+                                        onChange={this.onAgeGroupChange.bind(this)}
+                                        value={age}
+                                        tagRender={ageTag}
+                                        options={ageGroupOptions}
+                                    />
+                                </Form.Item>
+                        }
                         {
                             this.state.genderType.length > 0 ?
-                                <Form.Item key="gender" label="Gender"
-                                    rules={[{ required: true, message: 'Select gender' }]}>
+                                <Form.Item key="gender" label="Gender">
                                     <Select
                                         mode="multiple"
                                         placeholder="Select gender"
@@ -679,15 +690,6 @@ class EditConsumerSegmentModal extends Component {
                                     label="Gender"
                                     validateStatus="error"
                                     help="Select gender"
-                                    rules={[
-                                        {
-                                            validator: async (_, gender) => {
-                                                if (!gender || gender.length < 1) {
-                                                    return Promise.reject(new Error('Select gender'));
-                                                }
-                                            },
-                                        },
-                                    ]}
                                 >
                                     <Select
                                         mode="multiple"
@@ -699,18 +701,13 @@ class EditConsumerSegmentModal extends Component {
                                     />
                                 </Form.Item>
                         }
-                        {/* <Form.Item key="gender" name="gender" label="Gender"
-                            rules={[{ required: true, message: 'Select gender' }]}>
-                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Select gender" onChange={this.onGenderTypeChange.bind(this)} >
-                                {genderOptions}
-                            </Select>
-                        </Form.Item> */}
+
                         {
                             this.state.educationType.length > 0 ?
                                 <Form.Item
                                     key="education"
                                     label="Education"
-                                    rules={[{ required: true, message: 'Select education' }]}>
+                                >
                                     <Select
                                         mode="multiple"
                                         placeholder="Choose education"
@@ -726,15 +723,6 @@ class EditConsumerSegmentModal extends Component {
                                     label="Education"
                                     validateStatus="error"
                                     help="Select education"
-                                    rules={[
-                                        {
-                                            validator: async (_, education) => {
-                                                if (!education || education.length < 1) {
-                                                    return Promise.reject(new Error('Select education'));
-                                                }
-                                            },
-                                        },
-                                    ]}
                                 >
                                     <Select
                                         mode="multiple"
@@ -746,18 +734,12 @@ class EditConsumerSegmentModal extends Component {
                                     />
                                 </Form.Item>
                         }
-                        {/* <Form.Item key="education" name="education" label="Education"
-                            rules={[{ required: true, message: 'Select education' }]}>
-                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose education" onChange={this.onEducationTypeChange.bind(this)} value={this.state.educationType}>
-                                {educationOptions}
-                            </Select>
-                        </Form.Item> */}
+
                         {
                             this.state.incomeType.length > 0 ?
                                 <Form.Item
                                     key="income"
                                     label="Income"
-                                    rules={[{ required: true, message: 'Select income' }]}
                                 >
                                     <Select
                                         mode="multiple"
@@ -774,15 +756,7 @@ class EditConsumerSegmentModal extends Component {
                                     label="Income"
                                     validateStatus="error"
                                     help="Select income"
-                                    rules={[
-                                        {
-                                            validator: async (_, income) => {
-                                                if (!income || income.length < 1) {
-                                                    return Promise.reject(new Error('Select income'));
-                                                }
-                                            },
-                                        },
-                                    ]}>
+                                >
                                     <Select
                                         mode="multiple"
                                         placeholder="Choose income"
@@ -793,23 +767,36 @@ class EditConsumerSegmentModal extends Component {
                                     />
                                 </Form.Item>
                         }
-                        {/* <Form.Item key="income" name="income" label="Income"
-                            rules={[{ required: true, message: 'Select income' }]}>
-                            <Select style={{ width: '100%', ...inputStyle }} mode="multiple" placeholder="Choose income" onChange={this.onIncomeTypeChange.bind(this)} >
-                                {incomeOptions}
-                            </Select>
-                        </Form.Item> */}
 
-                        <Form.Item
-                            key="geographicLocation"
-                            name="geographicLocation"
-                            label="Geographic Location"
-                            rules={[{ required: true, message: 'Select geographic location' }]}
-                        >
-                            <Select mode="multiple" placeholder="Choose geographic location" onChange={this.onLocationTypeChange.bind(this)} value={this.state.educationType}>
-                                {locationOptions}
-                            </Select>
-                        </Form.Item>
+                        {
+                            this.state.locationType.length > 0 ?
+                                <Form.Item key="geographicLocation" label="Geographic Location">
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Choose geographic location"
+                                        onChange={this.onLocationTypeChange.bind(this)}
+                                        value={location}
+                                        tagRender={locationTag}
+                                        options={locationOptions}
+                                    />
+                                </Form.Item>
+                                :
+                                <Form.Item
+                                    key="geographicLocation"
+                                    label="Geographic Location"
+                                    validateStatus="error"
+                                    help="Choose geographic location"
+                                >
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Choose geographic location"
+                                        onChange={this.onLocationTypeChange.bind(this)}
+                                        value={location}
+                                        tagRender={locationTag}
+                                        options={locationOptions}
+                                    />
+                                </Form.Item>
+                        }
                     </Form>
                 </Modal >
             </>
