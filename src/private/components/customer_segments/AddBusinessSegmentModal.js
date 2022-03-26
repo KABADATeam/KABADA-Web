@@ -22,7 +22,10 @@ class AddBusinessSegmentModal extends Component {
         companySize: [],
         companySizeError: false,
         locationType: [],
-        locationTypeError: false
+        locationTypeError: false, 
+        popoverVisibility: false,
+        popoverType: 'no predict', 
+        popoverTextObject: []
     }
 
     onCancel = () => {
@@ -70,8 +73,6 @@ class AddBusinessSegmentModal extends Component {
             })
             this.props.onClose();
         } else {
-            console.log('Nope');
-            console.log(type);
             this.setState({
                 segmentNameError: segmentName.length === 0 ? true : false,
                 typeError: type.length === 0 ? true : false,
@@ -154,9 +155,26 @@ class AddBusinessSegmentModal extends Component {
         })
     }
     handlePopoverVisibilityChange = (visible) => {
-        this.setState({
-            popoverVisibility: visible
-        })
+        if (this.props.customerSegments.aiPredict === null) {
+            this.setState({
+                popoverVisibility: visible,
+                popoverType: 'no predict'
+            })
+        } else {
+            const text = this.generateAIHelpText(this.props.customerSegments.aiPredict.custSegs.business, this.props.categories.customer_segments_types);
+            if (text === undefined) {
+                this.setState({
+                    popoverVisibility: visible,
+                    popoverType: 'no predict',
+                })
+            } else {
+                this.setState({
+                    popoverVisibility: visible,
+                    popoverType: 'is predict',
+                    popoverTextObject: text
+                })
+            }
+        }
     }
     hidePopover = () => {
         this.setState({
@@ -172,13 +190,80 @@ class AddBusinessSegmentModal extends Component {
         }
         return newArray;
     }
+    generateAIHelpText = (predictsObj, segmentTypes) => {
+        const aiHintTextObject = [];
+        const selectedItem = {
+            "business_type": this.state.type,
+            "company_size": this.state.companySize,
+            "geographic_location": this.state.locationType
+        }
+        console.log(predictsObj)
+        if (predictsObj !== undefined) {
+            const predictObj = predictsObj.find(s => s.id === null);
+
+            if (predictObj !== undefined) {
+                const predictProperties = Object.getOwnPropertyNames(predictsObj.find(s => s.id === null));
+                const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
+                for (const property of filteredPredictProperties) {
+                    const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(selectedItem, property).value;
+                    const selectedItemPropertyValues = selectedItemPropertyValuesObj.map(s => s.id);
+                    const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
+                    const propertyType = property === 'geographic_location' ? segmentTypes.geographic_locations
+                        : property === 'company_size' ? segmentTypes.company_sizes
+                            : property === 'business_type' ? segmentTypes.business_types
+                                : null
+                    const comparePropertiesValues = this.compareArray(predictObjPropertyValues, selectedItemPropertyValues);
+                    console.log(comparePropertiesValues);
+                    console.log(comparePropertiesValues.length);
+                    let propertiesValuesString = '';
+                    if (comparePropertiesValues.length > 1) {
+                        console.log(comparePropertiesValues);
+                        for (var i = 0; i < comparePropertiesValues.length; i++) {
+                            const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[i]);
+                            propertiesValuesString += i === predictObjPropertyValues.length - 1 ? propertyTypeTitle.title + '' : propertyTypeTitle.title + ', '
+                            console.log(propertiesValuesString);
+                        }
+                        //property.charAt(0).toUpperCase() + property.slice(1),
+                        const new_obj = {
+                            type_title: property === 'business_type' ? 'Type' : property === 'company_size' ? 'Company size' : property === 'geographic_location' ? 'Geographic location' : null,
+                            text: propertiesValuesString
+                        }
+                        aiHintTextObject.push(new_obj);
+                    } else if (comparePropertiesValues.length === 1){
+                        const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[0]);
+                        propertiesValuesString = propertyTypeTitle.title + '';
+                        console.log(propertiesValuesString);
+                        const new_obj = {
+                            type_title: property === 'business_type' ? 'Type' : property === 'company_size' ? 'Company size' : property === 'geographic_location' ? 'Geographic location' : null,
+                            text: propertiesValuesString
+                        }
+                        aiHintTextObject.push(new_obj);
+                    } else {
+                        this.setState({
+                            popoverType: 'no predict',
+                        })
+                    }
+                }
+                return aiHintTextObject
+            } else {
+                this.setState({
+                    popoverType: 'no predict',
+                })
+            }
+
+        } else {
+            this.setState({
+                popoverType: 'no predict',
+            })
+        }
+
+    }
     onAIButtonClick = () => {
         const obj = this.props.customerSegments.aiPredict.custSegs.business;
         const aiObject = obj.find((el) => el.id === null);
         const type = this.state.type === null ? [] : this.state.type.map(e => e.id);
         const typeAI = aiObject.business_type;
         const typePredict = this.compareArray(typeAI, type);
-        console.log(typePredict)
         const newTypeArray = this.state.type === null ? [] : [...this.state.type];
         for (var i in typePredict) {
             const title = this.props.categories.customer_segments_types.business_types.find((obj) => obj.id === typePredict[i]).title;
@@ -215,13 +300,16 @@ class AddBusinessSegmentModal extends Component {
             }
             newLocationArray.push(new_location_obj);
         }
+        console.log(newTypeArray);
+        console.log(newCompanySizeArray);
+        console.log(newLocationArray);
         this.setState({
             type: newTypeArray.length === 0 ? [] : newTypeArray,
-            typeError: newTypeArray.length === 0 ? true: false,
+            typeError: newTypeArray.length === 0 && this.state.typeError === false ? false : newTypeArray.length > 0 && this.state.typeError === false ? false : newTypeArray.length > 0 && this.state.typeError === true ? false : true,
             companySize: newCompanySizeArray.length === 0 ? [] : newCompanySizeArray,
-            companySizeError: newCompanySizeArray.length === 0 ? true : false,
+            companySizeError: newCompanySizeArray.length === 0 && this.state.locationTypeError === false ? false : newCompanySizeArray.length > 0 && this.state.locationTypeError === false ? false: newCompanySizeArray.length > 0 && this.state.locationTypeError === true ? false: true,
             locationType: newLocationArray.length === 0 ? [] : newLocationArray,
-            locationTypeError: newLocationArray.length === 0 ? true : false
+            locationTypeError: newLocationArray.length === 0 && this.state.locationTypeError === false ? false : newLocationArray.length > 0 && this.state.locationTypeError === false ? false : newLocationArray.length > 0 && this.state.locationTypeError === true ? false : true,
         })
         this.hidePopover();
     }
@@ -242,30 +330,38 @@ class AddBusinessSegmentModal extends Component {
         );
         const popoverContent = (
             <>
-                <Row>
-                    <Text>
-                        text
-                        {/* Based on your input KABADA AI recommends that you consider adding {this.props.customerSegments.predictText.map((e, index) =>
-                            <Text key={index} > for "{e.type_title}": {e.predict.map((p, index) => <Text key={index}>{p.title},</Text>)}</Text>)}. */}
-                    </Text>
-                    {/* Based on your input KABADA AI recommends that you consider adding for "Gender" male, for "Education" Primary. */}
-                </Row>
-                <Row style={{ marginTop: '12px' }}>
-                    <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
-                    <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
-                </Row>
-            </>
-        )
-        const popoverContentError = (
-            <>
-                <Row>
-                    <Text>
-                        AI did not have predict
-                    </Text>
-                </Row>
-                <Row style={{ marginTop: '12px' }}>
-                    <Button onClick={this.hidePopover}>Cancel</Button>
-                </Row>
+                {
+                    this.state.popoverType === 'no predict' ?
+                        <>
+                            <Row>
+                                <Text>
+                                    Based on the current information KABADA AI did not have any suggestions.
+                                </Text>
+                            </Row>
+                            <Row style={{ marginTop: '12px' }}>
+                                <Button onClick={this.hidePopover}>Cancel</Button>
+                            </Row>
+                        </>
+                        :
+                        <>
+                            <Row>
+                                {
+                                    this.state.popoverTextObject.length === 0 ?
+                                        <Text>Based on the current information KABADA AI thinks that everything looks good.</Text>
+                                        :
+                                        <Text>
+                                            Based on your input KABADA AI recommends that you consider adding {this.state.popoverTextObject.map((e, index) =>
+                                                <Text key={index} > for "{e.type_title}": {e.text}</Text>)}.
+                                        </Text>
+                                }
+
+                            </Row>
+                            <Row style={{ marginTop: '12px' }}>
+                                <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
+                                <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
+                            </Row>
+                        </>
+                }
             </>
         )
         const typeTag = (props) => {
@@ -386,7 +482,7 @@ class AddBusinessSegmentModal extends Component {
                         <Popover
                             placement='topLeft'
                             title='AI Hint'
-                            content={this.props.customerSegments.errorMessage === false ? popoverContent : popoverContentError}
+                            content={popoverContent}
                             overlayStyle={{ width: "328px" }}
                             trigger="click"
                             visible={this.state.popoverVisibility}
