@@ -275,7 +275,6 @@ class AddConsumerSegmentModal extends Component {
                         })
                     }
                 }
-                console.log(aiHintTextObject)
                 return aiHintTextObject
             } else {
                 this.setState({

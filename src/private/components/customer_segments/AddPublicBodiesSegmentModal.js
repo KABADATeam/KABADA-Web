@@ -117,9 +117,7 @@ class AddPublicBodiesSegmentModal extends Component {
     }
 
     handlePopoverVisibilityChange = (visible) => {
-        console.log('Opp');
         if (this.props.customerSegments.aiPredict === null) {
-            console.log('AiPredict nera')
             this.setState({
                 popoverVisibility: visible,
                 popoverType: false
@@ -154,7 +152,6 @@ class AddPublicBodiesSegmentModal extends Component {
         const selectedItem = {
             "business_type": this.state.ngoType,
         }
-        console.log(predictsObj)
         if (predictsObj !== undefined) {
             const predictObj = predictsObj.find(s => s.id === null);
 
@@ -167,15 +164,11 @@ class AddPublicBodiesSegmentModal extends Component {
                     const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
                     const propertyType = property === 'business_type' ? segmentTypes.ngo_types : segmentTypes.ngo_types;
                     const comparePropertiesValues = this.compareArray(predictObjPropertyValues, selectedItemPropertyValues);
-                    console.log(comparePropertiesValues);
-                    console.log(comparePropertiesValues.length);
                     let propertiesValuesString = '';
                     if (comparePropertiesValues.length > 1) {
-                        console.log(comparePropertiesValues);
                         for (var i = 0; i < comparePropertiesValues.length; i++) {
                             const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[i]);
-                            propertiesValuesString += i === predictObjPropertyValues.length - 1 ? propertyTypeTitle.title + '' : propertyTypeTitle.title + ', '
-                            console.log(propertiesValuesString);
+                            propertiesValuesString += i === predictObjPropertyValues.length - 1 ? propertyTypeTitle.title + '' : propertyTypeTitle.title + ', ';
                         }
                         //property.charAt(0).toUpperCase() + property.slice(1),
                         const new_obj = {
@@ -186,7 +179,6 @@ class AddPublicBodiesSegmentModal extends Component {
                     } else if (comparePropertiesValues.length === 1) {
                         const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[0]);
                         propertiesValuesString = propertyTypeTitle.title + '';
-                        console.log(propertiesValuesString);
                         const new_obj = {
                             type_title: property === 'business_type' ? 'Type' : property ,
                             text: propertiesValuesString

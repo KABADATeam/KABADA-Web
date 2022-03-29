@@ -69,7 +69,6 @@ export const customerSegmentReducer = (
                 "aiPredict": action.payload.data.plan,
             }
         case "ERROR_AI_MESSAGE":
-            console.log(action.payload);
             return { ...state, "errorMessage": action.payload }
         case "RESET_AI_PREDICT":
             return {

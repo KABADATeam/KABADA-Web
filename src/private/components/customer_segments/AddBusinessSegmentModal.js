@@ -131,7 +131,6 @@ class AddBusinessSegmentModal extends Component {
         return resultArray;
     }
     onTypeChange(value) {
-        console.log(value);
         const type_value = this.addSelectedValue(value, this.state.type, this.props.categories.customer_segments_types.business_types);
         this.setState({
             type: type_value,
@@ -200,7 +199,6 @@ class AddBusinessSegmentModal extends Component {
         console.log(predictsObj)
         if (predictsObj !== undefined) {
             const predictObj = predictsObj.find(s => s.id === null);
-
             if (predictObj !== undefined) {
                 const predictProperties = Object.getOwnPropertyNames(predictsObj.find(s => s.id === null));
                 const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
@@ -213,15 +211,11 @@ class AddBusinessSegmentModal extends Component {
                             : property === 'business_type' ? segmentTypes.business_types
                                 : null
                     const comparePropertiesValues = this.compareArray(predictObjPropertyValues, selectedItemPropertyValues);
-                    console.log(comparePropertiesValues);
-                    console.log(comparePropertiesValues.length);
                     let propertiesValuesString = '';
                     if (comparePropertiesValues.length > 1) {
-                        console.log(comparePropertiesValues);
                         for (var i = 0; i < comparePropertiesValues.length; i++) {
                             const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[i]);
-                            propertiesValuesString += i === predictObjPropertyValues.length - 1 ? propertyTypeTitle.title + '' : propertyTypeTitle.title + ', '
-                            console.log(propertiesValuesString);
+                            propertiesValuesString += i === predictObjPropertyValues.length - 1 ? propertyTypeTitle.title + '' : propertyTypeTitle.title + ', ';
                         }
                         //property.charAt(0).toUpperCase() + property.slice(1),
                         const new_obj = {
@@ -232,7 +226,6 @@ class AddBusinessSegmentModal extends Component {
                     } else if (comparePropertiesValues.length === 1) {
                         const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[0]);
                         propertiesValuesString = propertyTypeTitle.title + '';
-                        console.log(propertiesValuesString);
                         const new_obj = {
                             type_title: property === 'business_type' ? 'Type' : property === 'company_size' ? 'Company size' : property === 'geographic_location' ? 'Geographic location' : null,
                             text: propertiesValuesString
@@ -300,9 +293,6 @@ class AddBusinessSegmentModal extends Component {
             }
             newLocationArray.push(new_location_obj);
         }
-        console.log(newTypeArray);
-        console.log(newCompanySizeArray);
-        console.log(newLocationArray);
         this.setState({
             type: newTypeArray.length === 0 ? [] : newTypeArray,
             typeError: newTypeArray.length === 0 && this.state.typeError === false ? false : newTypeArray.length > 0 && this.state.typeError === false ? false : newTypeArray.length > 0 && this.state.typeError === true ? false : true,

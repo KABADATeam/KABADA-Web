@@ -151,10 +151,8 @@ class EditPublicBodiesSegmentModal extends Component {
             "id": this.state.id,
             "business_type": this.state.ngoType,
         }
-        console.log(predictsObj)
         if (predictsObj !== undefined) {
             const predictObj = predictsObj.find(s => s.id === selectedItem.id);
-
             if (predictObj !== undefined) {
                 const predictProperties = Object.getOwnPropertyNames(predictsObj.find(s => s.id === selectedItem.id));
                 const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
@@ -164,15 +162,11 @@ class EditPublicBodiesSegmentModal extends Component {
                     const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
                     const propertyType = property === 'business_type' ? segmentTypes.ngo_types : segmentTypes.ngo_types;
                     const comparePropertiesValues = this.compareArray(predictObjPropertyValues, selectedItemPropertyValues);
-                    console.log(comparePropertiesValues);
-                    console.log(comparePropertiesValues.length);
                     let propertiesValuesString = '';
                     if (comparePropertiesValues.length > 1) {
-                        console.log(comparePropertiesValues);
                         for (var i = 0; i < comparePropertiesValues.length; i++) {
                             const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[i]);
                             propertiesValuesString += i === predictObjPropertyValues.length - 1 ? propertyTypeTitle.title + '' : propertyTypeTitle.title + ', '
-                            console.log(propertiesValuesString);
                         }
                         //property.charAt(0).toUpperCase() + property.slice(1),
                         const new_obj = {
@@ -183,9 +177,8 @@ class EditPublicBodiesSegmentModal extends Component {
                     } else if (comparePropertiesValues.length === 1) {
                         const propertyTypeTitle = propertyType.find(t => t.id === comparePropertiesValues[0]);
                         propertiesValuesString = propertyTypeTitle.title + '';
-                        console.log(propertiesValuesString);
                         const new_obj = {
-                            type_title: property === 'business_type' ? 'Type' : property ,
+                            type_title: property === 'business_type' ? 'Type' : property,
                             text: propertiesValuesString
                         }
                         aiHintTextObject.push(new_obj);

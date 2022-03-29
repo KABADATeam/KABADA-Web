@@ -157,16 +157,13 @@ class EditConsumerSegmentModal extends Component {
     }
 
     handlePopoverVisibilityChange = (visible) => {
-        console.log(this.props.customerSegments.aiPredict)
         if (this.props.customerSegments.aiPredict === null) {
-            console.log('if')
             this.setState({
                 popoverVisibility: visible,
                 popoverType: 'no predict'
             })
         } else {
             const text = this.generateAIHelpText(this.props.customerSegments.aiPredict.custSegs.consumer, this.props.categories.customer_segments_types);
-            console.log(text);
             if (text === undefined) {
                 this.setState({
                     popoverVisibility: visible,
@@ -265,6 +262,19 @@ class EditConsumerSegmentModal extends Component {
     onAIButtonClick = () => {
         const obj = this.props.customerSegments.aiPredict.custSegs.consumer;
         const aiObject = obj.find((el) => el.id === this.props.item.id);
+        const ageGruop = this.state.ageGroup.map(e => e.id);
+        const ageGroupAi = aiObject.age;
+        const ageGroupPredict = this.compareArray(ageGroupAi, ageGruop);
+        const newAgeGroupArray = [...this.state.ageGroup];
+        for (var i in ageGroupPredict) {
+            const title = this.props.categories.customer_segments_types.age_groups.find((obj) => obj.id === ageGroupPredict[i]).title;
+            const new_age_group_obj = {
+                id: ageGroupPredict[i],
+                title: title,
+                tag: 1
+            }
+            newAgeGroupArray.push(new_age_group_obj);
+        }
         const gender = this.state.genderType.map(e => e.id);
         const genderAI = aiObject.gender;
         const genderPredict = this.compareArray(genderAI, gender);
@@ -317,10 +327,6 @@ class EditConsumerSegmentModal extends Component {
             }
             newLocationArray.push(new_location_obj);
         }
-        console.log(newGenderArray);
-        console.log(newEducationArray)
-        console.log(newIncomeArray);
-        console.log(newLocationArray);
         this.setState({
             genderType: newGenderArray,
             educationType: newEducationArray,
