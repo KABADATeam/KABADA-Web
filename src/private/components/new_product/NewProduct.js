@@ -66,7 +66,7 @@ class NewProduct extends React.Component {
             differentiation_level: '',
             innovative_level: '',
             quality_level: '',
-            title_value: null,
+            title_value: '',
             title_error: false,
             product_type_value: null,
             product_type_error: false,
@@ -107,7 +107,7 @@ class NewProduct extends React.Component {
 
     saveChanges = () => {
         const { title_value, product_type_value, price_level_value, title_error, product_type_error, price_level_error } = this.state;
-        if (title_value === null) {
+        if (title_value.length === 0) {
             this.setState({
                 title_error: true
             })
@@ -122,7 +122,7 @@ class NewProduct extends React.Component {
                 price_level_error: true
             })
         }
-        if (title_error === false && product_type_error === false && price_level_error === false) {
+        if (title_error === false && product_type_error === false && price_level_error === false && title_value.length !== 0) {
             const product_type = this.props.product.product_type.type_id;
             const price_level = this.props.product.price_level.price_id;
             console.log('Before post obj ', this.props.product);
