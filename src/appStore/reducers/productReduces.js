@@ -100,20 +100,20 @@ const getSliderValue = (objArray, productFeatures) => {
         if (obj !== undefined) {
             const descriptor = Object.getOwnPropertyDescriptor(obj, 'score');
             valueList.push(descriptor.value);
-        }  
+        }
     }
     var sum = 0
-    for (var i = 0; i <valueList.length; i++) {
+    for (var i = 0; i < valueList.length; i++) {
         sum += valueList[i];
     }
     var index = 0;
-    if ( sum >= 0 && sum <= 2 ) {
+    if (sum >= 0 && sum <= 2) {
         index = 0;
         return index;
-    } else if ( sum >= 3 & sum <= 4 ) {
+    } else if (sum >= 3 & sum <= 4) {
         index = 1;
         return index;
-    } else if ( sum >= 5 ) {
+    } else if (sum >= 5) {
         index = 2;
         return index;
     }
@@ -196,25 +196,34 @@ export const productReducer = (
         product_features: [],
         differentiation_level: '',
         innovative_level: '',
-        quality_level: ''
+        quality_level: '',
+        aiPredict: null
     }, action) => {
     switch (action.type) {
         case "SETTING_PRODUCT_TITLE_SUCCESS":
             return { ...state, "title": action.payload };
         case "SETTING_PRODUCT_TYPE_SUCCESS":
-            return { ...state, "product_type": action.payload };
+            const typeObj = {
+                "type_id": action.payload,
+                "tag": 0
+            }
+            return { ...state, "product_type": typeObj };
         case "SETTING_PRODUCT_DESCRIPTION_SUCCESS":
             return { ...state, "description": action.payload };
         case "SETTING_PRODUCT_PRICE_LEVEL_SUCCESS":
-            return { ...state, "price_level": action.payload };
+            const priceLevelObj = {
+                "price_id": action.payload,
+                "tag": 0
+            }
+            return { ...state, "price_level": priceLevelObj };
         case "SETTING_INCOME_SOURCES_SUCCESS":
             return { ...state, "selected_additional_income_sources": action.payload };
         case "SETTING_PRODUCT_FEATURES_SUCCESS":
             const innovativeLevelIndex = getSliderValue(innovative, action.payload);
             const qualityLevelIndex = getSliderValue(quality, action.payload);
             const differentiationLevelIndex = getSliderValue(differentiation, action.payload);
-            console.log(qualityLevelIndex);
-            return { ...state, 
+            return {
+                ...state,
                 "product_features": action.payload,
                 "innovative_level_index": innovativeLevelIndex,
                 "quality_level_index": qualityLevelIndex,
@@ -224,6 +233,7 @@ export const productReducer = (
             const innovativeLevelIndex_ = getSliderValue(innovative, action.payload.product_features);
             const qualityLevelIndex_ = getSliderValue(quality, action.payload.product_features);
             const differentiationLevelIndex_ = getSliderValue(differentiation, action.payload.product_features);
+            console.log(action.payload);
             return {
                 ...state,
                 "title": action.payload.title,
@@ -252,6 +262,36 @@ export const productReducer = (
                 differentiation_level: '',
                 innovative_level: '',
                 quality_level: ''
+            }
+        case "GET_PRODUCT_AI_PREDICT":
+            console.log(action.payload)
+            return {
+                ...state,
+                "aiPredict": action.payload,
+            }
+        case "SET_PRODUCT_AI_PREDICT":
+            const ai_obj = action.payload.find(e => e.id === null)
+            const type_AI_Obj = {
+                "type_id": ai_obj.productType,
+                "tag": 1
+            }
+            const price_level_AI_Obj = {
+                "price_id": ai_obj.priceLevel,
+                "tag": 1
+            }
+            console.log(ai_obj.productFeatures);
+            const innovative_LevelIndex = getSliderValue(innovative, ai_obj.productFeatures);
+            const quality_LevelIndex = getSliderValue(quality, ai_obj.productFeatures);
+            const differentiation_LevelIndex = getSliderValue(differentiation, ai_obj.productFeatures);
+            return {
+                ...state,
+                "product_type": type_AI_Obj,
+                "price_level": price_level_AI_Obj,
+                "selected_additional_income_sources": ai_obj.incomeSources,
+                "product_features": ai_obj.productFeatures,
+                "innovative_level_index": innovative_LevelIndex,
+                "quality_level_index": quality_LevelIndex,
+                "differentiation_level_index": differentiation_LevelIndex
             }
         default:
             return state;

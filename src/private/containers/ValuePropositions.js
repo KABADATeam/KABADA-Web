@@ -5,7 +5,7 @@ import { Button, Breadcrumb, Row, Col, Typography, Switch, Space, Result, Image,
 import { ArrowLeftOutlined, InfoCircleFilled, DeleteOutlined } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle } from '../../styles/customStyles';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getProducts, deleteProduct, saveState } from "../../appStore/actions/productActions";
+import { getProducts, deleteProduct, saveState, getValuePropositionAIPredict } from "../../appStore/actions/productActions";
 import EditProduct from "../components/new_product/EditProduct";
 import '../../css/customTable.css';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
@@ -63,6 +63,11 @@ class ValuePropositions extends React.Component {
 
     addKeyProduct = () => {
         this.props.history.push(`/new-product`);
+        // const postObj = {
+        //     "location": '',
+        //     "planId": this.props.businessPlan.id
+        // };
+        // this.props.getValuePropositionAIPredict(postObj);
     }
 
     deleteItem = (item) => {
@@ -227,4 +232,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, refreshPlan, getProducts, deleteProduct, saveState,logout })(ValuePropositions);
+export default connect(mapStateToProps, { getSelectedPlanOverview, refreshPlan, getProducts, deleteProduct, saveState, logout, getValuePropositionAIPredict})(ValuePropositions);

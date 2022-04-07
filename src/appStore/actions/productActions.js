@@ -1,6 +1,23 @@
 import kabadaAPI from './kabadaAPI';
 import { errorHandler } from './errorHandler';
 
+const AIPredictDummyData = {
+    location: 'value-proposition',
+    plan: {
+        businessPlan_id: '9c698d0a-f4de-4ddc-dd3b-08d9f790d51b',
+        valueProposition: [
+            {
+                id: null,
+                productType: 'c64ed84d-db99-4a25-95f1-79bb99fa6936',
+                priceLevel: '4261a424-6b58-467c-a5da-1844827950b5',
+                incomeSources: ['67cdf9e6-acc0-404a-a189-78325e83f547', '87ffbf10-1f99-4d0b-ae5a-202736ed5a4e', '085df303-2e4d-4dd0-9e9f-204085352597'],
+                productFeatures: ['aae57ccf-f33c-4a0e-925a-7a65d8ca171e', '5eb6013b-0cca-4f89-b39d-e711477a972f', '2984418a-638e-4da9-be1d-12ba94d8ffaf', 
+                'adcdc439-8170-4fab-a70d-457c1b98bc92', '07d5452f-6ea6-4ae6-9395-89fd1d0eeab0', '4cb290b2-7fbc-4846-be7b-79f9e3efbb46', 'dfe881a2-cd69-4295-a16a-edfb2c8fc0bf' ]
+            }
+        ]
+    }
+}
+
 export const getProductTypes = () => {
     return async (dispatch, getState) => {
         dispatch({ type: "LOADING", payload: true });
@@ -79,7 +96,6 @@ export const getProductFeatures = () => {
         dispatch({ type: "LOADING", payload: true });
         try {
             const response = await kabadaAPI.get('api/products/features');
-            console.log(response.data);
             dispatch({ type: "FETCHING_PRODUCT_FEATURES_SUCCESS", payload: response.data });
         } finally {
             dispatch({ type: "LOADING", payload: false });
@@ -105,7 +121,6 @@ export const getProduct = (productId, callback) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/products/product/' + productId, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response.data)
             dispatch({ type: 'FETCHING_PRODUCT_SUCCESS', payload: response.data });
             if (callback !== null) {
                 callback(response.data);
@@ -167,6 +182,7 @@ export const setProductTitle = (title) => {
 
 export const setProductType = (id) => {
     return async (dispatch, getState) => {
+        console.log(id)
         dispatch({ type: "SETTING_PRODUCT_TYPE_SUCCESS", payload: id });
     }
 }
@@ -206,7 +222,6 @@ export const deleteProduct = (id) => {
         try {
             const token = getState().user.access_token;
             await kabadaAPI.delete("api/products/" + id, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(id)
             dispatch({ type: "REMOVING_PRODUCT_SUCCESS", payload: id });
         } catch (error) {
             dispatch({ type: 'ERROR', payload: errorHandler(error) });
@@ -224,10 +239,39 @@ export const saveState = (planId, is_completed, callback) => {
             callback();
         } catch (error) {
             dispatch({ type: 'ERROR', payload: errorHandler(error) });
-            //callback2();
         } finally {
         }
     }
 };
 
+export const getValuePropositionAIPredict = (postObject) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true});
+        //dispatch({ type: 'ERROR_AI_MESSAGE', payload: false});
+        //dispatch({ type: 'RESET_AI_PREDICT'});
+        try {
+            const token = getState().user.access_token;
+            //const response = await kabadaAPI.post('api/plans/predict', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            //console.log(response.data);
+            dispatch({ type: 'GET_PRODUCT_AI_PREDICT', payload: AIPredictDummyData.plan.valueProposition});
+        } catch {
+            //dispatch({ type: 'ERROR_AI_MESSAGE', payload: true});
+        } finally {
 
+        }
+    }
+}
+
+export const setValuePropositionAIPredict = () => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true});
+        try {
+            const aiPredict = getState().product.aiPredict;
+            dispatch({ type: 'SET_PRODUCT_AI_PREDICT', payload: aiPredict })
+        } catch {
+
+        } finally {
+            
+        }
+    }
+}

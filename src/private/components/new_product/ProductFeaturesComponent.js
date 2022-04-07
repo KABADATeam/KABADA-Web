@@ -45,15 +45,14 @@ class ProductFeaturesComponent extends Component {
         const checkBoxes = this.props.features.map((obj) =>
             <Checkbox value={obj.id} key={obj.key}>{obj.title}</Checkbox>
         );
-
         return (
             <>
                 <Card style={{ ...cardStyle, padding: 20 }} bodyStyle={{ ...tableCardBodyStyle, padding: 0 }}>
                     <Space direction="vertical">
                         <Text style={infoTextStyle}>Product features<TooltipComponent code="vpnp3" type="text"/></Text>
                         <Text style={descriptionTextStyle}>Up to 9 of mixed characteristics</Text>
-                        <Checkbox.Group onChange={this.onChange}>
-                            <Space direction="vertical">
+                        <Checkbox.Group onChange={this.onChange} value={this.props.product.product_features}>
+                            <Space direction="vertical" >
                                 {this.props.features.map((obj) =>(
                                     <Checkbox value={obj.id} key={obj.key} disabled={this.isDisabled(obj.id)}>{obj.title}</Checkbox>
                                 ))}
@@ -68,7 +67,8 @@ class ProductFeaturesComponent extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        features: state.productFeatures
+        features: state.productFeatures,
+        product: state.product
     };
 }
 

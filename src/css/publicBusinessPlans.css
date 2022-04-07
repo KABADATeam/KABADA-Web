@@ -25,6 +25,19 @@ width: 100%;
     font-size: 14px;
     line-height: 22px;
 }
+/* .ant-input {
+    width: 100%;
+    padding: 4px 11px;
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5715;
+    background-color: #fff;
+    border: 1px solid #bfbfbf;
+    border-radius: 1px;
+    height: 40px;
+} */
+
 
 ::placeholder{
     color: #8C8C8C!important;
@@ -38,9 +51,13 @@ width: 100%;
     display: flex;
     margin-left: 7px;
 }
-/* .ant-select-selection-item{
+.ant-select-selection-item{
     padding-top: 4px!important;
-} */
+    font-size: 14px;
+    font-weight: 400px;
+    line-height: 22px;
+    font-style: normal;
+}
 
 .ant-dropdown-link{
     font-style: normal;
@@ -50,6 +67,11 @@ width: 100%;
     font-size: 14px;
     line-height: 22px;
     color: #262626;
+}
+
+.ant-select-single .ant-select-selector {
+    display: flex;
+    background-color: '#BAE7FF';
 }
 
 .ant-table-pagination.ant-pagination {

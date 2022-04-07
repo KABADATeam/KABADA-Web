@@ -48,13 +48,13 @@ class PriceLevelComponent extends Component {
 
 
     render() {
-        const options = this.props.priceLevels.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+        const priceOptions = this.props.priceLevels.map((obj) =>
+            ({ label: obj.title, value: obj.id })
         );
         const checkBoxes = this.props.incomeSources.map((obj) =>
             <Checkbox value={obj.id} key={obj.key}>{obj.title}</Checkbox>
         );
-
+        const priceLevelValue = this.props.product.price_level.price_id;
 
         return (
             <>
@@ -67,24 +67,28 @@ class PriceLevelComponent extends Component {
                             this.props.price_error === false ?
                                 <Form.Item style={{ display: 'inline-block', width: '100%', marginRight: "10px" }}
                                     key="price"
-                                    name="price"
-
                                 >
-                                    <Select style={{ width: '100%', marginTop: '20px' }} placeholder="Select price level" onChange={this.onSelectionChange.bind(this)}>
-                                        {options}
-                                    </Select>
+                                    <Select 
+                                        style={{ width: '100%', marginTop: '20px' }} 
+                                        placeholder="Select price level" 
+                                        onChange={this.onSelectionChange.bind(this)}
+                                        value={priceLevelValue}
+                                        options={priceOptions}
+                                    />
                                 </Form.Item>
                                 :
                                 <Form.Item style={{ display: 'inline-block', width: '100%', marginRight: "10px" }}
                                     key="price"
-                                    name="price"
                                     validateStatus="error"
                                     help="Select price level"
-
                                 >
-                                    <Select style={{ width: '100%', marginTop: '20px' }} placeholder="Select price level" onChange={this.onSelectionChange.bind(this)}>
-                                        {options}
-                                    </Select>
+                                    <Select 
+                                        style={{ width: '100%', marginTop: '20px' }} 
+                                        placeholder="Select price level" 
+                                        onChange={this.onSelectionChange.bind(this)}
+                                        value={priceLevelValue}
+                                        options={priceOptions}
+                                    />
                                 </Form.Item>
                         }
 
@@ -92,7 +96,7 @@ class PriceLevelComponent extends Component {
                         <Space direction="vertical">
                             <Text style={infoTextStyle}>Additional income sources<TooltipComponent code="vpnp2" type="text" /></Text>
                             <Text style={descriptionTextStyle}>Select up to 5 sources</Text>
-                            <Checkbox.Group onChange={this.onChange}>
+                            <Checkbox.Group onChange={this.onChange} value={this.props.product.selected_additional_income_sources}>
                                 <Space direction="vertical">
                                     {this.props.incomeSources.map((obj) => (
                                         <Checkbox value={obj.id} key={obj.key} disabled={this.isDisabled(obj.id)}>{obj.title}</Checkbox>
@@ -110,7 +114,8 @@ class PriceLevelComponent extends Component {
 const mapStateToProps = (state) => {
     return {
         priceLevels: state.productFeaturesLevels.priceLevels,
-        incomeSources: state.additionalIncomeSources
+        incomeSources: state.additionalIncomeSources,
+        product: state.product,
     };
 }
 

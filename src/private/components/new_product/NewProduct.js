@@ -10,7 +10,7 @@ import ProductInfoComponent from './ProductInfoComponent';
 import PriceLevelComponent from './PriceLevelComponent';
 import ProductFeaturesComponent from './ProductFeaturesComponent';
 import { refreshPlan } from "../../../appStore/actions/refreshAction";
-import { getProductTypes, getProductPriceLevels, getAditionalIncomeSources, getProductFeatures, saveProduct, getInnovativeLevels, getQualityLevels, getDifferentiationLevels } from "../../../appStore/actions/productActions";
+import { getProductTypes, getProductPriceLevels, getAditionalIncomeSources, getProductFeatures, saveProduct, getInnovativeLevels, getQualityLevels, getDifferentiationLevels, getValuePropositionAIPredict } from "../../../appStore/actions/productActions";
 
 const { Text } = Typography;
 
@@ -81,6 +81,7 @@ class NewProduct extends React.Component {
         })
     }
     getTypeValue = (value) => {
+        console.log('new product ', value);
         this.setState({
             product_type_value: value,
             product_type_error: false
@@ -122,8 +123,16 @@ class NewProduct extends React.Component {
             })
         }
         if (title_error === false && product_type_error === false && price_level_error === false) {
+            const product_type = this.props.product.product_type.type_id;
+            const price_level = this.props.product.price_level.price_id;
+            console.log('Before post obj ', this.props.product);
             const postObj = {
-                ...this.props.product,
+                "title": this.props.product.title,
+                "product_type": product_type,
+                "description": this.props.product.description,
+                "price_level": price_level,
+                "selected_additional_income_sources": this.props.product.selected_additional_income_sources,
+                "product_features": this.props.product.product_features,
                 "innovative_level": this.props.product.innovative_level_index === undefined ? this.props.productFeatures.innovative[0].id : this.props.productFeatures.innovative[this.props.product.innovative_level_index].id,
                 "quality_level": this.props.product.quality_level_index === undefined ? this.props.productFeatures.quality[0].id : this.props.productFeatures.quality[this.props.product.quality_level_index].id,
                 "differentiation_level": this.props.product.differentiation_level_index === undefined ? this.props.productFeatures.differentiation[0].id : this.props.productFeatures.differentiation[this.props.product.differentiation_level_index].id,
@@ -176,8 +185,6 @@ class NewProduct extends React.Component {
         }
 
         if (original.title !== modified.title) {
-            console.log(original)
-            console.log(modified)
             return 'visible';
         }
 
@@ -224,7 +231,7 @@ class NewProduct extends React.Component {
     }
 
     getPriceSliderDefaultValue() {
-        const index = this.props.productFeatures.priceLevels.findIndex(x => x.id === this.props.product.price_level);
+        const index = this.props.productFeatures.priceLevels.findIndex(x => x.id === this.props.product.price_level.price_id);
         const k = 100 / (this.props.productFeatures.priceLevels.length - 1);
         return index * k;
     }
@@ -257,6 +264,11 @@ class NewProduct extends React.Component {
                     this.props.getInnovativeLevels();
                     this.props.getQualityLevels();
                     this.props.getDifferentiationLevels();
+                    const postObj = {
+                        "location": '',
+                        "planId": this.props.businessPlan.id
+                    };
+                    this.props.getValuePropositionAIPredict(postObj);
                 });
             }
         } else {
@@ -267,6 +279,11 @@ class NewProduct extends React.Component {
             this.props.getInnovativeLevels();
             this.props.getQualityLevels();
             this.props.getDifferentiationLevels();
+            const postObj = {
+                "location": '',
+                "planId": this.props.businessPlan.id
+            };
+            this.props.getValuePropositionAIPredict(postObj);
         }
     }
 
@@ -314,7 +331,7 @@ class NewProduct extends React.Component {
                     <Col span={11} offset={4}>
                         <Row style={{ marginBottom: "20px" }}>
                             <Col span={23} >
-                                <ProductInfoComponent title_error={this.state.title_error} product_type_error={this.state.product_type_error} getTitle={this.getTitleValue} getType={this.getTypeValue} />
+                                <ProductInfoComponent title_error={this.state.title_error} product_type_error={this.state.product_type_error} getTitle={this.getTitleValue} getType={this.getTypeValue} getPrice={this.getPriceValue}/>
                             </Col>
                         </Row>
                         <Row style={{ marginBottom: "20px" }}>
@@ -381,5 +398,6 @@ export default connect(
         saveProduct,
         getInnovativeLevels,
         getQualityLevels,
-        getDifferentiationLevels
+        getDifferentiationLevels,
+        getValuePropositionAIPredict
     })(NewProduct);
