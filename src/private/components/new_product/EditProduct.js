@@ -103,38 +103,82 @@ class EditProduct extends React.Component {
     }
 
     getUpdatesWindowState() {
-        const original = this.state.originalProduct;
-        const modified = this.props.product;
+        //const original = this.state.originalProduct;
+        console.log(this.state.originalProduct);
+        if (this.state.originalProduct === null) {
 
-        if (original === null) {
+        } else {
+            const type_Obj = {
+                "type_id": this.state.originalProduct.product_type,
+                "tag": 0
+            }
+            const price_LevelObj = {
+                "price_id": this.state.originalProduct.price_level,
+                "tag": 0
+            }            
+            const original = {
+                "title": this.state.originalProduct.title,
+                "product_type": type_Obj,
+                "description": this.state.originalProduct.description,
+                "price_level": price_LevelObj,
+                "selected_additional_income_sources": this.state.originalProduct.selected_additional_income_sources,
+                "product_features": this.state.originalProduct.product_features,
+                "differentiation_level": this.state.originalProduct.differentiation_level,
+                "innovative_level": this.state.originalProduct.innovative_level,
+                "quality_level": this.state.originalProduct.quality_level,
+            }
+            const modified = {
+                "title": this.props.product.title,
+                "product_type": this.props.product.product_type,
+                "description": this.props.product.description,
+                "price_level": this.props.product.price_level,
+                "selected_additional_income_sources": this.props.product.selected_additional_income_sources,
+                "product_features": this.props.product.product_features,
+                "differentiation_level": this.props.product.differentiation_level,
+                "innovative_level": this.props.product.innovative_level,
+                "quality_level": this.props.product.quality_level,
+            }
+    
+            console.log('original ', original);
+            console.log('modified ', modified)
+    
+            if (original === null) {
+                console.log('nes orginal null')
+                return 'hidden';
+            }
+    
+            if (original.title !== modified.title) {
+                console.log('nelygus title')
+                return 'visible';
+            }
+    
+            if (original.description !== modified.description) {
+                console.log('nelygus description')
+                return 'visible';
+            }
+    
+            if (original.product_type.type_id !== modified.product_type.type_id) {
+                console.log('nelygus type')
+                return 'visible';
+            }
+    
+            if (original.price_level.price_id !== modified.price_level.price_id) {
+                console.log('nelygus price level')
+                return 'visible';
+            }
+    
+            if (this.arraysEqual(original.selected_additional_income_sources, modified.selected_additional_income_sources) === false) {
+                console.log('nelygus income sources')
+                return 'visible';
+            }
+    
+            if (this.arraysEqual(original.product_features, modified.product_features) === false) {
+                console.log('nelygus product features')
+                return 'visible';
+            }
             return 'hidden';
         }
-
-        if (original.title !== modified.title) {
-            return 'visible';
-        }
-
-        if (original.description !== modified.description) {
-            return 'visible';
-        }
-
-        if (original.product_type !== modified.product_type) {
-            return 'visible';
-        }
-
-        if (original.price_level !== modified.price_level) {
-            return 'visible';
-        }
-
-        if (this.arraysEqual(original.selected_additional_income_sources, modified.selected_additional_income_sources) === false) {
-            return 'visible';
-        }
-
-        if (this.arraysEqual(original.product_features, modified.product_features) === false) {
-            return 'visible';
-        }
-
-        return 'hidden';
+        
     }
 
     getSliderMarks(array) {
@@ -157,7 +201,7 @@ class EditProduct extends React.Component {
     }
 
     getPriceSliderDefaultValue() {
-        const index = this.props.productFeatures.priceLevels.findIndex(x => x.id === this.props.product.price_level);
+        const index = this.props.productFeatures.priceLevels.findIndex(x => x.id === this.props.product.price_level.price_id);
         const k = 100 / (this.props.productFeatures.priceLevels.length - 1);
         return index * k;
     }

@@ -233,13 +233,20 @@ export const productReducer = (
             const innovativeLevelIndex_ = getSliderValue(innovative, action.payload.product_features);
             const qualityLevelIndex_ = getSliderValue(quality, action.payload.product_features);
             const differentiationLevelIndex_ = getSliderValue(differentiation, action.payload.product_features);
-            console.log(action.payload);
+            const type_Obj = {
+                "type_id": action.payload.product_type,
+                "tag": 0
+            }
+            const price_LevelObj = {
+                "price_id": action.payload.price_level,
+                "tag": 0
+            }
             return {
                 ...state,
                 "title": action.payload.title,
-                "product_type": action.payload.product_type,
+                "product_type": type_Obj,
                 "description": action.payload.description,
-                "price_level": action.payload.price_level,
+                "price_level": price_LevelObj,
                 "selected_additional_income_sources": action.payload.selected_additional_income_sources,
                 "product_features": action.payload.product_features,
                 "differentiation_level": action.payload.differentiation_level,
@@ -279,7 +286,6 @@ export const productReducer = (
                 "price_id": ai_obj.priceLevel,
                 "tag": 1
             }
-            console.log(ai_obj.productFeatures);
             const innovative_LevelIndex = getSliderValue(innovative, ai_obj.productFeatures);
             const quality_LevelIndex = getSliderValue(quality, ai_obj.productFeatures);
             const differentiation_LevelIndex = getSliderValue(differentiation, ai_obj.productFeatures);

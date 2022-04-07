@@ -23,7 +23,9 @@ const inputStyle = {
 class EditProductInfoComponent extends Component {
 
     state = {
-        popoverVisibility: false
+        popoverVisibility: false,
+        popoverType: 'is predict',
+        popoverTextObject: []
     }
 
     handlePopoverVisibilityChange = (visible) => {
@@ -51,21 +53,66 @@ class EditProductInfoComponent extends Component {
     }
 
     render() {
-        const options = this.props.productTypes.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
-        );
+        const typeOptions = this.props.productTypes.map((obj) =>
+            ({ label: obj.title, value: obj.id })
+        );        
+        const typeValue = this.props.product.product_type.type_id;
         const popoverContent = (
             <>
-
-                <Row>
-                    <Text>
-                        Based on the current information KABADA AI did not have any suggestions.
-                    </Text>
-                </Row>
-                <Row style={{ marginTop: '12px' }}>
-                    <Button onClick={this.hidePopover}>Cancel</Button>
-                </Row>
-
+                {
+                    this.state.popoverType === 'no predict' ?
+                        <>
+                            <Row>
+                                <Text>
+                                    Based on the current information KABADA AI did not have any suggestions.
+                                </Text>
+                            </Row>
+                            <Row style={{ marginTop: '12px' }}>
+                                <Button onClick={this.hidePopover}>Cancel</Button>
+                            </Row>
+                        </>
+                        :
+                        <>
+                            <Row>
+                                <Row>
+                                    <Text>Test test test test tets test test test</Text>
+                                    {/* {
+                                        this.state.popoverTextObject.length === 0 ?
+                                            <Text>Based on the current information KABADA AI thinks that everything looks good.</Text>
+                                            :
+                                            <Text>
+                                                Based on your input KABADA AI recommends that you consider adding {this.state.popoverTextObject.map((e, index) => {
+                                                    if (index + 1 === this.state.popoverTextObject.length) {
+                                                        return (
+                                                            <Text key={index} > for "{e.type_title}": {e.text}</Text>
+                                                        )
+                                                    } else {
+                                                        return (
+                                                            <Text key={index} > for "{e.type_title}": {e.text};</Text>
+                                                        )
+                                                    }
+                                                })}.
+                                            </Text>
+                                    } */}
+                                </Row>
+                                <Row style={{ marginTop: '12px' }}>
+                                    {/* {
+                                        this.state.popoverTextObject.length === 0 ?
+                                            <Button onClick={this.hidePopover}>Cancel</Button>
+                                            :
+                                            <>
+                                                <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
+                                                <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
+                                            </>
+                                    } */}
+                                    
+                                        <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
+                                        <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
+                                    
+                                </Row>
+                            </Row>
+                        </>
+                }
             </>
         )
         if (this.props.product.title === undefined) {
@@ -109,9 +156,13 @@ class EditProductInfoComponent extends Component {
                                 <Input id="name" style={{ ...inputStyle }} size='large' onChange={this.onTitleChanged} value={this.props.product.title} />
                             </Form.Item>
                             <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 8px)' }} key="type" label="Product type" disabled={true}>
-                                <Select style={{ width: '100%' }} placeholder="Select product type" value={this.props.product.product_type} onChange={this.onSelectionChange.bind(this)} >
-                                    {options}
-                                </Select>
+                                <Select 
+                                    style={{ width: '100%' }} 
+                                    placeholder="Select product type" 
+                                    value={this.props.product.product_type.type_id} 
+                                    onChange={this.onSelectionChange.bind(this)} 
+                                    options={typeOptions}
+                                />
                             </Form.Item>
                             <Form.Item style={{ marginBottom: '0px' }} key="description" label="Short description of Product (2-3 sentences)">
                                 <TextArea style={inputStyle} rows={3} value={this.props.product.description} onChange={this.onDescriptionChanged} />

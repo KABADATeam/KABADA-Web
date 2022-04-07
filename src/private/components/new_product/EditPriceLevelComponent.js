@@ -61,20 +61,21 @@ class EditPriceLevelComponent extends Component {
     // }
 
     render() {
-        const options = this.props.priceLevels.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+        const priceOptions = this.props.priceLevels.map((obj) =>
+            ({ label: obj.title, value: obj.id })
         );
-        const checkBoxes = this.props.incomeSources.map((obj) =>
-            <Checkbox value={obj.id} key={obj.key}>{obj.title}</Checkbox>
-        );
-
+        const priceLevelValue = this.props.product.price_level.price_id
         return (
             <>
                 <Card style={{ ...cardStyle, padding: 20 }} bodyStyle={{ ...tableCardBodyStyle, padding: 0 }}>
                     <Text style={infoTextStyle}>Price Level</Text>
-                    <Select style={{ width: '100%', marginTop: '20px' }} value={this.props.product.price_level} placeholder="Select price level" onChange={this.onSelectionChange.bind(this)}>
-                        {options}
-                    </Select>
+                    <Select 
+                        style={{ width: '100%', marginTop: '20px' }} 
+                        value={priceLevelValue} 
+                        placeholder="Select price level" 
+                        onChange={this.onSelectionChange.bind(this)}
+                        options={priceOptions}
+                    />
 
                     <Divider />
                     <Space direction="vertical">

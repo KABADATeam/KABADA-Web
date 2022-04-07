@@ -195,6 +195,7 @@ export const setProductDescription = (description) => {
 
 export const setProductPriceLevel = (id) => {
     return async (dispatch, getState) => {
+        console.log('level action ',id)
         dispatch({ type: "SETTING_PRODUCT_PRICE_LEVEL_SUCCESS", payload: id });
     }
 }
