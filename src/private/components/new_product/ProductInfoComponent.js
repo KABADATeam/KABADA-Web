@@ -30,8 +30,10 @@ class ProductInfoComponent extends Component {
     }
 
     handlePopoverVisibilityChange = (visible) => {
+        this.generateAIHelpText();
         this.setState({
             popoverVisibility: visible,
+            popoverTextObject: this.generateAIHelpText()
         })
     }
 
@@ -56,19 +58,115 @@ class ProductInfoComponent extends Component {
     }
 
     onAIButtonClick = () => {
-        const type_id = this.props.product.aiPredict.find(e => e.id === null).productType;
-        const price_id = this.props.product.aiPredict.find(e => e.id === null).priceLevel;
+        const ai_type_id = this.props.product.aiPredict.find(e => e.id === null).productType;
+        const ai_price_id = this.props.product.aiPredict.find(e => e.id === null).priceLevel;
+        console.log(this.props.product)
+        console.log(ai_type_id);
+        console.log(ai_price_id)
+
         this.props.setValuePropositionAIPredict();
-        this.props.getType(type_id);
-        this.props.getPrice(price_id);
+        this.props.getType(ai_type_id);
+        this.props.getPrice(ai_price_id);
         this.hidePopover();
+    }
+
+    compareArray = (arrayAI, arrayState) => {
+        const newArray = []
+        for (var i in arrayAI) {
+            if (arrayState.indexOf(arrayAI[i]) === -1) {
+                newArray.push(arrayAI[i]);
+            }
+        }
+        return newArray;
+    }
+
+    generateAIHelpText = () => {
+        const aiHintTextObject = [];
+        const { product_type, price_level, selected_additional_income_sources, product_features, aiPredict } = this.props.product;
+        const { priceLevels } = this.props.productFeaturesLevels;
+        const ai_obj = aiPredict.find(e => e.id === null);
+        if (ai_obj !== undefined) {
+            if (product_type.type_id !== ai_obj.productType) {
+                const type_name = this.props.productTypes.find(e => e.id === ai_obj.productType).title;
+                const new_obj = {
+                    type_title: 'Product type',
+                    text: type_name
+                };
+                aiHintTextObject.push(new_obj);
+            }
+
+            if (price_level.price_id !== ai_obj.priceLevel) {
+                const level_name = priceLevels.find(e => e.id === ai_obj.priceLevel).title;
+                const new_obj = {
+                    type_title: 'Price level',
+                    text: level_name
+                };
+                aiHintTextObject.push(new_obj);
+            }
+            let incomeSourcesHintText = '';
+            const selected_income_sources = selected_additional_income_sources.map(e => e.id);
+            const comparedIncomeSource = this.compareArray(ai_obj.incomeSources, selected_income_sources);
+            if (comparedIncomeSource.length > 1) {
+                for (let i = 0; i < comparedIncomeSource.length; i++) {
+                    const income_name = this.props.additionalIncomeSources.find(e => e.id === comparedIncomeSource[i]).title;
+                    incomeSourcesHintText += i === comparedIncomeSource.length - 1 ? income_name + '' : income_name + ', ';
+                }
+                const new_obj = {
+                    type_title: 'Additional income sources',
+                    text: incomeSourcesHintText
+                }
+                aiHintTextObject.push(new_obj);
+            } else if (comparedIncomeSource.length === 1) {
+                const income_name = this.props.additionalIncomeSources.find(e => e.id === comparedIncomeSource[0]).title;
+                incomeSourcesHintText = income_name;
+                const new_obj = {
+                    type_title: 'Additional income sources',
+                    text: incomeSourcesHintText
+                }
+                console.log(new_obj);
+                aiHintTextObject.push(new_obj)
+            };
+            console.log(this.props.productFeatures);
+            let productFeaturesHintText = '';
+            const selected_product_features = product_features.map(e => e.id);
+            const comparedProductFeatures = this.compareArray(ai_obj.productFeatures, selected_product_features);
+            console.log(comparedProductFeatures);
+            if (comparedProductFeatures.length > 1) {
+                for (let i = 0; i < comparedProductFeatures.length; i++) {
+                    const features_name = this.props.productFeatures.find(e => e.id === comparedProductFeatures[i]).title;
+                    productFeaturesHintText += i === comparedProductFeatures.length - 1 ? features_name + '' : features_name + ', ';
+                }
+                const new_obj = {
+                    type_title: 'Product features',
+                    text: productFeaturesHintText
+                }
+                aiHintTextObject.push(new_obj);
+            } else if (comparedProductFeatures.length === 1) {
+                const features_name = this.props.productFeatures.find(e => e.id === comparedProductFeatures[0]).title;
+                productFeaturesHintText = features_name;
+                const new_obj = {
+                    type_title: 'Product features',
+                    text: productFeaturesHintText
+                }
+                console.log(new_obj);
+                aiHintTextObject.push(new_obj)
+            };
+
+        } else {
+            this.setState({
+                popoverType: 'no predict',
+            })
+        }
+        return aiHintTextObject;
     }
 
     render() {
         const typeOptions = this.props.productTypes.map((obj) =>
             ({ label: obj.title, value: obj.id })
-        );        
+        );
         const typeValue = this.props.product.product_type.type_id;
+        // const testText = this.generateAIHelpText();
+        // console.log(testText);
         const popoverContent = (
             <>
                 {
@@ -87,8 +185,8 @@ class ProductInfoComponent extends Component {
                         <>
                             <Row>
                                 <Row>
-                                    <Text>Test test test test tets test test test</Text>
-                                    {/* {
+                                    {/* <Text>Test test test test tets test test test</Text> */}
+                                    {
                                         this.state.popoverTextObject.length === 0 ?
                                             <Text>Based on the current information KABADA AI thinks that everything looks good.</Text>
                                             :
@@ -105,10 +203,10 @@ class ProductInfoComponent extends Component {
                                                     }
                                                 })}.
                                             </Text>
-                                    } */}
+                                    }
                                 </Row>
                                 <Row style={{ marginTop: '12px' }}>
-                                    {/* {
+                                    {
                                         this.state.popoverTextObject.length === 0 ?
                                             <Button onClick={this.hidePopover}>Cancel</Button>
                                             :
@@ -116,11 +214,11 @@ class ProductInfoComponent extends Component {
                                                 <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
                                                 <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
                                             </>
-                                    } */}
-                                    
-                                        <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
-                                        <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
-                                    
+                                    }
+
+                                    {/* <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
+                                    <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button> */}
+
                                 </Row>
                             </Row>
                         </>
@@ -194,9 +292,9 @@ class ProductInfoComponent extends Component {
                         {
                             this.props.product_type_error === false ?
                                 <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 8px)' }} key="type" label="Product type">
-                                    <Select 
-                                        style={{ width: '100%'}}
-                                        placeholder="Select product type" 
+                                    <Select
+                                        style={{ width: '100%' }}
+                                        placeholder="Select product type"
                                         onChange={this.onSelectionChange.bind(this)}
                                         value={typeValue}
                                         options={typeOptions}
@@ -207,10 +305,10 @@ class ProductInfoComponent extends Component {
                                     validateStatus="error"
                                     help="Select product type"
                                 >
-                                    <Select 
-                                        style={{ width: '100%' }} 
-                                        placeholder="Select product type" 
-                                        onChange={this.onSelectionChange.bind(this)} 
+                                    <Select
+                                        style={{ width: '100%' }}
+                                        placeholder="Select product type"
+                                        onChange={this.onSelectionChange.bind(this)}
                                         value={typeValue}
                                         options={typeOptions}
                                     />
@@ -232,7 +330,10 @@ class ProductInfoComponent extends Component {
 const mapStateToProps = (state) => {
     return {
         product: state.product,
-        productTypes: state.productTypes
+        productTypes: state.productTypes,
+        productFeaturesLevels: state.productFeaturesLevels,
+        additionalIncomeSources: state.additionalIncomeSources,
+        productFeatures: state.productFeatures
     };
 }
 

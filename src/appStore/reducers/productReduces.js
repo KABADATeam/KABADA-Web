@@ -197,7 +197,8 @@ export const productReducer = (
         differentiation_level: '',
         innovative_level: '',
         quality_level: '',
-        aiPredict: null
+        aiPredict: null,
+        aiHintTextObject: []
     }, action) => {
     switch (action.type) {
         case "SETTING_PRODUCT_TITLE_SUCCESS":
@@ -311,17 +312,15 @@ export const productReducer = (
                 "aiPredict": action.payload,
             }
         case "SET_PRODUCT_AI_PREDICT":
-            const ai_obj = action.payload.find(e => e.id === null);
+            const ai_obj = action.payload.predict.find(e => e.id === null);
             const income_sources_array = [];
             const product_features_array = [];
-            const type_AI_Obj = {
-                "type_id": ai_obj.productType,
-                "tag": 1
-            }
-            const price_level_AI_Obj = {
-                "price_id": ai_obj.priceLevel,
-                "tag": 1
-            }
+            const aiHintTextObject = []
+            const {product_type, price_level} = action.payload.userData;
+            const type_obj = product_type.type_id === ai_obj.productType ? {"type_id": ai_obj.productType, "tag": 0} : {"type_id": ai_obj.productType, "tag": 1}
+            
+            const price_obj = price_level.price_id === ai_obj.priceLevel ? {"price_id": ai_obj.priceLevel, "tag": 0} : {"price_id": ai_obj.priceLevel, "tag": 1}
+        
             for (let i in ai_obj.incomeSources) {
                 const obj = {
                     "id": ai_obj.incomeSources[i],
@@ -336,20 +335,21 @@ export const productReducer = (
                 }
                 product_features_array.push(obj);
             }
-            console.log(ai_obj.incomeSources)
-            console.log(ai_obj.product_features_array)
             const innovative_LevelIndex = getSliderValue(innovative, ai_obj.productFeatures);
             const quality_LevelIndex = getSliderValue(quality, ai_obj.productFeatures);
             const differentiation_LevelIndex = getSliderValue(differentiation, ai_obj.productFeatures);
+            console.log(income_sources_array);
+            console.log(product_features_array);
             return {
                 ...state,
-                "product_type": type_AI_Obj,
-                "price_level": price_level_AI_Obj,
+                "product_type": type_obj,
+                "price_level": price_obj,
                 "selected_additional_income_sources": income_sources_array,
                 "product_features": product_features_array,
                 "innovative_level_index": innovative_LevelIndex,
                 "quality_level_index": quality_LevelIndex,
-                "differentiation_level_index": differentiation_LevelIndex
+                "differentiation_level_index": differentiation_LevelIndex,
+                "aiHintTextObject": aiHintTextObject
             }
         default:
             return state;

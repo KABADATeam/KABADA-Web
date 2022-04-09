@@ -55,10 +55,7 @@ class PriceLevelComponent extends Component {
             <Checkbox value={obj.id} key={obj.key}>{obj.title}</Checkbox>
         );
         const priceLevelValue = this.props.product.price_level.price_id;
-        console.log(this.props.product.selected_additional_income_sources)
-//value={this.props.product.selected_additional_income_sources}
         const incomeSourcesValues = this.props.product.selected_additional_income_sources.map(e => e.id);
-        console.log(incomeSourcesValues);
         return (
             <>
                 <Card style={{ ...cardStyle, padding: 20 }} bodyStyle={{ ...tableCardBodyStyle, padding: 0 }}>
