@@ -65,6 +65,7 @@ class EditPriceLevelComponent extends Component {
             ({ label: obj.title, value: obj.id })
         );
         const priceLevelValue = this.props.product.price_level.price_id
+        const incomeSourcesValues = this.props.product.selected_additional_income_sources.map(e => e.id);
         return (
             <>
                 <Card style={{ ...cardStyle, padding: 20 }} bodyStyle={{ ...tableCardBodyStyle, padding: 0 }}>
@@ -81,7 +82,7 @@ class EditPriceLevelComponent extends Component {
                     <Space direction="vertical">
                         <Text style={infoTextStyle}>Additional income sources</Text>
                         <Text style={descriptionTextStyle}>Select up to 5 sources</Text>
-                        <Checkbox.Group onChange={this.onChange} value={this.props.product.selected_additional_income_sources}>
+                        <Checkbox.Group onChange={this.onChange} value={incomeSourcesValues}>
                             <Space direction="vertical">
                                 {this.props.incomeSources.map((obj) => (
                                     <Checkbox value={obj.id} key={obj.key} disabled={this.isDisabled(obj.id)}>{obj.title}</Checkbox>

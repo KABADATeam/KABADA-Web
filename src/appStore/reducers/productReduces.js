@@ -217,19 +217,38 @@ export const productReducer = (
             }
             return { ...state, "price_level": priceLevelObj };
         case "SETTING_INCOME_SOURCES_SUCCESS":
-            return { ...state, "selected_additional_income_sources": action.payload };
+            const incomeSourcesArray = [];
+            for (let i in action.payload) {
+                const incomeSourcesObj = {
+                    "id": action.payload[i],
+                    "tag": 0
+                }
+                incomeSourcesArray.push(incomeSourcesObj);
+            }
+            console.log(incomeSourcesArray);
+            return { ...state, "selected_additional_income_sources": incomeSourcesArray};
         case "SETTING_PRODUCT_FEATURES_SUCCESS":
+            const productFeaturesArray = [];
+            for (let i in action.payload){
+                const productFeaturesObj = {
+                    "id": action.payload[i],
+                    "tag": 0
+                }
+                productFeaturesArray.push(productFeaturesObj)
+            }
+            console.log(productFeaturesArray)
             const innovativeLevelIndex = getSliderValue(innovative, action.payload);
             const qualityLevelIndex = getSliderValue(quality, action.payload);
             const differentiationLevelIndex = getSliderValue(differentiation, action.payload);
             return {
                 ...state,
-                "product_features": action.payload,
+                "product_features": productFeaturesArray,
                 "innovative_level_index": innovativeLevelIndex,
                 "quality_level_index": qualityLevelIndex,
                 "differentiation_level_index": differentiationLevelIndex
             };
         case "FETCHING_PRODUCT_SUCCESS":
+            console.log(action.payload)
             const innovativeLevelIndex_ = getSliderValue(innovative, action.payload.product_features);
             const qualityLevelIndex_ = getSliderValue(quality, action.payload.product_features);
             const differentiationLevelIndex_ = getSliderValue(differentiation, action.payload.product_features);
@@ -241,14 +260,30 @@ export const productReducer = (
                 "price_id": action.payload.price_level,
                 "tag": 0
             }
+            const income_SourcesArray = [];
+            for (let i in action.payload.selected_additional_income_sources) {
+                const incomeSourcesObj = {
+                    "id": action.payload.selected_additional_income_sources[i],
+                    "tag": 0
+                }
+                income_SourcesArray.push(incomeSourcesObj);
+            }
+            const product_FeaturesArray = [];
+            for (let i in action.payload.product_features){
+                const productFeaturesObj = {
+                    "id": action.payload.product_features[i],
+                    "tag": 0
+                }
+                product_FeaturesArray.push(productFeaturesObj)
+            }
             return {
                 ...state,
                 "title": action.payload.title,
                 "product_type": type_Obj,
                 "description": action.payload.description,
                 "price_level": price_LevelObj,
-                "selected_additional_income_sources": action.payload.selected_additional_income_sources,
-                "product_features": action.payload.product_features,
+                "selected_additional_income_sources": income_SourcesArray,
+                "product_features": product_FeaturesArray,
                 "differentiation_level": action.payload.differentiation_level,
                 "innovative_level": action.payload.innovative_level,
                 "quality_level": action.payload.quality_level,
@@ -271,13 +306,14 @@ export const productReducer = (
                 quality_level: ''
             }
         case "GET_PRODUCT_AI_PREDICT":
-            console.log(action.payload)
             return {
                 ...state,
                 "aiPredict": action.payload,
             }
         case "SET_PRODUCT_AI_PREDICT":
-            const ai_obj = action.payload.find(e => e.id === null)
+            const ai_obj = action.payload.find(e => e.id === null);
+            const income_sources_array = [];
+            const product_features_array = [];
             const type_AI_Obj = {
                 "type_id": ai_obj.productType,
                 "tag": 1
@@ -286,6 +322,22 @@ export const productReducer = (
                 "price_id": ai_obj.priceLevel,
                 "tag": 1
             }
+            for (let i in ai_obj.incomeSources) {
+                const obj = {
+                    "id": ai_obj.incomeSources[i],
+                    "tag": 1
+                }
+                income_sources_array.push(obj);
+            }
+            for (let i in ai_obj.productFeatures) {
+                const obj = {
+                    "id": ai_obj.productFeatures[i],
+                    "tag": 1
+                }
+                product_features_array.push(obj);
+            }
+            console.log(ai_obj.incomeSources)
+            console.log(ai_obj.product_features_array)
             const innovative_LevelIndex = getSliderValue(innovative, ai_obj.productFeatures);
             const quality_LevelIndex = getSliderValue(quality, ai_obj.productFeatures);
             const differentiation_LevelIndex = getSliderValue(differentiation, ai_obj.productFeatures);
@@ -293,8 +345,8 @@ export const productReducer = (
                 ...state,
                 "product_type": type_AI_Obj,
                 "price_level": price_level_AI_Obj,
-                "selected_additional_income_sources": ai_obj.incomeSources,
-                "product_features": ai_obj.productFeatures,
+                "selected_additional_income_sources": income_sources_array,
+                "product_features": product_features_array,
                 "innovative_level_index": innovative_LevelIndex,
                 "quality_level_index": quality_LevelIndex,
                 "differentiation_level_index": differentiation_LevelIndex

@@ -87,8 +87,9 @@ class EditProduct extends React.Component {
     };
 
     arraysEqual = (array1, array2) => {
-        let a = JSON.parse(JSON.stringify(array1));
-        let b = JSON.parse(JSON.stringify(array2));
+        let a = JSON.stringify(array1); //if is object array
+        let b = JSON.stringify(array2);
+        //let b = JSON.parse(JSON.stringify(array2)); if is simple array
 
         if (a === b) return true;
         if (a == null || b == null) return false;
@@ -115,14 +116,30 @@ class EditProduct extends React.Component {
             const price_LevelObj = {
                 "price_id": this.state.originalProduct.price_level,
                 "tag": 0
+            }
+            const income_Sources_Array = [];
+            for (let i in this.state.originalProduct.selected_additional_income_sources) {
+                const incomeSourcesObj = {
+                    "id": this.state.originalProduct.selected_additional_income_sources[i],
+                    "tag": 0
+                }
+                income_Sources_Array.push(incomeSourcesObj);
+            }
+            const product_Features_Array = [];
+            for (let i in this.state.originalProduct.product_features){
+                const productFeaturesObj = {
+                    "id": this.state.originalProduct.product_features[i],
+                    "tag": 0
+                }
+                product_Features_Array.push(productFeaturesObj)
             }            
             const original = {
                 "title": this.state.originalProduct.title,
                 "product_type": type_Obj,
                 "description": this.state.originalProduct.description,
                 "price_level": price_LevelObj,
-                "selected_additional_income_sources": this.state.originalProduct.selected_additional_income_sources,
-                "product_features": this.state.originalProduct.product_features,
+                "selected_additional_income_sources": income_Sources_Array,
+                "product_features": product_Features_Array,
                 "differentiation_level": this.state.originalProduct.differentiation_level,
                 "innovative_level": this.state.originalProduct.innovative_level,
                 "quality_level": this.state.originalProduct.quality_level,
@@ -139,41 +156,31 @@ class EditProduct extends React.Component {
                 "quality_level": this.props.product.quality_level,
             }
     
-            console.log('original ', original);
-            console.log('modified ', modified)
-    
             if (original === null) {
-                console.log('nes orginal null')
                 return 'hidden';
             }
     
             if (original.title !== modified.title) {
-                console.log('nelygus title')
                 return 'visible';
             }
     
             if (original.description !== modified.description) {
-                console.log('nelygus description')
                 return 'visible';
             }
     
             if (original.product_type.type_id !== modified.product_type.type_id) {
-                console.log('nelygus type')
                 return 'visible';
             }
     
             if (original.price_level.price_id !== modified.price_level.price_id) {
-                console.log('nelygus price level')
                 return 'visible';
             }
     
             if (this.arraysEqual(original.selected_additional_income_sources, modified.selected_additional_income_sources) === false) {
-                console.log('nelygus income sources')
                 return 'visible';
             }
     
             if (this.arraysEqual(original.product_features, modified.product_features) === false) {
-                console.log('nelygus product features')
                 return 'visible';
             }
             return 'hidden';
@@ -223,6 +230,7 @@ class EditProduct extends React.Component {
 
     componentDidMount() {
         this.props.getProduct(this.props.productId, (data) => {
+            console.log(data)
             this.setState({
                 originalProduct: JSON.parse(JSON.stringify(data))
             });

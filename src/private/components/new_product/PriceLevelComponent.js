@@ -55,7 +55,10 @@ class PriceLevelComponent extends Component {
             <Checkbox value={obj.id} key={obj.key}>{obj.title}</Checkbox>
         );
         const priceLevelValue = this.props.product.price_level.price_id;
-
+        console.log(this.props.product.selected_additional_income_sources)
+//value={this.props.product.selected_additional_income_sources}
+        const incomeSourcesValues = this.props.product.selected_additional_income_sources.map(e => e.id);
+        console.log(incomeSourcesValues);
         return (
             <>
                 <Card style={{ ...cardStyle, padding: 20 }} bodyStyle={{ ...tableCardBodyStyle, padding: 0 }}>
@@ -96,7 +99,7 @@ class PriceLevelComponent extends Component {
                         <Space direction="vertical">
                             <Text style={infoTextStyle}>Additional income sources<TooltipComponent code="vpnp2" type="text" /></Text>
                             <Text style={descriptionTextStyle}>Select up to 5 sources</Text>
-                            <Checkbox.Group onChange={this.onChange} value={this.props.product.selected_additional_income_sources}>
+                            <Checkbox.Group onChange={this.onChange} value={incomeSourcesValues}>
                                 <Space direction="vertical">
                                     {this.props.incomeSources.map((obj) => (
                                         <Checkbox value={obj.id} key={obj.key} disabled={this.isDisabled(obj.id)}>{obj.title}</Checkbox>

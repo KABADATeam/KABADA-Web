@@ -56,7 +56,6 @@ class ProductInfoComponent extends Component {
     }
 
     onAIButtonClick = () => {
-        console.log(this.props.product.aiPredict)
         const type_id = this.props.product.aiPredict.find(e => e.id === null).productType;
         const price_id = this.props.product.aiPredict.find(e => e.id === null).priceLevel;
         this.props.setValuePropositionAIPredict();

@@ -81,7 +81,6 @@ class NewProduct extends React.Component {
         })
     }
     getTypeValue = (value) => {
-        console.log('new product ', value);
         this.setState({
             product_type_value: value,
             product_type_error: false

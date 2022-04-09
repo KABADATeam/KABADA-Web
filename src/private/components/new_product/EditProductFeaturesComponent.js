@@ -53,13 +53,14 @@ class EditProductFeaturesComponent extends Component {
 
 
     render() {
+        const productFeaturesValues = this.props.product.product_features.map(e => e.id);
         return (
             <>
                 <Card style={{ ...cardStyle, padding: 20 }} bodyStyle={{ ...tableCardBodyStyle, padding: 0 }}>
                     <Space direction="vertical">
                         <Text style={infoTextStyle}>Product features</Text>
                         <Text style={descriptionTextStyle}>Up to 9 of mixed characteristics</Text>
-                        <Checkbox.Group onChange={this.onChange} value={this.props.product.product_features}>
+                        <Checkbox.Group onChange={this.onChange} value={productFeaturesValues}>
                             <Space direction="vertical">
                                 {this.props.features.map((obj) =>(
                                     <Checkbox value={obj.id} key={obj.key} disabled={this.isDisabled(obj.id)}>{obj.title}</Checkbox>
