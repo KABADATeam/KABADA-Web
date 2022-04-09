@@ -226,7 +226,6 @@ export const productReducer = (
                 }
                 incomeSourcesArray.push(incomeSourcesObj);
             }
-            console.log(incomeSourcesArray);
             return { ...state, "selected_additional_income_sources": incomeSourcesArray};
         case "SETTING_PRODUCT_FEATURES_SUCCESS":
             const productFeaturesArray = [];
@@ -249,7 +248,6 @@ export const productReducer = (
                 "differentiation_level_index": differentiationLevelIndex
             };
         case "FETCHING_PRODUCT_SUCCESS":
-            console.log(action.payload)
             const innovativeLevelIndex_ = getSliderValue(innovative, action.payload.product_features);
             const qualityLevelIndex_ = getSliderValue(quality, action.payload.product_features);
             const differentiationLevelIndex_ = getSliderValue(differentiation, action.payload.product_features);
@@ -338,8 +336,6 @@ export const productReducer = (
             const innovative_LevelIndex = getSliderValue(innovative, ai_obj.productFeatures);
             const quality_LevelIndex = getSliderValue(quality, ai_obj.productFeatures);
             const differentiation_LevelIndex = getSliderValue(differentiation, ai_obj.productFeatures);
-            console.log(income_sources_array);
-            console.log(product_features_array);
             return {
                 ...state,
                 "product_type": type_obj,

@@ -7,7 +7,7 @@ const AIPredictDummyData = {
         businessPlan_id: '9c698d0a-f4de-4ddc-dd3b-08d9f790d51b',
         valueProposition: [
             {
-                id: 1,
+                id: "94c93bbe-9769-488d-a78a-fb6af2850bfc",
                 productType: 'c64ed84d-db99-4a25-95f1-79bb99fa6936',
                 priceLevel: '4261a424-6b58-467c-a5da-1844827950b5',
                 incomeSources: ['67cdf9e6-acc0-404a-a189-78325e83f547', '87ffbf10-1f99-4d0b-ae5a-202736ed5a4e', '085df303-2e4d-4dd0-9e9f-204085352597'],

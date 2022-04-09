@@ -126,7 +126,6 @@ class NewProduct extends React.Component {
             const price_level = this.props.product.price_level.price_id;
             const income_sources = this.props.product.selected_additional_income_sources.map(e => e.id);
             const product_features = this.props.product.product_features.map(e => e.id);
-            console.log('Before post obj ', this.props.product);
             const postObj = {
                 "title": this.props.product.title,
                 "product_type": product_type,
@@ -139,13 +138,12 @@ class NewProduct extends React.Component {
                 "differentiation_level": this.props.product.differentiation_level_index === undefined ? this.props.productFeatures.differentiation[0].id : this.props.productFeatures.differentiation[this.props.product.differentiation_level_index].id,
                 "business_plan_id": this.props.businessPlan.id
             };
-            console.log(postObj);
             this.props.saveProduct(postObj, () => {
                 this.props.history.push(`/value-propositions`);
             });
         }
         else {
-            
+
         }
 
     };
