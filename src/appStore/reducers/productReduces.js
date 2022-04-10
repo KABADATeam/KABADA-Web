@@ -228,25 +228,40 @@ export const productReducer = (
             }
             return { ...state, "price_level": priceLevelObj };
         case "SETTING_INCOME_SOURCES_SUCCESS":
-            const incomeSourcesArray = [];
-            for (let i in action.payload) {
+            let incomeSourcesArray = [];
+            const income_list_action_length = action.payload.length;
+            const income_list_state_length = state.selected_additional_income_sources.length;
+            const income_state_list = state.selected_additional_income_sources.map(e => e.id);
+            if (income_list_action_length > income_list_state_length) {
+                const find_income_source = compareArray(action.payload, income_state_list);
                 const incomeSourcesObj = {
-                    "id": action.payload[i],
+                    "id": find_income_source[0],
                     "tag": 0
                 }
-                incomeSourcesArray.push(incomeSourcesObj);
+                incomeSourcesArray = [...state.selected_additional_income_sources, incomeSourcesObj];
+            } else {
+                const deleted_income_item_id = compareArray(income_state_list, action.payload);
+                const index = state.selected_additional_income_sources.findIndex(e => e.id === deleted_income_item_id[0]);
+                incomeSourcesArray = [...state.selected_additional_income_sources.slice(0,index), ...state.selected_additional_income_sources.slice(index+1)];
             }
             return { ...state, "selected_additional_income_sources": incomeSourcesArray};
         case "SETTING_PRODUCT_FEATURES_SUCCESS":
-            const productFeaturesArray = [];
-            for (let i in action.payload){
+            let productFeaturesArray = [];
+            const features_list_action_length = action.payload.length;
+            const features_list_state_length = state.product_features.length;
+            const features_list = state.product_features.map(e => e.id);
+            if (features_list_action_length > features_list_state_length) {
+                const find_features = compareArray(action.payload, features_list);
                 const productFeaturesObj = {
-                    "id": action.payload[i],
+                    "id": find_features[0],
                     "tag": 0
-                }
-                productFeaturesArray.push(productFeaturesObj)
-            }
-            console.log(productFeaturesArray)
+                };
+                productFeaturesArray = [...state.product_features, productFeaturesObj];
+            } else {
+                const deleted_features_item_id = compareArray(features_list, action.payload);
+                const index = state.product_features.findIndex(e => e.id === deleted_features_item_id[0]);
+                productFeaturesArray = [...state.product_features.slice(0,index), ...state.product_features.slice(index+1)];
+            };
             const innovativeLevelIndex = getSliderValue(innovative, action.payload);
             const qualityLevelIndex = getSliderValue(quality, action.payload);
             const differentiationLevelIndex = getSliderValue(differentiation, action.payload);
@@ -330,16 +345,6 @@ export const productReducer = (
             const price_obj = price_level.price_id === ai_obj.priceLevel ? {"price_id": ai_obj.priceLevel, "tag": 0} : {"price_id": ai_obj.priceLevel, "tag": 1}
             console.log(price_obj);
             const selected_income_sources = state.selected_additional_income_sources.map(e => e.id);
-            // console.log(selected_income_sources);
-            // console.log(ai_obj.incomeSources);
-            // for (let i in ai_obj.incomeSources) {
-            //     const obj = {
-            //         "id": ai_obj.incomeSources[i],
-            //         "tag": 1
-            //     }
-            //     income_sources_array.push(obj);
-            // }
-            // console.log(income_sources_array);
             const comparedIncomeSource = compareArray(ai_obj.incomeSources, selected_income_sources);
             for (let i in comparedIncomeSource) {
                 const obj = {
@@ -349,8 +354,6 @@ export const productReducer = (
                 income_sources_array.push(obj);
             }
             const selected_product_features = state.product_features.map(e => e.id);
-            console.log('selected elements ',selected_product_features);
-            console.log('ai elements ', ai_obj.productFeatures)
             const comparedProductFeatures = compareArray(ai_obj.productFeatures, selected_product_features);
             for (let i in comparedProductFeatures) {
                 const obj = {
@@ -359,9 +362,7 @@ export const productReducer = (
                 }
                 product_features_array.push(obj);
             }
-            console.log(product_features_array);
             const mergedProductFeaturesArray = [...new Set([...ai_obj.productFeatures, ...selected_product_features])];
-            console.log(mergedProductFeaturesArray)
             const innovative_LevelIndex = getSliderValue(innovative, mergedProductFeaturesArray);
             const quality_LevelIndex = getSliderValue(quality, mergedProductFeaturesArray);
             const differentiation_LevelIndex = getSliderValue(differentiation, mergedProductFeaturesArray);

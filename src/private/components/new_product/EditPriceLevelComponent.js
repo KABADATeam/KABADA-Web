@@ -56,6 +56,23 @@ class EditPriceLevelComponent extends Component {
         this.props.setProductPriceLevel(id);
     }
 
+    getColor = (id) => {
+        const element = this.props.product.selected_additional_income_sources.find(e => e.id === id);
+        if (element === undefined) {
+            let color = "white"
+            return color
+        } else {
+            if (element.tag === 0) {
+                let color = "white"
+                return color
+            } else {
+                let color = "#BAE7FF"
+                return color
+            }
+        }
+        
+    }
+
     // onIncomeSourcesChanged = (values) => {
     //     this.props.setIncomeSources(values);
     // }
@@ -85,7 +102,7 @@ class EditPriceLevelComponent extends Component {
                         <Checkbox.Group onChange={this.onChange} value={incomeSourcesValues}>
                             <Space direction="vertical">
                                 {this.props.incomeSources.map((obj) => (
-                                    <Checkbox value={obj.id} key={obj.key} disabled={this.isDisabled(obj.id)}>{obj.title}</Checkbox>
+                                    <Checkbox value={obj.id} key={obj.key} disabled={this.isDisabled(obj.id)} style={{backgroundColor: this.getColor(obj.id)}}>{obj.title}</Checkbox>
                                 ))}
                             </Space>
                         </Checkbox.Group>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Typography, Space, Card, Checkbox } from 'antd';
 import { cardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
-import { setProductFeatures,getProduct ,getProductFeatures} from "../../../appStore/actions/productActions";
+import { setProductFeatures, getProduct, getProductFeatures } from "../../../appStore/actions/productActions";
 import { thisExpression } from '@babel/types';
 
 const { Text } = Typography;
@@ -24,24 +24,39 @@ class EditProductFeaturesComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          checked: []
+            checked: []
         };
-      }
-      //everytime you check checkbox it will add id of income source to checked array ['7878787','898954654654654']
-      onChange = checkedValues => {
+    }
+    //everytime you check checkbox it will add id of income source to checked array ['7878787','898954654654654']
+    onChange = checkedValues => {
         this.setState(() => {
-          return { checked: checkedValues };
+            return { checked: checkedValues };
         });
         this.props.setProductFeatures(checkedValues);
-      };
-    
-      isDisabled(id){
+    };
+
+    isDisabled(id) {
         return (
-          this.state.checked.length > 8 && this.state.checked.indexOf(id) === -1
+            this.state.checked.length > 8 && this.state.checked.indexOf(id) === -1
         );
-      }; 
-    
-    componentDidMount(){
+    };
+    getColor = (id) => {
+        const element = this.props.product.product_features.find(e => e.id === id);
+        if (element === undefined) {
+            let color = "white"
+            return color
+        } else {
+            if (element.tag === 0) {
+                let color = "white"
+                return color
+            } else {
+                let color = "#BAE7FF"
+                return color
+            }
+        }
+    }
+
+    componentDidMount() {
         this.props.getProduct(this.props.productId, (data) => {
             this.setState({
                 checked: this.props.product.product_features
@@ -49,8 +64,6 @@ class EditProductFeaturesComponent extends Component {
         });
         this.props.getProductFeatures();
     }
-    
-
 
     render() {
         const productFeaturesValues = this.props.product.product_features.map(e => e.id);
@@ -62,8 +75,8 @@ class EditProductFeaturesComponent extends Component {
                         <Text style={descriptionTextStyle}>Up to 9 of mixed characteristics</Text>
                         <Checkbox.Group onChange={this.onChange} value={productFeaturesValues}>
                             <Space direction="vertical">
-                                {this.props.features.map((obj) =>(
-                                    <Checkbox value={obj.id} key={obj.key} disabled={this.isDisabled(obj.id)}>{obj.title}</Checkbox>
+                                {this.props.features.map((obj) => (
+                                    <Checkbox value={obj.id} key={obj.key} disabled={this.isDisabled(obj.id)} style={{ backgroundColor: this.getColor(obj.id) }}>{obj.title}</Checkbox>
                                 ))}
                             </Space>
                         </Checkbox.Group>
@@ -81,4 +94,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { setProductFeatures, getProduct,getProductFeatures })(EditProductFeaturesComponent);
+export default connect(mapStateToProps, { setProductFeatures, getProduct, getProductFeatures })(EditProductFeaturesComponent);
