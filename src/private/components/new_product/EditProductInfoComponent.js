@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Card, Typography, Form, Input, Select, Popover, Button, Row, Col } from 'antd'
 import { cardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
-import { setProductTitle, setProductType, setProductDescription } from "../../../appStore/actions/productActions";
+import { setProductTitle, setProductType, setProductDescription, setValuePropositionAIPredict } from "../../../appStore/actions/productActions";
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -31,6 +31,7 @@ class EditProductInfoComponent extends Component {
     handlePopoverVisibilityChange = (visible) => {
         this.setState({
             popoverVisibility: visible,
+            popoverTextObject: this.generateAIHelpText()
         })
     }
 
@@ -50,6 +51,96 @@ class EditProductInfoComponent extends Component {
 
     onDescriptionChanged = (e) => {
         this.props.setProductDescription(e.target.value);
+    }
+    onAIButtonClick = () => {
+        this.props.setValuePropositionAIPredict(this.props.productId);
+        this.hidePopover();
+    }
+    compareArray = (arrayAI, arrayState) => {
+        const newArray = []
+        for (var i in arrayAI) {
+            if (arrayState.indexOf(arrayAI[i]) === -1) {
+                newArray.push(arrayAI[i]);
+            }
+        }
+        return newArray;
+    }
+
+    generateAIHelpText = () => {
+        const aiHintTextObject = [];
+        const { product_type, price_level, selected_additional_income_sources, product_features, aiPredict } = this.props.product;
+        const { priceLevels } = this.props.productFeaturesLevels;
+        const ai_obj = aiPredict.find(e => e.id === this.props.productId);
+        //console.log(ai_obj);
+        if (ai_obj !== undefined) {            
+            if (product_type.type_id !== ai_obj.productType) {
+                const type_name = this.props.productTypes.find(e => e.id === ai_obj.productType).title;
+                const new_obj = {
+                    type_title: 'Product type',
+                    text: type_name
+                };
+                aiHintTextObject.push(new_obj);
+            }
+            
+            if (price_level.price_id !== ai_obj.priceLevel) {
+                const level_name = priceLevels.find(e => e.id === ai_obj.priceLevel).title;
+                const new_obj = {
+                    type_title: 'Price level',
+                    text: level_name
+                };
+                aiHintTextObject.push(new_obj);
+            }
+            let incomeSourcesHintText = '';
+            const selected_income_sources = selected_additional_income_sources.map(e => e.id);
+            const comparedIncomeSource = this.compareArray(ai_obj.incomeSources, selected_income_sources);
+            if (comparedIncomeSource.length > 1) {
+                for (let i = 0; i < comparedIncomeSource.length; i++) {
+                    const income_name = this.props.additionalIncomeSources.find(e => e.id === comparedIncomeSource[i]).title;
+                    incomeSourcesHintText += i === comparedIncomeSource.length - 1 ? income_name + '' : income_name + ', ';
+                }
+                const new_obj = {
+                    type_title: 'Additional income sources',
+                    text: incomeSourcesHintText
+                }
+                aiHintTextObject.push(new_obj);
+            } else if (comparedIncomeSource.length === 1) {
+                const income_name = this.props.additionalIncomeSources.find(e => e.id === comparedIncomeSource[0]).title;
+                incomeSourcesHintText = income_name;
+                const new_obj = {
+                    type_title: 'Additional income sources',
+                    text: incomeSourcesHintText
+                }
+                aiHintTextObject.push(new_obj)
+            };
+            let productFeaturesHintText = '';
+            const selected_product_features = product_features.map(e => e.id);
+            const comparedProductFeatures = this.compareArray(ai_obj.productFeatures, selected_product_features);
+            if (comparedProductFeatures.length > 1) {
+                for (let i = 0; i < comparedProductFeatures.length; i++) {
+                    const features_name = this.props.productFeatures.find(e => e.id === comparedProductFeatures[i]).title;
+                    productFeaturesHintText += i === comparedProductFeatures.length - 1 ? features_name + '' : features_name + ', ';
+                }
+                const new_obj = {
+                    type_title: 'Product features',
+                    text: productFeaturesHintText
+                }
+                aiHintTextObject.push(new_obj);
+            } else if (comparedProductFeatures.length === 1) {
+                const features_name = this.props.productFeatures.find(e => e.id === comparedProductFeatures[0]).title;
+                productFeaturesHintText = features_name;
+                const new_obj = {
+                    type_title: 'Product features',
+                    text: productFeaturesHintText
+                }
+                aiHintTextObject.push(new_obj)
+            };
+
+        } else {
+            this.setState({
+                popoverType: 'no predict',
+            })
+        }
+        return aiHintTextObject;
     }
 
     render() {
@@ -75,8 +166,7 @@ class EditProductInfoComponent extends Component {
                         <>
                             <Row>
                                 <Row>
-                                    <Text>Test test test test tets test test test</Text>
-                                    {/* {
+                                    {
                                         this.state.popoverTextObject.length === 0 ?
                                             <Text>Based on the current information KABADA AI thinks that everything looks good.</Text>
                                             :
@@ -93,10 +183,10 @@ class EditProductInfoComponent extends Component {
                                                     }
                                                 })}.
                                             </Text>
-                                    } */}
+                                    }
                                 </Row>
                                 <Row style={{ marginTop: '12px' }}>
-                                    {/* {
+                                    {
                                         this.state.popoverTextObject.length === 0 ?
                                             <Button onClick={this.hidePopover}>Cancel</Button>
                                             :
@@ -104,11 +194,7 @@ class EditProductInfoComponent extends Component {
                                                 <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
                                                 <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
                                             </>
-                                    } */}
-                                    
-                                        <Button type="primary" onClick={this.onAIButtonClick}>Add</Button>
-                                        <Button style={{ marginLeft: '10px' }} onClick={this.hidePopover}>Cancel</Button>
-                                    
+                                    }                                    
                                 </Row>
                             </Row>
                         </>
@@ -178,8 +264,11 @@ class EditProductInfoComponent extends Component {
 const mapStateToProps = (state) => {
     return {
         product: state.product,
-        productTypes: state.productTypes
+        productTypes: state.productTypes,
+        productFeaturesLevels: state.productFeaturesLevels,
+        additionalIncomeSources: state.additionalIncomeSources,
+        productFeatures: state.productFeatures
     };
 }
 
-export default connect(mapStateToProps, { setProductTitle, setProductType, setProductDescription })(EditProductInfoComponent);
+export default connect(mapStateToProps, { setProductTitle, setProductType, setProductDescription, setValuePropositionAIPredict })(EditProductInfoComponent);

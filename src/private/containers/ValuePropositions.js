@@ -73,6 +73,11 @@ class ValuePropositions extends React.Component {
     deleteItem = (item) => {
         console.log(item);
         this.props.deleteProduct(item.id);
+        const postObj = {
+            "location": '',
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getValuePropositionAIPredict(postObj);
     }
 
     onEditItem = (item) => {

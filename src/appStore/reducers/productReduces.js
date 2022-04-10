@@ -120,6 +120,16 @@ const getSliderValue = (objArray, productFeatures) => {
     return index;
 }
 
+const compareArray = (arrayAI, arrayState) => {
+    const newArray = []
+    for (var i in arrayAI) {
+        if (arrayState.indexOf(arrayAI[i]) === -1) {
+            newArray.push(arrayAI[i]);
+        }
+    }
+    return newArray;
+}
+
 export const productsReducer = (
     state = {
         is_proposition_completed: false,
@@ -310,32 +320,51 @@ export const productReducer = (
                 "aiPredict": action.payload,
             }
         case "SET_PRODUCT_AI_PREDICT":
-            const ai_obj = action.payload.predict.find(e => e.id === null);
-            const income_sources_array = [];
-            const product_features_array = [];
+            const ai_obj = action.payload.predict.find(e => e.id === action.payload.productId);
+            const income_sources_array = [...state.selected_additional_income_sources];
+            const product_features_array = [...state.product_features];
             const aiHintTextObject = []
             const {product_type, price_level} = action.payload.userData;
             const type_obj = product_type.type_id === ai_obj.productType ? {"type_id": ai_obj.productType, "tag": 0} : {"type_id": ai_obj.productType, "tag": 1}
-            
+            console.log(type_obj);
             const price_obj = price_level.price_id === ai_obj.priceLevel ? {"price_id": ai_obj.priceLevel, "tag": 0} : {"price_id": ai_obj.priceLevel, "tag": 1}
-        
-            for (let i in ai_obj.incomeSources) {
+            console.log(price_obj);
+            const selected_income_sources = state.selected_additional_income_sources.map(e => e.id);
+            // console.log(selected_income_sources);
+            // console.log(ai_obj.incomeSources);
+            // for (let i in ai_obj.incomeSources) {
+            //     const obj = {
+            //         "id": ai_obj.incomeSources[i],
+            //         "tag": 1
+            //     }
+            //     income_sources_array.push(obj);
+            // }
+            // console.log(income_sources_array);
+            const comparedIncomeSource = compareArray(ai_obj.incomeSources, selected_income_sources);
+            for (let i in comparedIncomeSource) {
                 const obj = {
-                    "id": ai_obj.incomeSources[i],
+                    "id": comparedIncomeSource[i],
                     "tag": 1
                 }
                 income_sources_array.push(obj);
             }
-            for (let i in ai_obj.productFeatures) {
+            const selected_product_features = state.product_features.map(e => e.id);
+            console.log('selected elements ',selected_product_features);
+            console.log('ai elements ', ai_obj.productFeatures)
+            const comparedProductFeatures = compareArray(ai_obj.productFeatures, selected_product_features);
+            for (let i in comparedProductFeatures) {
                 const obj = {
-                    "id": ai_obj.productFeatures[i],
+                    "id": comparedProductFeatures[i],
                     "tag": 1
                 }
                 product_features_array.push(obj);
             }
-            const innovative_LevelIndex = getSliderValue(innovative, ai_obj.productFeatures);
-            const quality_LevelIndex = getSliderValue(quality, ai_obj.productFeatures);
-            const differentiation_LevelIndex = getSliderValue(differentiation, ai_obj.productFeatures);
+            console.log(product_features_array);
+            const mergedProductFeaturesArray = [...new Set([...ai_obj.productFeatures, ...selected_product_features])];
+            console.log(mergedProductFeaturesArray)
+            const innovative_LevelIndex = getSliderValue(innovative, mergedProductFeaturesArray);
+            const quality_LevelIndex = getSliderValue(quality, mergedProductFeaturesArray);
+            const differentiation_LevelIndex = getSliderValue(differentiation, mergedProductFeaturesArray);
             return {
                 ...state,
                 "product_type": type_obj,

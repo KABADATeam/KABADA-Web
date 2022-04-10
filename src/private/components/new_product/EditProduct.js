@@ -72,9 +72,19 @@ class EditProduct extends React.Component {
 
     saveChanges = () => {
         if (this.props.product.title !== '') {
+            console.log(this.props.product)
+            const product_type = this.props.product.product_type.type_id;
+            const price_level = this.props.product.price_level.price_id;
+            const income_sources = this.props.product.selected_additional_income_sources.map(e => e.id);
+            const product_features = this.props.product.product_features.map(e => e.id);
             const postObj = {
-                ...this.props.product,
                 "id": this.props.productId,
+                "title": this.props.product.title,
+                "product_type": product_type,
+                "description": this.props.product.description,
+                "price_level": price_level,
+                "selected_additional_income_sources": income_sources,
+                "product_features": product_features,
                 "innovative_level": this.props.productFeatures.innovative[0].id,
                 "quality_level": this.props.productFeatures.quality[0].id,
                 "differentiation_level": this.props.productFeatures.differentiation[0].id,
@@ -95,8 +105,8 @@ class EditProduct extends React.Component {
         if (a == null || b == null) return false;
         if (a.length !== b.length) return false;
 
-        a = a.sort();
-        b = b.sort();
+        // a = a.sort();
+        // b = b.sort();
         for (var i = 0; i < a.length; ++i) {
             if (a[i] !== b[i]) return false;
         }
@@ -104,8 +114,6 @@ class EditProduct extends React.Component {
     }
 
     getUpdatesWindowState() {
-        //const original = this.state.originalProduct;
-        console.log(this.state.originalProduct);
         if (this.state.originalProduct === null) {
 
         } else {
@@ -230,12 +238,11 @@ class EditProduct extends React.Component {
 
     componentDidMount() {
         this.props.getProduct(this.props.productId, (data) => {
-            console.log(data)
             this.setState({
                 originalProduct: JSON.parse(JSON.stringify(data))
             });
         });
-
+        
         if (this.props.productTypes.length === 0) {
             this.props.getProductTypes();
             this.props.getProductPriceLevels();
@@ -291,7 +298,7 @@ class EditProduct extends React.Component {
                     <Col span={11} offset={4}>
                         <Row style={{ marginBottom: "20px" }}>
                             <Col span={23} >
-                                <EditProductInfoComponent />
+                                <EditProductInfoComponent productId={this.props.productId} />
                             </Col>
                         </Row>
                         <Row style={{ marginBottom: "20px" }}>

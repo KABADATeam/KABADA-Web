@@ -30,7 +30,6 @@ class ProductInfoComponent extends Component {
     }
 
     handlePopoverVisibilityChange = (visible) => {
-        this.generateAIHelpText();
         this.setState({
             popoverVisibility: visible,
             popoverTextObject: this.generateAIHelpText()
@@ -60,11 +59,8 @@ class ProductInfoComponent extends Component {
     onAIButtonClick = () => {
         const ai_type_id = this.props.product.aiPredict.find(e => e.id === null).productType;
         const ai_price_id = this.props.product.aiPredict.find(e => e.id === null).priceLevel;
-        console.log(this.props.product)
-        console.log(ai_type_id);
-        console.log(ai_price_id)
 
-        this.props.setValuePropositionAIPredict();
+        this.props.setValuePropositionAIPredict(null);
         this.props.getType(ai_type_id);
         this.props.getPrice(ai_price_id);
         this.hidePopover();
@@ -123,14 +119,11 @@ class ProductInfoComponent extends Component {
                     type_title: 'Additional income sources',
                     text: incomeSourcesHintText
                 }
-                console.log(new_obj);
                 aiHintTextObject.push(new_obj)
             };
-            console.log(this.props.productFeatures);
             let productFeaturesHintText = '';
             const selected_product_features = product_features.map(e => e.id);
             const comparedProductFeatures = this.compareArray(ai_obj.productFeatures, selected_product_features);
-            console.log(comparedProductFeatures);
             if (comparedProductFeatures.length > 1) {
                 for (let i = 0; i < comparedProductFeatures.length; i++) {
                     const features_name = this.props.productFeatures.find(e => e.id === comparedProductFeatures[i]).title;
@@ -148,7 +141,6 @@ class ProductInfoComponent extends Component {
                     type_title: 'Product features',
                     text: productFeaturesHintText
                 }
-                console.log(new_obj);
                 aiHintTextObject.push(new_obj)
             };
 
