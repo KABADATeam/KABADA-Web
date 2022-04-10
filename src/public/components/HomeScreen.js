@@ -82,7 +82,7 @@ class HomeScreen extends React.Component {
                 imgPath: 'SETSlogo.png'
             }, {
                 id: 6,
-                imgPath: 'IPS_logo.jpg'
+                imgPath: 'IPS_logo.png'
             }, {
                 id: 7,
                 imgPath: 'ArtSmart_Logo_eng.png'
@@ -300,9 +300,9 @@ class HomeScreen extends React.Component {
                                 <List.Item>
                                     <Card
                                         style={{
-                                            height: '97px', borderRadius: '8px', backgroundColor: '#FFFFFF'
+                                            height: '97px', borderRadius: '8px', backgroundColor: '#FFFFFF', overflow: 'hidden'
                                         }}
-                                        cover={<img alt="" src={item.imgPath} style={{ width: ' 15.309446254071661vw', height: '80px', marginTop: '10px', marginLeft: '10px' }} />}
+                                        cover={<img alt="" src={item.imgPath} style={{ height: '80px', marginTop: '10px', marginLeft: '10px' }} />}
                                     >
                                     </Card>
                                 </List.Item>
