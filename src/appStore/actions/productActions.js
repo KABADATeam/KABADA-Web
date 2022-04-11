@@ -202,7 +202,6 @@ export const setProductTitle = (title) => {
 
 export const setProductType = (id) => {
     return async (dispatch, getState) => {
-        console.log(id)
         dispatch({ type: "SETTING_PRODUCT_TYPE_SUCCESS", payload: id });
     }
 }
@@ -215,7 +214,6 @@ export const setProductDescription = (description) => {
 
 export const setProductPriceLevel = (id) => {
     return async (dispatch, getState) => {
-        console.log('level action ', id)
         dispatch({ type: "SETTING_PRODUCT_PRICE_LEVEL_SUCCESS", payload: id });
     }
 }

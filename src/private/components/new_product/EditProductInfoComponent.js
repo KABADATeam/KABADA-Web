@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Card, Typography, Form, Input, Select, Popover, Button, Row, Col } from 'antd'
 import { cardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
 import { setProductTitle, setProductType, setProductDescription, setValuePropositionAIPredict } from "../../../appStore/actions/productActions";
+import '../../../css/publicBusinessPlans.css';
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -245,6 +246,7 @@ class EditProductInfoComponent extends Component {
                                 <Select 
                                     style={{ width: '100%' }} 
                                     placeholder="Select product type" 
+                                    className={this.props.product.product_type.tag === 1 ? "aicolor .ant-select-selector" : "simplecolor .ant-select-selector" } 
                                     value={this.props.product.product_type.type_id} 
                                     onChange={this.onSelectionChange.bind(this)} 
                                     options={typeOptions}

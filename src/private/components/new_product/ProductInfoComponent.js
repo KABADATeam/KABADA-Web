@@ -287,6 +287,7 @@ class ProductInfoComponent extends Component {
                                     <Select
                                         style={{ width: '100%' }}
                                         placeholder="Select product type"
+                                        className={this.props.product.product_type.tag === 1 ? "aicolor .ant-select-selector" : "simplecolor .ant-select-selector" }
                                         onChange={this.onSelectionChange.bind(this)}
                                         value={typeValue}
                                         options={typeOptions}

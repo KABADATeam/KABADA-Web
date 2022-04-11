@@ -341,9 +341,7 @@ export const productReducer = (
             const aiHintTextObject = []
             const {product_type, price_level} = action.payload.userData;
             const type_obj = product_type.type_id === ai_obj.productType ? {"type_id": ai_obj.productType, "tag": 0} : {"type_id": ai_obj.productType, "tag": 1}
-            console.log(type_obj);
             const price_obj = price_level.price_id === ai_obj.priceLevel ? {"price_id": ai_obj.priceLevel, "tag": 0} : {"price_id": ai_obj.priceLevel, "tag": 1}
-            console.log(price_obj);
             const selected_income_sources = state.selected_additional_income_sources.map(e => e.id);
             const comparedIncomeSource = compareArray(ai_obj.incomeSources, selected_income_sources);
             for (let i in comparedIncomeSource) {

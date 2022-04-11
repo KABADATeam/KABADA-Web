@@ -4,6 +4,7 @@ import { Typography, Space, Card, Divider, Select, Checkbox, Col, Row, Form } fr
 import { cardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
 import { setProductPriceLevel, setIncomeSources } from "../../../appStore/actions/productActions";
 import TooltipComponent from "../Tooltip";
+import '../../../css/publicBusinessPlans.css';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -62,6 +63,16 @@ class PriceLevelComponent extends Component {
         }
         
     }
+    getClassName = (obj) => {
+        console.log(obj)
+        if(obj.tag === 0) {
+            const className = "simplecolor .ant-select-selector"
+            return className
+        } else {
+            const className = "aicolor .ant-select-selector"
+            return className
+        }
+    }
     render() {
         const priceOptions = this.props.priceLevels.map((obj) =>
             ({ label: obj.title, value: obj.id })
@@ -84,7 +95,8 @@ class PriceLevelComponent extends Component {
                                     key="price"
                                 >
                                     <Select 
-                                        style={{ width: '100%', marginTop: '20px' }} 
+                                        style={{ width: '100%', marginTop: '20px' }}
+                                        className={this.props.product.price_level.tag === 1 ? "aicolor .ant-select-selector" : "simplecolor .ant-select-selector" }                                         
                                         placeholder="Select price level" 
                                         onChange={this.onSelectionChange.bind(this)}
                                         value={priceLevelValue}

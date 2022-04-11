@@ -1,30 +1,32 @@
-.filterSelect{
+.filterSelect {
     width: 100%;
 }
 
-.ant-select-selection-placeholder{
-    line-height: 35px!important;
+.ant-select-selection-placeholder {
+    line-height: 35px !important;
 }
 
-.ant-select{  
-width: 100%;
+.ant-select {
+    width: 100%;
 }
 
-.ant-table-thead th{
+.ant-table-thead th {
     border-top: 1px solid #f0f0f0;
-    background-color: #FFFFFF!important;
+    background-color: #FFFFFF !important;
 
 }
-.ant-select-selector{
-    height: 40px!important;
-    border-radius: 4px!important;
-    border: 1px solid #BFBFBF!important;
+
+.ant-select-selector {
+    height: 40px !important;
+    border-radius: 4px !important;
+    border: 1px solid #BFBFBF !important;
     text-align: left;
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
     line-height: 22px;
 }
+
 /* .ant-input {
     width: 100%;
     padding: 4px 11px;
@@ -39,27 +41,29 @@ width: 100%;
 } */
 
 
-::placeholder{
-    color: #8C8C8C!important;
+::placeholder {
+    color: #8C8C8C !important;
 }
 
-.ant-select-selection-placeholder{
-    color: #8C8C8C!important;
+.ant-select-selection-placeholder {
+    color: #8C8C8C !important;
 }
+
 .ant-select-selection-overflow {
     position: relative;
     display: flex;
     margin-left: 7px;
 }
-.ant-select-selection-item{
-    padding-top: 4px!important;
+
+.ant-select-selection-item {
+    padding-top: 4px !important;
     font-size: 14px;
     font-weight: 400px;
     line-height: 22px;
     font-style: normal;
 }
 
-.ant-dropdown-link{
+.ant-dropdown-link {
     font-style: normal;
     font-weight: 600;
     border-style: none;
@@ -69,22 +73,25 @@ width: 100%;
     color: #262626;
 }
 
-.ant-select-single .ant-select-selector {
-    display: flex;
-    background-color: '#BAE7FF';
+.aicolor .ant-select-selector {
+    background-color: #BAE7FF !important;
+}
+
+.simplecolor .ant-select-selector {
+    background-color: white !important;
 }
 
 .ant-table-pagination.ant-pagination {
-    margin: 16px 8px!important;
+    margin: 16px 8px !important;
     background: #FFFFFF;
 }
 
 .ant-pagination-item-link {
-    border-radius: 4px!important;
+    border-radius: 4px !important;
 }
 
 .ant-pagination-item {
-    border-radius: 4px!important;
+    border-radius: 4px !important;
 }
 
 
@@ -92,19 +99,21 @@ width: 100%;
     min-height: 280px;
     padding: 24px;
     background: #fff;
-  }
-  #components-layout-demo-top .logo {
+}
+
+#components-layout-demo-top .logo {
     float: left;
     width: 120px;
     height: 31px;
     margin: 16px 24px 16px 0;
     background: rgba(255, 255, 255, 0.3);
-  }
-  .ant-row-rtl #components-layout-demo-top .logo {
+}
+
+.ant-row-rtl #components-layout-demo-top .logo {
     float: right;
     margin: 16px 0 16px 24px;
-  }
+}
 
-  body {
-      background-color: #F5F5F5!important;
-  }
+body {
+    background-color: #F5F5F5 !important;
+}

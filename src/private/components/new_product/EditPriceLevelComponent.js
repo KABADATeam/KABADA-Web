@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Typography, Space, Card, Divider, Select, Checkbox } from 'antd';
 import { cardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
 import { setProductPriceLevel, setIncomeSources, getProduct, getProductPriceLevels, getAditionalIncomeSources } from "../../../appStore/actions/productActions";
+import '../../../css/publicBusinessPlans.css';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -89,7 +90,8 @@ class EditPriceLevelComponent extends Component {
                     <Text style={infoTextStyle}>Price Level</Text>
                     <Select 
                         style={{ width: '100%', marginTop: '20px' }} 
-                        value={priceLevelValue} 
+                        value={priceLevelValue}
+                        className={this.props.product.price_level.tag === 1 ? "aicolor .ant-select-selector" : "simplecolor .ant-select-selector" } 
                         placeholder="Select price level" 
                         onChange={this.onSelectionChange.bind(this)}
                         options={priceOptions}
