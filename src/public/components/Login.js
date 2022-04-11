@@ -11,9 +11,12 @@ import '../../css/customButtons.css';
 import KabadaIcon from './KabadaIcon';
 import { cardStyle, buttonStyle, textColor, inputStyle, linkStyle, bottomDisclaimerStyle } from '../../styles/customStyles';
 import { tailLayout } from '../../styles/customLayouts';
+import PoliciesComponent from "./PoliciesComponent";
 
 const { Title, Text } = Typography;
-
+const policiesLinkTextStyle = {
+	color: '#1890ff',
+};
 class Login extends React.Component {
 	constructor(props) {
 		super(props);
@@ -23,10 +26,20 @@ class Login extends React.Component {
 			data: "",
 			picture: "",
 			googleSignup: "",
-			submited: false
+			submited: false,
+			policy: false
 		};
 	}
-
+	showPolicy = () => {
+		this.setState({
+			policiesVisible: true,
+		});
+	};
+	hidePolicy = () => {
+		this.setState({
+			policiesVisible: false,
+		});
+	};
 	responseGoogle = (response) => {
 		const email = response.profileObj.email;
 		this.setState({ googleSignup: response });
@@ -49,6 +62,7 @@ class Login extends React.Component {
 	render() {
 		console.log(this.props)
 		return (
+			<>
 			<Card style={cardStyle} bodyStyle={{ padding: "0" }}>
 				<Row>
 					<Space direction="vertical" size={40}>
@@ -153,10 +167,18 @@ class Login extends React.Component {
 				</Form>
 				<Space direction="horizontal" style={bottomDisclaimerStyle}>
 					<Text style={bottomDisclaimerStyle}>
-						By continuing, you agree with Terms of service and Privacy Policy.
+						By continuing, you agree with 
+						<Text onClick={this.showPolicy} style={{ ...policiesLinkTextStyle }}> Terms of service and Privacy Policy</Text>.
 					</Text>
 				</Space>
 			</Card >
+			{this.state.policiesVisible === true ? (
+          		<PoliciesComponent
+            		visible={this.state.policiesVisible}
+            		onClose={this.hidePolicy}
+          		/>
+        	) : null}
+			</>
 		);
 	}
 }
