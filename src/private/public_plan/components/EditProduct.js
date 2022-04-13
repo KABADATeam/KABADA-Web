@@ -162,8 +162,23 @@ class EditProduct extends React.Component {
     }
 
     getPriceSliderDefaultValue() {
-        const index = this.props.productFeatures.priceLevels.findIndex(x => x.id === this.props.product.price_level);
+        const index = this.props.productFeatures.priceLevels.findIndex(x => x.id === this.props.product.price_level.price_id);
         const k = 100 / (this.props.productFeatures.priceLevels.length - 1);
+        return index * k;
+    }
+    getInnovativeSliderDefaultValue() {
+        const index = this.props.product.innovative_level_index;
+        const k = 100 / (this.props.productFeatures.innovative.length - 1);
+        return index * k;
+    }
+    getQualitySliderDefaultValue() {
+        const index = this.props.product.quality_level_index;
+        const k = 100 / (this.props.productFeatures.quality.length - 1);
+        return index * k;
+    }
+    getDifferentiationSliderDefaultValue() {
+        const index = this.props.product.differentiation_level_index;
+        const k = 100 / (this.props.productFeatures.differentiation.length - 1);
         return index * k;
     }
 
@@ -248,11 +263,11 @@ class EditProduct extends React.Component {
                             <Text style={categoryTextStyle}>Price</Text>
                             <Slider marks={priceMarks} disabled={true} included={true} step={null} value={this.getPriceSliderDefaultValue()}></Slider>
                             <Text style={categoryTextStyle}>Innovative</Text>
-                            <Slider marks={innovativeMarks} disabled={true} included={true} step={null} defaultValue={0}></Slider>
+                            <Slider marks={innovativeMarks} disabled={true} included={true} step={null} value={this.getInnovativeSliderDefaultValue()}></Slider>
                             <Text style={categoryTextStyle}>Quality</Text>
-                            <Slider marks={qualityMarks} disabled={true} included={true} step={null} defaultValue={0}></Slider>
+                            <Slider marks={qualityMarks} disabled={true} included={true} step={null} value={this.getQualitySliderDefaultValue()}></Slider>
                             <Text style={categoryTextStyle}>Differentiation</Text>
-                            <Slider marks={differentiationMarks} included={true} step={null} disabled={true} defaultValue={0}></Slider>
+                            <Slider marks={differentiationMarks} included={true} step={null} disabled={true} value={this.getDifferentiationSliderDefaultValue()}></Slider>
                         </Card>
                     </Col>
                 </Row>

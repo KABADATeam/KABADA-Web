@@ -20,38 +20,32 @@ const descriptionTextStyle = {
     color: '#8C8C8C',
 }
 class EditPriceLevelComponent extends Component {
-
-    onSelectionChange(id) {
-        this.props.setProductPriceLevel(id);
-    }
-
-    onIncomeSourcesChanged = (values) => {
-        this.props.setIncomeSources(values);
-    }
-
     render() {
-        const options = this.props.priceLevels.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+        const priceOptions = this.props.priceLevels.map((obj) =>
+            ({ label: obj.title, value: obj.id })
         );
-        const checkBoxes = this.props.incomeSources.map((obj) =>
-            <Checkbox value={obj.id} key={obj.key}>{obj.title}</Checkbox>
-        );
-
+        const priceLevelValue = this.props.product.price_level.price_id
+        const incomeSourcesValues = this.props.product.selected_additional_income_sources.map(e => e.id);
         return (
             <>
                 <Card style={{ ...cardStyle, padding: 20 }} bodyStyle={{ ...tableCardBodyStyle, padding: 0 }}>
                     <Text style={infoTextStyle}>Price Level</Text>
-                    <Select style={{ width: '100%', marginTop: '20px' }} value={this.props.product.price_level} placeholder="Select price level" onChange={this.onSelectionChange.bind(this)} disabled={true}>
-                        {options}
-                    </Select>
+                    <Select 
+                        style={{ width: '100%', marginTop: '20px' }} 
+                        value={priceLevelValue}
+                        disabled
+                        options={priceOptions}
+                    />
 
                     <Divider />
-                    <Space direction="vertical" disabled = {true}>
+                    <Space direction="vertical">
                         <Text style={infoTextStyle}>Additional income sources</Text>
                         <Text style={descriptionTextStyle}>Select up to 5 sources</Text>
-                        <Checkbox.Group onChange={this.onIncomeSourcesChanged} value={this.props.product.selected_additional_income_sources} disabled={true}>
+                        <Checkbox.Group onChange={this.onChange} value={incomeSourcesValues}>
                             <Space direction="vertical">
-                                {checkBoxes}
+                                {this.props.incomeSources.map((obj) => (
+                                    <Checkbox value={obj.id} key={obj.key} disabled>{obj.title}</Checkbox>
+                                ))}
                             </Space>
                         </Checkbox.Group>
                     </Space>

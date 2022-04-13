@@ -128,7 +128,6 @@ class PublicOverview extends React.Component {
 
     render() {
         const overview = this.props.businessPlan.overview;
-        console.log(this.props.businessPlan.activityID);
         if (this.props.loading === true || this.props.businessPlan.overview === undefined) {
             return (<div></div>)
         } else {
