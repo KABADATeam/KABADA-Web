@@ -54,7 +54,8 @@ class EditProductInfoComponent extends Component {
         this.props.setProductDescription(e.target.value);
     }
     onAIButtonClick = () => {
-        this.props.setValuePropositionAIPredict(this.props.productId);
+        const product_id = localStorage.getItem('product-id');
+        this.props.setValuePropositionAIPredict(product_id);
         this.hidePopover();
     }
     compareArray = (arrayAI, arrayState) => {
@@ -71,8 +72,11 @@ class EditProductInfoComponent extends Component {
         const aiHintTextObject = [];
         const { product_type, price_level, selected_additional_income_sources, product_features, aiPredict } = this.props.product;
         const { priceLevels } = this.props.productFeaturesLevels;
-        const ai_obj = aiPredict.find(e => e.id === this.props.productId);
-        //console.log(ai_obj);
+        const product_id = localStorage.getItem('product-id');
+        console.log('product id ',product_id);
+        console.log(aiPredict)
+        const ai_obj = aiPredict.find(e => e.id === product_id);
+        console.log(ai_obj);
         if (ai_obj !== undefined) {            
             if (product_type.type_id !== ai_obj.productType) {
                 const type_name = this.props.productTypes.find(e => e.id === ai_obj.productType).title;

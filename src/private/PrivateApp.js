@@ -11,6 +11,7 @@ import KeyPartners from './containers/KeyPartners';
 import Overview from './containers/Overview';
 import ValuePropositions from './containers/ValuePropositions';
 import NewProduct from './components/new_product/NewProduct';
+import EditProduct from './components/new_product/EditProduct';
 import RevenueStreams from './containers/RevenueStreams';
 import CostStructure from './containers/CostStructure';
 import Channels from './containers/Channels';
@@ -65,6 +66,7 @@ class PrivateApp extends React.Component {
                     <Route exact path="/key-partners" render={(props) => <MainWindow {...props}> <KeyPartners {...props} /> </MainWindow>} />
                     <Route exact path="/overview" render={(props) => <MainWindow {...props}> <Overview {...props} /> <FullPageLoader /> </MainWindow>} />
                     <Route exact path="/value-propositions" render={(props) => <MainWindow {...props}> <ValuePropositions {...props} /> </MainWindow>} />
+                    <Route exact path="/value-propositions/:productId" render={(props) => <MainWindow {...props}><EditProduct {...props}/> </MainWindow>} />
                     <Route exact path="/new-product" render={(props) => <MainWindow {...props}> <NewProduct {...props} /> </MainWindow>} />
                     <Route exact path="/revenue-streams" render={(props) => <MainWindow {...props}> <RevenueStreams {...props} /> </MainWindow>} />
                     <Route exact path="/cost-structure" render={(props) => <MainWindow {...props}> <CostStructure {...props} /> </MainWindow>} />
