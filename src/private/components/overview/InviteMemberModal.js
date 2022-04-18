@@ -55,29 +55,46 @@ class InviteMemberModal extends Component {
 
 
     onEmailChange = (e) => {
-        const emailInMemberList = this.props.businessPlan.members.find((x) => x.email === e.target.value) === undefined ? false : true;
-        if (e.target.value !== this.props.user.email) {
-            this.setState({
-                invitationEmail: e.target.value,
-                validateStatus: 'success',
-                errorMsg: null
-            });
-        }
-        if (e.target.value === this.props.user.email) {
-            this.setState({
-                invitationEmail: e.target.value,
-                validateStatus: 'error',
-                errorMsg: 'Can not share business plan with yourseft'
-            })
-        }
-        if (emailInMemberList === true) {
-            this.setState({
-                invitationEmail: e.target.value,
-                validateStatus: 'error',
-                errorMsg: 'The invited member is already on the list'
-            })
-        }
-
+        console.log(this.props.businessPlan.members);
+        if (this.props.businessPlan.members === null) {
+            if (e.target.value !== this.props.user.email) {
+                this.setState({
+                    invitationEmail: e.target.value,
+                    validateStatus: 'success',
+                    errorMsg: null
+                });
+            }
+            if (e.target.value === this.props.user.email) {
+                this.setState({
+                    invitationEmail: e.target.value,
+                    validateStatus: 'error',
+                    errorMsg: 'Can not share business plan with yourseft'
+                })
+            }
+        } else {
+            const emailInMemberList = this.props.businessPlan.members.find((x) => x.email === e.target.value) === undefined ? false : true;
+            if (e.target.value !== this.props.user.email) {
+                this.setState({
+                    invitationEmail: e.target.value,
+                    validateStatus: 'success',
+                    errorMsg: null
+                });
+            }
+            if (e.target.value === this.props.user.email) {
+                this.setState({
+                    invitationEmail: e.target.value,
+                    validateStatus: 'error',
+                    errorMsg: 'Can not share business plan with yourseft'
+                })
+            }
+            if (emailInMemberList === true) {
+                this.setState({
+                    invitationEmail: e.target.value,
+                    validateStatus: 'error',
+                    errorMsg: 'The invited member is already on the list'
+                })
+            }
+        }      
     }
 
     onBack = () => {
