@@ -235,15 +235,11 @@ export const downloadDOCFile = (planId, planName) => {
         dispatch({ type: "LOADING", payload: true });
         dispatch({ type: "DOWNLOAD_LOADING", payload: true})
         try {
-            console.log('OK ', planId);
             const token = getState().user.access_token;
             const response = await kabadaAPI.get("api/plans/doc/" + planId, { headers: { Authorization: `Bearer ${token}` }, responseType: 'blob' });
-            console.log(response);
             dispatch({ type: "DOWNLOAD_LOADING", payload: false})
             const url = window.URL.createObjectURL(new Blob([response.data]));
-            console.log(url);
             const link = document.createElement('a');
-            console.log(link);
             link.href = url;
             link.setAttribute('download', 'Kabada_export_'+planName+'.docx');
             document.body.appendChild(link);
@@ -283,15 +279,12 @@ export const downloadCashFlow = (planId, planName) => {
         dispatch({ type: "LOADING", payload: true });
         dispatch({ type: "DOWNLOAD_LOADING", payload: true})
         try {
-            console.log('OK ', planId);
             const token = getState().user.access_token;
             const response = await kabadaAPI.get("api/plans/xlsx/" + planId, { headers: { Authorization: `Bearer ${token}` }, responseType: 'blob' });
             console.log(response);
             dispatch({ type: "DOWNLOAD_LOADING", payload: false})
             const url = window.URL.createObjectURL(new Blob([response.data]));
-            console.log(url);
             const link = document.createElement('a');
-            console.log(link);
             link.href = url;
             link.setAttribute('download', 'Kabada_export_Cashflow_'+planName+'.xlsx');
             document.body.appendChild(link);

@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import { getAllPublicPlans } from "../../appStore/actions/planActions";
 import { iconColor, pageHeaderStyle, filterStyle } from '../../styles/customStyles';
 import '../../css/publicBusinessPlans.css';
-import { getSelectedPlan, getSelectedPlanDetails, getSelectedPlanOverview, getPlansOverview } from "../../appStore/actions/planActions";
+import { Link } from 'react-router-dom';
+import { getSelectedPlan, getSelectedPlanDetails, getSelectedPlanOverview, getPlansOverview, downloadPDFFile } from "../../appStore/actions/planActions";
 import { logout } from "../../appStore/actions/authenticationActions";
 import Cookies from "js-cookie";
 
@@ -22,7 +23,8 @@ class PublicBusinessPlans extends React.Component {
         super(props);
         this.state = {
             planData: this.props.publicPlans,
-            sorting: false
+            sorting: false,
+            selectedPlan: null
         };
     }
 
@@ -76,10 +78,16 @@ class PublicBusinessPlans extends React.Component {
         });
     };
 
-    onPublicPlanClick = (plan) => {
-        this.props.getSelectedPlan(plan)
-        localStorage.setItem("public_plan", plan.id);
+    onPublicPlanClick = () => {
+        this.props.getSelectedPlan(this.state.selectedPlan)
+        localStorage.setItem("public_plan", this.state.selectedPlan.id);
         this.props.history.push(`/public/overview`);
+    }
+
+    downloadDOCFile = () => {
+        console.log(this.state.selectedPlan);
+        console.log('downloadDoc')
+        this.props.downloadPDFFile(this.state.selectedPlan.id, this.state.selectedPlan.name);
     }
 
     componentDidMount(){
@@ -98,16 +106,17 @@ class PublicBusinessPlans extends React.Component {
     }
 
     render() {
-        const menu = (
+        const menu = () => (
             <Menu>
-                <Menu.Item key="1">
-                    1st action
+                <Menu.Item key="1" onClick={this.onPublicPlanClick}>
+                    Open 
                 </Menu.Item>
-                <Menu.Item key="2">
-                    2nd action
+                <Menu.Item key="2" onClick={this.downloadDOCFile}>
+                    Download PDF 
                 </Menu.Item>
             </Menu>
         );
+        console.log(this.state.selectedPlan);
         const columns = [
             {
                 title: 'Name',
@@ -149,7 +158,8 @@ class PublicBusinessPlans extends React.Component {
                 key: 'owner',
                 sorter: (a, b) => a.owner.localeCompare(b.owner),
                 sortDirections: ['descend', 'ascend'],
-                render: (text, record) => (
+                 render: (text, record) =>  
+                (
                     <Space size="small">
                         <Avatar size={22} icon={<UserOutlined />} src={record.ownerAvatar ? "data:image/png;base64," + record.ownerAvatar : ""} />
                         <Text>
@@ -163,7 +173,7 @@ class PublicBusinessPlans extends React.Component {
                 key: 'action',
                 render: () => (
                     <Dropdown overlay={menu}>
-                        <a href="/#" className="ant-dropdown-link">
+                        <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
                             Actions <CaretDownFilled />
                         </a>
                     </Dropdown>
@@ -247,7 +257,7 @@ class PublicBusinessPlans extends React.Component {
                                 <Table
                                     onRow={(record, rowIndex) => {
                                         return {
-                                            onClick: () => { this.onPublicPlanClick(record) }
+                                            onMouseEnter: () => { this.setState({ selectedPlan: record}) }
                                         };
                                     }} style={{ width: '100%' }} size="default"
                                     columns={columns} pagination={{
@@ -274,4 +284,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getAllPublicPlans, getSelectedPlan, getSelectedPlanDetails, getSelectedPlanOverview, getPlansOverview,logout })(PublicBusinessPlans);
+export default connect(mapStateToProps, { getAllPublicPlans, getSelectedPlan, getSelectedPlanDetails, getSelectedPlanOverview, getPlansOverview, logout, downloadPDFFile })(PublicBusinessPlans);

@@ -41,6 +41,7 @@ import CashFlow from './containers/CashFlow';
 import Assets from './containers/Assets';
 import PersonalCharacteristics from './containers/PersonalCharacteristics';
 import FullPageLoader from './components/overview/FullPageLoader';
+import PublicPageLoader from './public_plan/components/FullPageLoader';
 import Home from '../public/components/Home';
 
 class PrivateApp extends React.Component {
@@ -58,7 +59,7 @@ class PrivateApp extends React.Component {
 
                 <Switch>
                     <Route exact path="/" render={(props) => <MainWindow {...props}> <Home {...props} /> </MainWindow>} />
-                    <Route exact path="/public-business-plans" render={(props) => <MainWindow {...props}> <PublicBusinessPlans {...props} /> </MainWindow>} />
+                    <Route exact path="/public-business-plans" render={(props) => <MainWindow {...props}> <PublicBusinessPlans {...props} /> <PublicPageLoader /></MainWindow>} />
                     <Route exact path="/personal-business-plans" render={(props) => <MainWindow {...props}><PersonalBusinessPlans {...props} /> </MainWindow>} />
                     <Route exact path="/user-settings" render={(props) => <MainWindow {...props}> <UserSettingsWindow {...props} /> </MainWindow>} />
                     <Route exact path="/swot" render={(props) => <MainWindow {...props}> <SwotWindow {...props} /> </MainWindow>} />
