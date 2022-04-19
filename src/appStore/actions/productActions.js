@@ -7,7 +7,7 @@ const AIPredictDummyData = {
         businessPlan_id: '9c698d0a-f4de-4ddc-dd3b-08d9f790d51b',
         valueProposition: [
             {
-                id: "94c93bbe-9769-488d-a78a-fb6af2850bfc",
+                id: "c9c6f3a3-aa9f-4722-8b6c-2597f4aa0c70",
                 productType: '3f2faea5-f8f6-43b4-80f2-db55874a5c4b',    //Physical
                 priceLevel: '4261a424-6b58-467c-a5da-1844827950b5',     //High-end
                 // income sources: paid plains, different price of business, fees come from another product
@@ -25,7 +25,7 @@ const AIPredictDummyData = {
                 productFeatures: ['adcdc439-8170-4fab-a70d-457c1b98bc92',  '4cb290b2-7fbc-4846-be7b-79f9e3efbb46', 'dfe881a2-cd69-4295-a16a-edfb2c8fc0bf']
             },
             {
-                id: "c9c6f3a3-aa9f-4722-8b6c-2597f4aa0c70",
+                id: "9265a8e8-1c74-4852-99c0-ff943192398b",
                 productType: '3f2faea5-f8f6-43b4-80f2-db55874a5c4b', //Physical
                 priceLevel: '3325759e-8add-4b30-a00c-10ce7fbbd330', //Free
                 // income sources: paid plains, different price of business, fees come from another product
@@ -141,6 +141,7 @@ export const getProduct = (productId, callback) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/products/product/' + productId, { headers: { Authorization: `Bearer ${token}` } });
+            console.log(response.data);
             dispatch({ type: 'FETCHING_PRODUCT_SUCCESS', payload: response.data });
             if (callback !== null) {
                 callback(response.data);
@@ -303,4 +304,8 @@ export const setValuePropositionAIPredict = (productId) => {
 
         }
     }
+}
+
+export function resetProducState() {
+    return {type : "RESET_PRODUCT_STATE", payload: true}
 }

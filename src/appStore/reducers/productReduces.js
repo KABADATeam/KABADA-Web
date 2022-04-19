@@ -207,8 +207,10 @@ export const productReducer = (
         differentiation_level: '',
         innovative_level: '',
         quality_level: '',
+        innovative_level_index: null,
+        quality_level_index: null,
+        differentiation_level_index: null,
         aiPredict: null,
-        aiHintTextObject: []
     }, action) => {
     switch (action.type) {
         case "SETTING_PRODUCT_TITLE_SUCCESS":
@@ -242,9 +244,9 @@ export const productReducer = (
             } else {
                 const deleted_income_item_id = compareArray(income_state_list, action.payload);
                 const index = state.selected_additional_income_sources.findIndex(e => e.id === deleted_income_item_id[0]);
-                incomeSourcesArray = [...state.selected_additional_income_sources.slice(0,index), ...state.selected_additional_income_sources.slice(index+1)];
+                incomeSourcesArray = [...state.selected_additional_income_sources.slice(0, index), ...state.selected_additional_income_sources.slice(index + 1)];
             }
-            return { ...state, "selected_additional_income_sources": incomeSourcesArray};
+            return { ...state, "selected_additional_income_sources": incomeSourcesArray };
         case "SETTING_PRODUCT_FEATURES_SUCCESS":
             let productFeaturesArray = [];
             const features_list_action_length = action.payload.length;
@@ -260,7 +262,7 @@ export const productReducer = (
             } else {
                 const deleted_features_item_id = compareArray(features_list, action.payload);
                 const index = state.product_features.findIndex(e => e.id === deleted_features_item_id[0]);
-                productFeaturesArray = [...state.product_features.slice(0,index), ...state.product_features.slice(index+1)];
+                productFeaturesArray = [...state.product_features.slice(0, index), ...state.product_features.slice(index + 1)];
             };
             const innovativeLevelIndex = getSliderValue(innovative, action.payload);
             const qualityLevelIndex = getSliderValue(quality, action.payload);
@@ -293,7 +295,7 @@ export const productReducer = (
                 income_SourcesArray.push(incomeSourcesObj);
             }
             const product_FeaturesArray = [];
-            for (let i in action.payload.product_features){
+            for (let i in action.payload.product_features) {
                 const productFeaturesObj = {
                     "id": action.payload.product_features[i],
                     "tag": 0
@@ -327,7 +329,11 @@ export const productReducer = (
                 product_features: [],
                 differentiation_level: '',
                 innovative_level: '',
-                quality_level: ''
+                quality_level: '',
+                innovative_level_index: null,
+                quality_level_index: null,
+                differentiation_level_index: null,
+                aiPredict: action.payload === true ? null : state.aiPredict,
             }
         case "GET_PRODUCT_AI_PREDICT":
             return {
@@ -339,9 +345,9 @@ export const productReducer = (
             const income_sources_array = [...state.selected_additional_income_sources];
             const product_features_array = [...state.product_features];
             const aiHintTextObject = []
-            const {product_type, price_level} = action.payload.userData;
-            const type_obj = product_type.type_id === ai_obj.productType ? {"type_id": ai_obj.productType, "tag": 0} : {"type_id": ai_obj.productType, "tag": 1}
-            const price_obj = price_level.price_id === ai_obj.priceLevel ? {"price_id": ai_obj.priceLevel, "tag": 0} : {"price_id": ai_obj.priceLevel, "tag": 1}
+            const { product_type, price_level } = action.payload.userData;
+            const type_obj = product_type.type_id === ai_obj.productType ? { "type_id": ai_obj.productType, "tag": 0 } : { "type_id": ai_obj.productType, "tag": 1 }
+            const price_obj = price_level.price_id === ai_obj.priceLevel ? { "price_id": ai_obj.priceLevel, "tag": 0 } : { "price_id": ai_obj.priceLevel, "tag": 1 }
             const selected_income_sources = state.selected_additional_income_sources.map(e => e.id);
             const comparedIncomeSource = compareArray(ai_obj.incomeSources, selected_income_sources);
             for (let i in comparedIncomeSource) {

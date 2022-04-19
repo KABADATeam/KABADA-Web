@@ -14,3 +14,8 @@
     position: absolute;
     top: calc((100% - 720px)/2);
 }
+
+.public_plans_spinner{
+    position: absolute;
+    top: calc((100% - 40px)/2);
+}

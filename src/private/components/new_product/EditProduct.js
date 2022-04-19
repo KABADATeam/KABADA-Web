@@ -9,7 +9,11 @@ import { cardStyle, tableCardBodyStyle, buttonStyle } from '../../../styles/cust
 import EditProductInfoComponent from './EditProductInfoComponent';
 import EditPriceLevelComponent from './EditPriceLevelComponent';
 import EditProductFeaturesComponent from './EditProductFeaturesComponent';
-import { getProduct, getProductTypes, getProductPriceLevels, getAditionalIncomeSources, getProductFeatures, updateProduct, getInnovativeLevels, getQualityLevels, getDifferentiationLevels, discardChanges } from "../../../appStore/actions/productActions";
+import { refreshPlan } from "../../../appStore/actions/refreshAction";
+import { getProduct, getProducts, getProductTypes, getProductPriceLevels, getAditionalIncomeSources, getProductFeatures, 
+    updateProduct, getInnovativeLevels, getQualityLevels, getDifferentiationLevels, discardChanges, resetProducState,
+    getValuePropositionAIPredict } from "../../../appStore/actions/productActions";
+import Cookies from 'js-cookie';
 
 const { Text } = Typography;
 
@@ -59,7 +63,9 @@ class EditProduct extends React.Component {
     }
 
     onBackClick() {
-        this.props.onBack();
+        //this.props.onBack();
+        this.props.resetProducState();
+        this.props.history.push(`/value-propositions`)
     }
 
     onCompleteChange() {
@@ -134,13 +140,13 @@ class EditProduct extends React.Component {
                 income_Sources_Array.push(incomeSourcesObj);
             }
             const product_Features_Array = [];
-            for (let i in this.state.originalProduct.product_features){
+            for (let i in this.state.originalProduct.product_features) {
                 const productFeaturesObj = {
                     "id": this.state.originalProduct.product_features[i],
                     "tag": 0
                 }
                 product_Features_Array.push(productFeaturesObj)
-            }            
+            }
             const original = {
                 "title": this.state.originalProduct.title,
                 "product_type": type_Obj,
@@ -163,37 +169,37 @@ class EditProduct extends React.Component {
                 "innovative_level": this.props.product.innovative_level,
                 "quality_level": this.props.product.quality_level,
             }
-    
+
             if (original === null) {
                 return 'hidden';
             }
-    
+
             if (original.title !== modified.title) {
                 return 'visible';
             }
-    
+
             if (original.description !== modified.description) {
                 return 'visible';
             }
-    
+
             if (original.product_type.type_id !== modified.product_type.type_id) {
                 return 'visible';
             }
-    
+
             if (original.price_level.price_id !== modified.price_level.price_id) {
                 return 'visible';
             }
-    
+
             if (this.arraysEqual(original.selected_additional_income_sources, modified.selected_additional_income_sources) === false) {
                 return 'visible';
             }
-    
+
             if (this.arraysEqual(original.product_features, modified.product_features) === false) {
                 return 'visible';
             }
             return 'hidden';
         }
-        
+
     }
 
     getSliderMarks(array) {
@@ -237,21 +243,60 @@ class EditProduct extends React.Component {
     }
 
     componentDidMount() {
-        this.props.getProduct(this.props.productId, (data) => {
-            this.setState({
-                originalProduct: JSON.parse(JSON.stringify(data))
-            });
-        });
-        
-        if (this.props.productTypes.length === 0) {
-            this.props.getProductTypes();
-            this.props.getProductPriceLevels();
-            this.props.getAditionalIncomeSources();
-            this.props.getProductFeatures();
-            this.props.getInnovativeLevels();
-            this.props.getQualityLevels();
-            this.props.getDifferentiationLevels();
+        if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
+            if (this.props.businessPlan.id === null) {
+                if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
+                    this.props.history.push(`/`);
+                } else {
+                    this.props.refreshPlan(localStorage.getItem("plan"), () => {
+                        this.props.getProducts(this.props.businessPlan.id);
+                    });
+                    const postObj = {
+                        "location": '',
+                        "planId": this.props.businessPlan.id
+                    };
+                    this.props.getValuePropositionAIPredict(postObj);
+                    const productId = localStorage.getItem('product-id')
+                    this.props.getProduct(productId, (data) => {
+                        this.setState({
+                            originalProduct: JSON.parse(JSON.stringify(data))
+                        });
+                    });
+
+                    if (this.props.productTypes.length === 0) {
+                        this.props.getProductTypes();
+                        this.props.getProductPriceLevels();
+                        this.props.getAditionalIncomeSources();
+                        this.props.getProductFeatures();
+                        this.props.getInnovativeLevels();
+                        this.props.getQualityLevels();
+                        this.props.getDifferentiationLevels();
+                    }
+
+                }
+            } else {
+                const productId = localStorage.getItem('product-id')
+                this.props.getProduct(productId, (data) => {
+                    this.setState({
+                        originalProduct: JSON.parse(JSON.stringify(data))
+                    });
+                });
+
+                if (this.props.productTypes.length === 0) {
+                    this.props.getProductTypes();
+                    this.props.getProductPriceLevels();
+                    this.props.getAditionalIncomeSources();
+                    this.props.getProductFeatures();
+                    this.props.getInnovativeLevels();
+                    this.props.getQualityLevels();
+                    this.props.getDifferentiationLevels();
+                }
+            }
+        } else {
+            this.props.logout()
+            this.props.history.push('/')
         }
+
     }
 
     render() {
@@ -358,6 +403,7 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps,
     {
         getProduct,
+        getProducts,
         getProductTypes,
         getProductPriceLevels,
         getAditionalIncomeSources,
@@ -366,5 +412,8 @@ export default connect(mapStateToProps,
         getInnovativeLevels,
         getQualityLevels,
         getDifferentiationLevels,
-        discardChanges
+        discardChanges, 
+        refreshPlan,
+        getValuePropositionAIPredict, 
+        resetProducState
     })(EditProduct);

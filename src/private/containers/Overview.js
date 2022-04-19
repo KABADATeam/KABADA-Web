@@ -1,14 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar, Dropdown, Menu, message, Popconfirm, Collapse, Tooltip, Steps, Divider, Input } from 'antd';
-import { ArrowLeftOutlined, InfoCircleFilled, PlusSquareOutlined, EllipsisOutlined } from '@ant-design/icons';
+import { Button, Breadcrumb, Row, Col, Typography, Tag, Tabs, Card, List, Space, Select, Avatar, Dropdown, Menu, message, Popconfirm, Collapse, Steps } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { discardChanges, saveChanges } from "../../appStore/actions/swotAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { uploadFile } from '../../appStore/actions/userFileAction';
 import { updatePlanData, updateImage } from '../../appStore/actions/planActions';
-import { updateStatus, getMembers, deleteMember, getSelectedPlanOverview, getSelectedPlanDetails, getImage, removePlan, downloadDOCFile, downloadPDFFile, downloadCashFlow } from "../../appStore/actions/planActions";
+import { updateStatus, getMembers, deleteMember, getSelectedPlanOverview, getSelectedPlanDetails, getImage, removePlan, 
+    downloadDOCFile, downloadPDFFile, downloadCashFlow } from "../../appStore/actions/planActions";
 import { getSurvivalRate } from '../../appStore/actions/eurostat/eurostatSurvivalRateAction';
 import { saveState as saveValuePropositions } from '../../appStore/actions/productActions'
 import { saveState as saveCustomerSegments } from "../../appStore/actions/customerSegmentAction";
@@ -25,8 +26,6 @@ import { saveState as saveFixedAndVariableCompleted } from '../../appStore/actio
 import { saveState as saveBusinessInvestmentsCompleted } from "../../appStore/actions/businessInvestmentAction";
 import { saveState as saveSalesForecastCompleted } from '../../appStore/actions/salesForecastActions';
 import { savePersonalCharacteristics as savePersonalCharacteristicsCompleted, getCompletedPersonalCharacteristics } from '../../appStore/actions/personalCharacteristicsActions';
-
-
 import { withRouter } from 'react-router-dom';
 import InviteMemberModal from '../components/overview/InviteMemberModal';
 import EditBusinessPlanModal from '../components/overview/EditBusinessPlanModal';
@@ -130,7 +129,8 @@ class Overview extends React.Component {
         this.state = {
             showInviteModal: false,
             showEditBusinessPlanModal: false,
-            selectedImage: null
+            selectedImage: null,
+            activeTabKey: 1
         }
         this.fileSelectRef = React.createRef();
         //this.downloadPdf = React.createRef();
@@ -292,6 +292,12 @@ class Overview extends React.Component {
         console.log('ok')
         this.props.downloadCashFlow(this.props.businessPlan.id, this.props.businessPlan.name);
     }
+    getTabKey = (key) => {
+        console.log(key);
+        this.setState({
+            activeTabKey: key
+        })
+    }
     componentDidMount() {
         if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
             if (this.props.businessPlan.id === null) {
@@ -303,7 +309,7 @@ class Overview extends React.Component {
                         this.props.getMembers(this.props.businessPlan.id);
                         this.props.getSelectedPlanDetails(this.props.businessPlan.id);
                         this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-                        
+
                     });
 
                 }
@@ -338,11 +344,26 @@ class Overview extends React.Component {
                 <Menu.Item key="3" onClick={this.downloadCashFlow}>
                     Download Cash Flow
                 </Menu.Item>
-                <Menu.Item key="4" onClick={() => {this.downloadPdf()}}>
-                    Download Industry data 
+            </Menu>
+        )
+        const exportAsWithoutIndustryData = (
+            <Menu>
+                <Menu.Item key="1" onClick={this.downloadDOCFile}>
+                    Download DOC file
+                </Menu.Item>
+                <Menu.Item key="2" onClick={this.downloadPDFFile}>
+                    Download PDF file
+                </Menu.Item>
+                <Menu.Item key="3" onClick={this.downloadCashFlow}>
+                    Download Cash Flow
+                </Menu.Item>
+                <Menu.Item key="4" onClick={() => { this.downloadPdf() }}>
+                    Download Industry data
                 </Menu.Item>
             </Menu>
-        );
+        )
+
+
         const moreActionsMenu = (
             <Menu >
                 <Menu.Item key="1">
@@ -394,7 +415,7 @@ class Overview extends React.Component {
                                                 More Actions <DownOutlined />
                                             </a>
                                         </Dropdown>
-                                        <Dropdown overlay={exportAsMenu}>
+                                        <Dropdown overlay={this.state.activeTabKey === '2' ? exportAsWithoutIndustryData : exportAsMenu }>
                                             <a className="ant-dropdown-link">
                                                 Export As <DownOutlined />
                                             </a>
@@ -405,7 +426,7 @@ class Overview extends React.Component {
                         </Row>
                     </Col>
                     <Col span={20} offset={2}>
-                        <Tabs defaultActiveKey="1">
+                        <Tabs defaultActiveKey="1" onChange={(key) => this.getTabKey(key)}>
                             <TabPane tab="My business plan" key="1">
                                 <Row style={{ marginTop: "40px" }} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
                                     <Col span={18}>
@@ -715,7 +736,7 @@ class Overview extends React.Component {
                                                     avatar={this.props.businessPlan.assets_state === true ? <Avatar src="complete.png" style={financialAvatarStyle} /> : <Avatar src="incomplete.png" style={financialAvatarStyle} />}
                                                     description={
                                                         <div>
-                                                            <Row>                    
+                                                            <Row>
                                                                 <Col span={12}>
                                                                     <div style={{ ...financialTitlePositionStyle }}>
                                                                         <Link to='/assets' style={canvasElementTextStyle}>Assets</Link>
@@ -927,7 +948,7 @@ class Overview extends React.Component {
                                 </Row>
                             </TabPane>
                             <TabPane tab="Industry data" key="2">
-                                <IndustryDataComponent setClick={click => { this.downloadPdf = click}}/>
+                                <IndustryDataComponent setClick={click => { this.downloadPdf = click }} />
                             </TabPane>
                             <TabPane tab="Industry risks" key="3">
                                 <Row style={{ marginBottom: "50px", marginTop: "40px" }}>

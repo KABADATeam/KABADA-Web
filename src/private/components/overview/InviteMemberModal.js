@@ -8,19 +8,19 @@ import { inviteMember, getMembers } from '../../../appStore/actions/planActions'
 const invitationLink = "http://kabada.ba.lv/register?email=";
 
 const validateEmail = (email) => {
-    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     return re.test(String(email).toLowerCase());
 }
 
 class InviteMemberModal extends Component {
     state = {
         invitationEmail: '',
-        isEmailValid: true, 
+        isEmailValid: true,
         validateStatus: 'success',
         errorMsg: null
     }
 
-    
+
 
     onCancel = () => {
         this.props.onClose();
@@ -35,48 +35,66 @@ class InviteMemberModal extends Component {
             });
             return;
         }
-        if (this.state.validateStatus === 'error'){
-            
+        if (this.state.validateStatus === 'error') {
+
         } else {
             const postObj = {
                 "business_plan_id": this.props.businessPlan.id,
                 "email": this.state.invitationEmail
             }
-    
+
             this.setState({
                 invitationEmail: ''
             });
-    
+
             this.props.inviteMember(postObj);
             this.props.onClose();
         }
-        
+
     }
 
+
     onEmailChange = (e) => {
-        const emailInMemberList = this.props.businessPlan.members.find((x) => x.email === e.target.value) === undefined ? false : true;
-        if (e.target.value !== this.props.user.email){
-            this.setState({
-                invitationEmail: e.target.value,
-                validateStatus: 'success',
-                errorMsg: null
-            });
-        }
-        if (e.target.value === this.props.user.email){
-            this.setState({
-                invitationEmail: e.target.value,
-                validateStatus: 'error',
-                errorMsg: 'Can not share business plan with yourseft'
-            })
-        }
-        if (emailInMemberList === true){
-            this.setState({
-                invitationEmail: e.target.value,
-                validateStatus: 'error',
-                errorMsg: 'The invited member is already on the list'
-            })
-        } 
-        
+        console.log(this.props.businessPlan.members);
+        if (this.props.businessPlan.members === null) {
+            if (e.target.value !== this.props.user.email) {
+                this.setState({
+                    invitationEmail: e.target.value,
+                    validateStatus: 'success',
+                    errorMsg: null
+                });
+            }
+            if (e.target.value === this.props.user.email) {
+                this.setState({
+                    invitationEmail: e.target.value,
+                    validateStatus: 'error',
+                    errorMsg: 'Can not share business plan with yourseft'
+                })
+            }
+        } else {
+            const emailInMemberList = this.props.businessPlan.members.find((x) => x.email === e.target.value) === undefined ? false : true;
+            if (e.target.value !== this.props.user.email) {
+                this.setState({
+                    invitationEmail: e.target.value,
+                    validateStatus: 'success',
+                    errorMsg: null
+                });
+            }
+            if (e.target.value === this.props.user.email) {
+                this.setState({
+                    invitationEmail: e.target.value,
+                    validateStatus: 'error',
+                    errorMsg: 'Can not share business plan with yourseft'
+                })
+            }
+            if (emailInMemberList === true) {
+                this.setState({
+                    invitationEmail: e.target.value,
+                    validateStatus: 'error',
+                    errorMsg: 'The invited member is already on the list'
+                })
+            }
+        }      
     }
 
     onBack = () => {
@@ -102,18 +120,18 @@ class InviteMemberModal extends Component {
                     }
                 >
                     <Form layout="vertical" id="invitationForm">
-                    
+
                         <Form.Item label="Invitation link"  >
                             <Input disabled={true} value={invitationLink + this.state.invitationEmail} />
                         </Form.Item>
 
-                        <Form.Item 
+                        <Form.Item
                             name="email"
                             label="Member email"
                             validateStatus={this.state.validateStatus}
                             help={this.state.errorMsg}
-                            >
-                        
+                        >
+
                             <Input size="large" style={inputStyle} onChange={this.onEmailChange} />
                         </Form.Item>
 

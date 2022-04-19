@@ -60,7 +60,6 @@ class IndustryDataComponent extends PureComponent {
         this.getAlert = this.getAlert.bind(this);
     }
     getAlert = async () => {
-        console.log('click');
         const imgWidth = 53.3;
         const pageHeight = 297;
         const surviveCanvas = await html2canvas(this.survivalRate[0]);
@@ -111,8 +110,6 @@ class IndustryDataComponent extends PureComponent {
         for (var i = 0; i < this.costsProductivity.length; i++) {
             const canvas = await html2canvas(this.costsProductivity[i]);
             const dataElement = canvas.toDataURL('image/png');
-            console.log('height', canvas.height)
-            console.log('width', canvas.width)
             const imgHeight = canvas.height * imgWidth / canvas.width;
             const xPosition = 20 + i * 5 + i * imgWidth;
             const yPosition = 25 + imgHeight;
@@ -130,8 +127,6 @@ class IndustryDataComponent extends PureComponent {
         for (var i = 0; i < this.companySize.length; i++) {
             const canvas = await html2canvas(this.companySize[i]);
             const dataElement = canvas.toDataURL('image/png');
-            console.log('height', canvas.height)
-            console.log('width', canvas.width)
             const imgHeight = canvas.height * imgWidth / canvas.width;
             const xPosition = 20 + i * 5 + i * imgWidth;
             const yPosition = 40 + imgHeight;
@@ -150,16 +145,10 @@ class IndustryDataComponent extends PureComponent {
     }
 
     downloadPdfFile = async () => {
-        console.log(this.survivalRate.length);
-        console.log(this.bigIndustry.length);
-        console.log(this.costsProductivity.length);
-        console.log(this.companySize.length);
-        console.log(this.dividerRef);
         const imgWidth = 53.3;
         const pageHeight = 297;
         const surviveCanvas = await html2canvas(this.survivalRate[0]);
         const surviveHeight = surviveCanvas.height * imgWidth / surviveCanvas.width
-
         const chartCardHeight = 601 * imgWidth / 394;
         const doc = new jsPDF('p', 'mm', [297, 210]);
         const dividerCanvas = await html2canvas(this.dividerRef[0]);
@@ -188,8 +177,6 @@ class IndustryDataComponent extends PureComponent {
             for (var i = 0; i < this.bigIndustry.length; i++) {
                 const canvas = await html2canvas(this.bigIndustry[i]);
                 const dataElement = canvas.toDataURL('image/png');
-                console.log('height', canvas.height)
-                console.log('width', canvas.width)
                 const imgHeight = canvas.height * imgWidth / canvas.width;
                 const xPosition = 20 + i * 5 + i * imgWidth;
                 const yPosition = 60 + surviveHeight;
@@ -210,8 +197,6 @@ class IndustryDataComponent extends PureComponent {
             for (var i = 0; i < this.costsProductivity.length; i++) {
                 const canvas = await html2canvas(this.costsProductivity[i]);
                 const dataElement = canvas.toDataURL('image/png');
-                console.log('height', canvas.height)
-                console.log('width', canvas.width)
                 const imgHeight = canvas.height * imgWidth / canvas.width;
                 const xPosition = 20 + i * 5 + i * imgWidth;
                 const yPosition = 25 + imgHeight;
@@ -231,8 +216,6 @@ class IndustryDataComponent extends PureComponent {
             for (var i = 0; i < this.companySize.length; i++) {
                 const canvas = await html2canvas(this.companySize[i]);
                 const dataElement = canvas.toDataURL('image/png');
-                console.log('height', canvas.height)
-                console.log('width', canvas.width)
                 const imgHeight = canvas.height * imgWidth / canvas.width;
                 const xPosition = 20 + i * 5 + i * imgWidth;
                 const yPosition = 40 + imgHeight;
@@ -267,10 +250,8 @@ class IndustryDataComponent extends PureComponent {
         this.props.setClick(this.getAlert);
     }
     render() {
-        console.log(this.props.loading);
         const spinner = this.props.loading.survival_rate === true && this.props.loading.greatness_industry === true && this.props.loading.costs_productivity === true && this.props.loading.company_size === true ? true : false;
         //const spinnerTest = true;
-        console.log(this.props.costsProductivity);
         const defaultEmptyText = {
             emptyText: 'Not all the data could be taken from the Eurostat'
         }

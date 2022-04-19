@@ -12,6 +12,7 @@ import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import TooltipComponent from "../components/Tooltip";
 import { logout } from '../../appStore/actions/authenticationActions';
 import Cookies from 'js-cookie';
+import MD5 from 'crypto-js/md5';
 
 const { Text } = Typography;
 
@@ -73,17 +74,20 @@ class ValuePropositions extends React.Component {
     deleteItem = (item) => {
         console.log(item);
         this.props.deleteProduct(item.id);
+    }
+
+    onEditItem = (item) => {
         const postObj = {
             "location": '',
             "planId": this.props.businessPlan.id
         };
         this.props.getValuePropositionAIPredict(postObj);
-    }
-
-    onEditItem = (item) => {
         this.setState({
             selectedProduct: item.id
         });
+        localStorage.setItem('product-id', item.id);
+        let linkHash = MD5(item.id).toString();
+        this.props.history.push(`/value-propositions/${linkHash}`);
     }
 
     componentDidMount() {
@@ -142,7 +146,7 @@ class ValuePropositions extends React.Component {
                 render: (obj, record) => (
                     <Space size={0} style={{ float: 'right', display: 'inline-flex', alignItems: 'center' }}>
                         <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditItem.bind(this, record)} >Edit</Button>
-                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.deleteItem.bind(this, record)} ><DeleteOutlined /></Button>
+                        <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={() => this.deleteItem(record)} ><DeleteOutlined /></Button>
                     </Space>
                 ),
             }
@@ -151,11 +155,11 @@ class ValuePropositions extends React.Component {
         const data = this.props.products.products;
         const keyProductsCount = data.length;
 
-        if (this.state.selectedProduct !== null) {
-            return (
-                <EditProduct onBack={() => this.setState({ selectedProduct: null })} productId={this.state.selectedProduct} onClose={() => this.setState({ selectedProduct: null })} />
-            );
-        } else {
+        // if (this.state.selectedProduct !== null) {
+        //     return (
+        //         <EditProduct onBack={() => this.setState({ selectedProduct: null })} productId={this.state.selectedProduct} onClose={() => this.setState({ selectedProduct: null })} />
+        //     );
+        // } else {
             return (
                 <>
                     <Col span={20} offset={2}>
@@ -226,7 +230,7 @@ class ValuePropositions extends React.Component {
                     </Col>
                 </>
             );
-        }
+        // }
     }
 }
 

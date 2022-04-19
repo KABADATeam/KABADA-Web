@@ -104,7 +104,6 @@ export const selectedplanFetchReducer = (state = {
         case "FETCHING_PLAN_MEMBERS_SUCCESS":
             return { ...state, "members": action.payload.members }
         case "FETCHING_SELECTED_PLAN_OVERVIEW_SUCCESS":
-            console.log(action.payload);
             const obj = action.payload.overview
             const percentage = getPercentage(action.payload.overview);
             const new_overview = { ...action.payload.overview, "percentage": percentage };
