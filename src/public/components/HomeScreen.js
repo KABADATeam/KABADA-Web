@@ -246,7 +246,7 @@ class HomeScreen extends React.Component {
                     <Col span={20} offset={2}>
                         <List
                             grid={{
-                                gutter: 16,
+                                gutter: 24,
                                 xs: 1,
                                 sm: 2,
                                 md: 3,
@@ -287,7 +287,7 @@ class HomeScreen extends React.Component {
                     <Col span={20} offset={2}>
                         <List
                             grid={{
-                                gutter: 60,
+                                gutter: 24,
                                 xs: 1,
                                 sm: 2,
                                 md: 3,
@@ -302,7 +302,15 @@ class HomeScreen extends React.Component {
                                         style={{
                                             height: '97px', borderRadius: '8px', backgroundColor: '#FFFFFF', overflow: 'hidden'
                                         }}
-                                        cover={<img alt="" src={item.imgPath} style={{ height: '80px', marginTop: '10px', marginLeft: '10px' }} />}
+                                        cover={
+                                            <div style={{ width:'100%', textAlign: 'center' }}>
+                                                <img 
+                                                    alt="" 
+                                                    src={item.imgPath} 
+                                                    style={{ height: '95%'}} 
+                                                />
+                                            </div>
+                                        }
                                     >
                                     </Card>
                                 </List.Item>
