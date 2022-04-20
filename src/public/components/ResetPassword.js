@@ -47,9 +47,9 @@ class ResetPassword extends Component {
           </Space>
         </Row>
 
-        <Form layout='vertical' name='basic' onFinish={(e) => this.onFinish(e)}>
+        <Form layout='vertical' name='basic' onFinish={(e) => this.onFinish(e)} requiredMark={false} >
           <Form.Item
-            name={'email'}
+            name='email'
             label='Email'
             rules={[{ required: true, type: 'email', message: 'Please enter your email address' }]}
           >
