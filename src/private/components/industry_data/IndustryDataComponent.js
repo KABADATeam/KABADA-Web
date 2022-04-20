@@ -56,10 +56,10 @@ class IndustryDataComponent extends PureComponent {
         this.costsProductivity = [];
         this.companySize = [];
         this.dividerRef = [];
-        this.testRef = React.createRef();
-        this.getAlert = this.getAlert.bind(this);
+        //this.testRef = React.createRef();
+        this.getIndustryDataFile = this.getIndustryDataFile.bind(this);
     }
-    getAlert = async () => {
+    getIndustryDataFile = async () => {
         const imgWidth = 53.3;
         const pageHeight = 297;
         const surviveCanvas = await html2canvas(this.survivalRate[0]);
@@ -90,8 +90,6 @@ class IndustryDataComponent extends PureComponent {
         for (var i = 0; i < this.bigIndustry.length; i++) {
             const canvas = await html2canvas(this.bigIndustry[i]);
             const dataElement = canvas.toDataURL('image/png');
-            console.log('height', canvas.height)
-            console.log('width', canvas.width)
             const imgHeight = canvas.height * imgWidth / canvas.width;
             const xPosition = 20 + i * 5 + i * imgWidth;
             const yPosition = 60 + surviveHeight;
@@ -141,7 +139,7 @@ class IndustryDataComponent extends PureComponent {
             }
         }
         doc.addImage(dividerElement, 'PNG', 20, 50 + 2 * chartCardHeight, 170, dividerHeight);
-        doc.save('doc.pdf');
+        doc.save(this.props.businessPlan.activityCode + ' Industry data.pdf');
     }
 
     downloadPdfFile = async () => {
@@ -231,7 +229,7 @@ class IndustryDataComponent extends PureComponent {
             }
             doc.addImage(dividerElement, 'PNG', 20, 50 + 2 * chartCardHeight, 170, dividerHeight);
         }
-        doc.save('doc.pdf');
+        doc.save(this.props.businessPlan.activityCode + ' Industry data.pdf');
     }
 
     getChartsData() {
@@ -247,7 +245,7 @@ class IndustryDataComponent extends PureComponent {
         this.getChartsData();
         this.survivalRate[0] && this.survivalRate[0].focus();
         this.bigIndustry[0] && this.bigIndustry[0].focus();
-        this.props.setClick(this.getAlert);
+        this.props.setClick(this.getIndustryDataFile);
     }
     render() {
         const spinner = this.props.loading.survival_rate === true && this.props.loading.greatness_industry === true && this.props.loading.costs_productivity === true && this.props.loading.company_size === true ? true : false;
@@ -268,11 +266,6 @@ class IndustryDataComponent extends PureComponent {
                     </div>
                     :
                     <>
-                        <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-                            <Col>
-                                <Button type="primary" onClick={this.downloadPdfFile}>Download industry data</Button>
-                            </Col>
-                        </Row>
                         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
                             <Col span={24}>
                                 <Row style={{ marginTop: "40px" }}>
@@ -932,6 +925,7 @@ class IndustryDataComponent extends PureComponent {
 
 const mapStateToProps = (state) => {
     return {
+        businessPlan: state.selectedBusinessPlan,
         personalPlans: state.personalBusinessPlans,
         survival: state.survivalRate,
         greatnessIndustry: state.greatnessIndustry,

@@ -10,7 +10,6 @@ export const getGreatnessIndustry = () => {
         const split_nace_code = nace_code.split('.');
         const industry = split_nace_code[0];
         const activityCode = industry.concat('', split_nace_code[1]);
-        console.log(dataSetGreatnessIndustry[industry]);
         try {
             if (dataSetGreatnessIndustry[industry] !== undefined) {
                 let queryData = dataSetGreatnessIndustry[industry].dataSets;
@@ -31,8 +30,6 @@ export const getGreatnessIndustry = () => {
             dispatch({ type: 'GREATNESS_INDUSTRY_LOADING', payload: true})
             } throw "Don't find industry in dataset"
         } catch(err) {
-            console.log(err);
-            console.log('greatness')
             dispatch({ type: 'GREATNESS_INDUSTRY_ERROR', payload: { state: true, error: 'No data' }})
         }        
     }

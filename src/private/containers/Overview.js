@@ -133,7 +133,6 @@ class Overview extends React.Component {
             activeTabKey: 1
         }
         this.fileSelectRef = React.createRef();
-        //this.downloadPdf = React.createRef();
     }
     getActivityID = (nace, industryCode, activityCode) => {
         console.log(activityCode);
@@ -357,7 +356,7 @@ class Overview extends React.Component {
                 <Menu.Item key="3" onClick={this.downloadCashFlow}>
                     Download Cash Flow
                 </Menu.Item>
-                <Menu.Item key="4" onClick={() => { this.downloadPdf() }}>
+                <Menu.Item key="4" onClick={() => { this.downloadIndustryDataPdf() }}>
                     Download Industry data
                 </Menu.Item>
             </Menu>
@@ -948,7 +947,7 @@ class Overview extends React.Component {
                                 </Row>
                             </TabPane>
                             <TabPane tab="Industry data" key="2">
-                                <IndustryDataComponent setClick={click => { this.downloadPdf = click }} />
+                                <IndustryDataComponent setClick={click => { this.downloadIndustryDataPdf = click }} />
                             </TabPane>
                             <TabPane tab="Industry risks" key="3">
                                 <Row style={{ marginBottom: "50px", marginTop: "40px" }}>

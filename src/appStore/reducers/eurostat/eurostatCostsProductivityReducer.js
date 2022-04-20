@@ -43,7 +43,6 @@ export const eurostatCostProductivityReducer = (
     }, action) => {
     switch (action.type) {
         case 'FETCHING_COSTS_PRODUCTIVITY_EUROSTATDATA_SUCCESS':
-            console.log(action.payload);
             const activityValuesObj = JSON.parse(JSON.stringify(action.payload.activityData)).value;
             const activityTimeLabelObj = JSON.parse(JSON.stringify(action.payload.activityData)).dimension.time.category.label;
             const totalActivitiesValuesObj = JSON.parse(JSON.stringify(action.payload.totalActivitiesData)).value;

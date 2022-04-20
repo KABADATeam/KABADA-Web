@@ -10,12 +10,9 @@ export const getCompanySize = () => {
         const split_nace_code = nace_code.split('.');
         const industry = split_nace_code[0];
         const activityCode = industry.concat('', split_nace_code[1]);
-        const test = dataSetsCompanySize[industry];
-        console.log(test);
         try {
             if (dataSetsCompanySize[industry] !== undefined) {
                 let queryData = dataSetsCompanySize[industry].dataSets;
-                console.log('querydata', queryData);
                 if (queryData[0].industries.includes(activityCode)) {
                     const tableCode = queryData[0].tableCode;
                     for (var variable of queryData[0].variables) {
@@ -35,8 +32,6 @@ export const getCompanySize = () => {
                 dispatch({ type: 'COMPANY_SIZE_LOADING', payload: true });
             } throw "Don't find industry in dataset";
         } catch (err) {
-            console.log(err);
-            console.log('company size')
             dispatch({ type: 'COMPANY_SIZE_ERROR', payload: { state: true, error: 'No data' } });
         }
         // if (dataSetsCompanySize[industry] === undefined) {

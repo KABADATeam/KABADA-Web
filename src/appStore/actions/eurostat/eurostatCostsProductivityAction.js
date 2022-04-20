@@ -10,10 +10,7 @@ export const getCostsProductivity = () => {
         const split_nace_code = nace_code.split('.');
         const industry = split_nace_code[0];
         const activityCode = industry.concat('', split_nace_code[1]);
-        const test = dataSetCostsProductivity[industry];
-        console.log(test);
         if (dataSetCostsProductivity[industry] === undefined){
-            console.log('productivity')
             dispatch({ type: 'COSTS_PRODUCTIVITY_INDUSTRY_LOADING', payload: true})
         } else {
             let queryData = dataSetCostsProductivity[industry].dataSets;

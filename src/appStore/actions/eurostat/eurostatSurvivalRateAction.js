@@ -13,7 +13,6 @@ export const getSurvivalRate = () => {
         const split_nace_code = nace_code.split('.');
         const industry = split_nace_code[0];
         const activityCode = industry.concat('', split_nace_code[1]);
-        console.log(dataSetForSurvivalRate[industry]);
         
         if (dataSetForSurvivalRate[industry] !== undefined) {
             let queryData = dataSetForSurvivalRate[industry].dataSets;
@@ -115,7 +114,6 @@ export const getSurvivalRate = () => {
                 }
                 try {
                     var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
-                    console.log(response.data);
                     if(response.data.source === "Eurostat"){                        
                         dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_TOTAL_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: geoTitle } });
                     }  else {
