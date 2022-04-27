@@ -8,8 +8,10 @@ import { discardChanges, saveChanges } from "../../appStore/actions/swotAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { uploadFile } from '../../appStore/actions/userFileAction';
 import { updatePlanData, updateImage } from '../../appStore/actions/planActions';
-import { updateStatus, getMembers, deleteMember, getSelectedPlanOverview, getSelectedPlanDetails, getImage, removePlan, 
-    downloadDOCFile, downloadPDFFile, downloadCashFlow } from "../../appStore/actions/planActions";
+import {
+    updateStatus, getMembers, deleteMember, getSelectedPlanOverview, getSelectedPlanDetails, getImage, removePlan,
+    downloadDOCFile, downloadPDFFile, downloadCashFlow, startAItraining
+} from "../../appStore/actions/planActions";
 import { getSurvivalRate } from '../../appStore/actions/eurostat/eurostatSurvivalRateAction';
 import { saveState as saveValuePropositions } from '../../appStore/actions/productActions'
 import { saveState as saveCustomerSegments } from "../../appStore/actions/customerSegmentAction";
@@ -375,6 +377,9 @@ class Overview extends React.Component {
                         <a href="#">Delete</a>
                     </Popconfirm>
                 </Menu.Item>
+                <Menu.Item key="2" onClick={this.props.startAItraining}>
+                    <Text>Start AI training</Text>
+                </Menu.Item>
             </Menu>
         );
 
@@ -414,7 +419,7 @@ class Overview extends React.Component {
                                                 More Actions <DownOutlined />
                                             </a>
                                         </Dropdown>
-                                        <Dropdown overlay={this.state.activeTabKey === '2' ? exportAsWithoutIndustryData : exportAsMenu }>
+                                        <Dropdown overlay={this.state.activeTabKey === '2' ? exportAsWithoutIndustryData : exportAsMenu}>
                                             <a className="ant-dropdown-link">
                                                 Export As <DownOutlined />
                                             </a>
@@ -996,4 +1001,42 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getImage, logout, discardChanges, getSelectedPlanDetails, getMembers, updateStatus, saveChanges, refreshPlan, deleteMember, getSelectedPlanOverview, removePlan, getSurvivalRate, getCountryShortCodeV2, downloadDOCFile, downloadPDFFile, downloadCashFlow, uploadFile, updateImage, updatePlanData, saveValuePropositions, saveCustomerSegments, saveChannelsCompleted, saveCustomerRelationshipsCompleted, saveRevenueStreamsCompleted, saveResourcesCompleted, saveKeyActivitiesCompleted, saveKeyPartnersCompleted, saveCostStructureCompleted, saveSwotCompleted, saveAssetsCompleted, saveFixedAndVariableCompleted, saveSalesForecastCompleted, saveBusinessInvestmentsCompleted, savePersonalCharacteristicsCompleted, getCompletedPersonalCharacteristics })(withRouter(Overview))
+export default connect(mapStateToProps,
+    {
+        getImage,
+        logout,
+        discardChanges,
+        getSelectedPlanDetails,
+        getMembers,
+        updateStatus,
+        saveChanges,
+        refreshPlan,
+        deleteMember,
+        getSelectedPlanOverview,
+        removePlan,
+        getSurvivalRate,
+        getCountryShortCodeV2,
+        downloadDOCFile,
+        downloadPDFFile,
+        downloadCashFlow,
+        uploadFile,
+        updateImage,
+        updatePlanData,
+        saveValuePropositions,
+        saveCustomerSegments,
+        saveChannelsCompleted,
+        saveCustomerRelationshipsCompleted,
+        saveRevenueStreamsCompleted,
+        saveResourcesCompleted,
+        saveKeyActivitiesCompleted,
+        saveKeyPartnersCompleted,
+        saveCostStructureCompleted,
+        saveSwotCompleted,
+        saveAssetsCompleted,
+        saveFixedAndVariableCompleted,
+        saveSalesForecastCompleted,
+        saveBusinessInvestmentsCompleted,
+        savePersonalCharacteristicsCompleted,
+        getCompletedPersonalCharacteristics, 
+        startAItraining
+    })(withRouter(Overview))

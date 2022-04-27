@@ -290,3 +290,15 @@ export const downloadCashFlow = (planId, planName) => {
         }
     }
 }
+export const startAItraining = () => {
+    return async (dispatch, getState) => {
+        try {
+            const token = getState().user.access_token;
+            await kabadaAPI.get('api/plans/startAItraining', { headers: { Authorization: `Bearer ${token}` } });
+        } catch {
+            //dispatch({ type: 'ERROR_AI_MESSAGE', payload: true});
+        } finally {
+
+        }
+    }
+}
