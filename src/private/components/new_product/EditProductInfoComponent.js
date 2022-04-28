@@ -78,22 +78,25 @@ class EditProductInfoComponent extends Component {
         const ai_obj = aiPredict.find(e => e.id === product_id);
         console.log(ai_obj);
         if (ai_obj !== undefined) {            
-            if (product_type.type_id !== ai_obj.productType) {
-                const type_name = this.props.productTypes.find(e => e.id === ai_obj.productType).title;
-                const new_obj = {
-                    type_title: 'Product type',
-                    text: type_name
-                };
-                aiHintTextObject.push(new_obj);
-            }
-            
-            if (price_level.price_id !== ai_obj.priceLevel) {
-                const level_name = priceLevels.find(e => e.id === ai_obj.priceLevel).title;
-                const new_obj = {
-                    type_title: 'Price level',
-                    text: level_name
-                };
-                aiHintTextObject.push(new_obj);
+            if (ai_obj.prodType !== undefined) {
+                if (product_type.type_id !== ai_obj.prodType[0]) {
+                    const type_name = this.props.productTypes.find(e => e.id === ai_obj.prodType[0]).title;
+                    const new_obj = {
+                        type_title: 'Product type',
+                        text: type_name
+                    };
+                    aiHintTextObject.push(new_obj);
+                }
+            }            
+            if (ai_obj.priceLevel !== undefined) {
+                if (price_level.price_id !== ai_obj.priceLevel[0]) {
+                    const level_name = priceLevels.find(e => e.id === ai_obj.priceLevel[0]).title;
+                    const new_obj = {
+                        type_title: 'Price level',
+                        text: level_name
+                    };
+                    aiHintTextObject.push(new_obj);
+                }
             }
             let incomeSourcesHintText = '';
             const selected_income_sources = selected_additional_income_sources.map(e => e.id);

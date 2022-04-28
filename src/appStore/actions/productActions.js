@@ -8,26 +8,26 @@ const AIPredictDummyData = {
         valueProposition: [
             {
                 id: "c9c6f3a3-aa9f-4722-8b6c-2597f4aa0c70",
-                productType: '3f2faea5-f8f6-43b4-80f2-db55874a5c4b',    //Physical
-                priceLevel: '4261a424-6b58-467c-a5da-1844827950b5',     //High-end
+                prodType: ['3f2faea5-f8f6-43b4-80f2-db55874a5c4b'],    //Physical
+                priceLevel: ['4261a424-6b58-467c-a5da-1844827950b5'],     //High-end
                 // income sources: paid plains, different price of business, fees come from another product
-                incomeSources: ['67cdf9e6-acc0-404a-a189-78325e83f547', '87ffbf10-1f99-4d0b-ae5a-202736ed5a4e', '085df303-2e4d-4dd0-9e9f-204085352597'],
+                addIncomeSources: ['67cdf9e6-acc0-404a-a189-78325e83f547', '87ffbf10-1f99-4d0b-ae5a-202736ed5a4e', '085df303-2e4d-4dd0-9e9f-204085352597'],
                 productFeatures: ['aae57ccf-f33c-4a0e-925a-7a65d8ca171e', '5eb6013b-0cca-4f89-b39d-e711477a972f', '2984418a-638e-4da9-be1d-12ba94d8ffaf',
                     'adcdc439-8170-4fab-a70d-457c1b98bc92', '07d5452f-6ea6-4ae6-9395-89fd1d0eeab0', '4cb290b2-7fbc-4846-be7b-79f9e3efbb46', 'dfe881a2-cd69-4295-a16a-edfb2c8fc0bf']
             },
             {
                 id: null,
-                productType: 'c64ed84d-db99-4a25-95f1-79bb99fa6936',  //Servise
-                priceLevel: '4261a424-6b58-467c-a5da-1844827950b5', //High-end
+                prodType: ['c64ed84d-db99-4a25-95f1-79bb99fa6936'],  //Servise
+                priceLevel: ['4261a424-6b58-467c-a5da-1844827950b5'], //High-end
                 //different price of business, fees come from another product
-                incomeSources: ['87ffbf10-1f99-4d0b-ae5a-202736ed5a4e', '085df303-2e4d-4dd0-9e9f-204085352597'],
+                addIncomeSource: ['87ffbf10-1f99-4d0b-ae5a-202736ed5a4e', '085df303-2e4d-4dd0-9e9f-204085352597'],
                 // is exclusive, is more customisable, is safer to use
-                productFeatures: ['adcdc439-8170-4fab-a70d-457c1b98bc92',  '4cb290b2-7fbc-4846-be7b-79f9e3efbb46', 'dfe881a2-cd69-4295-a16a-edfb2c8fc0bf']
+                //productFeatures: ['adcdc439-8170-4fab-a70d-457c1b98bc92',  '4cb290b2-7fbc-4846-be7b-79f9e3efbb46', 'dfe881a2-cd69-4295-a16a-edfb2c8fc0bf']
             },
             {
                 id: "9265a8e8-1c74-4852-99c0-ff943192398b",
-                productType: '3f2faea5-f8f6-43b4-80f2-db55874a5c4b', //Physical
-                priceLevel: '3325759e-8add-4b30-a00c-10ce7fbbd330', //Free
+                prodType: ['3f2faea5-f8f6-43b4-80f2-db55874a5c4b'], //Physical
+                priceLevel: ['3325759e-8add-4b30-a00c-10ce7fbbd330'], //Free
                 // income sources: paid plains, different price of business, fees come from another product
                 incomeSources: ['67cdf9e6-acc0-404a-a189-78325e83f547', '87ffbf10-1f99-4d0b-ae5a-202736ed5a4e', '085df303-2e4d-4dd0-9e9f-204085352597'],
                 // features: is a fundamentally new product or service, Has a different visual design, Has a new set of features, is exclusive, is a niche, Is more customisable (more user-selectable options), is safer to use 
@@ -271,9 +271,9 @@ export const getValuePropositionAIPredict = (postObject) => {
         //dispatch({ type: 'RESET_AI_PREDICT'});
         try {
             const token = getState().user.access_token;
-            //const response = await kabadaAPI.post('api/plans/predict', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            //console.log(response.data);
-            dispatch({ type: 'GET_PRODUCT_AI_PREDICT', payload: AIPredictDummyData.plan.valueProposition });
+            const response = await kabadaAPI.post('api/plans/predict', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            console.log(response.data);
+            dispatch({ type: 'GET_PRODUCT_AI_PREDICT', payload: response.data.plan.valueProposition });
         } catch {
             //dispatch({ type: 'ERROR_AI_MESSAGE', payload: true});
         } finally {
@@ -297,6 +297,8 @@ export const setValuePropositionAIPredict = (productId) => {
             }
             const productTypes = getState().productTypes;
             const productFeaturesLevels = getState().productFeaturesLevels;
+            console.log(aiPredict);
+            console.log(userInsertedData)
             dispatch({ type: 'SET_PRODUCT_AI_PREDICT', payload: {predict: aiPredict, userData: userInsertedData, productId: productId } })
         } catch {
 

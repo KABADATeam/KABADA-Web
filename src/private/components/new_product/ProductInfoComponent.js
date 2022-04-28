@@ -80,28 +80,35 @@ class ProductInfoComponent extends Component {
         const aiHintTextObject = [];
         const { product_type, price_level, selected_additional_income_sources, product_features, aiPredict } = this.props.product;
         const { priceLevels } = this.props.productFeaturesLevels;
+        console.log(aiPredict)
         const ai_obj = aiPredict.find(e => e.id === null);
+        console.log(ai_obj);
+        console.log(this.props.product)
         if (ai_obj !== undefined) {
-            if (product_type.type_id !== ai_obj.productType) {
-                const type_name = this.props.productTypes.find(e => e.id === ai_obj.productType).title;
-                const new_obj = {
-                    type_title: 'Product type',
-                    text: type_name
-                };
-                aiHintTextObject.push(new_obj);
+            if (ai_obj.prodType !== undefined) {
+                if (product_type.type_id !== ai_obj.prodType[0]) {
+                    const type_name = this.props.productTypes.find(e => e.id === ai_obj.prodType[0]).title;
+                    const new_obj = {
+                        type_title: 'Product type',
+                        text: type_name
+                    };
+                    aiHintTextObject.push(new_obj);
+                }
+            }            
+            if (ai_obj.priceLevel !== undefined) {
+                if (price_level.price_id !== ai_obj.priceLevel[0]) {
+                    const level_name = priceLevels.find(e => e.id === ai_obj.priceLevel[0]).title;
+                    const new_obj = {
+                        type_title: 'Price level',
+                        text: level_name
+                    };
+                    aiHintTextObject.push(new_obj);
+                }
             }
-
-            if (price_level.price_id !== ai_obj.priceLevel) {
-                const level_name = priceLevels.find(e => e.id === ai_obj.priceLevel).title;
-                const new_obj = {
-                    type_title: 'Price level',
-                    text: level_name
-                };
-                aiHintTextObject.push(new_obj);
-            }
+            
             let incomeSourcesHintText = '';
             const selected_income_sources = selected_additional_income_sources.map(e => e.id);
-            const comparedIncomeSource = this.compareArray(ai_obj.incomeSources, selected_income_sources);
+            const comparedIncomeSource = this.compareArray(ai_obj.addIncomeSource, selected_income_sources);
             if (comparedIncomeSource.length > 1) {
                 for (let i = 0; i < comparedIncomeSource.length; i++) {
                     const income_name = this.props.additionalIncomeSources.find(e => e.id === comparedIncomeSource[i]).title;
@@ -149,6 +156,7 @@ class ProductInfoComponent extends Component {
                 popoverType: 'no predict',
             })
         }
+        console.log(aiHintTextObject);
         return aiHintTextObject;
     }
 
