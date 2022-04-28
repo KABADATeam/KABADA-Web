@@ -34,14 +34,14 @@ class LoginServicesSettings extends Component {
                 <Row>
                     <Col span={24}>
                         <Card title="Login services" headStyle={{ paddingLeft: '20px', paddingRight: '20px', textAlign: 'left' }} style={{ ...CardStyle }} bodyStyle={{ ...CardBodyStyle }}>
-                            <Card.Grid hoverable={false} style={{ ...CardRowStyle }}>
+                            {/* <Card.Grid hoverable={false} style={{ ...CardRowStyle }}>
                                 <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <div><FacebookFilled /> Facebook</div>
                                     <Button size="large" style={{ ...buttonStyle }} onClick={this.toggleFacebook.bind(this)}>
                                         {facebook ? 'Disconnect' : 'Connect'}
                                     </Button>
                                 </Space>
-                            </Card.Grid>
+                            </Card.Grid> */}
                             <Card.Grid hoverable={false} style={{ ...CardRowStyle }}>
                                 <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <div><GoogleCircleFilled /> Google</div>

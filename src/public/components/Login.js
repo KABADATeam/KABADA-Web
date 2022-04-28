@@ -84,7 +84,7 @@ class Login extends React.Component {
 					onFinish={this.onFinish}
 				>
 				{/* autoLoad: false */}
-					<Form.Item {...tailLayout} style={{ marginBottom: '16px' }}>
+					{/* <Form.Item {...tailLayout} style={{ marginBottom: '16px' }}>
 						<FacebookLogin
 							// appId={process.env.REACT_APP_FACEBOOK_APPID}
 							appId={process.env.REACT_APP_FACEBOOK_APPID.toString()}
@@ -98,7 +98,7 @@ class Login extends React.Component {
 							icon={<FacebookFilled />}
 							// onClick={this.responseFacebook.bind(this)}
 							 />
-					</Form.Item>
+					</Form.Item> */}
 
 					<Form.Item {...tailLayout} >
 						<GoogleLogin

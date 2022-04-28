@@ -229,7 +229,7 @@ class UserSettingsWindow extends React.Component {
                             settings={this.state.settings}
                             handleHeader={this.showChangesHeader}
                             handleGoogle={this.changeGoogle}
-                            handleFacebook={this.changeFacebook}
+                            // handleFacebook={this.changeFacebook}
                         />
                     </Col>
                 </Row>

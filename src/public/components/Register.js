@@ -139,7 +139,7 @@ class Register extends React.Component {
             onFinish={this.onFinish}
             onFinishFailed={this.onFinishFailed}
           >
-            <Form.Item
+            {/* <Form.Item
               {...tailLayout}
               block='true'
               style={{ marginBottom: '16px' }}
@@ -155,7 +155,7 @@ class Register extends React.Component {
                 icon={<FacebookFilled />}
                 onClick={this.responseFacebook.bind(this)}
               />
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item {...tailLayout}>
               <GoogleLogin
