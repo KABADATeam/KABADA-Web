@@ -83,8 +83,9 @@ class EditProduct extends React.Component {
             const price_level = this.props.product.price_level.price_id;
             const income_sources = this.props.product.selected_additional_income_sources.map(e => e.id);
             const product_features = this.props.product.product_features.map(e => e.id);
+            const productId = localStorage.getItem('product-id')
             const postObj = {
-                "id": this.props.productId,
+                "id": productId,
                 "title": this.props.product.title,
                 "product_type": product_type,
                 "description": this.props.product.description,
@@ -96,9 +97,11 @@ class EditProduct extends React.Component {
                 "differentiation_level": this.props.productFeatures.differentiation[0].id,
                 "business_plan_id": this.props.businessPlan.id
             };
+            console.log(postObj);
             this.props.updateProduct(postObj, () => {
                 this.props.onClose();
             });
+            this.props.history.push(`/value-propositions`);
         }
     };
 
@@ -106,7 +109,8 @@ class EditProduct extends React.Component {
         let a = JSON.stringify(array1); //if is object array
         let b = JSON.stringify(array2);
         //let b = JSON.parse(JSON.stringify(array2)); if is simple array
-
+        console.log(array1)
+        console.log(array2)
         if (a === b) return true;
         if (a == null || b == null) return false;
         if (a.length !== b.length) return false;
@@ -169,7 +173,8 @@ class EditProduct extends React.Component {
                 "innovative_level": this.props.product.innovative_level,
                 "quality_level": this.props.product.quality_level,
             }
-
+            console.log(original)
+            console.log(modified)
             if (original === null) {
                 return 'hidden';
             }
@@ -257,6 +262,7 @@ class EditProduct extends React.Component {
                     };
                     this.props.getValuePropositionAIPredict(postObj);
                     const productId = localStorage.getItem('product-id')
+                    console.log(productId)
                     this.props.getProduct(productId, (data) => {
                         this.setState({
                             originalProduct: JSON.parse(JSON.stringify(data))

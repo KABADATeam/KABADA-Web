@@ -55,6 +55,7 @@ class EditProductInfoComponent extends Component {
     }
     onAIButtonClick = () => {
         const product_id = localStorage.getItem('product-id');
+        console.log(product_id)
         this.props.setValuePropositionAIPredict(product_id);
         this.hidePopover();
     }
@@ -100,7 +101,7 @@ class EditProductInfoComponent extends Component {
             }
             let incomeSourcesHintText = '';
             const selected_income_sources = selected_additional_income_sources.map(e => e.id);
-            const comparedIncomeSource = this.compareArray(ai_obj.incomeSources, selected_income_sources);
+            const comparedIncomeSource = this.compareArray(ai_obj.addIncomeSource, selected_income_sources);
             if (comparedIncomeSource.length > 1) {
                 for (let i = 0; i < comparedIncomeSource.length; i++) {
                     const income_name = this.props.additionalIncomeSources.find(e => e.id === comparedIncomeSource[i]).title;

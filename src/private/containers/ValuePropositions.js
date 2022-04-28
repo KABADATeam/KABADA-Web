@@ -86,6 +86,7 @@ class ValuePropositions extends React.Component {
             selectedProduct: item.id
         });
         localStorage.setItem('product-id', item.id);
+        console.log(item.id)
         let linkHash = MD5(item.id).toString();
         this.props.history.push(`/value-propositions/${linkHash}`);
     }
@@ -207,7 +208,7 @@ class ValuePropositions extends React.Component {
                                             title={
                                                 <>
                                                     <Text>Add Key Products</Text><br />
-                                                    <Text style={infoTextStyle}>"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu"</Text>
+                                                    <Text style={infoTextStyle}>Please add here few (maximum 3) most important products, with which your business will provide value to the customer. Product can be physical good or service.</Text>
                                                 </>
                                             }
                                             extra={<Button style={{ ...buttonStyle }} size="large" type="primary" onClick={this.addKeyProduct.bind(this)}>Add key product</Button>}
