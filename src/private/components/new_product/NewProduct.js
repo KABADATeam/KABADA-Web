@@ -292,7 +292,6 @@ class NewProduct extends React.Component {
         const priceMarks = this.getSliderMarks(this.props.productFeatures.priceLevels);
         const qualityMarks = this.getSliderMarks(this.props.productFeatures.quality);
         const innovativeMarks = this.getSliderMarks(this.props.productFeatures.innovative);
-        console.log(this.props.product.price_level.price_id)
         return (
             <>
                 <UnsavedChangesHeader

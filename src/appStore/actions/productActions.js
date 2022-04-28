@@ -297,8 +297,6 @@ export const setValuePropositionAIPredict = (productId) => {
             }
             const productTypes = getState().productTypes;
             const productFeaturesLevels = getState().productFeaturesLevels;
-            console.log(aiPredict);
-            console.log(userInsertedData)
             dispatch({ type: 'SET_PRODUCT_AI_PREDICT', payload: {predict: aiPredict, userData: userInsertedData, productId: productId } })
         } catch {
 

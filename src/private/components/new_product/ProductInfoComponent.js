@@ -80,10 +80,7 @@ class ProductInfoComponent extends Component {
         const aiHintTextObject = [];
         const { product_type, price_level, selected_additional_income_sources, product_features, aiPredict } = this.props.product;
         const { priceLevels } = this.props.productFeaturesLevels;
-        console.log(aiPredict)
         const ai_obj = aiPredict.find(e => e.id === null);
-        console.log(ai_obj);
-        console.log(this.props.product)
         if (ai_obj !== undefined) {
             if (ai_obj.prodType !== undefined) {
                 if (product_type.type_id !== ai_obj.prodType[0]) {
@@ -156,7 +153,6 @@ class ProductInfoComponent extends Component {
                 popoverType: 'no predict',
             })
         }
-        console.log(aiHintTextObject);
         return aiHintTextObject;
     }
 

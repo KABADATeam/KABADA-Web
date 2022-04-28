@@ -336,23 +336,19 @@ export const productReducer = (
                 aiPredict: action.payload === true ? null : state.aiPredict,
             }
         case "GET_PRODUCT_AI_PREDICT":
-            console.log(action.payload)
             return {
                 ...state,
                 "aiPredict": action.payload,
             }
         case "SET_PRODUCT_AI_PREDICT":
             const ai_obj = action.payload.predict.find(e => e.id === action.payload.productId);
-            console.log(action.payload);
             const income_sources_array = [...state.selected_additional_income_sources];
             const product_features_array = [...state.product_features];
             const aiHintTextObject = []
             const { product_type, price_level } = action.payload.userData;
             // const type_obj = product_type.type_id === ai_obj.prodType ? { "type_id": ai_obj.prodType, "tag": 0 } : { "type_id": ai_obj.prodType, "tag": 1 }
-            console.log(product_type);
-            const type_obj = ai_obj.prodType === undefined && product_type === '' ? '' : ai_obj.prodType === undefined && product_type !== '' ? product_type : ai_obj.prodType === product_type.type_id ? product_type : { "type_id": ai_obj.prodType, "tag": 1 };
-            const price_obj = ai_obj.priceLevel === undefined && price_level === '' ? '' : ai_obj.priceLevel === undefined && price_level !== '' ? price_level : price_level.price_id === ai_obj.priceLevel ? price_level : { "price_id": ai_obj.priceLevel, "tag": 1 };
-
+            const type_obj = ai_obj.prodType === undefined && product_type === '' ? '' : ai_obj.prodType === undefined && product_type !== '' ? product_type : ai_obj.prodType === product_type.type_id ? product_type : { "type_id": ai_obj.prodType[0], "tag": 1 };
+            const price_obj = ai_obj.priceLevel === undefined && price_level === '' ? '' : ai_obj.priceLevel === undefined && price_level !== '' ? price_level : price_level.price_id === ai_obj.priceLevel ? price_level : { "price_id": ai_obj.priceLevel[0], "tag": 1 };
             const selected_income_sources = state.selected_additional_income_sources.map(e => e.id);
             const comparedIncomeSource = compareArray(ai_obj.addIncomeSource, selected_income_sources);
             for (let i in comparedIncomeSource) {
@@ -375,12 +371,6 @@ export const productReducer = (
             const innovative_LevelIndex = getSliderValue(innovative, mergedProductFeaturesArray);
             const quality_LevelIndex = getSliderValue(quality, mergedProductFeaturesArray);
             const differentiation_LevelIndex = getSliderValue(differentiation, mergedProductFeaturesArray);
-            console.log(type_obj)
-            console.log(price_obj)
-            console.log(income_sources_array)
-            console.log(product_features_array)
-            console.log(innovative_LevelIndex);
-            console.log(quality_LevelIndex)
             return {
                 ...state,
                 "product_type": type_obj,
