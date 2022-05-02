@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { getSelectedPlan, getSelectedPlanDetails, getSelectedPlanOverview, getPlansOverview, downloadPDFFile } from "../../appStore/actions/planActions";
 import { logout } from "../../appStore/actions/authenticationActions";
 import Cookies from "js-cookie";
+import moment from 'moment'
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -40,7 +41,7 @@ class PublicBusinessPlans extends React.Component {
 
     search = (values, changedValues) => {
         let sorted = false;
-        let filteredData = this.props.publicPlans;
+        let filteredData = [...this.props.publicPlans];
 
         Object.keys(changedValues).forEach(function (key, index) {
             if (changedValues[key] !== undefined) {
@@ -58,10 +59,20 @@ class PublicBusinessPlans extends React.Component {
                     // filter by language
                 }
                 if (key === "sorting" && changedValues[key] !== undefined) {
-                    sorted = changedValues[key];
+                    if(values.sorting === 'descend'){
+                        filteredData.sort(function(a,b){
+                            // Turn your strings into dates, and then subtract them
+                            // to get a value that is either negative, positive, or zero.
+                            return new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime();
+                        });
+                    }else if(values.sorting === 'ascend'){
+                        filteredData.sort(function(a,b){
+                            return new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime();
+                        });
+                    }
                 }
                 if (key === "industry" || key === "name" || key === "country") {
-                    console.log(`key=${key}  value=${changedValues[key]}`)
+                    //console.log(`key=${key}  value=${changedValues[key]}`)
                     filteredData = filteredData.filter(item => {
                         return (
                             item[key].toLowerCase().indexOf(changedValues[key].toLowerCase()) >= 0
@@ -71,7 +82,7 @@ class PublicBusinessPlans extends React.Component {
                 }
             }
         });
-
+        
         this.setState({
             planData: filteredData,
             sorting: sorted,
