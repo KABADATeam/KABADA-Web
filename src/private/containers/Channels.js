@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import AddChannelModal from '../components/channels/AddChannelModal';
 import EditChannelModal from '../components/channels/EditChannelModal';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getChannelTypes, getChannels, deleteChannel, saveState } from "../../appStore/actions/channelActions";
+import { getChannelTypes, getChannels, deleteChannel, saveState, getAIChannelsPredict } from "../../appStore/actions/channelActions";
 import { getProducts } from "../../appStore/actions/productActions";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
@@ -66,6 +66,11 @@ class Channels extends React.Component {
     }
 
     onAddChannel = () => {
+        const postObj = {
+            "location": '',
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getAIChannelsPredict(postObj);
         this.setState({
             showAddChannelModal: true
         });
@@ -128,11 +133,11 @@ class Channels extends React.Component {
     }
 
     render() {
-        console.log(this.props)
-            ;
+        console.log(this.props.channels.channels)
         const data = this.props.channels.channels.map(item => {
             const channel_name = item.channel_type.name;
             const distribution_names = item.distribution_channels === null ? [] : item.distribution_channels.map(item => item.name);
+            console.log(distribution_names);
             const distribution_name = distribution_names.length === 0 ? "-" : distribution_names.join();
             const product_names = item.products.map(item => item.name);
             const product_name = product_names.join();
@@ -260,4 +265,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { logout, getChannelTypes, getProducts, getChannels, deleteChannel, saveState, refreshPlan, getSelectedPlanOverview })(withRouter(Channels));
+export default connect(mapStateToProps, { logout, getChannelTypes, getProducts, getChannels, deleteChannel, saveState, refreshPlan, getSelectedPlanOverview, getAIChannelsPredict })(withRouter(Channels));

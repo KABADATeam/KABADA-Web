@@ -1,7 +1,8 @@
 export const channelsReducer = (
     state = {
         is_channels_completed: false,
-        channels: []
+        channels: [],
+        aiChannelPredict: []
     }, action) => {
     switch (action.type) {
         case "FETCHING_CHANNELS_SUCCESS":
@@ -20,6 +21,9 @@ export const channelsReducer = (
             return { ...state, "channels": _channels };
         case "SAVE_STATE_SUCCESS":
             return { ...state, "is_channels_completed": action.payload };
+        case "GET_AI_CHANNEL_PREDICT_SUCCESS": 
+            console.log(action.payload)
+            return {...state, aiChannelPredict: action.payload }
         default:
             return state;
     }

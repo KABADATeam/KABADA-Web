@@ -78,3 +78,21 @@ export const deleteChannel = (id) => {
         }
     }
 };
+
+export const getAIChannelsPredict = (postObject) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true});
+        dispatch({ type: 'ERROR_AI_MESSAGE', payload: false});
+        dispatch({ type: 'RESET_AI_PREDICT'});
+        try {
+            const token = getState().user.access_token;
+            const response = await kabadaAPI.post('api/plans/predict', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            console.log(response.data);
+            dispatch({ type: 'GET_AI_CHANNEL_PREDICT_SUCCESS', payload: response.data.plan.channels });
+        } catch {
+            dispatch({ type: 'ERROR_AI_MESSAGE', payload: true});
+        } finally {
+
+        }
+    }
+}

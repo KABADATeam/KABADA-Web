@@ -197,6 +197,7 @@ class AddBusinessSegmentModal extends Component {
             "geographic_location": this.state.locationType
         }
         console.log(predictsObj)
+        console.log(segmentTypes)
         if (predictsObj !== undefined) {
             const predictObj = predictsObj.find(s => s.id === null);
             if (predictObj !== undefined) {
@@ -210,6 +211,7 @@ class AddBusinessSegmentModal extends Component {
                         : property === 'company_size' ? segmentTypes.company_sizes
                             : property === 'business_type' ? segmentTypes.business_types
                                 : null
+                    console.log('Property type ', propertyType)
                     const comparePropertiesValues = this.compareArray(predictObjPropertyValues, selectedItemPropertyValues);
                     let propertiesValuesString = '';
                     if (comparePropertiesValues.length > 1) {
