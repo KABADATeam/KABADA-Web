@@ -32,7 +32,6 @@ class NewBusinessPlanModal extends Component {
     }
 
     handleOk = (values) => {
-
         const { fileList } = this.state;
         const formData = new FormData();
 
@@ -236,7 +235,17 @@ class NewBusinessPlanModal extends Component {
                         </Form.Item>*/
                         }
                         <Form.Item key="activity" name="activity" label="NACE Rev. 2"
-                            rules={[{ required: true, message: 'Select NACE Rev. 2' }]}>
+                            rules={[{ 
+                                required: true,
+                                validator(_, activity) {
+                                    if(activity && naceClass.findIndex(x => x.id === activity) !== -1) {
+                                        return Promise.reject('Don\'t select first level activities')
+                                    } else if(!activity){
+                                        return Promise.reject('Select NACE Rev. 2')
+                                    }else {
+                                        return Promise.resolve()
+                                    }
+                                } }]}>
                             <TreeSelect
                                 showSearch
                                 style={{ width: 655 }}
