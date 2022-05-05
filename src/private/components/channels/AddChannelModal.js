@@ -100,8 +100,7 @@ class AddChannelModal extends Component {
         const distributions = this.state.distributionChannels.map(obj => ({
             id: obj.id, name: obj.title
         }))
-        console.log(this.state.distributionChannels);
-        console.log(distributions)
+        
         const type = this.state.shopType === null ? null : {
             "id": this.state.shopType.id,
             "name": this.state.shopType.name,
@@ -114,7 +113,7 @@ class AddChannelModal extends Component {
             "distribution_channels": distributions,
             "channel_subtype": this.state.selectedSubChannel.id === undefined ? null : { ...this.state.selectedSubChannel, "type": type },
         }
-        console.log(reducerObj)
+        
         this.props.saveChannel(postObj, reducerObj);
 
         this.props.onClose();
@@ -154,9 +153,6 @@ class AddChannelModal extends Component {
     }
     addSelectedValue = (value, state, segment_type) => {
         const resultArray = [];
-        console.log(value);
-        console.log(state);
-        console.log(segment_type);
         if (state === null) {
             const type = segment_type.find((obj) => obj.id === value[0]);
             const new_obj = {
@@ -209,9 +205,7 @@ class AddChannelModal extends Component {
 
     onShopTypeSelection(e) {
         const shopType = { ...this.state.selectedSubChannel.types.find(x => x.id === e.target.value), tag: 0 };
-        console.log(shopType);
         const location = shopType === null ? null : { ...shopType.location_types[0], tag: 0 };
-        console.log(location)
         this.setState({
             shopType: shopType,
             location: location,
@@ -351,14 +345,12 @@ class AddChannelModal extends Component {
                     const distribution_channels = this.state.distributionChannels === null ? [] : this.state.distributionChannels.map(e => e.id);
                     const distribution_channels_predict = this.compareArray(distribution_channels_ai, distribution_channels);
                     for (let i in distribution_channels_predict) {
-                        const title = ai_shopType.distribution_channels.find(x => x.id === distribution_channels_predict[i])
-
+                        const title = ai_shopType.distribution_channels.find(x => x.id === distribution_channels_predict[i]);
                         const new_distribution_channel_obj = {
                             id: distribution_channels_predict[i],
                             title: title !== undefined ? title.name : undefined,
                             tag: 1
-                        }
-                        console.log(new_distribution_channel_obj)
+                        };
                         if (new_distribution_channel_obj.title !== undefined) {
                             new_distribution_channel_array.push(new_distribution_channel_obj)
                         }
@@ -373,19 +365,16 @@ class AddChannelModal extends Component {
                     const distribution_channels_ai = aiObject.distributionChannels;
                     const distribution_channels = this.state.distributionChannels === null ? [] : this.state.distributionChannels.map(e => e.id);
                     const distribution_channels_predict = this.compareArray(distribution_channels_ai, distribution_channels);
-                    console.log(distribution_channels_predict)
                     for (let i in distribution_channels_predict) {
-                        const title = ai_shopType.distribution_channels.find(x => x.id === distribution_channels_predict[i])
-
+                        const title = ai_shopType.distribution_channels.find(x => x.id === distribution_channels_predict[i]);
                         const new_distribution_channel_obj = {
                             id: distribution_channels_predict[i],
                             title: title !== undefined ? title.name : undefined,
                             tag: 1
-                        }
-                        console.log(new_distribution_channel_obj)
+                        };
                         if (new_distribution_channel_obj.title !== undefined) {
                             new_distribution_channel_array.push(new_distribution_channel_obj)
-                        }
+                        };
                     }
                     new_shopType = ai_shopTypeWithTag;
                     new_location = ai_locationWithTag;
@@ -411,10 +400,10 @@ class AddChannelModal extends Component {
     generateAIHelpText = (predictsObj, types) => {
         const aiHintTextObject = [];
         const selectedItem = {
-            'subtypeType': this.state.shopType,
-            'locationType': this.state.location,
             'channelType': this.state.selectedChannel,
             'channelSubtype': this.state.selectedSubChannel,
+            'subtypeType': this.state.shopType,
+            'locationType': this.state.location,
             'distributionChannels': this.state.distributionChannels,
         }
         const channelSubType = types.find(obj => obj.name === 'Direct sales').subtypes;
@@ -426,15 +415,26 @@ class AddChannelModal extends Component {
                 const filteredPredictProperties = predictProperties.filter(p => p !== 'id');
                 for (const property of filteredPredictProperties) {
                     let selectedItemPropertyValues;
-                    if (property === 'channelSubtype' || property === 'channelType' || property === 'distributionChannels') {
+                    if (property === 'channelType') {
+                        const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(selectedItem, property).value;
+                        selectedItemPropertyValues = selectedItemPropertyValuesObj.subtypes === null ? []
+                                : selectedItemPropertyValuesObj.id; 
+                    } else if (property === 'channelSubtype') {
+                        const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(selectedItem, property).value;
+                        selectedItemPropertyValues = selectedItemPropertyValuesObj.types === null ? []
+                                : selectedItemPropertyValuesObj.id;
+                    } else if (property === 'distributionChannels') {
                         const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(selectedItem, property).value;
                         selectedItemPropertyValues = selectedItemPropertyValuesObj.types === null ? []
                             : selectedItemPropertyValuesObj.subtypes === null ? []
                                 : selectedItemPropertyValuesObj.map(s => s.id);
-                    } else if (property === 'subtypeType' || property === 'locationType') {
+                    } else if (property === 'subtypeType') {
                         const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(selectedItem, property).value === null ? [] : Object.getOwnPropertyDescriptor(selectedItem, property).value;
-                        selectedItemPropertyValues = selectedItemPropertyValuesObj === null ? [] : selectedItemPropertyValuesObj.map(s => s.id);
-                    }
+                        selectedItemPropertyValues = selectedItemPropertyValuesObj.length === 0 ? [] : selectedItemPropertyValuesObj.id;            
+                    } else if (property === 'locationType') {
+                        const selectedItemPropertyValuesObj = Object.getOwnPropertyDescriptor(selectedItem, property).value === null ? [] : Object.getOwnPropertyDescriptor(selectedItem, property).value;
+                        selectedItemPropertyValues = selectedItemPropertyValuesObj.length === 0  ? [] : selectedItemPropertyValuesObj.id;
+                    };
                     const predictObjPropertyValues = Object.getOwnPropertyDescriptor(predictObj, property).value;
                     const propertyType = property === 'channelType' ? types.map((obj) => ({ id: obj.id, title: obj.name }))
                         : property === 'channelSubtype' ? (types.find(obj => obj.name === 'Direct sales').subtypes).map(obj => ({ id: obj.id, title: obj.name }))

@@ -104,7 +104,6 @@ class Channels extends React.Component {
         });
     }
     onProductChange = (id) => {
-        console.log(id)
         this.setState({
             productId: id
         })
@@ -133,11 +132,9 @@ class Channels extends React.Component {
     }
 
     render() {
-        console.log(this.props.channels.channels)
         const data = this.props.channels.channels.map(item => {
             const channel_name = item.channel_type.name;
             const distribution_names = item.distribution_channels === null ? [] : item.distribution_channels.map(item => item.name);
-            console.log(distribution_names);
             const distribution_name = distribution_names.length === 0 ? "-" : distribution_names.join();
             const product_names = item.products.map(item => item.name);
             const product_name = product_names.join();
