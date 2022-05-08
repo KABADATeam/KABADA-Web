@@ -124,7 +124,7 @@ class AddChannelModal extends Component {
 
     onChannelChange(itemId) {
         const selectedChannel = this.props.types.find(x => x.id === itemId);
-        const modifySelectedChannel = { ...selectedChannel, tag: 0 }
+        const modifySelectedChannel = { ...selectedChannel, tag: 0 };
         this.setState({
             selectedChannel: modifySelectedChannel,
             selectedSubChannel: { "types": null },
@@ -193,9 +193,10 @@ class AddChannelModal extends Component {
         }
         return resultArray;
     }
+
     onDistributionChannelChange(value) {
         const subtypes = this.props.types.find(x => x.name === 'Direct sales').subtypes;
-        const distribution_array = (subtypes.find(x => x.name === "Own shop").types).find(x => x.id === this.state.shopType.id).distribution_channels
+        const distribution_array = (subtypes.find(x => x.name === "Own shop").types).find(x => x.id === this.state.shopType.id).distribution_channels;
         const distribution_values = this.addSelectedValue(value, this.state.distributionChannels, distribution_array);
         this.setState({
             distributionChannels: distribution_values,

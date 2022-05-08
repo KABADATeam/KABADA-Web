@@ -93,6 +93,12 @@ class Channels extends React.Component {
     }
 
     onEditChannel(item) {
+        const postObj = {
+            "location": '',
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getAIChannelsPredict(postObj);
+        console.log('Pasirinktas elementas ', item.item);
         this.setState({
             item: item.item
         });
