@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Form, Space, Select } from 'antd';
+import { Modal, Button, Form, Space, Select, Tag } from 'antd';
 import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { updateCustomerRelationship } from "../../../appStore/actions/customerRelationshipsAction";
@@ -69,9 +69,20 @@ class EditCustomerRelationshipModal extends Component {
         const category_title = this.props.item.category.title;
 
         const typeOptions = this.props.item.channels.map((obj) =>
-            <Option key={obj} value={obj}>{obj}</Option>
+            ({ label: obj.name, value: obj.id })
         );
-
+        const channelTag = (props) => {
+            const { label, value, onClose } = props;
+            return (
+                <Tag
+                    closable
+                    onClose={onClose}
+                    style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                >
+                    {label}
+                </Tag>
+            )
+        }
         return (
             <>
                 <Modal
@@ -91,11 +102,19 @@ class EditCustomerRelationshipModal extends Component {
                         initialValues={{
                             channels: this.props.item.channels.map(e => e),
                         }}>
-                        <Form.Item key="channels" name="channels" label="Channel"
-                            validateStatus={this.state.channelsError !== '' ? 'error' : 'success'}>
-                            <Select style={{ width: '100%' }} mode="tags" placeholder="Select channel" onChange={this.onChannelsChange.bind(this)} >
-                                {typeOptions}
-                            </Select>
+                        <Form.Item 
+                            key="channels" 
+                            name="channels" label="Channel"
+                            validateStatus={this.state.channelsError !== '' ? 'error' : 'success'}
+                        >
+                            <Select 
+                                style={{ width: '100%' }} 
+                                mode="tags" 
+                                placeholder="Select channel" 
+                                onChange={this.onChannelsChange.bind(this)}
+                                tagRender={channelTag}
+                                options={typeOptions} 
+                            />
                         </Form.Item>
                     </Form>
                 </Modal >
