@@ -5,11 +5,16 @@ export const customerRelationshipsCategoriesReducer = (
     }, action) => {
     switch (action.type) {
         case 'FETCHING_CUSTOMER_RELATIONSHIPS_CATEGORIES_SUCCESS':
-            const categories = action.payload.categories.map(obj => ({ ...obj, "key": obj.id }))
+            const categories = action.payload.categories.map(obj => ({ ...obj, "key": obj.id, "tag": 0 }))
             return { ...state, "categories": categories };
         case 'SELECTING_RELATIONSHIP_CATEGORY_SUCCESS':
             const selected_category = action.payload;
             return { ...state, "selected_category": selected_category };
+        case 'SET_RELATIONSHIP_CATEGORY_SUCCESS':
+            console.log(action.payload);
+            const updated_categories = state.categories.map(x => x.id === action.payload.id ? action.payload : x)
+            console.log(updated_categories);
+            return { ...state, "categories": updated_categories}
         default:
             return state;
     }
@@ -20,7 +25,8 @@ export const customerRelationshipsReducer = (
         is_customer_relationship_completed: false,
         how_to_get_new: [],
         how_to_keep_existing: [],
-        how_to_make_spend: []
+        how_to_make_spend: [],
+        ai_customer_relationship_predict: []
     }, action) => {
     switch (action.type) {
         case "SAVE_STATE_SUCCESS":
@@ -72,6 +78,12 @@ export const customerRelationshipsReducer = (
                 return { ...state, "how_to_make_spend": segment };
             }
             return state;
+        case "GET_AI_CUSTOMER_RELATIONSHIP_PREDICT_SUCCESS": 
+            console.log(action.payload)
+            return {
+                ...state,
+                "ai_customer_relationship_predict": action.payload
+            }
         default:
             return state;
     }

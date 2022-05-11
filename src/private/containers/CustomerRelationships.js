@@ -6,7 +6,7 @@ import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCa
 import { connect } from 'react-redux';
 import RelationshipCategoriesModal from '../components/customer_relationships/RelationshipCategoriesModal';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getCustomerRelationshipsCategories, getCustomerRelationships, saveState, selectRelationshipCategory, deleteCustomerRelationship } from "../../appStore/actions/customerRelationshipsAction";
+import { getCustomerRelationshipsCategories, getCustomerRelationships, saveState, selectRelationshipCategory, deleteCustomerRelationship, getAICustomerRelationshipsPredict } from "../../appStore/actions/customerRelationshipsAction";
 import AddCustomerRelationshipModal from '../components/customer_relationships/AddCustomerRelationshipModal';
 import EditCustomerRelationshipModal from '../components/customer_relationships/EditCustomerRelationshipModal';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
@@ -65,6 +65,12 @@ class CustomerRelationships extends React.Component {
     }
 
     onAddHowToGetNew = () => {
+        this.props.getCustomerRelationshipsCategories();
+        const postObj = {
+            "location": '',
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getAICustomerRelationshipsPredict(postObj);
         this.setState({
             relationshipCategory: 1,
             group: 1
@@ -72,6 +78,12 @@ class CustomerRelationships extends React.Component {
     }
 
     onAddHowToKeepExisting = () => {
+        this.props.getCustomerRelationshipsCategories();
+        const postObj = {
+            "location": '',
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getAICustomerRelationshipsPredict(postObj);
         this.setState({
             relationshipCategory: 2,
             group: 2
@@ -79,6 +91,12 @@ class CustomerRelationships extends React.Component {
     }
 
     onAddHowToMakeSpend = () => {
+        this.props.getCustomerRelationshipsCategories();
+        const postObj = {
+            "location": '',
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getAICustomerRelationshipsPredict(postObj);
         this.setState({
             relationshipCategory: 3,
             group: 3
@@ -91,6 +109,7 @@ class CustomerRelationships extends React.Component {
             group: this.state.relationshipCategory
         });
         this.props.selectRelationshipCategory(null);
+        this.props.getCustomerRelationshipsCategories();
     };
 
     onCloseRelationshipCategoriesModal = () => {
@@ -100,6 +119,7 @@ class CustomerRelationships extends React.Component {
             item: null,
         });
         this.props.selectRelationshipCategory(null);
+        this.props.getCustomerRelationshipsCategories();
     };
 
     onBackAddRelationshipModal = () => {
@@ -289,7 +309,7 @@ class CustomerRelationships extends React.Component {
                             :
                             <>
                                 <Button size="medium" style={{ ...leftButtonStyle }} onClick={this.onEditHowToMakeSpend.bind(this, row)} >Edit</Button>
-
+                                <Button size="small" style={{ ...rightButtonStyle, width: "32px", height: "32px" }} onClick={this.onDeleteHowToMakeSpend.bind(this, row)} ><DeleteOutlined /></Button>
                             </>
                         }
                     </Space>
@@ -414,4 +434,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, logout, getCustomerRelationshipsCategories, getCustomerRelationships, refreshPlan, saveState, selectRelationshipCategory, deleteCustomerRelationship })(withRouter(CustomerRelationships));
+export default connect(mapStateToProps, { getSelectedPlanOverview, logout, getCustomerRelationshipsCategories, getCustomerRelationships, refreshPlan, saveState, selectRelationshipCategory, deleteCustomerRelationship, getAICustomerRelationshipsPredict })(withRouter(CustomerRelationships));

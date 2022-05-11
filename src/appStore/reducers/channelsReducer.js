@@ -18,8 +18,7 @@ export const channelsReducer = (
             return { ...state, "channels": _channels };
         case "SAVE_STATE_SUCCESS":
             return { ...state, "is_channels_completed": action.payload };
-        case "GET_AI_CHANNEL_PREDICT_SUCCESS": 
-            console.log(action.payload)
+        case "GET_AI_CHANNEL_PREDICT_SUCCESS":
             return {...state, aiChannelPredict: action.payload }
         default:
             return state;

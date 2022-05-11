@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Form, Space, Select } from 'antd';
+import { Modal, Button, Form, Space, Select, Tag } from 'antd';
 import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { saveCustomerRelationship } from "../../../appStore/actions/customerRelationshipsAction";
@@ -61,7 +61,18 @@ class AddCustomerRelationshipModal extends Component {
 
         const category_title = this.props.categories.selected_category.title;
         const children = [];
-
+        const channelTag = (props) => {
+            const { label, value, onClose } = props;
+            return (
+                <Tag
+                    closable
+                    onClose={onClose}
+                    style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                >
+                    {label}
+                </Tag>
+            )
+        }
         return (
             <>
                 <Modal
@@ -78,11 +89,20 @@ class AddCustomerRelationshipModal extends Component {
                     }
                 >
                     <Form layout="vertical" id="myForm" name="myForm" onFinish={this.handleOk}>
-                        <Form.Item key="channels" name="channels" label="Channel"
-                            validateStatus={this.state.channelsError !== '' ? 'error' : 'success'}>
-                            <Select mode="tags" style={{ width: '100%' }} placeholder="Enter channel" onChange={this.onChannelsChange.bind(this)}>
-                                {children}
-                            </Select>
+                        <Form.Item 
+                            key="channels" 
+                            name="channels" 
+                            label="Channel"
+                            validateStatus={this.state.channelsError !== '' ? 'error' : 'success'}
+                        >
+                            <Select 
+                                mode="tags" 
+                                style={{ width: '100%' }} 
+                                placeholder="Enter channel" 
+                                onChange={this.onChannelsChange.bind(this)}
+                                tagRender={channelTag}
+                                options={children}
+                            />
                         </Form.Item>
                     </Form>
                 </Modal >
