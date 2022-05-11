@@ -93,7 +93,7 @@ class AddChannelModal extends Component {
             "location_type_id": this.state.location === null ? null : this.state.location.id,
             "distribution_channels_id": this.state.distributionChannels.map(i => i.id)
         };
-
+        console.log('Create new channel ',postObj)
         const products = this.state.selectedProducts.map(id => {
             return this.props.products.products.find(x => x.id === id);
         });
@@ -113,7 +113,7 @@ class AddChannelModal extends Component {
             "distribution_channels": distributions,
             "channel_subtype": this.state.selectedSubChannel.id === undefined ? null : { ...this.state.selectedSubChannel, "type": type },
         }
-        
+        console.log(reducerObj)
         this.props.saveChannel(postObj, reducerObj);
 
         this.props.onClose();

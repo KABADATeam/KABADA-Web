@@ -32,7 +32,7 @@ export const saveChannel = (postObject, reducerObject) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.post('api/channels/save', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            dispatch({ type: 'SAVE_CHANNEL_SUCCESS', payload: { ...reducerObject, "id": response.data, "key": response.data } });
+            dispatch({ type: 'SAVE_CHANNEL_SUCCESS', payload: { ...reducerObject, "id": response.data } });
         } finally {
             dispatch({ type: "LOADING", payload: false });
         }
@@ -45,7 +45,7 @@ export const updateChannel = (postObject, reducerObject) => {
         try {
             const token = getState().user.access_token;
             await kabadaAPI.post('api/channels/save', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            dispatch({ type: 'UPDATE_CHANNEL_SUCCESS', payload: { ...reducerObject, "id": postObject.id, "key": postObject.id } });
+            dispatch({ type: 'UPDATE_CHANNEL_SUCCESS', payload: { ...reducerObject, "id": postObject.id } });
         } finally {
             dispatch({ type: "LOADING", payload: false });
         }
@@ -87,7 +87,6 @@ export const getAIChannelsPredict = (postObject) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.post('api/plans/predict', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response.data);
             dispatch({ type: 'GET_AI_CHANNEL_PREDICT_SUCCESS', payload: response.data.plan.channels });
         } catch {
             dispatch({ type: 'ERROR_AI_MESSAGE', payload: true});

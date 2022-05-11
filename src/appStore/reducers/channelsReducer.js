@@ -6,15 +6,12 @@ export const channelsReducer = (
     }, action) => {
     switch (action.type) {
         case "FETCHING_CHANNELS_SUCCESS":
-            //console.log(action.payload);
             return action.payload;
         case "SAVE_CHANNEL_SUCCESS":
             const channels = [ ...state.channels, { ...action.payload } ];
             return { ...state, "channels": channels };
         case "UPDATE_CHANNEL_SUCCESS":
-            //console.log(action.payload);
             const channels_ = state.channels.map(x => x.id === action.payload.id ? action.payload : x);
-            //console.log(channels_);
             return { ...state, "channels": channels_ };
         case "REMOVING_CHANNEL_SUCCESS":
             const _channels = state.channels.filter(x => x.id !== action.payload);
