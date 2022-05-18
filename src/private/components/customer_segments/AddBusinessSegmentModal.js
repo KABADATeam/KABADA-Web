@@ -154,7 +154,7 @@ class AddBusinessSegmentModal extends Component {
         })
     }
     handlePopoverVisibilityChange = (visible) => {
-        if (this.props.customerSegments.aiPredict === null) {
+        if (this.props.customerSegments.aiPredict.custSegs === undefined) {
             this.setState({
                 popoverVisibility: visible,
                 popoverType: 'no predict'

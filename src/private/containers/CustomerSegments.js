@@ -75,7 +75,7 @@ class CustomerSegments extends React.Component {
             consumerSegment: true
         });
         const postObj = {
-            "location": 'custSegs::cosumers',
+            "location": 'plan::custSegs::consumer',
             "planId": this.props.businessPlan.id
         };
         this.props.getAIValues(postObj, null, 'consumer');
@@ -86,7 +86,7 @@ class CustomerSegments extends React.Component {
             businessSegment: true
         });
         const postObj = {
-            "location": 'custSegs::business',
+            "location": 'plan::custSegs::business',
             "planId": this.props.businessPlan.id
         };
         this.props.getAIValues(postObj, null, 'business');
@@ -97,7 +97,7 @@ class CustomerSegments extends React.Component {
             publicBodiesSegment: true
         });
         const postObj = {
-            "location": 'custSegs::business',
+            "location": 'plan::custSegs::publicNgo',
             "planId": this.props.businessPlan.id
         };
         this.props.getAIValues(postObj, null, 'publicNgo');
@@ -139,12 +139,12 @@ class CustomerSegments extends React.Component {
         this.setState({
             item: { ...item },
             consumerEditSegment: true
-        });
-        
+        });        
         const postObj = {
-            "location": 'custSegs::cosumers',
+            "location": `plan::custSegs::consumer::${item.id}`,
             "planId": this.props.businessPlan.id
         };
+        console.log(postObj);
         this.props.getAIValues(postObj, item.id, 'consumer');
     }
 
@@ -154,9 +154,10 @@ class CustomerSegments extends React.Component {
             businessSegment: true
         });
         const postObj = {
-            "location": 'custSegs::business',
+            "location": `plan::custSegs::business::${item.id}`,
             "planId": this.props.businessPlan.id
         };
+        console.log(postObj);
         this.props.getAIValues(postObj, item.id, 'business');
     }
 
@@ -166,7 +167,7 @@ class CustomerSegments extends React.Component {
             publicBodiesSegment: true
         });
         const postObj = {
-            "location": 'custSegs::business',
+            "location": `plan::custSegs::publicNgo::${item.id}`,
             "planId": this.props.businessPlan.id
         };
         this.props.getAIValues(postObj, item.id, 'public_bodies_ngo');
