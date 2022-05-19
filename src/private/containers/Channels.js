@@ -67,7 +67,7 @@ class Channels extends React.Component {
 
     onAddChannel = () => {
         const postObj = {
-            "location": '',
+            "location": "plan::channels",
             "planId": this.props.businessPlan.id
         };
         this.props.getAIChannelsPredict(postObj);
@@ -94,7 +94,7 @@ class Channels extends React.Component {
 
     onEditChannel(item) {
         const postObj = {
-            "location": '',
+            "location": `plan::channels::${item.item.id}`,
             "planId": this.props.businessPlan.id
         };
         this.props.getAIChannelsPredict(postObj);

@@ -271,10 +271,10 @@ class EditChannelModal extends Component {
     }
 
     onAIButtonClick = () => {
-        const obj = this.props.channels.aiChannelPredict;
-        const aiObject = obj.find(el => el.id === null);
+        const aiObject = this.props.channels.aiChannelPredict[0];
+        //const aiObject = obj.find(el => el.id === null);
         const channel_type = this.state.selected_channel.id !== undefined ? this.state.selected_channel.id : null;
-        const ai_channel_type = aiObject.channelType[0]
+        const ai_channel_type = aiObject.channelType[0];
         let new_channel_type_obj;
         let new_channel_subtype_obj;
         let new_shopType;
