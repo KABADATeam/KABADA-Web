@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import AddSegmentModal from '../components/revenue_streams/AddSegmentModal';
 import EditSegmentModal from '../components/revenue_streams/EditSegmentModal';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getStreamTypes, getPrices, getRevenues, saveState, deleteRevenue } from "../../appStore/actions/revenueStreamActions";
+import { getStreamTypes, getPrices, getRevenues, saveState, deleteRevenue, getAIRevenueStreamPredict } from "../../appStore/actions/revenueStreamActions";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
 import TooltipComponent from "../components/Tooltip";
@@ -92,7 +92,9 @@ class RevenueStreams extends React.Component {
             item: null
         });
     };
-
+//     "plan::revenue::consumer::${item.id}"
+// "plan::revenue::business::<id>"
+// "plan::revenue::publicNgo::<id>"
     onDeleteFirstSegment(item) {
         this.props.deleteRevenue({ "id": item.id, "segment": 1 });
     }
@@ -106,6 +108,13 @@ class RevenueStreams extends React.Component {
     }
 
     onEditFirstSegment(item) {
+        console.log('Revenue stream item data: ',item.id);
+        //"plan::revenue::consumer::8e583491-3675-49a7-bf9a-e07f1a6c81b1"
+        const postObj = {
+            "location": `plan::custSegs::business::${item.id}`,
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getAIRevenueStreamPredict(postObj);
         this.setState({
             item: { ...item, "segment": 1 }
         });
@@ -139,7 +148,6 @@ class RevenueStreams extends React.Component {
                         this.props.getRevenues(this.props.businessPlan.id);
                         this.props.getStreamTypes();
                         this.props.getPrices();
-                        console.log(this.props.revenues.segment_1);
 
                     });
                 }
@@ -388,4 +396,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPlan,logout })(withRouter(RevenueStreams));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPlan,logout, getAIRevenueStreamPredict })(withRouter(RevenueStreams));

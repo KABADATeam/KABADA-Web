@@ -92,3 +92,19 @@ export const deleteRevenue = (obj) => {
         }
     }
 };
+
+export const getAIRevenueStreamPredict = (postObject) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true});
+        try {
+            const token = getState().user.access_token;
+            const response = await kabadaAPI.post('api/plans/predict', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            console.log(response)
+            //dispatch({ type: 'GET_AI_CHANNEL_PREDICT_SUCCESS', payload: response.data.plan.channels });
+        } catch {
+            dispatch({ type: 'ERROR_AI_MESSAGE', payload: true});
+        } finally {
+
+        }
+    }
+}
