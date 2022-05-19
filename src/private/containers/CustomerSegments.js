@@ -144,7 +144,6 @@ class CustomerSegments extends React.Component {
             "location": `plan::custSegs::consumer::${item.id}`,
             "planId": this.props.businessPlan.id
         };
-        console.log(postObj);
         this.props.getAIValues(postObj, item.id, 'consumer');
     }
 
@@ -157,7 +156,6 @@ class CustomerSegments extends React.Component {
             "location": `plan::custSegs::business::${item.id}`,
             "planId": this.props.businessPlan.id
         };
-        console.log(postObj);
         this.props.getAIValues(postObj, item.id, 'business');
     }
 

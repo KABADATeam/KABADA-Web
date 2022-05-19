@@ -157,7 +157,6 @@ class EditConsumerSegmentModal extends Component {
     }
 
     handlePopoverVisibilityChange = (visible) => {
-        console.log(this.props.customerSegments.aiPredict)
         if (this.props.customerSegments.aiPredict.custSegs === undefined) {
             this.setState({
                 popoverVisibility: visible,
