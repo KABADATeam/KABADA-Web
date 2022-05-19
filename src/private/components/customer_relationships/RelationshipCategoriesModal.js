@@ -16,7 +16,7 @@ class RelationshipCategoriesModal extends Component {
     }
 
     handlePopoverVisibilityChange = (visible) => {
-        if (this.props.customerRelationships.ai_customer_relationship_predict === null || this.props.customerRelationships.ai_customer_relationship_predict.lenght === 0) {
+        if (this.props.customerRelationships.ai_customer_relationship_predict === undefined) {
             this.setState({
                 popoverVisibility: visible,
                 popoverType: 'no predict'
@@ -28,7 +28,6 @@ class RelationshipCategoriesModal extends Component {
                     : this.props.group === 3 ? this.props.customerRelationships.ai_customer_relationship_predict.convCust
                         : null;
             const text = this.generateAIHelpText(customerRelatioshipType);
-            console.log(text)
             if (text === undefined) {
                 this.setState({
                     popoverVisibility: visible,
@@ -56,8 +55,6 @@ class RelationshipCategoriesModal extends Component {
                 : this.props.group === 3 ? this.props.customerRelationships.ai_customer_relationship_predict.convCust
                     : null;
         const newAICustomerRelationshipSuggest = customerRelatioshipType.find(x => x.id === null).action;
-        console.log(newAICustomerRelationshipSuggest[0])
-        console.log(this.props.categories.categories)
         const selectionSuggestObj = this.props.categories.categories.find(x => x.id === newAICustomerRelationshipSuggest[0]);
         const selectionSuggestObjForReducer = {
             id: selectionSuggestObj.id,
@@ -70,7 +67,6 @@ class RelationshipCategoriesModal extends Component {
     }
 
     addNewRelationship = (item) => {
-        console.log(item)
         this.props.selectRelationshipCategory(item)
             .then(
                 this.props.onOpen()
@@ -104,9 +100,7 @@ class RelationshipCategoriesModal extends Component {
         const aiHintTextObject = [];
         if (predictsObj !== undefined) {
             const predict = predictsObj.find(x => x.id === null).action;
-            console.log(predict)
             const title = this.props.categories.categories.find(x => x.id === predict[0]).title;
-            console.log(title)
             const newObject = {
                 type_title: 'mechanism',
                 text: title 
@@ -118,7 +112,6 @@ class RelationshipCategoriesModal extends Component {
                 popoverType: 'no predict',
             })
         }
-        console.log(aiHintTextObject)
     }
 
     render() {

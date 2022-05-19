@@ -79,7 +79,6 @@ export const customerRelationshipsReducer = (
             }
             return state;
         case "GET_AI_CUSTOMER_RELATIONSHIP_PREDICT_SUCCESS": 
-            console.log(action.payload)
             return {
                 ...state,
                 "ai_customer_relationship_predict": action.payload

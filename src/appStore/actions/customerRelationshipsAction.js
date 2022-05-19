@@ -52,8 +52,6 @@ export const saveCustomerRelationship = (postObject, reducerObj) => {
         dispatch({ type: "LOADING", payload: true });
         try {
             const token = getState().user.access_token;
-            console.log(postObject)
-            console.log(reducerObj)
             const response = await kabadaAPI.post('api/custRel/save', postObject, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: 'SAVE_CUSTOMER_RELATIONSHIP_SUCCESS', payload: { ...reducerObj, "id": response.data, "key": response.data } });
         } finally {
@@ -96,7 +94,6 @@ export const getAICustomerRelationshipsPredict = (postObject) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.post('api/plans/predict', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response.data.plan.custRelationship);
             dispatch({ type: 'GET_AI_CUSTOMER_RELATIONSHIP_PREDICT_SUCCESS', payload: response.data.plan.custRelationship });
         } catch {
             dispatch({ type: 'ERROR_AI_MESSAGE', payload: true});

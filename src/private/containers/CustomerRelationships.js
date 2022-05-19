@@ -67,7 +67,7 @@ class CustomerRelationships extends React.Component {
     onAddHowToGetNew = () => {
         this.props.getCustomerRelationshipsCategories();
         const postObj = {
-            "location": '',
+            "location": 'plan::custRelationship::getCust',
             "planId": this.props.businessPlan.id
         };
         this.props.getAICustomerRelationshipsPredict(postObj);
@@ -76,11 +76,10 @@ class CustomerRelationships extends React.Component {
             group: 1
         });
     }
-
     onAddHowToKeepExisting = () => {
         this.props.getCustomerRelationshipsCategories();
         const postObj = {
-            "location": '',
+            "location": 'plan::custRelationship::keepCust',
             "planId": this.props.businessPlan.id
         };
         this.props.getAICustomerRelationshipsPredict(postObj);
@@ -93,7 +92,7 @@ class CustomerRelationships extends React.Component {
     onAddHowToMakeSpend = () => {
         this.props.getCustomerRelationshipsCategories();
         const postObj = {
-            "location": '',
+            "location": 'plan::custRelationship::convCust',
             "planId": this.props.businessPlan.id
         };
         this.props.getAICustomerRelationshipsPredict(postObj);
@@ -158,18 +157,33 @@ class CustomerRelationships extends React.Component {
     }
 
     onEditHowToGetNew(item) {
+        const postObj = {
+            "location": `plan::custRelationship::getCust::${item.id}`,
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getAICustomerRelationshipsPredict(postObj);
         this.setState({
             item: { ...item, "group": 1 },
         });
     }
 
     onEditHowToKeepExisting(item) {
+        const postObj = {
+            "location": `plan::custRelationship::keepCust::${item.id}`,
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getAICustomerRelationshipsPredict(postObj);
         this.setState({
             item: { ...item, "group": 2 },
         });
     }
 
     onEditHowToMakeSpend(item) {
+        const postObj = {
+            "location": `plan::custRelationship::convCust::${item.id}`,
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getAICustomerRelationshipsPredict(postObj);
         this.setState({
             item: { ...item, "group": 3 },
         });
