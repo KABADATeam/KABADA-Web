@@ -78,7 +78,7 @@ class ValuePropositions extends React.Component {
 
     onEditItem = (item) => {
         const postObj = {
-            "location": '',
+            "location": `plan::valueProposition::${item.id}`,
             "planId": this.props.businessPlan.id
         };
         this.props.getValuePropositionAIPredict(postObj);

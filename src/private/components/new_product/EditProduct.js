@@ -109,8 +109,6 @@ class EditProduct extends React.Component {
         let a = JSON.stringify(array1); //if is object array
         let b = JSON.stringify(array2);
         //let b = JSON.parse(JSON.stringify(array2)); if is simple array
-        console.log(array1)
-        console.log(array2)
         if (a === b) return true;
         if (a == null || b == null) return false;
         if (a.length !== b.length) return false;
@@ -173,8 +171,6 @@ class EditProduct extends React.Component {
                 "innovative_level": this.props.product.innovative_level,
                 "quality_level": this.props.product.quality_level,
             }
-            console.log(original)
-            console.log(modified)
             if (original === null) {
                 return 'hidden';
             }

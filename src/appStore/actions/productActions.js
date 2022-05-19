@@ -141,7 +141,6 @@ export const getProduct = (productId, callback) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/products/product/' + productId, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response.data);
             dispatch({ type: 'FETCHING_PRODUCT_SUCCESS', payload: response.data });
             if (callback !== null) {
                 callback(response.data);
@@ -185,7 +184,6 @@ export const updateProduct = (postObject, callback) => {
                 "product_type": productType.title,
                 "value": qualityLevel.title
             }
-            console.log(obj)
             dispatch({ type: 'UPDATE_PRODUCT_SUCCESS', payload: obj });
             callback();
         } catch (error) {
@@ -241,7 +239,7 @@ export const deleteProduct = (id) => {
     return async (dispatch, getState) => {
         try {
             const token = getState().user.access_token;
-            await kabadaAPI.delete("api/products/" + id, { headers: { Authorization: `Bearer ${token}` } });
+            const response = await kabadaAPI.delete("api/products/" + id, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: "REMOVING_PRODUCT_SUCCESS", payload: id });
         } catch (error) {
             dispatch({ type: 'ERROR', payload: errorHandler(error) });
@@ -272,7 +270,6 @@ export const getValuePropositionAIPredict = (postObject) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.post('api/plans/predict', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response.data);
             dispatch({ type: 'GET_PRODUCT_AI_PREDICT', payload: response.data.plan.valueProposition });
         } catch {
             //dispatch({ type: 'ERROR_AI_MESSAGE', payload: true});
