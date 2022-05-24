@@ -79,8 +79,9 @@ class ProductInfoComponent extends Component {
     generateAIHelpText = () => {
         const aiHintTextObject = [];
         const { product_type, price_level, selected_additional_income_sources, product_features, aiPredict } = this.props.product;
+        console.log(this.props.product);
         const { priceLevels } = this.props.productFeaturesLevels;
-        const ai_obj = aiPredict.find(e => e.id === null);
+        const ai_obj = aiPredict === undefined ? undefined : aiPredict.find(e => e.id === null);
         if (ai_obj !== undefined) {
             if (ai_obj.prodType !== undefined) {
                 if (product_type.type_id !== ai_obj.prodType[0]) {

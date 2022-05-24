@@ -78,7 +78,6 @@ class EditProduct extends React.Component {
 
     saveChanges = () => {
         if (this.props.product.title !== '') {
-            console.log(this.props.product)
             const product_type = this.props.product.product_type.type_id;
             const price_level = this.props.product.price_level.price_id;
             const income_sources = this.props.product.selected_additional_income_sources.map(e => e.id);
@@ -97,7 +96,6 @@ class EditProduct extends React.Component {
                 "differentiation_level": this.props.productFeatures.differentiation[0].id,
                 "business_plan_id": this.props.businessPlan.id
             };
-            console.log(postObj);
             this.props.updateProduct(postObj, () => {
                 this.props.onClose();
             });
@@ -257,8 +255,7 @@ class EditProduct extends React.Component {
                         "planId": this.props.businessPlan.id
                     };
                     this.props.getValuePropositionAIPredict(postObj);
-                    const productId = localStorage.getItem('product-id')
-                    console.log(productId)
+                    const productId = localStorage.getItem('product-id');
                     this.props.getProduct(productId, (data) => {
                         this.setState({
                             originalProduct: JSON.parse(JSON.stringify(data))

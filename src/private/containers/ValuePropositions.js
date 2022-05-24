@@ -64,11 +64,11 @@ class ValuePropositions extends React.Component {
 
     addKeyProduct = () => {
         this.props.history.push(`/new-product`);
-        // const postObj = {
-        //     "location": '',
-        //     "planId": this.props.businessPlan.id
-        // };
-        // this.props.getValuePropositionAIPredict(postObj);
+        const postObj = {
+            "location": 'plan::valueProposition::sample',
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getValuePropositionAIPredict(postObj);
     }
 
     deleteItem = (item) => {
