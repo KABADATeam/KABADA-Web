@@ -64,6 +64,11 @@ class RevenueStreams extends React.Component {
     }
 
     onAddFirstRevenueStream = () => {
+        const postObj = {
+            "location": "plan::revenue::consumer::sample",
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getAIRevenueStreamPredict(postObj);
         this.setState({
             segmentNumber: 1
         });
