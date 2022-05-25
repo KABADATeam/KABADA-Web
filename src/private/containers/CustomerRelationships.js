@@ -67,7 +67,7 @@ class CustomerRelationships extends React.Component {
     onAddHowToGetNew = () => {
         this.props.getCustomerRelationshipsCategories();
         const postObj = {
-            "location": 'plan::custRelationship::getCust',
+            "location": 'plan::custRelationship::getCust::sample',
             "planId": this.props.businessPlan.id
         };
         this.props.getAICustomerRelationshipsPredict(postObj);
@@ -79,7 +79,7 @@ class CustomerRelationships extends React.Component {
     onAddHowToKeepExisting = () => {
         this.props.getCustomerRelationshipsCategories();
         const postObj = {
-            "location": 'plan::custRelationship::keepCust',
+            "location": 'plan::custRelationship::keepCust::sample',
             "planId": this.props.businessPlan.id
         };
         this.props.getAICustomerRelationshipsPredict(postObj);
@@ -92,7 +92,7 @@ class CustomerRelationships extends React.Component {
     onAddHowToMakeSpend = () => {
         this.props.getCustomerRelationshipsCategories();
         const postObj = {
-            "location": 'plan::custRelationship::convCust',
+            "location": 'plan::custRelationship::convCust::sample',
             "planId": this.props.businessPlan.id
         };
         this.props.getAICustomerRelationshipsPredict(postObj);

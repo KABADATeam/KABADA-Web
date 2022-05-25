@@ -67,7 +67,7 @@ class Channels extends React.Component {
 
     onAddChannel = () => {
         const postObj = {
-            "location": "plan::channels",
+            "location": "plan::channels::sample",
             "planId": this.props.businessPlan.id
         };
         this.props.getAIChannelsPredict(postObj);

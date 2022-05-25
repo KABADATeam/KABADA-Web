@@ -94,6 +94,7 @@ export const getAICustomerRelationshipsPredict = (postObject) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.post('api/plans/predict', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            console.log(response.data);
             dispatch({ type: 'GET_AI_CUSTOMER_RELATIONSHIP_PREDICT_SUCCESS', payload: response.data.plan.custRelationship });
         } catch {
             dispatch({ type: 'ERROR_AI_MESSAGE', payload: true});
