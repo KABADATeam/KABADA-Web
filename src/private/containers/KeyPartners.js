@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import KeyPartnersModal from "../components/KeyPartnersModal";
 import AddKeyPartnerModal from '../components/AddKeyPartnerModal';
 import EditKeyPartnerModal from '../components/EditKeyPartnerModal';
-import { getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState } from "../../appStore/actions/partnersAction";
+import { getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState, getKeyPartnersAIPredict } from "../../appStore/actions/partnersAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
@@ -80,7 +80,13 @@ class KeyPartners extends React.Component {
     }
 
     onAddNewDistributor = () => {
-        this.props.selectCategory("distributor", this.props.categories.distributors_types, () => {
+        const postObj = {
+            "location": 'plan::keyPartners::distributors::sample',
+            "planId": this.props.businessPlan.id
+        };
+        const partnerType = 'distributors';
+        this.props.getKeyPartnersAIPredict(postObj, partnerType);
+        this.props.selectCategory("distributor", this.props.categories.distributors, () => {
             this.setState({
                 isCategoriesModalVisible: true
             });
@@ -88,7 +94,13 @@ class KeyPartners extends React.Component {
     }
 
     onAddNewSupplier = () => {
-        this.props.selectCategory("supplier", this.props.categories.suppliers_types, () => {
+        const postObj = {
+            "location": 'plan::keyPartners::suppliers::sample',
+            "planId": this.props.businessPlan.id
+        };
+        const partnerType = 'suppliers';
+        this.props.getKeyPartnersAIPredict(postObj, partnerType);
+        this.props.selectCategory("supplier", this.props.categories.suppliers, () => {
             this.setState({
                 isCategoriesModalVisible: true
             });
@@ -96,7 +108,13 @@ class KeyPartners extends React.Component {
     }
 
     onAddNewOther = () => {
-        this.props.selectCategory("other", this.props.categories.others_types, () => {
+        const postObj = {
+            "location": 'plan::keyPartners::others::sample',
+            "planId": this.props.businessPlan.id
+        };
+        const partnerType = 'others';
+        this.props.getKeyPartnersAIPredict(postObj, partnerType);
+        this.props.selectCategory("other", this.props.categories.others, () => {
             this.setState({
                 isCategoriesModalVisible: true
             });
@@ -404,4 +422,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState, refreshPlan, logout })(withRouter(KeyPartners));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState, refreshPlan, logout, getKeyPartnersAIPredict })(withRouter(KeyPartners));

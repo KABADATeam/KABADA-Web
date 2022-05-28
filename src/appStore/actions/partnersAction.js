@@ -44,6 +44,7 @@ export const getPartnersCategories = () => {
 
 export const selectCategory = (title, items, callback) => {
     return async (dispatch, getState) => {
+        console.log("selectCategory title ", title + " items ",items);
         dispatch({ type: "SELECTING_PARTNERS_CATEGORY_SUCCESS", payload: { title, items } });
         callback();
     };
@@ -51,6 +52,7 @@ export const selectCategory = (title, items, callback) => {
 
 export const selectCategoryType = (title, type, callback) => {
     return async (dispatch, getState) => {
+        console.log("selectCategoryType title ", title + "type ", type);
         dispatch({ type: "SELECTING_PARTNERS_CATEGORY_TYPE_SUCCESS", payload: { category_title: title, ...type } });
         callback();
     };
@@ -191,3 +193,26 @@ export const saveState = (planId, is_completed, callback) => {
     }
 };
 
+export const getKeyPartnersAIPredict = (postObject, type) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "LOADING", payload: true});
+        try {
+            const token = getState().user.access_token;
+            const response = await kabadaAPI.post('api/plans/predict', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            const partnerTypePredict = type == 'distributors' ? response.data.plan.keyPartners.distributors : 
+                type === 'suppliers' ? response.data.plan.keyPartners.suppliers :
+                    type === 'others' ? response.data.plan.keyPartners.others : null ;
+            dispatch({ type: 'GET_AI_KEY_PARTNERS_PREDICT_SUCCESS', payload: partnerTypePredict });
+        } catch {
+            dispatch({ type: 'ERROR_AI_MESSAGE', payload: true});
+        } finally {
+
+        }
+    }
+}
+
+export const setKeyPartnerCategoryType = (item) => {
+    return async (dispatch, getState) => {
+        dispatch({ type: "SET_KEY_PARTNER_CATEGORY_TYPE_SUCCESS", payload: item });
+    };
+}
