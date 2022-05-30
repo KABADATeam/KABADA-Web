@@ -93,6 +93,7 @@ class AddSegmentModal extends Component {
         this.setState({
             revenue: id
         });
+
     }
 
     onPriceChange(id) {
@@ -126,18 +127,20 @@ class AddSegmentModal extends Component {
     }
     render() {
         const additionalTitle = this.props.number === 3 ? 'Public bodies & NGO' : this.props.number === 2 ? 'Business' : 'Consumers';
+        const Prices = this.state.price !== null ? this.state.price : null
+        const PriceType = this.state.priceType !== null ? this.state.priceType : null
 
         const streamOptions = this.props.types.stream_types.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+            ({ label: obj.title, value: obj.id })
         );
 
         const priceOptions = this.props.types.prices.map((obj) =>
-            <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+            ({ label: obj.title, value: obj.id })
         );
 
         const priceTypeOptions = this.state.price === null ? [] :
             this.props.types.prices.find(x => x.id === this.state.price).types.map((obj) =>
-                <Option key={obj.id} value={obj.id}>{obj.title}</Option>
+                ({ label: obj.title, value: obj.id })
             );
         const consumersNames = this.props.customerSegments.consumers.map((obj) =>
             <Option key={obj.segment_name} value={obj.segment_name}>{obj.segment_name}</Option>
@@ -168,23 +171,19 @@ class AddSegmentModal extends Component {
                     <Form layout="vertical" id="myForm" name="myForm" onFinish={this.handleOk}>
                         <Form.Item key="name" name="name" label="Revenue Stream Name"
                             validateStatus={this.state.revenueError !== '' ? 'error' : 'success'}>
-                            <Select style={{ width: '100%' }} placeholder="Select revenue stream" onChange={this.onNameChange.bind(this)} >
-                                {streamOptions}
-                            </Select>
+                            <Select options={streamOptions} style={{ width: '100%' }} placeholder="Select revenue stream" onChange={this.onNameChange.bind(this)} />
+
                         </Form.Item>
 
-                        <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingRight: "10px" }} key="price" name="price" label="Prices"
+                        <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingRight: "10px" }} key="price" label="Prices"
                             validateStatus={this.state.priceError !== '' ? 'error' : 'success'}>
-                            <Select style={{ width: '100%' }} placeholder="Select price" onChange={this.onPriceChange.bind(this)} >
-                                {priceOptions}
-                            </Select>
+                            <Select options={priceOptions} value={Prices} style={{ width: '100%' }} placeholder="Select price" onChange={this.onPriceChange.bind(this)} />
                         </Form.Item>
 
-                        <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingLeft: "10px" }} key="type" name="type" label="Types of pricing"
+                        <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingLeft: "10px" }} key="type" label="Types of pricing"
                             validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
-                            <Select style={{ width: '100%' }} placeholder="Choose type" disabled={this.state.price === null ? true : false} onChange={this.onPriceTypeChange.bind(this)} >
-                                {priceTypeOptions}
-                            </Select>
+                            <Select options={priceTypeOptions} value={PriceType} style={{ width: '100%' }} placeholder="Choose type" disabled={this.state.price === null ? true : false} onChange={this.onPriceTypeChange.bind(this)} />
+
                         </Form.Item>
 
 
