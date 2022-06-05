@@ -7,7 +7,7 @@ export const getRevenues = (planId) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/revenue/' + planId, { headers: { Authorization: `Bearer ${token}` } });
-            console.log('Revenues:'+JSON.stringify(response.data))
+            console.log('Revenues:' + JSON.stringify(response.data))
             dispatch({ type: "FETCHING_REVENUE_STREAMS_SUCCESS", payload: response.data });
         } finally {
             dispatch({ type: "LOADING", payload: false });
@@ -20,7 +20,7 @@ export const getStreamTypes = () => {
         dispatch({ type: "LOADING", payload: true });
         try {
             const response = await kabadaAPI.get('api/revenue/streamTypes');
-            console.log('GOT stream types :'+JSON.stringify(response.data))
+            console.log('GOT stream types :' + JSON.stringify(response.data))
             dispatch({ type: "FETCHING_REVENUE_TYPES_SUCCESS", payload: response.data });
         } finally {
             dispatch({ type: "LOADING", payload: false });
@@ -93,18 +93,39 @@ export const deleteRevenue = (obj) => {
     }
 };
 
-export const getAIRevenueStreamPredict = (postObject) => {
+export const getAIRevenueStreamPredict = (postObject, itemID, segmentType) => {
     return async (dispatch, getState) => {
-        dispatch({ type: "LOADING", payload: true});
+        dispatch({ type: "LOADING", payload: true });
+        dispatch({ type: 'ERROR_AI_MESSAGE', payload: false });
+        dispatch({ type: 'RESET_AI_PREDICT' });
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.post('api/plans/predict', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response)
+            console.log(response.data.plan.revenue)
             //dispatch({ type: 'GET_AI_CHANNEL_PREDICT_SUCCESS', payload: response.data.plan.channels });
+            dispatch({ type: 'GET_AI_PREDICT_SUCCESS', payload: { data: response.data, itemID: itemID, segments: getState().customerSegmentProperties, segmentType: segmentType } });
+
         } catch {
-            dispatch({ type: 'ERROR_AI_MESSAGE', payload: true});
+            dispatch({ type: 'ERROR_AI_MESSAGE', payload: true });
         } finally {
 
         }
     }
 }
+
+// export const getAIValues = (postObject, itemID, segmentType) => {
+//     return async (dispatch, getState) => {
+//         dispatch({ type: "LOADING", payload: true});
+//         dispatch({ type: 'ERROR_AI_MESSAGE', payload: false});
+//         dispatch({ type: 'RESET_AI_PREDICT'});
+//         try {
+//             const token = getState().user.access_token;
+//             const response = await kabadaAPI.post('api/plans/predict', postObject, { headers: { Authorization: `Bearer ${token}` } });
+//             dispatch({ type: 'GET_AI_PREDICT_SUCCESS', payload: { data: response.data, itemID: itemID, segments: getState().customerSegmentProperties, segmentType: segmentType}});
+//         } catch {
+//             dispatch({ type: 'ERROR_AI_MESSAGE', payload: true});
+//         } finally {
+
+//         }
+//     }
+// }

@@ -15,7 +15,8 @@ const getOwnership = (obj) => {
 export const resourcesReducer = (
     state = {
         is_resources_completed: false,
-        key_resources: []
+        key_resources: [],
+        aiPredict: null
     }, action) => {
     switch (action.type) {
         case "FETCHING_RESOURCES_SUCCESS":
@@ -33,6 +34,18 @@ export const resourcesReducer = (
             return { ...state, "key_resources": _resources_ };
         case "SAVE_CHANGES_SUCCESS":
             return { ...state, "is_resources_completed": action.payload };
+        case "GET_AI_PREDICT_SUCCESS":
+            return {
+                ...state,
+                "aiPredict": action.payload.data.plan,
+            }//222
+        case "ERROR_AI_MESSAGE":
+            return { ...state, "errorMessage": action.payload }
+        case "RESET_AI_PREDICT":
+            return {
+                ...state,
+                "aiPredict": null,
+            }
         default:
             return state;
     }

@@ -75,12 +75,22 @@ class RevenueStreams extends React.Component {
     }
 
     onAddSecondRevenueStream = () => {
+        const postObj = {
+            "location": "plan::revenue::consumer::sample",
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getAIRevenueStreamPredict(postObj);
         this.setState({
             segmentNumber: 2
         });
     }
 
     onAddNewOther = () => {
+        const postObj = {
+            "location": "plan::revenue::consumer::sample",
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getAIRevenueStreamPredict(postObj);
         this.setState({
             segmentNumber: 3
         });
@@ -97,9 +107,9 @@ class RevenueStreams extends React.Component {
             item: null
         });
     };
-//     "plan::revenue::consumer::${item.id}"
-// "plan::revenue::business::<id>"
-// "plan::revenue::publicNgo::<id>"
+    //     "plan::revenue::consumer::${item.id}"
+    // "plan::revenue::business::<id>"
+    // "plan::revenue::publicNgo::<id>"
     onDeleteFirstSegment(item) {
         this.props.deleteRevenue({ "id": item.id, "segment": 1 });
     }
@@ -113,7 +123,7 @@ class RevenueStreams extends React.Component {
     }
 
     onEditFirstSegment(item) {
-        console.log('Revenue stream item data: ',item.id);
+        console.log('Revenue stream item data: ', item.id);
         //"plan::revenue::consumer::8e583491-3675-49a7-bf9a-e07f1a6c81b1"
         const postObj = {
             "location": `plan::custSegs::business::${item.id}`,
@@ -317,7 +327,7 @@ class RevenueStreams extends React.Component {
                         <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Consumers</Typography.Title>
-                                <TextHelper code="revstreamconsumer" type="lefttext"/>
+                                <TextHelper code="revstreamconsumer" type="lefttext" />
                             </div>
                         </Col>
                         <Col span={16}>
@@ -338,7 +348,7 @@ class RevenueStreams extends React.Component {
                         <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Business</Typography.Title>
-                                <TextHelper code="revstreambusiness" type="lefttext"/>
+                                <TextHelper code="revstreambusiness" type="lefttext" />
                             </div>
                         </Col>
                         <Col span={16}>
@@ -359,7 +369,7 @@ class RevenueStreams extends React.Component {
                         <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Public bodies & NGO</Typography.Title>
-                                <TextHelper code="revstreampublicbodies" type="lefttext"/>
+                                <TextHelper code="revstreampublicbodies" type="lefttext" />
                             </div>
                         </Col>
                         <Col span={16}>
@@ -382,7 +392,7 @@ class RevenueStreams extends React.Component {
                         <AddSegmentModal visibility={true} number={this.state.segmentNumber} onClose={this.onCloseAddSegmentModal} />
                         : null
                 }
-
+                {console.info({ Number: this.state.segmentNumber })}
                 {
                     this.state.item !== null ?
                         <EditSegmentModal visibility={true} item={this.state.item} businessPlanId={this.props.businessPlan.id} onClose={this.onCloseEditSegmentModal} />
@@ -401,4 +411,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPlan,logout, getAIRevenueStreamPredict })(withRouter(RevenueStreams));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPlan, logout, getAIRevenueStreamPredict })(withRouter(RevenueStreams));
