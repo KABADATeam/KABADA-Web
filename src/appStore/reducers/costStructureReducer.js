@@ -42,6 +42,10 @@ export const costStructureReducer = (
             return state;
         case "SAVE_STATE_SUCCESS":
             return {...state, "is_cost_completed": action.payload }
+        case 'GET_COST_STRUCTURE_AI_PREDICT':
+            return {...state, loading: false, "aiPredict": action.payload}
+        case 'GET_COST_STRUCTURE_AI_PREDICT_FAIL':
+            return {...state, loading: false}
         default:
             return state
     }

@@ -5,7 +5,7 @@ import { ArrowLeftOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/ico
 import { buttonStyle, leftButtonStyle, rightButtonStyle, tableCardStyle, tableCardBodyStyle } from '../../styles/customStyles';
 import { connect } from 'react-redux';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getCostStructureList, getCategories, deleteFixedCost, deleteVariableCost, selectCostCategory, saveState } from "../../appStore/actions/costStructureAction"
+import { getCostStructureList, getCategories, deleteFixedCost, deleteVariableCost, selectCostCategory, saveState, getCostStructureAIValues } from "../../appStore/actions/costStructureAction"
 //import FixedCostModal from "../components/cost_structure/FixedCostModal";
 import CostCategoriesModal from "../components/cost_structure/CostCategoriesModal"
 import EditCostModal from "../components/cost_structure/EditCostModal"
@@ -67,19 +67,6 @@ class CostStructure extends React.Component {
         this.props.history.push(`/overview`);
     }
 
-    openFixedCostCategories = () => {
-        this.setState({
-            costNumber: 1,
-            fixedCostNumber: 1
-        });
-
-    }
-    openVarCostCategories = () => {
-        this.setState({
-            costNumber: 2,
-            fixedCostNumber: 2
-        });
-    }
     openAddCostModal = () => {
         this.setState({
             addModalVisibility: true,
@@ -133,6 +120,31 @@ class CostStructure extends React.Component {
     onCompletedChange(state) {
         this.props.saveState(this.props.businessPlan.id, state, () => {
             this.props.getSelectedPlanOverview(this.props.businessPlan.id);
+        });
+    }
+
+    // AI
+    onAddFixedCosts = () => {
+        const postObj = {
+            "location": 'plan::costs::fixedCosts',
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getCostStructureAIValues(postObj);
+        this.setState({
+            costNumber: 1,
+            fixedCostNumber: 1
+        });
+    }
+
+    onAddVariableCosts = () => {
+        const postObj = {
+            "location": 'plan::costs::variableCosts',
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getCostStructureAIValues(postObj);
+        this.setState({
+            costNumber: 2,
+            fixedCostNumber: 2
         });
     }
 
@@ -270,7 +282,7 @@ class CostStructure extends React.Component {
                                 columns={fixedCostsColumns}
                                 rowKey={record => record.id}
                                 pagination={false}
-                                footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.openFixedCostCategories.bind(this)}><PlusOutlined />Add fixed cost</Button></Space>)}
+                                footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddFixedCosts.bind(this)}><PlusOutlined />Add fixed cost</Button></Space>)}
                             />
                         </Col>
                     </Row>
@@ -288,7 +300,7 @@ class CostStructure extends React.Component {
                                 columns={varCostsColumns}
                                 rowKey={record => record.id}
                                 pagination={false}
-                                footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.openVarCostCategories.bind(this)}><PlusOutlined />Add variable cost</Button></Space>)}
+                                footer={() => (<Space style={{ display: 'flex', justifyContent: 'space-between' }}><Button size="large" style={{ ...buttonStyle }} onClick={this.onAddVariableCosts.bind(this)}><PlusOutlined />Add variable cost</Button></Space>)}
                             />
                         </Col>
                     </Row>
@@ -324,4 +336,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview,logout, deleteFixedCost, deleteVariableCost, getCategories, getCostStructureList, refreshPlan, saveState, selectCostCategory })(CostStructure);
+export default connect(mapStateToProps, { getSelectedPlanOverview,logout, deleteFixedCost, deleteVariableCost, getCategories, getCostStructureList, refreshPlan, saveState, selectCostCategory, getCostStructureAIValues })(CostStructure);
