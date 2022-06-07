@@ -234,7 +234,7 @@ class NewBusinessPlanModal extends Component {
                             </Select>
                         </Form.Item>*/
                         }
-                        <Form.Item key="activity" name="activity" label="NACE Rev. 2"
+                        <Form.Item key="activity" name="activity" label="Select industry according NACE Rev. 2 classification"
                             rules={[{ 
                                 required: true,
                                 validator(_, activity) {
