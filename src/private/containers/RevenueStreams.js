@@ -55,7 +55,8 @@ class RevenueStreams extends React.Component {
         super(props);
         this.state = {
             item: null,
-            segmentNumber: null
+            segmentNumber: null,
+            AIObject: null
         };
     }
 
@@ -107,7 +108,7 @@ class RevenueStreams extends React.Component {
             item: null
         });
     };
-    //     "plan::revenue::consumer::${item.id}"
+    // "plan::revenue::consumer::${item.id}"
     // "plan::revenue::business::<id>"
     // "plan::revenue::publicNgo::<id>"
     onDeleteFirstSegment(item) {
@@ -123,7 +124,6 @@ class RevenueStreams extends React.Component {
     }
 
     onEditFirstSegment(item) {
-        console.log('Revenue stream item data: ', item.id);
         //"plan::revenue::consumer::8e583491-3675-49a7-bf9a-e07f1a6c81b1"
         const postObj = {
             "location": `plan::custSegs::business::${item.id}`,
@@ -131,20 +131,38 @@ class RevenueStreams extends React.Component {
         };
         this.props.getAIRevenueStreamPredict(postObj);
         this.setState({
-            item: { ...item, "segment": 1 }
+            item: { ...item, "segment": 1 },
+            AIObject: { postObj, "segment": 1 }
         });
+        //console.info({ ID: item.id })
+        //console.info({ postObj })
+
     }
 
     onEditSecondSegment(item) {
+        const postObj = {
+            "location": `plan::custSegs::business::${item.id}`,
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getAIRevenueStreamPredict(postObj);
         this.setState({
             item: { ...item, "segment": 2 }
         });
+        console.info({ postObj })
+        console.info({ item })
     }
 
     onEditOther(item) {
+        const postObj = {
+            "location": `plan::custSegs::business::${item.id}`,
+            "planId": this.props.businessPlan.id
+        };
+        this.props.getAIRevenueStreamPredict(postObj);
         this.setState({
             item: { ...item, "segment": 3 }
         });
+        console.info({ postObj })
+        console.info({ item })
     }
 
     onCompletedChange(state) {
@@ -395,7 +413,7 @@ class RevenueStreams extends React.Component {
                 {console.info({ Number: this.state.segmentNumber })}
                 {
                     this.state.item !== null ?
-                        <EditSegmentModal visibility={true} item={this.state.item} businessPlanId={this.props.businessPlan.id} onClose={this.onCloseEditSegmentModal} />
+                        <EditSegmentModal visibility={true} AIObject={this.state.AIObject} item={this.state.item} businessPlanId={this.props.businessPlan.id} onClose={this.onCloseEditSegmentModal} />
                         : null
                 }
             </>
