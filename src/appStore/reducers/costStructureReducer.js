@@ -3,6 +3,7 @@ export const costStructureReducer = (
         is_cost_completed: false,
         fixed_costs: [],
         variable_costs: [],
+        ai_cost_structure_predict: []
     }, action) => {
     switch (action.type) {
         case 'FETCHING_COST_STRUCTURE_SUCCESS':
@@ -43,7 +44,7 @@ export const costStructureReducer = (
         case "SAVE_STATE_SUCCESS":
             return {...state, "is_cost_completed": action.payload }
         case 'GET_COST_STRUCTURE_AI_PREDICT':
-            return {...state, loading: false, "aiPredict": action.payload}
+            return {...state, loading: false, "ai_cost_structure_predict": action.payload}
         case 'GET_COST_STRUCTURE_AI_PREDICT_FAIL':
             return {...state, loading: false}
         default:
@@ -59,6 +60,10 @@ export const costStructureCategoriesReducer = (
     switch (action.type) {
         case 'FETCHING_COST_STRUCTURE_CATEGORIES_SUCCESS':
             return { ...state, "fixed_categories": action.payload.fixed_categories, "variable_categories": action.payload.variable_categories };
+        case 'SET_COST_STRUCTURE_CATEGORY_SUCCESS':
+            console.log('actionpayload')
+            console.log(action.payload)
+            return {...state}
         default:
             return state;
     }

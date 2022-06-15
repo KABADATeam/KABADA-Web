@@ -124,9 +124,9 @@ class CostStructure extends React.Component {
     }
 
     // AI
-    onAddFixedCosts = () => {
+    onAddFixedCosts = (e) => {
         const postObj = {
-            "location": 'plan::costs::fixedCosts',
+            "location": 'plan::keyPartners::suppliers::sample',
             "planId": this.props.businessPlan.id
         };
         this.props.getCostStructureAIValues(postObj);
@@ -138,7 +138,7 @@ class CostStructure extends React.Component {
 
     onAddVariableCosts = () => {
         const postObj = {
-            "location": 'plan::costs::variableCosts',
+            "location": 'plan::keyPartners::suppliers::sample',
             "planId": this.props.businessPlan.id
         };
         this.props.getCostStructureAIValues(postObj);
@@ -307,8 +307,14 @@ class CostStructure extends React.Component {
                 </Col>
 
                 {
-                    this.state.costNumber !== null ?
-                        <CostCategoriesModal visibility={true} number={this.state.fixedCostNumber} onClose={this.onCloseCostCategoriesModal} onOpen={this.openAddCostModal} />
+                    this.state.costNumber !== null && this.props.costs.ai_cost_structure_predict?
+                        <CostCategoriesModal 
+                        visibility={true}
+                        number={this.state.fixedCostNumber}
+                        costNumber={this.state.costNumber}
+                        onClose={this.onCloseCostCategoriesModal}
+                        onOpen={this.openAddCostModal}
+                         />
                         : null
                 }
                 {
@@ -317,7 +323,7 @@ class CostStructure extends React.Component {
                         : null
                 }
                 {
-                    this.state.addModalVisibility !== null ?
+                    this.state.addModalVisibility !== null?
                         <AddCostModal visibility={true} number={this.state.fixedCostNumber} onClose={this.closeAddCostModal} />
                         : null
                 }
@@ -332,7 +338,7 @@ const mapStateToProps = (state) => {
         businessPlan: state.selectedBusinessPlan,
         categories: state.costCategoriesList,
         costs: state.costStructure,
-        category: state.selectedCostCategory
+        category: state.selectedCostCategory,
     };
 }
 

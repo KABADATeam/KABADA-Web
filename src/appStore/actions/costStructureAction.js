@@ -135,11 +135,17 @@ export const saveState = (planId, is_completed, callback) => {
     }
 };
 
+export const setCostStructureCategory = (item) => {
+    return async (dispatch) => {
+        dispatch({ type: "SET_COST_STRUCTURE_CATEGORY_SUCCESS", payload: item });
+    };
+};
+
 export const getCostStructureAIValues = (postObject) => async (dispatch, getState) => {
     try {
         const token = getState().user.access_token;
         const response = await kabadaAPI.post('api/plans/predict', postObject, { headers: { Authorization: `Bearer ${token}` } });
-        dispatch({ type: 'GET_COST_STRUCTURE_AI_PREDICT', payload: { data: response.data}});
+        dispatch({ type: 'GET_COST_STRUCTURE_AI_PREDICT', payload: response.data.plan.costs});
     } catch {
         dispatch({ type: 'GET_COST_STRUCTURE_AI_PREDICT_FAIL', payload: false});
     }
