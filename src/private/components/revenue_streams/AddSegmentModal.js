@@ -195,13 +195,13 @@ class AddSegmentModal extends Component {
         const selectedPriceType = this.props?.types?.prices.find(x => x.id === priceName.id)?.types
         let priceTypeName = selectedPriceType.find(x => x.id === price[0])
 
-        if (this.state.revenue === revenueName.id) {
+        if (this.state.revenue === revenueName?.id) {
             revenueName = null
         }
-        if (this.state.price === priceName.id) {
+        if (this.state.price === priceName?.id) {
             priceName = null
         }
-        if (this.state.priceType === priceTypeName.id) {
+        if (this.state.priceType === priceTypeName?.id) {
             priceTypeName = null
         }
 
@@ -373,7 +373,6 @@ class AddSegmentModal extends Component {
                                 placeholder="Select revenue stream"
                                 onChange={this.onNameChange.bind(this)}
                                 className={this.state.isAichangeName === '2' && "aicolor .ant-select-selector"}
-                            //className={this.state.selectedChannel.tag === 1 ? "aicolor .ant-select-selector" : "simplecolor .ant-select-selector"}
                             />
 
                         </Form.Item>
