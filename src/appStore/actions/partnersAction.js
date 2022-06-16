@@ -199,6 +199,7 @@ export const getKeyPartnersAIPredict = (postObject, type) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.post('api/plans/predict', postObject, { headers: { Authorization: `Bearer ${token}` } });
+            console.log(response.data)
             const partnerTypePredict = type == 'distributors' ? response.data.plan.keyPartners.distributors : 
                 type === 'suppliers' ? response.data.plan.keyPartners.suppliers :
                     type === 'others' ? response.data.plan.keyPartners.others : null ;
@@ -213,6 +214,13 @@ export const getKeyPartnersAIPredict = (postObject, type) => {
 
 export const setKeyPartnerCategoryType = (item) => {
     return async (dispatch, getState) => {
+        console.log(item)
         dispatch({ type: "SET_KEY_PARTNER_CATEGORY_TYPE_SUCCESS", payload: item });
     };
+}
+export const setPriorityObject = (item) => {
+    return async (dispatch, getState) => {
+        console.log('nustatymas priority ',item);
+        dispatch({ type: "SET_PRIORITY_SUCCESS", payload: item})
+    }
 }

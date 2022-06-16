@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Modal, List, Button, Space, Popover, Row, Typography } from 'antd';
 import '../../css/customModal.css';
 import { RightOutlined } from '@ant-design/icons';
-import { selectCategoryType, setKeyPartnerCategoryType } from "../../appStore/actions/partnersAction";
+import { selectCategoryType, setKeyPartnerCategoryType, setPriorityObject } from "../../appStore/actions/partnersAction";
 import { saveDistributor } from "../../appStore/actions/partnersAction";
 
 const { Text } = Typography;
@@ -13,7 +13,8 @@ class KeyPartnersModal extends Component {
     state = {
         popoverVisibility: false,
         popoverType: 'no predict',
-        popoverTextObject: []
+        popoverTextObject: [],
+        predictActive: false
     }
 
     onCancel = () => {
@@ -21,7 +22,16 @@ class KeyPartnersModal extends Component {
     };
 
     onAddNewPartner = (item) => {
-        this.props.selectCategoryType(this.props.category.title, item, () => {
+        const newItem = this.props.partners.aiPredict[0].partnerType[0] === item.type_id && this.state.predictActive === true ? {...item, tag: 1} : item ;
+        console.log('New item is', newItem);
+        const priority = this.props.partners.aiPredict[0].partnerType[0] === item.type_id && this.state.predictActive === true ?  this.props.partners.aiPredict[0].priority[0].toLowerCase() : 'false';
+        console.log('Priority ', priority)
+        const priorityObject = {
+            value: priority === 'true',
+            tag: this.props.partners.aiPredict[0].partnerType[0] === item.type_id && this.state.predictActive === true ? 1 : 0
+        }
+        console.log(priorityObject)
+        this.props.selectCategoryType(this.props.category.title, newItem, () => {
             if (item.title === "Self distribution" || item.title === "Highly diversified distributors") {
                 const postObj = {
                     "id": null,
@@ -35,6 +45,8 @@ class KeyPartnersModal extends Component {
                 this.props.saveDistributor(postObj, item.title);
                 this.props.onClose();
             } else {
+                //console.log('Pasirenkamas item', item)
+                this.props.setPriorityObject(priorityObject);
                 this.props.onClose();
                 this.props.onForward();
             }
@@ -77,23 +89,17 @@ class KeyPartnersModal extends Component {
     }
 
     generateAIHelpText = (predictsObj) => {
-        console.log('category props ', this.props.category);
         const aiHintTextObject = [];
         if (predictsObj !== undefined) {
-            console.log('Predict ', predictsObj);
             const predict = predictsObj.find(x => x.id === null);
             const title = this.props.category.types.find(x => x.type_id === predict.partnerType[0]).title;
-            console.log(title);
             if (title === 'Self distribution' || title === 'Highly diversified distributors') {
-                console.log('self distribution')
                 const newObject = {
                     type_title: this.props.category.title + ' type',
                     text: title
                 }
-                console.log('check new object', newObject)
                 aiHintTextObject.push(newObject)
             } else {
-                console.log('not self distribution')
                 const newObjectType = {
                     type_title: this.props.category.title + ' type',
                     text: title
@@ -113,34 +119,21 @@ class KeyPartnersModal extends Component {
         }
     }
     onAIButtonClick = () => {
-        // const customerRelatioshipType = this.props.group === 1 ? this.props.customerRelationships.ai_customer_relationship_predict.getCust
-        //     : this.props.group === 2 ? this.props.customerRelationships.ai_customer_relationship_predict.keepCust
-        //         : this.props.group === 3 ? this.props.customerRelationships.ai_customer_relationship_predict.convCust
-        //             : null;
-        // const newAICustomerRelationshipSuggest = customerRelatioshipType.find(x => x.id === null).action;
-        // const selectionSuggestObj = this.props.categories.categories.find(x => x.id === newAICustomerRelationshipSuggest[0]);
-        // const selectionSuggestObjForReducer = {
-        //     id: selectionSuggestObj.id,
-        //     title: selectionSuggestObj.title,
-        //     key: selectionSuggestObj.key,
-        //     tag: 1
-        // }
-        // this.props.setRelationshipCategory(selectionSuggestObjForReducer);
+        //console.log('AI spejimas', this.props.partners.aiPredict);
         const newAIPartnerTypeID = this.props.partners.aiPredict[0].partnerType[0];
-        console.log(newAIPartnerTypeID);
         const aiPartnerTypeObj = this.props.category.title === 'distributor' ? this.props.categories.distributors.find(obj => obj.type_id === newAIPartnerTypeID) :
             this.props.category.title === 'supplier' ? this.props.categories.suppliers.find(obj => obj.type_id === newAIPartnerTypeID) :
                 this.props.category.title === 'other' ? this.props.categories.others.find(obj => obj.type_id === newAIPartnerTypeID) : null;
-        console.log(aiPartnerTypeObj);
         const selectionSuggestObjForReducer = {
             type_id: newAIPartnerTypeID,
             title: aiPartnerTypeObj.title,
             description: aiPartnerTypeObj.description,
             tag: 1
         }
-        console.log(selectionSuggestObjForReducer)
-        console.log('selected category title ',this.props.category.title);
         this.props.setKeyPartnerCategoryType(selectionSuggestObjForReducer);
+        this.setState({
+            predictActive: true
+        })
         this.hidePopover();
     }
 
@@ -260,5 +253,5 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { selectCategoryType, saveDistributor, setKeyPartnerCategoryType })(KeyPartnersModal);
+export default connect(mapStateToProps, { selectCategoryType, saveDistributor, setKeyPartnerCategoryType, setPriorityObject })(KeyPartnersModal);
 

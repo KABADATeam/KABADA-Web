@@ -59,8 +59,17 @@ class KeyPartners extends React.Component {
             isPartnerModalVisible: false,
             isEditPartnerModalVisible: false,
             category: null,
-            item: { "type_title": "" }
+            item: { "type_title": "" },
+            selectedCategoryType: null,
         };
+    }
+
+    handleCallbackCategroryType = (childData, priority) => {
+        console.log(childData)
+        console.log('Priority ', priority)
+        this.setState({
+            selectedCategoryType: childData
+        })
     }
 
     onBackClick() {
@@ -402,8 +411,8 @@ class KeyPartners extends React.Component {
                         </Col>
                     </Row>
                 </Col>
-                <KeyPartnersModal visibility={this.state.isCategoriesModalVisible} onForward={this.onAddNewPartner} onClose={this.onCloseCategoriesModal} />
-                <AddKeyPartnerModal visibility={this.state.isPartnerModalVisible} onClose={this.onClosePartnerModal} onBack={this.onBackToCategoriesModal} />
+                <KeyPartnersModal visibility={this.state.isCategoriesModalVisible} onForward={this.onAddNewPartner} onClose={this.onCloseCategoriesModal} getCategoryType={this.handleCallbackCategroryType} />
+                <AddKeyPartnerModal visibility={this.state.isPartnerModalVisible} onClose={this.onClosePartnerModal} onBack={this.onBackToCategoriesModal} categoryTypeItem={this.state.selectedCategoryType}/>
                 {
                     this.state.isEditPartnerModalVisible ?
                         <EditKeyPartnerModal visibility={this.state.isEditPartnerModalVisible} item={this.state.item} onClose={this.onCloseEditPartnerModal} />
