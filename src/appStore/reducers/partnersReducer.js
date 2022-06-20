@@ -16,7 +16,6 @@ export const partnersReducer = (
             const _distributors = [...state.distributors, { ...action.payload }];
             return { ...state, "distributors": _distributors };
         case "SAVE_SUPPLIER_SUCCESS":
-            console.log(action.payload);
             const _suppliers = [...state.suppliers, { ...action.payload }];
             return { ...state, "suppliers": _suppliers };
         case "SAVE_OTHER_SUCCESS":
@@ -77,11 +76,9 @@ export const selectedPartnersCategoryReducer = (
     }, action) => {
     switch (action.type) {
         case 'SELECTING_PARTNERS_CATEGORY_SUCCESS':
-            console.log('SELECTING_PARTNERS_CATEGORY_SUCCESS ', action.payload)
             return { ...state, title: action.payload.title, types: action.payload.items };
         case 'SET_KEY_PARTNER_CATEGORY_TYPE_SUCCESS':
             const updated_types = state.types.map(x => x.type_id === action.payload.type_id ? action.payload : x);
-            console.log(updated_types);
             return {
                 ...state,
                 types: updated_types,
@@ -98,13 +95,11 @@ export const selectedPartnersCategoryTypeReducer = (
     }, action) => {
     switch (action.type) {
         case 'SELECTING_PARTNERS_CATEGORY_TYPE_SUCCESS':
-            console.log('SELECTING_PARTNERS_CATEGORY_TYPE_SUCCESS ', action.payload);
             return {
                 ...state,
                 selectedType: action.payload,
             };
         case 'SET_PRIORITY_SUCCESS':
-            console.log(action.payload);
             return {
                 ...state,
                 priorityValue: action.payload

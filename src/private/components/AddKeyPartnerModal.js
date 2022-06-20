@@ -39,19 +39,18 @@ class AddKeyPartnerModal extends Component {
         const postObj = {
             "id": null,
             "business_plan_id": this.props.businessPlan.id,
-            "type_id": this.props.type.type_id,
+            "type_id": this.props.type.selectedType.type_id,
             "name": this.state.companyName,
-            "is_priority": this.state.priority.value,
+            "is_priority": this.state.priority === null ? this.props.type.priorityValue.value: this.state.priority.value,
             "website": this.state.website,
             "comment": this.state.comment
         }
-        if (this.props.type.category_title === "distributor") {
-            this.props.saveDistributor(postObj, this.props.type.title);
-            console.log(this.props.type.title)
-        } else if (this.props.type.category_title === "supplier") {
-            this.props.saveSupplier(postObj, this.props.type.title);
-        } else if (this.props.type.category_title === "other") {
-            this.props.saveOther(postObj, this.props.type.title);
+        if (this.props.type.selectedType.category_title === "distributor") {
+            this.props.saveDistributor(postObj, this.props.type.selectedType.title);
+        } else if (this.props.type.selectedType.category_title === "supplier") {
+            this.props.saveSupplier(postObj, this.props.type.selectedType.title);
+        } else if (this.props.type.selectedType.category_title === "other") {
+            this.props.saveOther(postObj, this.props.type.selectedType.title);
         } else {
             return;
         }
@@ -94,7 +93,6 @@ class AddKeyPartnerModal extends Component {
 
     getColor = (value) => {
         const element = this.props.type.priorityValue.value === value ? this.props.type.priorityValue : undefined;
-        console.log(element)
         if (element === undefined) {
             let color = "#FFFFFF"
             return color
@@ -112,11 +110,6 @@ class AddKeyPartnerModal extends Component {
         }
     }
     render() {
-        // console.log('partners ',this.props.partners);
-        // console.log('selected type ', this.props.type);
-        // console.log('priority state ', this.state.priority)
-         console.log(this.props.type.priorityValue)
-        // console.log(this.props.partners.aiPredict !== null ? this.props.partners.aiPredict[0].priority[0].toLowerCase() === 'true' : false)
         const priorityOptions = priorityData.map((obj) =>
             <Radio key={obj.value} value={obj.value} style={{ backgroundColor: this.getColor(obj.value) }}>{obj.title}</Radio>
         );

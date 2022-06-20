@@ -23,14 +23,11 @@ class KeyPartnersModal extends Component {
 
     onAddNewPartner = (item) => {
         const newItem = this.props.partners.aiPredict[0].partnerType[0] === item.type_id && this.state.predictActive === true ? {...item, tag: 1} : item ;
-        console.log('New item is', newItem);
         const priority = this.props.partners.aiPredict[0].partnerType[0] === item.type_id && this.state.predictActive === true ?  this.props.partners.aiPredict[0].priority[0].toLowerCase() : 'false';
-        console.log('Priority ', priority)
         const priorityObject = {
             value: priority === 'true',
             tag: this.props.partners.aiPredict[0].partnerType[0] === item.type_id && this.state.predictActive === true ? 1 : 0
         }
-        console.log(priorityObject)
         this.props.selectCategoryType(this.props.category.title, newItem, () => {
             if (item.title === "Self distribution" || item.title === "Highly diversified distributors") {
                 const postObj = {
@@ -45,7 +42,6 @@ class KeyPartnersModal extends Component {
                 this.props.saveDistributor(postObj, item.title);
                 this.props.onClose();
             } else {
-                //console.log('Pasirenkamas item', item)
                 this.props.setPriorityObject(priorityObject);
                 this.props.onClose();
                 this.props.onForward();
@@ -119,7 +115,6 @@ class KeyPartnersModal extends Component {
         }
     }
     onAIButtonClick = () => {
-        //console.log('AI spejimas', this.props.partners.aiPredict);
         const newAIPartnerTypeID = this.props.partners.aiPredict[0].partnerType[0];
         const aiPartnerTypeObj = this.props.category.title === 'distributor' ? this.props.categories.distributors.find(obj => obj.type_id === newAIPartnerTypeID) :
             this.props.category.title === 'supplier' ? this.props.categories.suppliers.find(obj => obj.type_id === newAIPartnerTypeID) :

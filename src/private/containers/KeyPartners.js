@@ -65,8 +65,6 @@ class KeyPartners extends React.Component {
     }
 
     handleCallbackCategroryType = (childData, priority) => {
-        console.log(childData)
-        console.log('Priority ', priority)
         this.setState({
             selectedCategoryType: childData
         })
@@ -169,6 +167,12 @@ class KeyPartners extends React.Component {
     }
 
     onEditDistributor(item) {
+        const postObj = {
+            "location": `plan::keyPartners::distributors::${item.id}`,
+            "planId": this.props.businessPlan.id
+        };
+        const partnerType = 'distributors';
+        this.props.getKeyPartnersAIPredict(postObj, partnerType);
         this.setState({
             isEditPartnerModalVisible: true,
             item: { ...item, "category": "distributor" }
@@ -176,6 +180,12 @@ class KeyPartners extends React.Component {
     }
 
     onEditSupplier(item) {
+        const postObj = {
+            "location": `plan::keyPartners::suppliers::${item.id}`,
+            "planId": this.props.businessPlan.id
+        };
+        const partnerType = 'suppliers';
+        this.props.getKeyPartnersAIPredict(postObj, partnerType);
         this.setState({
             isEditPartnerModalVisible: true,
             item: { ...item, "category": "supplier" }
@@ -183,6 +193,12 @@ class KeyPartners extends React.Component {
     }
 
     onEditOther(item) {
+        const postObj = {
+            "location": `plan::keyPartners::others::${item.id}`,
+            "planId": this.props.businessPlan.id
+        };
+        const partnerType = 'others';
+        this.props.getKeyPartnersAIPredict(postObj, partnerType);
         this.setState({
             isEditPartnerModalVisible: true,
             item: { ...item, "category": "other" }
