@@ -1,3 +1,13 @@
+const compareArray = (arrayAI, arrayState) => {
+    const newArray = []
+    for (var i in arrayAI) {
+        if (arrayState.indexOf(arrayAI[i]) === -1) {
+            newArray.push(arrayAI[i]);
+        }
+    }
+    return newArray;
+}
+
 export const swotReducer = (
     state = {
         is_swot_completed: false,
@@ -20,12 +30,13 @@ export const swotReducer = (
         updates: {
             strengths: [],
             opportunities: []
-        }
+        },
+        swotAIPredict: null
     }, action) => {
     switch (action.type) {
         case "FETCHING_SWOT_SUCCESS":
-            const strengths = action.payload.strengths_weakness_items.map(obj => ({ ...obj, key: obj.id })).sort((a, b) => (a.title < b.title) ? 1 : -1).sort((a, b) => (a.isLocal > b.isLocal) ? 1 : -1);
-            const opportunities = action.payload.oportunities_threats.map(obj => ({ ...obj, key: obj.id })).sort((a, b) => (a.title < b.title) ? 1 : -1).sort((a, b) => (a.isLocal > b.isLocal) ? 1 : -1);
+            const strengths = action.payload.strengths_weakness_items.map(obj => ({ ...obj, key: obj.id, tag: 0 })).sort((a, b) => (a.title < b.title) ? 1 : -1).sort((a, b) => (a.isLocal > b.isLocal) ? 1 : -1);
+            const opportunities = action.payload.oportunities_threats.map(obj => ({ ...obj, key: obj.id, tag: 0 })).sort((a, b) => (a.title < b.title) ? 1 : -1).sort((a, b) => (a.isLocal > b.isLocal) ? 1 : -1);
             const is_completed = action.payload.is_swot_completed;
             const originalObject = {
                 "strengths_weakness_items": strengths,
@@ -62,7 +73,16 @@ export const swotReducer = (
             const original_updates_oportunities = JSON.parse(JSON.stringify(updated_oportunities))
 
             const cloneObject = JSON.parse(JSON.stringify(originalObject));
-            return { ...state, original: originalObject, _t: cloneObject, original_updates: {"strengths":original_updates_strength, "opportunities": original_updates_oportunities}, updates: { "strengths": updated_strenghts, "opportunities": updated_oportunities}, checked_strengths: checked_strengths, checked_weakness: checked_weakness, checked_oportunities: checked_oportunities, checked_threats: checked_threats, "is_swot_completed": is_completed };
+            return { ...state, 
+                original: originalObject, 
+                _t: cloneObject, 
+                original_updates: {"strengths":original_updates_strength, "opportunities": original_updates_oportunities}, 
+                updates: { "strengths": updated_strenghts, "opportunities": updated_oportunities}, 
+                checked_strengths: checked_strengths, 
+                checked_weakness: checked_weakness, 
+                checked_oportunities: checked_oportunities, 
+                checked_threats: checked_threats, 
+                "is_swot_completed": is_completed };
         case "UPDATE_CHECKED_STRENGHTS_OPORTUNITIES_SUCCESS":
             //if checked are strenghts and weakness
             if (action.payload.type === 1) {
@@ -150,6 +170,9 @@ export const swotReducer = (
                             const updated = [...oportunities, { ...action.payload.item }];
                             // setting updates opportunities to updated. keeping whats already in opportunities
                             const obj = { ...state.updates, opportunities: updated };
+                            console.log('checked_opportunities ', checked_oportunities);
+                            console.log('updated ', updated);
+                            console.log('setting updates ', obj)
                             return { ...state, checked_oportunities: checked_oportunities,original: state.original, updates: obj }
                         }else{
                             //if updates.opportunities have item with this id then update it. and add item to checked_oportunities becouse there isnt one there
@@ -267,6 +290,35 @@ export const swotReducer = (
             return { ...state, original: discardObj, updates: original_updates, checked_strengths: strengths_checked, checked_weakness: weakness_checked};
         case "SAVE_STATE_SUCCESS":
             return { ...state, "is_swot_completed": action.payload };
+        case "GET_AI_SWOT_PREDICT_SUCCESS":
+            return {
+                ...state,
+                "swotAIPredict": action.payload 
+            }
+        case "SET_SWOT_OPPORTUNITIES_AI_PREDICT":
+            console.log('ok')
+            const { original, updates } = action.payload.userData;
+            console.log(original)
+            const opportunities_items_array = [...state.updates.opportunities];
+            const selected_opportunities_items = state.updates.opportunities.map(e => e.id);
+            const compared_opportunities = compareArray(action.payload.predict, selected_opportunities_items);
+            console.log(compared_opportunities);
+            for (let i in compared_opportunities) {
+                const item = original.find(e => e.id === compared_opportunities[i]);
+                const new_obj = {
+                    ...item,
+                    tag: 1,
+                    value: 3
+                }
+                opportunities_items_array.push(new_obj)
+            }
+            console.log(opportunities_items_array)
+            const obj = { ...state.updates, opportunities: opportunities_items_array };
+            console.log(obj)
+            return {
+                ...state,
+                updates: obj
+            }
         default:
             return state;
     }

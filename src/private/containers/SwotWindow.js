@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import StrengthsWeaknesses from '../components/StrengthsWeaknesses';
 import OpportunitiesThreats from '../components/OpportunitiesThreats';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
-import { getSwotList, discardChanges, saveChanges, saveState } from "../../appStore/actions/swotAction";
+import { getSwotList, discardChanges, saveChanges, saveState, getSwotAI } from "../../appStore/actions/swotAction";
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
@@ -182,12 +182,22 @@ class SwotWindow extends React.Component {
                         this.props.getSwotList(this.props.businessPlan.id, () => {
     
                         });
+                        const postObj = {
+                            "location": 'plan::swot',
+                            "planId": this.props.businessPlan.id
+                        };
+                        this.props.getSwotAI(postObj);
                     });
                 }
             } else {
                 this.props.getSwotList(this.props.businessPlan.id, () => {
     
                 });
+                const postObj = {
+                    "location": 'plan::swot',
+                    "planId": this.props.businessPlan.id
+                };
+                this.props.getSwotAI(postObj);
             }
         }else{
             this.props.logout()
@@ -300,4 +310,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getSwotList, discardChanges, saveChanges, saveState, refreshPlan,logout })(withRouter(SwotWindow));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getSwotList, discardChanges, saveChanges, saveState, refreshPlan,logout, getSwotAI })(withRouter(SwotWindow));
