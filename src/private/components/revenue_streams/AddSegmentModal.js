@@ -179,14 +179,14 @@ class AddSegmentModal extends Component {
             //price = path.consumer.map((x) => x.price[0])[0]
             priceType = path.consumer.map((x) => x.pricingType[0])[0]
         } else if (this.props.number === 2) {
-            consumersName = path.business.map((x) => x.category[0])
-            price = path.business.map((x) => x.price[0])
-            priceType = path.business.map((x) => x.pricingType[0])
+            consumersName = path.business.map((x) => x.category[0])[0]
+            //price = path.business.map((x) => x.price[0])
+            priceType = path.business.map((x) => x.pricingType[0])[0]
 
         } else {
-            consumersName = path.publicNgo.map((x) => x.category[0])
-            price = path.publicNgo.map((x) => x.price[0])
-            priceType = path.publicNgo.map((x) => x.pricingType[0])
+            consumersName = path.publicNgo.map((x) => x.category[0])[0]
+            //price = path.publicNgo.map((x) => x.price[0])
+            priceType = path.publicNgo.map((x) => x.pricingType[0])[0]
         }
 
 
@@ -220,14 +220,14 @@ class AddSegmentModal extends Component {
                 //price = path.consumer.map((x) => x.price[0])
                 priceType = path.consumer.map((x) => x.pricingType[0])[0]
             } else if (this.props.number === 2) {
-                consumersName = path.business.map((x) => x.category[0])
-                price = path.business.map((x) => x.price[0])
-                priceType = path.business.map((x) => x.pricingType[0])
+                consumersName = path.business.map((x) => x.category[0])[0]
+                //price = path.business.map((x) => x.price[0])
+                priceType = path.business.map((x) => x.pricingType[0])[0]
 
             } else {
-                consumersName = path.publicNgo.map((x) => x.category[0])
-                price = path.publicNgo.map((x) => x.price[0])
-                priceType = path.publicNgo.map((x) => x.pricingType[0])
+                consumersName = path.publicNgo.map((x) => x.category[0])[0]
+                //price = path.publicNgo.map((x) => x.price[0])
+                priceType = path.publicNgo.map((x) => x.pricingType[0])[0]
             }
             if (this.state.revenue !== consumersName) {
                 this.onNameChange(consumersName, '2')
