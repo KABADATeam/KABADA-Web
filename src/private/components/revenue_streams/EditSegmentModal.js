@@ -13,9 +13,12 @@ class EditSegmentModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            revenue: { id: this.props.item.stream_type_id, title: this.props.item.stream_type_name },
-            price: { id: this.props.item.price_category_id, title: this.props.item.price_category_name },
-            priceType: { id: this.props.item.price_type_id, title: this.props.item.price_type_name },
+            revenueID: this.props.item.stream_type_id,
+            revenueTitle: this.props.item.stream_type_name,
+            PriceId: this.props.item.price_category_id,
+            priceTitle: this.props.item.price_category_name,
+            priceTypeId: this.props.item.price_type_id,
+            priceTypeTitle: this.props.item.price_type_name,
             priceTypeError: '',
             names: this.props.item.segments,
             aIObject: this.props.AIObject,
@@ -36,9 +39,10 @@ class EditSegmentModal extends Component {
     }
 
     onOK = () => {
-        const price = this.props.types.prices.find(x => x.id === this.state.price.id);
-        console.log('Price type id:' + this.state.priceType.id)
-        if (this.state.priceType.id === null) {
+        const price = this.props.types.prices.find(x => x.id === this.state.PriceId);
+        console.log('Price type id:' + this.state.priceTypeTitle)
+        console.log({ price })
+        if (this.state.priceTypeId === null) {
             this.setState({
                 priceTypeError: 'Select price type'
             });
@@ -52,70 +56,69 @@ class EditSegmentModal extends Component {
         const postObj = {
             "id": this.props.item.id,
             "business_plan_id": this.props.businessPlanId,
-            "segment": this.props.number,
-            "stream_type_id": this.props.item.stream_type_id,
-            "price_type_id": this.state.priceType.id,
+            "segment": this.props.item.segment,
+            "stream_type_id": this.state.revenueID,
+            "price_type_id": this.state.priceTypeId,
             "segments": this.state.names
         };
 
-        console.log('Price type id:' + this.state.priceType.id)
+        console.log('Price type id:' + this.state.priceTypeId)
         console.log('Revenue id:' + this.props.item.stream_type_id)
         const reducerObj = {
             "id": this.props.item.id,
             "key": this.props.item.id,
-            "price_category_id": this.state.price.id,
-            "price_category_name": price.title,
-            "price_type_id": this.state.priceType.id,
-            "price_type_name": price.types.find(x => x.id === this.state.priceType.id)?.title,
-            "stream_type_id": this.state.revenue.id,
-            "stream_type_name": this.props.types.stream_types.find(x => x.id === this.state.revenue.id)?.title,
+            "price_category_id": this.state.PriceId,
+            "price_category_name": this.state.priceTitle, //Prices
+            "price_type_id": this.state.priceTypeId,
+            "price_type_name": this.state.priceTypeTitle, //Types of pricing
+            "stream_type_id": this.state.revenueID,
+            "stream_type_name": this.props.types.stream_types.find(x => x.id === this.state.revenueID)?.title,
             "segment": this.props.item.segment,
             "segments": this.state.names
         }
 
         //console.log('POST obj:' + JSON.stringify(postObj))
-        const tt = price.types.find(x => x.id === this.state.priceType.id)
-        console.log(tt?.title)
+        console.log(this.props.types.stream_types.find(x => x.id === this.state.revenueID))
+        console.log(this.state.revenueID)
 
         this.props.updateRevenue(postObj, reducerObj)
         console.info({ postObj, reducerObj })
         this.props.onClose();
     }
 
-    onNameChange(typeId, isAi) {
-        const obj = {
-            id: typeId,
-            title: this.props.item.stream_type_name
-        }
+    onNameChange(typeId, isAi, title) {
         this.setState({
-            revenue: obj,
+            revenueID: typeId,
+            revenueTitle: title,
             isAichangeName: isAi || '1'
         });
-        console.info({ typeId })
+        console.log(this.state.revenueID, this.state.revenueTitle)
+        console.log(this.props.types.stream_types.find(x => x.id === this.state.revenueID))
     }
 
-    onPriceChange(id, isAi) {
-        const obj = {
-            id: id,
-            title: this.props.item.price_title
-        }
+    onPriceChange(id, isAi, title) {
+
         this.setState({
-            price: obj,
-            isAichangePrice: isAi || '1'
+            priceId: id,
+            priceTitle: title,
+            isAichangePrice: isAi || '1',
+            priceTypeId: null,
+            priceTypeTitle: null
+
         });
-        console.info({ PriceId: id })
+        console.log(this.state.priceId, this.state.priceTitle)
+        console.log({ id, title })
     }
 
-    onPriceTypeChange(typeId, isAi) {
-        const obj = {
-            id: typeId,
-            title: this.props.item.price_type_name
-        }
+    onPriceTypeChange(typeId, isAi, title) {
+
         this.setState({
-            priceType: obj,
+            priceTypeId: typeId,
+            priceTypeTitle: this.props?.types?.prices.find(x => x.id === this.state.priceId)?.types.find((x) => x.id === typeId).title,
             isAichangePriceType: isAi || '1'
         });
-        console.info({ PriceType: typeId })
+        console.log(this.state.priceTypeId, this.state.priceTypeTitle)
+
     }
     onNgoTypeChange(value) {
         this.setState({
@@ -171,51 +174,49 @@ class EditSegmentModal extends Component {
     }
 
     generateAIText = () => {
-        // to do improve this function
+        // to do: improve this function
         const path = this.props.one?.revenue;
         let consumersName = '';
         let price = '';
         let priceType = '';
-        console.info(this.props.number)
         if (this.props.item.segment === 1) {
-            consumersName = path?.consumer.map((x) => x.category[0])
+            consumersName = path?.consumer.map((x) => x.category[0])[0]
 
-            price = path?.consumer.map((x) => x.price[0])
-            priceType = path?.consumer.map((x) => x.pricingType[0])
+            // price = path?.consumer.map((x) => x.price[0])
+            priceType = path?.consumer.map((x) => x.pricingType[0])[0]
 
         } else if (this.props.item.segment === 2) {
-            consumersName = path?.business.map((x) => x.category[0])
-            price = path?.business.map((x) => x.price[0])
-            priceType = path?.business.map((x) => x.pricingType[0])
+            consumersName = path?.business.map((x) => x.category[0])[0]
+            //price = path?.business.map((x) => x.price[0])
+            priceType = path?.business.map((x) => x.pricingType[0])[0]
 
         } else {
-            consumersName = path?.publicNgo.map((x) => x.category[0])
-            price = path?.publicNgo.map((x) => x.price[0])
-            priceType = path?.publicNgo.map((x) => x.pricingType[0])
+            consumersName = path?.publicNgo.map((x) => x.category[0])[0]
+            //price = path?.publicNgo.map((x) => x.price[0])
+            priceType = path?.publicNgo.map((x) => x.pricingType[0])[0]
         }
 
 
-        let revenueName = consumersName && this.props?.types.stream_types?.find((x) => x.id === consumersName[0])
-        let priceName = priceType && this.props.types?.prices.find((x) => x?.id === priceType[0])
-        const selectedPriceType = this.props?.types?.prices.find(x => x.id === priceName?.id)?.types
-        let priceTypeName = price && selectedPriceType?.find(x => x?.id === price[0])
+        let revenueName = consumersName && this.props?.types.stream_types?.find((x) => x.id === consumersName)
 
-        if (this.state.revenue === revenueName?.id) {
+        // let priceName = priceType && this.props.types?.prices.find((x) => x?.id === priceType[0])
+        // const selectedPriceType = this.props?.types?.prices.find(x => x.id === priceName?.id)?.types
+        let priceTypeName = priceType && this.props.types.prices.find(x => x?.id === priceType)
+
+        if (this.state.revenueID == revenueName?.id) {
             revenueName = null
         }
-        if (this.state.price === priceName?.id) {
-            priceName = null
-        }
-        if (this.state.priceType === priceTypeName?.id) {
+        // if (this.state.PriceId === priceName?.id) {
+        //     priceName = null
+        // }
+        if (this.state.priceTypeId === priceTypeName?.id) {
             priceTypeName = null
         }
 
-
-        return [revenueName?.title, priceName?.title, priceTypeName?.title]
+        return [revenueName?.title, priceTypeName?.title]
     }
 
     filterAIValues = () => {
-        // to do improve this function
         console.info(this.props.customerSegments.aiPredict.revenue.consumer)
         console.info(this.props.number)
         if (this.props.customerSegments.aiPredict.revenue.consumer) {
@@ -224,34 +225,33 @@ class EditSegmentModal extends Component {
             let price = '';
             let priceType = '';
             if (this.props.item.segment === 1) {
-                consumersName = path.consumer.map((x) => x.category[0])
-                price = path.consumer.map((x) => x.price[0])
-                priceType = path.consumer.map((x) => x.pricingType[0])
+                consumersName = path.consumer.map((x) => x.category[0])[0]
+                //price = path.consumer.map((x) => x.price[0])
+                priceType = path.consumer.map((x) => x.pricingType[0])[0]
+                console.log(priceType)
             } else if (this.props.item.segment === 2) {
-                consumersName = path.business.map((x) => x.category[0])
-                price = path.business.map((x) => x.price[0])
-                priceType = path.business.map((x) => x.pricingType[0])
+                consumersName = path.business.map((x) => x.category[0])[0]
+                //price = path.business.map((x) => x.price[0])
+                priceType = path.business.map((x) => x.pricingType[0])[0]
 
             } else {
-                consumersName = path.publicNgo?.map((x) => x.category[0])
-                price = path.publicNgo?.map((x) => x.price[0])
-                priceType = path.publicNgo?.map((x) => x.pricingType[0])
+                consumersName = path.publicNgo?.map((x) => x.category[0])[0]
+                //price = path.publicNgo?.map((x) => x.price[0])
+                priceType = path.publicNgo?.map((x) => x.pricingType[0])[0]
             }
-            console.info('***********************************************')
-            console.info({ consumersName, priceType, price })
-            if (consumersName || priceType || price) {
-                console.info({ consumersName, priceType, price })
-                if (this.state.revenue !== consumersName[0]) {
-                    this.onNameChange(consumersName[0], '2')
-                    console.info({ consumersName })
-                    console.info('***********************************************')
+
+            if (consumersName || priceType) {
+                //console.info({ consumersName, priceType, price })
+                if (this.state.revenueID !== consumersName) {
+                    this.onNameChange(consumersName, '2', this.generateAIText()[0])
                 }
-                if (this.state.price !== priceType[0]) {
-                    this.onPriceChange(priceType[0], '2')
+                if (this.state.priceTypeId !== priceType) {
+                    this.onPriceChange(priceType, '2', this.generateAIText()[1])
                 }
-                if (this.state.priceType !== price[0]) {
-                    this.onPriceTypeChange(price[0], '2')
-                }
+                // if (this.state.priceTypeId !== price[0]) {
+                //     this.onPriceTypeChange(price[0], '2', this.generateAIText()[2])
+                //     console.info(price[0])
+                // }
             }
 
             this.hidePopover();
@@ -259,6 +259,7 @@ class EditSegmentModal extends Component {
     }
 
     render() {
+
         const additionalTitle = this.props.item.segment === 3 ? 'Public bodies & NGO' : this.props.item.segment === 2 ? 'Business' : 'Consumers';
         const streamOptions = this.props.types.stream_types.map((obj) =>
             ({ label: obj.title, value: obj.id })
@@ -268,10 +269,11 @@ class EditSegmentModal extends Component {
             ({ label: obj.title, value: obj.id })
         );
 
-        const priceTypeOptions = this.state.price === null ? [] :
-            this.props?.types?.prices.find(x => x.id === this.state.price)?.types?.map((obj) =>
+        const priceTypeOptions = this.state.priceId === null ? [] :
+            this.props?.types?.prices.find(x => x.id === this.state.priceId)?.types?.map((obj) =>
                 ({ label: obj.title, value: obj.id })
             );
+
         const consumersNames = this.props.customerSegments.consumers.map((obj) =>
             <Option key={obj.id} value={obj.segment_name}>{obj.segment_name}</Option>
         )
@@ -302,26 +304,28 @@ class EditSegmentModal extends Component {
                             <Row>
                                 <Row>
                                     {
-                                        this.generateAIText()?.length === 0 ?
+                                        this.generateAIText()[0] === undefined && this.generateAIText()[1] === undefined ?
+
                                             <>
                                                 <Text>
                                                     Based on the current information KABADA AI thinks that everything looks good.
+
                                                 </Text>
                                             </>
 
                                             :
                                             <Text>
+
                                                 Based on your input KABADA AI recommends that you consider adding
-                                                {this.generateAIText()[0] && ' "Revenue Stream Name" : ' + this.generateAIText()[0] + '; for'}
-                                                {this.generateAIText()[1] && '" price"' + this.generateAIText()[1] + '; for'}
-                                                {this.generateAIText()[2] && '" Types of pricing"' + this.generateAIText()[2] + '.'}
+                                                {this.generateAIText()[0] && ' "Revenue Stream Name" : ' + this.generateAIText()[0] + ';'}
+                                                {this.generateAIText()[1] != undefined && '" Types of pricing"' + this.generateAIText()[1] + '.'}
 
                                             </Text>
                                     }
                                 </Row>
                                 <Row style={{ marginTop: '12px' }}>
                                     {
-                                        this.generateAIText()?.length === 0 ?
+                                        this.generateAIText()[0] === undefined && this.generateAIText()[1] === undefined ?
                                             <Button onClick={this.hidePopover}>Cancel</Button>
                                             :
                                             <>
@@ -336,8 +340,9 @@ class EditSegmentModal extends Component {
                 }
             </>
         )
-
+        console.log({ priceTypeOptions })
         return (
+
             <>
                 <Modal
                     bodyStyle={{ paddingBottom: '0px' }}
@@ -383,8 +388,9 @@ class EditSegmentModal extends Component {
                                 style={{ width: '100%' }}
                                 placeholder="Select revenue stream"
                                 options={streamOptions}
-                                defaultValue={this.state.revenue.title}
-                                onChange={this.onNameChange.bind(this)}
+                                defaultValue={this.state.revenueTitle}
+                                value={this.state.revenueTitle}
+                                onChange={(e) => this.onNameChange(e)}
                                 className={this.state.isAichangeName === '2' && "aicolor .ant-select-selector"}
                             />
                         </Form.Item>
@@ -394,8 +400,9 @@ class EditSegmentModal extends Component {
                                 style={{ width: '100%' }}
                                 options={priceOptions}
                                 placeholder="Select price"
-                                defaultValue={this.state.price.title}
-                                onChange={this.onPriceChange.bind(this)}
+                                defaultValue={this.state.priceTitle}
+                                value={this.state.priceTitle}
+                                onChange={(e) => this.onPriceChange(e)}
                                 className={this.state.isAichangePrice === '2' && "aicolor .ant-select-selector"}
                             />
                         </Form.Item>
@@ -406,8 +413,9 @@ class EditSegmentModal extends Component {
                                 style={{ width: '100%' }}
                                 options={priceTypeOptions}
                                 placeholder="Choose type"
-                                defaultValue={this.state.priceType.title}
-                                onChange={this.onPriceTypeChange.bind(this)}
+                                defaultValue={this.state.priceTypeTitle}
+                                value={this.state.priceTypeTitle}
+                                onChange={(e) => this.onPriceTypeChange(e)}
                                 className={this.state.isAichangePriceType === '2' && "aicolor .ant-select-selector"}
                             />
                         </Form.Item>
@@ -442,4 +450,3 @@ const mapStateToProps = (state) => {
 }
 
 export default connect(mapStateToProps, { updateRevenue, getStreamTypes, getRevenues, getCustomerSegments })(EditSegmentModal);
-
