@@ -176,36 +176,36 @@ class AddSegmentModal extends Component {
         let priceType = '';
         if (this.props.number === 1) {
             consumersName = path.consumer.map((x) => x.category[0])[0]
-            //price = path.consumer.map((x) => x.price[0])[0]
+            price = path.consumer.map((x) => x.price)[0] !== undefined && path.consumer.map((x) => x.price[0])[0]
             priceType = path.consumer.map((x) => x.pricingType[0])[0]
         } else if (this.props.number === 2) {
             consumersName = path.business.map((x) => x.category[0])[0]
-            //price = path.business.map((x) => x.price[0])
+            price = path.business.map((x) => x.price)[0] !== undefined && path.business.map((x) => x.price[0])[0]
             priceType = path.business.map((x) => x.pricingType[0])[0]
 
         } else {
             consumersName = path.publicNgo.map((x) => x.category[0])[0]
-            //price = path.publicNgo.map((x) => x.price[0])
+            price = path.publicNgo.map((x) => x.price)[0] !== undefined && path.publicNgo.map((x) => x.price[0])[0]
             priceType = path.publicNgo.map((x) => x.pricingType[0])[0]
         }
 
 
-        let revenueName = this.props.types.stream_types.find((x) => x?.id === consumersName).title
-        //let priceName = this.props.types?.prices.find((x) => x?.id === priceType)
-        //const selectedPriceType = this.props?.types?.prices.find(x => x?.id === priceName?.id)?.types
-        let priceTypeName = this.props.types.prices.find(x => x?.id === priceType).title
-        console.log(this.props.types.prices.find(x => x?.id === priceType).title)
-        if (this.state.revenue === revenueName?.id) {
+        let revenueName = this.props.types.stream_types.find((x) => x?.id === consumersName)
+        let priceName = this.props.types?.prices.find((x) => x?.id === priceType).types.find((y) => y.id === price)
+        let priceTypeName = this.props.types.prices.find(x => x?.id === priceType)
+        // console.log(this.state.state.price === priceTypeName.id)
+        // console.log({ id: this.state.price, id1: priceTypeName.id })
+        if (this.state.revenue === revenueName.id) {
             revenueName = null
         }
-        // if (this.state.price === priceName?.id) {
-        //     priceName = null
-        // }
-        if (this.state.priceType === priceTypeName?.id) {
+        if (this.state.price === priceTypeName.id) {
             priceTypeName = null
         }
 
-        return [revenueName, priceTypeName]
+        if (this.state.priceType === priceName?.id) {
+            priceName = null
+        }
+        return [revenueName?.title, priceTypeName?.title, priceName?.title]
     }
 
     filterAIValues = () => {
@@ -217,16 +217,16 @@ class AddSegmentModal extends Component {
             let priceType = '';
             if (this.props.number === 1) {
                 consumersName = path.consumer.map((x) => x.category[0])[0]
-                //price = path.consumer.map((x) => x.price[0])
+                price = path.consumer.map((x) => x.price)
                 priceType = path.consumer.map((x) => x.pricingType[0])[0]
             } else if (this.props.number === 2) {
                 consumersName = path.business.map((x) => x.category[0])[0]
-                //price = path.business.map((x) => x.price[0])
+                price = path.business.map((x) => x.price)
                 priceType = path.business.map((x) => x.pricingType[0])[0]
 
             } else {
                 consumersName = path.publicNgo.map((x) => x.category[0])[0]
-                //price = path.publicNgo.map((x) => x.price[0])
+                price = path.publicNgo.map((x) => x.price)
                 priceType = path.publicNgo.map((x) => x.pricingType[0])[0]
             }
             if (this.state.revenue !== consumersName) {
@@ -235,10 +235,10 @@ class AddSegmentModal extends Component {
             if (this.state.price !== priceType) {
                 this.onPriceChange(priceType, '2')
             }
-            // if (this.state.priceType !== price[0]) {
-            //     this.onPriceTypeChange(price[0], '2')
-            // }
-            console.log({ path })
+            console.log(price)
+            if (this.state.priceType !== price[0] && price[0]) {
+                this.onPriceTypeChange(price[0], '2')
+            }
             this.hidePopover();
         }
     }
@@ -293,7 +293,7 @@ class AddSegmentModal extends Component {
                             <Row>
                                 <Row>
                                     {
-                                        this.generateAIText()?.length === 0 ?
+                                        this.generateAIText()[0] === undefined && this.generateAIText()[1] === undefined && this.generateAIText()[2] === undefined ?
                                             <>
                                                 <Text>
                                                     Based on the current information KABADA AI thinks that everything looks good.
@@ -304,13 +304,13 @@ class AddSegmentModal extends Component {
                                             <Text>
                                                 Based on your input KABADA AI recommends that you consider adding {this.generateAIText()[0] && ' "Revenue Stream Name" : ' + this.generateAIText()[0] + '; for'}
 
-                                                {this.generateAIText()[1] && '" Types of pricing"' + this.generateAIText()[1] + '.'}
+                                                {this.generateAIText()[1] && '" Pric"' + this.generateAIText()[1] + '.'} {this.generateAIText()[2] && '" Type of Pricing"' + this.generateAIText()[2] + '.'}
                                             </Text>
                                     }
                                 </Row>
                                 <Row style={{ marginTop: '12px' }}>
                                     {
-                                        this.generateAIText()?.length === 0 ?
+                                        this.generateAIText()[0] === undefined && this.generateAIText()[1] === undefined && this.generateAIText()[2] === undefined ?
                                             <Button onClick={this.hidePopover}>Cancel</Button>
                                             :
                                             <>
