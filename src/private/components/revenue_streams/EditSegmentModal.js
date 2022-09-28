@@ -37,7 +37,6 @@ class EditSegmentModal extends Component {
     onBack = () => {
         this.props.onClose();
     }
-
     onOK = () => {
         const price = this.props.types.prices.find(x => x.id === this.state.PriceId);
         console.log('Price type id:' + this.state.priceTypeTitle)
@@ -68,7 +67,7 @@ class EditSegmentModal extends Component {
             "id": this.props.item.id,
             "key": this.props.item.id,
             "price_category_id": this.state.PriceId,
-            "price_category_name": this.state.priceTitle, //Prices
+            "price_category_name": this.props.types?.prices.find((x) => x.id === this.state.priceId)?.title, //this.state.priceTitle, //Prices
             "price_type_id": this.state.priceTypeId,
             "price_type_name": this.state.priceTypeTitle, //Types of pricing
             "stream_type_id": this.state.revenueID,
@@ -89,7 +88,7 @@ class EditSegmentModal extends Component {
     onNameChange(typeId, isAi, title) {
         this.setState({
             revenueID: typeId,
-            revenueTitle: title,
+            revenueTitle: title ?? typeId,
             isAichangeName: isAi || '1'
         });
         console.log(this.state.revenueID, this.state.revenueTitle)
@@ -97,24 +96,24 @@ class EditSegmentModal extends Component {
     }
 
     onPriceChange(id, isAi, title) {
-
+        console.log({ id, isAi, title })
         this.setState({
             priceId: id,
-            priceTitle: title,
+            priceTitle: title ?? id,
             isAichangePrice: isAi || '1',
             priceTypeId: null,
             priceTypeTitle: null
 
         });
         console.log(this.state.priceId, this.state.priceTitle)
-        console.log({ id, title })
+        console.log(this.props.types?.prices.find((x) => x.id === this.state.priceId).title)
     }
 
     onPriceTypeChange(typeId, isAi, title) {
 
         this.setState({
             priceTypeId: typeId,
-            priceTypeTitle: this.props?.types?.prices.find(x => x.id === this.state.priceId)?.types.find((x) => x.id === typeId).title,
+            priceTypeTitle: typeId,
             isAichangePriceType: isAi || '1'
         });
         console.log(this.state.priceTypeId, this.state.priceTypeTitle)
@@ -130,11 +129,16 @@ class EditSegmentModal extends Component {
         this.props.getRevenues(this.props.businessPlanId);
         this.props.getStreamTypes();
         this.setState({
-            revenue: { id: this.props.item.stream_type_id, title: this.props.item.stream_type_name },
-            price: { id: this.props.item.price_category_id, title: this.props.item.price_category_name },
-            priceType: { id: this.props.item.price_type_id, title: this.props.item.price_type_name },
+            // revenue: { id: this.props.item.stream_type_id, title: this.props.item.stream_type_name },
+            // price: { id: this.props.item.price_category_id, title: this.props.item.price_category_name },
+            // priceType: { id: this.props.item.price_type_id, title: this.props.item.price_type_name },
+            priceId: this.props.item.price_category_id
 
         })
+        console.log(this.props.item.price_category_id)
+        console.log(this.state.priceId)
+        console.log(this.props.item.price_category_name)
+        console.log(this.state.priceTitle)
 
         this.props.getCustomerSegments(this.props.businessPlan.id);
         this.setState({
@@ -206,10 +210,10 @@ class EditSegmentModal extends Component {
         if (this.state.revenueID == revenueName?.id) {
             revenueName = null
         }
-        // if (this.state.PriceId === priceName?.id) {
+        // if (this.state.PriceTypeId === priceName?.id) {
         //     priceName = null
         // }
-        if (this.state.priceTypeId === priceTypeName?.id) {
+        if (this.state.PriceId === priceTypeName?.id) {
             priceTypeName = null
         }
 
@@ -259,7 +263,6 @@ class EditSegmentModal extends Component {
     }
 
     render() {
-
         const additionalTitle = this.props.item.segment === 3 ? 'Public bodies & NGO' : this.props.item.segment === 2 ? 'Business' : 'Consumers';
         const streamOptions = this.props.types.stream_types.map((obj) =>
             ({ label: obj.title, value: obj.id })
@@ -340,7 +343,7 @@ class EditSegmentModal extends Component {
                 }
             </>
         )
-        console.log({ priceTypeOptions })
+
         return (
 
             <>
@@ -403,6 +406,7 @@ class EditSegmentModal extends Component {
                                 defaultValue={this.state.priceTitle}
                                 value={this.state.priceTitle}
                                 onChange={(e) => this.onPriceChange(e)}
+                                //onChange={this.onPriceChange.bind(this)}
                                 className={this.state.isAichangePrice === '2' && "aicolor .ant-select-selector"}
                             />
                         </Form.Item>
