@@ -46,6 +46,8 @@ class StrengthsWeaknesses extends Component {
     }
 
     handleState = (item, type) => event => {
+        console.log(event);
+        console.log(item);
         if (type === 1) {  // if strength
             item.value = event.target.checked === true ? 1 : 0;
         } else {    // weakness
@@ -55,6 +57,11 @@ class StrengthsWeaknesses extends Component {
         this.props.updateCheckedStrenghsAndOportunities(1, item)
         // this.props.getUpdatesWindowState();
     };
+    handleStateFromAIButton = (item) => {
+        console.log("working")
+        console.log(item)
+        this.props.updateCheckedStrenghsAndOportunities(1, item)
+    }
 
     onTitleChange = (item) => event => {
         const updateItem = {
@@ -97,7 +104,7 @@ class StrengthsWeaknesses extends Component {
                 popoverType: 'no predict'
             })
         } else {
-            const text = this.generateAIHelpText(this.props.list.swotAIPredict, 'strengths');
+            const text = this.generateAIHelpText(this.props.list.swotAIPredict);
             if (text === undefined) {
                 this.setState({
                     popoverVisibility: visible,
@@ -128,34 +135,63 @@ class StrengthsWeaknesses extends Component {
         return newArray;
     }
 
-    generateAIHelpText = (predictsObj, category) => {
+    generateAIHelpText = (predictsObj) => {
         const aiHintTextObject = [];
         console.log(predictsObj)
         const aiObj = undefined ? undefined : predictsObj;
         if (aiObj !== undefined) {
-            const swotAIList = category === 'strengths' ? aiObj.strengths : aiObj.opportunities;
-            const selected_strengths_weaknesses_items = this.props.list.updates.strengths.map(e => e.id);
-            const compared_strengths_weaknesses_items = this.compareArray(swotAIList, selected_strengths_weaknesses_items);
-            let strengths_weaknesses_text = '';
-            if (compared_strengths_weaknesses_items.length > 1) {
-                for (let i = 0; i < compared_strengths_weaknesses_items.length; i++) {
-                    const strengths_weaknesses_title = this.props.list.original.strengths_weakness_items.find(e => e.id === compared_strengths_weaknesses_items[i]).title;
-                    strengths_weaknesses_text += i === compared_strengths_weaknesses_items.length - 1 ? strengths_weaknesses_title + '' : strengths_weaknesses_title + ', ';
+            const swotAIStrengthsList = aiObj.strengths === undefined ? [] : aiObj.strengths;
+            const swotAIWeaknessList = aiObj.weaknesses === undefined ? [] : aiObj.weaknesses;
+            const selected_strengths_items = this.props.list.updates.strengths.filter(e => e.value === 1).map(e => e.id);
+            const selected_weakness_items = this.props.list.updates.strengths.filter(e => e.value === 2).map(e => e.id);
+            console.log(selected_strengths_items);
+            console.log(selected_weakness_items);
+            const compared_strengths_items = this.compareArray(swotAIStrengthsList, selected_strengths_items);
+            let strengths_text = '';
+            if (compared_strengths_items.length > 1) {
+                for (let i = 0; i < compared_strengths_items.length; i++) {
+                    const strengths_weaknesses_title = this.props.list.original.strengths_weakness_items.find(e => e.id === compared_strengths_items[i]).title;
+                    strengths_text += i === compared_strengths_items.length - 1 ? strengths_weaknesses_title + '' : strengths_weaknesses_title + ', ';
                 }
                 const new_obj = {
-                    type_title: 'Strengths and weaknesses',
-                    text: strengths_weaknesses_text
+                    type_title: 'Strengths',
+                    text: strengths_text
                 }
                 aiHintTextObject.push(new_obj)
-            } else if (compared_strengths_weaknesses_items === 1) {
-                const strengths_weaknesses_title = this.props.list.original.strengths_weakness_items.find(e => e.id === compared_strengths_weaknesses_items[0]).title;
-                strengths_weaknesses_text = strengths_weaknesses_title;
+            } else if (compared_strengths_items === 1) {
+                const strengths_weaknesses_title = this.props.list.original.strengths_weakness_items.find(e => e.id === compared_strengths_items[0]).title;
+                strengths_text = strengths_weaknesses_title;
                 const new_obj = {
-                    type_title: 'Strengths and weaknesses',
-                    text: strengths_weaknesses_text
+                    type_title: 'Strengths',
+                    text: strengths_text
                 }
                 aiHintTextObject.push(new_obj)
             }
+            const compared_weakness_items = this.compareArray(swotAIWeaknessList, selected_weakness_items);
+            console.log(compared_weakness_items);
+            let weakness_text = '';
+            if (compared_weakness_items.length > 1) {
+                for (let i = 0; i < compared_weakness_items.length; i++) {
+                    const weaknesses_title = this.props.list.original.strengths_weakness_items.find(e => e.id === compared_weakness_items[i]).title;
+                    weakness_text += i === compared_strengths_items.length - 1 ? weaknesses_title + '' : weaknesses_title + ', ';
+                }
+                const new_obj = {
+                    type_title: 'Weaknesses',
+                    text: weakness_text
+                }
+                aiHintTextObject.push(new_obj)
+            } else if (compared_weakness_items === 1) {
+                const weaknesses_title = this.props.list.original.strengths_weakness_items.find(e => e.id === compared_weakness_items[0]).title;
+                weakness_text = weaknesses_title;
+                const new_obj = {
+                    type_title: 'Weaknesses',
+                    text: weakness_text
+                }
+                aiHintTextObject.push(new_obj)
+            } else if (compared_strengths_items.length = 0){
+
+            }
+            console.log(aiHintTextObject)
             return aiHintTextObject
         } else {
             this.setState({
@@ -164,36 +200,30 @@ class StrengthsWeaknesses extends Component {
         }
     }
     onAIButtonClick = () => {
-        // const newAIPartnerTypeID = this.props.partners.aiPredict[0].partnerType[0];
-        // const aiPartnerTypeObj = this.props.category.title === 'distributor' ? this.props.categories.distributors.find(obj => obj.type_id === newAIPartnerTypeID) :
-        //     this.props.category.title === 'supplier' ? this.props.categories.suppliers.find(obj => obj.type_id === newAIPartnerTypeID) :
-        //         this.props.category.title === 'other' ? this.props.categories.others.find(obj => obj.type_id === newAIPartnerTypeID) : null;
-        // const selectionSuggestObjForReducer = {
-        //     type_id: newAIPartnerTypeID,
-        //     title: aiPartnerTypeObj.title,
-        //     description: aiPartnerTypeObj.description,
-        //     tag: 1
-        // }
-        // this.props.setKeyPartnerCategoryType(selectionSuggestObjForReducer);
-        // this.setState({
-        //     predictActive: true
-        // })
-        //this.props.setSwotOpportunitiesAIPredict();
-        // const swotAIList = this.props.list.swotAIPredict.opportunities
-        // const selected_opportunities_threats_items = this.props.list.updates.opportunities.map(e => e.id);
-        // const compared_opportunities_threats_items = this.compareArray(swotAIList, selected_opportunities_threats_items);
-        // console.log(compared_opportunities_threats_items);
-        // for (let i in compared_opportunities_threats_items) {
-        //     const opportunity_obj = this.props.list.original.oportunities_threats.find(e => e.id === compared_opportunities_threats_items[i]);
-        //     console.log(opportunity_obj);
-        //     const new_item = {
-        //         ...opportunity_obj,
-        //         tag: 1,
-        //         value: 3
-        //     }
-        //     console.log(new_item)
-        //     this.handleStateFromAIButton(new_item);
-        // }
+        const swotAIStrengthsList = this.props.list.swotAIPredict.strengths;
+        const swotAIWeaknessList = this.props.list.swotAIPredict.weaknesses;
+        const selected_strenghts_items = this.props.list.updates.strengths.filter(e => e.value === 1).map(e => e.id);
+        const selected_weakness_items = this.props.list.updates.strengths.filter(e => e.value === 2).map(e => e.id);
+        const compared_strengths_items = this.compareArray(swotAIStrengthsList, selected_strenghts_items);
+        for (let i in compared_strengths_items) {
+            const strengths_obj = this.props.list.original.strengths_weakness_items.find(e => e.id === compared_strengths_items[i]);
+            const new_item = {
+                ...strengths_obj,
+                tag: 1,
+                value: 1
+            }
+            this.handleStateFromAIButton(new_item);
+        }
+        const compared_weakness_items = this.compareArray(swotAIWeaknessList, selected_weakness_items);
+        for (let i in compared_weakness_items) {
+            const weakness_obj = this.props.list.original.strengths_weakness_items.find(e => e.id === compared_weakness_items[i]);
+            const new_item = {
+                ...weakness_obj,
+                tag: 1,
+                value: 2
+            }
+            this.handleStateFromAIButton(new_item);
+        }
         this.hidePopover();
     }
     render() {

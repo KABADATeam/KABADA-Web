@@ -114,12 +114,8 @@ class SwotWindow extends React.Component {
     }
 
     getUpdatesWindowState() {
-        // console.log('get updates windows state')
-        // console.log('YE YEYEY YE'+JSON.stringify(this.props.swot))
-
         if (this.props.swot.original.strengths_weakness_items.length > 0 ||
             this.props.swot.original.oportunities_threats > 0) {
-            // console.log('YE NOTOTOT NULLL YE' + JSON.stringify(this.props.swot))
             const originalStrengths = JSON.stringify(this.props.swot.original_updates.strengths)
             const modifiedStrengths = JSON.stringify(this.props.swot.updates.strengths)
             const originalOpportunities = JSON.stringify(this.props.swot.original_updates.opportunities)
