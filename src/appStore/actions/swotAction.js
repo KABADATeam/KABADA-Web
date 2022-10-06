@@ -37,7 +37,6 @@ export const updateSwotList = (type, item) => {
 export const updateCheckedStrenghsAndOportunities = (type, item) => {
     return async (dispatch,getState)=>{
         try {
-            console.log(item)
             dispatch({ type: 'UPDATE_CHECKED_STRENGHTS_OPORTUNITIES_SUCCESS', payload: { "type": type, "item": item } });
         } catch (error) {
             dispatch({ type: 'ERROR', payload: errorHandler(error) });
@@ -142,7 +141,6 @@ export const getSwotAI = (postObject) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.post('api/plans/predict', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response.data.plan.swot);
             dispatch({ type: 'GET_AI_SWOT_PREDICT_SUCCESS', payload: response.data.plan.swot });
         } catch (error) {
             dispatch({ type: 'ERROR', payload: errorHandler(error) });
@@ -160,8 +158,6 @@ export const setSwotOpportunitiesAIPredict = () => {
                 original: getState().swotList.original.oportunities_threats,
                 updates: getState().swotList.updates.opportunities
             }
-            console.log(aiPredict);
-            console.log(userInsertedData)
             dispatch({ type: 'SET_SWOT_OPPORTUNITIES_AI_PREDICT', payload: {predict: aiPredict, userData: userInsertedData } })
         } catch {
 

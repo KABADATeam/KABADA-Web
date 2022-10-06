@@ -90,7 +90,6 @@ export const swotReducer = (
                 const weaknessIndex = state.checked_weakness.findIndex(x => x.id === action.payload.id);
                 const checkedStrengths = state.checked_strengths;
                 const checkedWeakness = state.checked_weakness;
-
                 const strengths = state.updates.strengths;
                 const index = state.updates.strengths.findIndex(x => x.id === action.payload.item.id);
 
@@ -100,14 +99,14 @@ export const swotReducer = (
                     if (strengthIndex === -1) {
                         // if updates.strenghts already has that item dont add new one
                         if(index === -1){
-                            const checked_strengths = [...checkedStrengths, { ...action.payload.item }]
+                            const checked_strengths = [...checkedStrengths, { ...action.payload.item }];
                             const updated = [...strengths, { ...action.payload.item }];
                             // setting updates strenghts to updated. keeping whats already in strengths
                             const obj = { ...state.updates, strengths: updated };
                             return { ...state, checked_strengths: checked_strengths,original: state.original, updates: obj }
                         }else{
                             //if updates.strengths have item with this id then update it
-                            const checked_strengths = [...checkedStrengths, { ...action.payload.item }]
+                            const checked_strengths = [...checkedStrengths, { ...action.payload.item }];
                             //change the item 
                             const updated = strengths.map(x => x.id === action.payload.item.id? action.payload.item: x);
                             // setting updates strenghts to updated. keeping whats already in strengths
@@ -127,7 +126,7 @@ export const swotReducer = (
                             const obj = { ...state.updates, strengths: updated };
                             return { ...state, checked_weakness: checked_weakness,original: state.original, updates: obj }
                         }else{
-                            const checked_weakness = [...checkedWeakness, { ...action.payload.item }]
+                            const checked_weakness = [...checkedWeakness, { ...action.payload.item }];
                             const updated = strengths.map(x => x.id === action.payload.item.id? action.payload.item : x);
                             // setting updates strenghts to updated. keeping whats already in strengths
                             const obj = { ...state.updates, strengths: updated };
@@ -170,9 +169,6 @@ export const swotReducer = (
                             const updated = [...oportunities, { ...action.payload.item }];
                             // setting updates opportunities to updated. keeping whats already in opportunities
                             const obj = { ...state.updates, opportunities: updated };
-                            console.log('checked_opportunities ', checked_oportunities);
-                            console.log('updated ', updated);
-                            console.log('setting updates ', obj)
                             return { ...state, checked_oportunities: checked_oportunities,original: state.original, updates: obj }
                         }else{
                             //if updates.opportunities have item with this id then update it. and add item to checked_oportunities becouse there isnt one there
@@ -296,13 +292,10 @@ export const swotReducer = (
                 "swotAIPredict": action.payload 
             }
         case "SET_SWOT_OPPORTUNITIES_AI_PREDICT":
-            console.log('ok')
             const { original, updates } = action.payload.userData;
-            console.log(original)
             const opportunities_items_array = [...state.updates.opportunities];
             const selected_opportunities_items = state.updates.opportunities.map(e => e.id);
             const compared_opportunities = compareArray(action.payload.predict, selected_opportunities_items);
-            console.log(compared_opportunities);
             for (let i in compared_opportunities) {
                 const item = original.find(e => e.id === compared_opportunities[i]);
                 const new_obj = {
@@ -312,9 +305,7 @@ export const swotReducer = (
                 }
                 opportunities_items_array.push(new_obj)
             }
-            console.log(opportunities_items_array)
             const obj = { ...state.updates, opportunities: opportunities_items_array };
-            console.log(obj)
             return {
                 ...state,
                 updates: obj

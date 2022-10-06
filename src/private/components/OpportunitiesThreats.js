@@ -31,25 +31,17 @@ class OpportunitiesThreats extends Component {
     }
 
     handleState = (item, type) => event => {
-        console.log('handle state by user item', item)
-        console.log('handle state by user type', type)
-        console.log('handle state by user event', event.target.checked)
-        console.log('item before ', item.value)
         if (type === 3) {  // if opportunity
             item.value = event.target.checked === true ? 3 : 0;
         } else {    // threat
             item.value = event.target.checked === true ? 4 : 0;
         }
-        console.log('after ', item.value)
-        console.log("working", item)
         this.props.updateCheckedStrenghsAndOportunities(2, item)
         //isPredict === false ? this.props.updateCheckedStrenghsAndOportunities(2, item, false) : this.props.updateCheckedStrenghsAndOportunities(2, item, true);
         // this.props.getUpdatesWindowState();
     };
 
     handleStateFromAIButton = (item) => {
-        console.log("working")
-        console.log(item)
         this.props.updateCheckedStrenghsAndOportunities(2, item)
     }
 
@@ -162,15 +154,12 @@ class OpportunitiesThreats extends Component {
 
     generateAIHelpText = (predictsObj) => {
         const aiHintTextObject = [];
-        console.log(predictsObj)
         const aiObj = undefined ? undefined : predictsObj;
         if (aiObj !== undefined) {
             const swotAIOpportunitiesList = aiObj.opportunities === undefined ? [] : aiObj.opportunities;
             const swotAIThreatsList = aiObj.threats === undefined ? [] : aiObj.threats;
             const selected_opportunities_items = this.props.list.updates.opportunities.filter(e => e.value === 3).map(e => e.id);
             const selected_threats_items = this.props.list.updates.opportunities.filter(e => e.value === 4).map(e => e.id);
-            console.log(selected_opportunities_items);
-            console.log(selected_threats_items);
             const compared_opportunities_items = this.compareArray(swotAIOpportunitiesList, selected_opportunities_items);
             let opportunities_text = '';
             if (compared_opportunities_items.length > 1) {
@@ -183,7 +172,7 @@ class OpportunitiesThreats extends Component {
                     text: opportunities_text
                 }
                 aiHintTextObject.push(new_obj)
-            } else if (compared_opportunities_items === 1) {
+            } else {
                 const opportunity_title = this.props.list.original.oportunities_threats.find(e => e.id === compared_opportunities_items[0]).title;
                 opportunities_text = opportunity_title;
                 const new_obj = {
@@ -204,7 +193,7 @@ class OpportunitiesThreats extends Component {
                     text: threats_text
                 }
                 aiHintTextObject.push(new_obj)
-            } else if (compared_threats_items === 1) {
+            } else {
                 const threats_title = this.props.list.original.oportunities_threats.find(e => e.id === compared_threats_items[0]).title;
                 threats_text = threats_title;
                 const new_obj = {
@@ -222,10 +211,10 @@ class OpportunitiesThreats extends Component {
         }
     }
     onAIButtonClick = () => {
-        const swotAIOpportunitiesList = this.props.list.swotAIPredict.opportunities === undefined ? [] : this.props.swotAIPredict.opportunities;
-        const swotAIThreatsList = this.props.list.swotAIPredict.threats === undefined ? [] : this.props.list.swotAIPredict.threats; 
+        const swotAIOpportunitiesList = this.props.list.swotAIPredict.opportunities === undefined ? [] : this.props.list.swotAIPredict.opportunities;
+        const swotAIThreatsList = this.props.list.swotAIPredict.threats === undefined ? [] : this.props.list.swotAIPredict.threats;
         const selected_opportunities_items = this.props.list.updates.opportunities.filter(e => e.value === 3).map(e => e.id);
-        const selected_threats_items = this.props.list.updates.threats.filter(e => e.value === 4).map(e => e.id);
+        const selected_threats_items = this.props.list.updates.opportunities.filter(e => e.value === 4).map(e => e.id);
         const compared_opportunities_items = this.compareArray(swotAIOpportunitiesList, selected_opportunities_items);
         for (let i in compared_opportunities_items) {
             const opportunity_obj = this.props.list.original.oportunities_threats.find(e => e.id === compared_opportunities_items[i]);
@@ -249,7 +238,8 @@ class OpportunitiesThreats extends Component {
         this.hidePopover();
     }
     render() {
-        const data = this.props.list.original.oportunities_threats.concat(this.props.list.updates.opportunities.filter(x => isNaN(x.id) === false));
+        //const data = this.props.list.original.oportunities_threats.concat(this.props.list.updates.opportunities.filter(x => isNaN(x.id) === false));
+        const data = this.props.list.original.oportunities_threats.map(item => this.props.list.updates.opportunities.find(el => item.id === el.id) || item);
 
         const columns = [
             {

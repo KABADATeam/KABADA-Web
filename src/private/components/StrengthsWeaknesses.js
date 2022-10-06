@@ -10,12 +10,15 @@ import TooltipComponent from '../components/Tooltip';
 const { Text } = Typography;
 
 class StrengthsWeaknesses extends Component {
-
-    state = {
-        popoverVisibility: false,
-        popoverType: 'no predict',
-        popoverTextObject: [],
+    constructor(props) {
+        super(props);
+        this.state = {
+            popoverVisibility: false,
+            popoverType: 'no predict',
+            popoverTextObject: [],
+        }
     }
+    
 
     onAddItem = () => {
         const newItem = {
@@ -46,8 +49,6 @@ class StrengthsWeaknesses extends Component {
     }
 
     handleState = (item, type) => event => {
-        console.log(event);
-        console.log(item);
         if (type === 1) {  // if strength
             item.value = event.target.checked === true ? 1 : 0;
         } else {    // weakness
@@ -57,9 +58,7 @@ class StrengthsWeaknesses extends Component {
         this.props.updateCheckedStrenghsAndOportunities(1, item)
         // this.props.getUpdatesWindowState();
     };
-    handleStateFromAIButton = (item) => {
-        console.log("working")
-        console.log(item)
+    handleStateFromAIButton = (item, type) => {
         this.props.updateCheckedStrenghsAndOportunities(1, item)
     }
 
@@ -137,15 +136,12 @@ class StrengthsWeaknesses extends Component {
 
     generateAIHelpText = (predictsObj) => {
         const aiHintTextObject = [];
-        console.log(predictsObj)
         const aiObj = undefined ? undefined : predictsObj;
         if (aiObj !== undefined) {
             const swotAIStrengthsList = aiObj.strengths === undefined ? [] : aiObj.strengths;
             const swotAIWeaknessList = aiObj.weaknesses === undefined ? [] : aiObj.weaknesses;
             const selected_strengths_items = this.props.list.updates.strengths.filter(e => e.value === 1).map(e => e.id);
             const selected_weakness_items = this.props.list.updates.strengths.filter(e => e.value === 2).map(e => e.id);
-            console.log(selected_strengths_items);
-            console.log(selected_weakness_items);
             const compared_strengths_items = this.compareArray(swotAIStrengthsList, selected_strengths_items);
             let strengths_text = '';
             if (compared_strengths_items.length > 1) {
@@ -158,7 +154,7 @@ class StrengthsWeaknesses extends Component {
                     text: strengths_text
                 }
                 aiHintTextObject.push(new_obj)
-            } else if (compared_strengths_items === 1) {
+            } else {
                 const strengths_weaknesses_title = this.props.list.original.strengths_weakness_items.find(e => e.id === compared_strengths_items[0]).title;
                 strengths_text = strengths_weaknesses_title;
                 const new_obj = {
@@ -168,11 +164,12 @@ class StrengthsWeaknesses extends Component {
                 aiHintTextObject.push(new_obj)
             }
             const compared_weakness_items = this.compareArray(swotAIWeaknessList, selected_weakness_items);
-            console.log(compared_weakness_items);
+            console.log('Palyginimas', compared_weakness_items);
             let weakness_text = '';
             if (compared_weakness_items.length > 1) {
                 for (let i = 0; i < compared_weakness_items.length; i++) {
                     const weaknesses_title = this.props.list.original.strengths_weakness_items.find(e => e.id === compared_weakness_items[i]).title;
+                    console.log('title name: ', weaknesses_title);
                     weakness_text += i === compared_strengths_items.length - 1 ? weaknesses_title + '' : weaknesses_title + ', ';
                 }
                 const new_obj = {
@@ -180,7 +177,7 @@ class StrengthsWeaknesses extends Component {
                     text: weakness_text
                 }
                 aiHintTextObject.push(new_obj)
-            } else if (compared_weakness_items === 1) {
+            } else {
                 const weaknesses_title = this.props.list.original.strengths_weakness_items.find(e => e.id === compared_weakness_items[0]).title;
                 weakness_text = weaknesses_title;
                 const new_obj = {
@@ -188,10 +185,7 @@ class StrengthsWeaknesses extends Component {
                     text: weakness_text
                 }
                 aiHintTextObject.push(new_obj)
-            } else if (compared_strengths_items.length = 0){
-
-            }
-            console.log(aiHintTextObject)
+            } 
             return aiHintTextObject
         } else {
             this.setState({
@@ -212,7 +206,7 @@ class StrengthsWeaknesses extends Component {
                 tag: 1,
                 value: 1
             }
-            this.handleStateFromAIButton(new_item);
+            this.handleStateFromAIButton(new_item, 1);
         }
         const compared_weakness_items = this.compareArray(swotAIWeaknessList, selected_weakness_items);
         for (let i in compared_weakness_items) {
@@ -221,13 +215,23 @@ class StrengthsWeaknesses extends Component {
                 ...weakness_obj,
                 tag: 1,
                 value: 2
-            }
-            this.handleStateFromAIButton(new_item);
+            };
+            this.handleStateFromAIButton(new_item, 2);
         }
+        
         this.hidePopover();
     }
     render() {
-        const data = this.props.list.original.strengths_weakness_items.concat(this.props.list.updates.strengths.filter(x => isNaN(x.id) === false));
+        const data = this.props.list.original.strengths_weakness_items.map(item => this.props.list.updates.strengths.find(el => item.id === el.id) || item);
+        
+        // console.log("DATA: ", data);
+        // console.log('Tipo original: ',this.props.list.original.strengths_weakness_items);
+        // console.log('Tipo updates', this.props.list.updates.strengths);
+        // console.log('Tipo filter su isNaN', this.props.list.updates.strengths.filter(x => isNaN(x.id) === false));
+        // const originalData = this.props.list.original.strengths_weakness_items;
+        // const updatedData = this.props.list.updates.strengths;
+        // const dataForTesting = originalData.map( item => updatedData.find(el => item.id === el.id) || item); //[...new Set([...ai_obj.productFeatures, ...selected_product_features])];
+        // console.log('Tipo data for testing: ', dataForTesting)
 
         const columns = [
             {
@@ -257,6 +261,7 @@ class StrengthsWeaknesses extends Component {
                 key: 'strengths',
                 render: (value, record, rowIndex) => (
                     <Checkbox
+                        
                         checked={record.value === 0 ? false : record.value === 1 ? true : false}
                         // disabled={record.value === 2 ? true : false}
                         disabled={this.isStrengthDisabled(record.id)}
