@@ -61,9 +61,16 @@ export const costStructureCategoriesReducer = (
         case 'FETCHING_COST_STRUCTURE_CATEGORIES_SUCCESS':
             return { ...state, "fixed_categories": action.payload.fixed_categories, "variable_categories": action.payload.variable_categories };
         case 'SET_COST_STRUCTURE_CATEGORY_SUCCESS':
-            console.log('actionpayload')
             console.log(action.payload)
-            return {...state}
+            if(action.payload.costNumber === 1) {
+                const f_costs = state.fixed_categories.map(x => x.category_id === action.payload.id ? { ...x, key: action.payload.key, tag: action.payload.tag } : x)
+                return { ...state, "fixed_categories": f_costs}
+            } else if (action.payload.costNumber === 2) {
+                const v_categories = state.variable_categories.map(x => x.category_id === action.payload.id ? action.payload : x)
+                return { ...state, "variable_categories": v_categories}
+            } else {
+                return { ...state }
+            }
         default:
             return state;
     }

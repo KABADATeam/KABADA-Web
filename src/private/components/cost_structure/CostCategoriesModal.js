@@ -26,8 +26,8 @@ class CostCategoriesModal extends Component {
         });
     }*/
     handlePopoverVisibilityChange = (visible) => {
-        console.log('hanlde')
-        console.log(this.props.costs)
+        // console.log('hanlde')
+        // console.log(this.props.costs)
         // if ai_predict is undefined or null
         if (!this.props.costs.ai_cost_structure_predict) {
             this.setState({
@@ -39,6 +39,8 @@ class CostCategoriesModal extends Component {
             const costStructureType = this.props.costNumber === 1 ? this.props.costs.ai_cost_structure_predict.fixedCosts
                 : this.props.costNumber === 2 ? this.props.costs.ai_cost_structure_predict.variableCosts
                 : null;
+            // console.log('ĄĄ costs: ' + JSON.stringify(this.props.costs));
+            // console.log('coststructure: ' + JSON.stringify(costStructureType));
             const text = this.generateAIHelpText(costStructureType);
             if (text === undefined) {
                 this.setState({
@@ -62,17 +64,28 @@ class CostCategoriesModal extends Component {
     }
 
     onAIButtonClick = () => {
+        //list of all available fixed or variable costs (based on choice before: add fixed or variable cost)
         const costStructureType = this.props.costNumber === 1 ? this.props.costs.ai_cost_structure_predict.fixedCosts
                 : this.props.costNumber === 2 ? this.props.costs.ai_cost_structure_predict.variableCosts
                 : null;
-        const newAICostStructureSuggest = costStructureType.find(x => x.id === null).subCategory;
-        const selectionSuggestObj = this.props.categories.categories.find(x => x.id === newAICostStructureSuggest[0]);
+        //getting category suggested by ai (its array of 1 element)
+        const newAICostStructureSuggest = costStructureType.find(x => x.id === null).category;
+        const suggestedValue = newAICostStructureSuggest.shift();
+        // there are fixed_categories and variable_categories in categories redux state. 
+        // so there will be list of all available fixed categories (rent of office, rent of buildings ....)
+        const categories = this.props.costNumber === 1 ? this.props.categories.fixed_categories
+            : this.props.costNumber === 2 ? this.props.categories.variable_categories
+            : null;
+        const selectionSuggestObj = categories.find(x => x.category_id === suggestedValue);
+        // console.log(selectionSuggestObj)
         const selectionSuggestObjForReducer = {
-            id: selectionSuggestObj.id,
-            title: selectionSuggestObj.title,
-            key: selectionSuggestObj.key,
-            tag: 1
+            id: selectionSuggestObj.category_id,
+            title: selectionSuggestObj.category_title,
+            key: selectionSuggestObj.category_id,
+            tag: 1,
+            costNumber: this.props.costNumber 
         }
+        // console.log(selectionSuggestObjForReducer)
         this.props.setCostStructureCategory(selectionSuggestObjForReducer);
         this.hidePopover();
     }
@@ -81,20 +94,23 @@ class CostCategoriesModal extends Component {
         this.props.selectCostCategory(item, () => {
             this.props.onOpen()
         });
-        console.log(item);
+        // console.log(item);
     }
 
     generateAIHelpText = (predictsObj) => {
         const aiHintTextObject = [];
         if (predictsObj) {
+            var predictValue = "";
             const predict = predictsObj.find(x => x.id === null).subCategory;
-            console.log('predict:'+predict)
-            // there are fixed_categories and variable_categories in categories redux state
+            // there are fixed_categories and variable_categories in categories redux state. 
+            // so there will be list of all available fixed categories (rent of office, rent of buildings ....)
             const categoryType = this.props.costNumber === 1 ? this.props.categories.fixed_categories
                 : this.props.costNumber === 2 ? this.props.categories.variable_categories
-                : null;
-            const title = categoryType.find(x => x.category_id === predict[0]);
-            console.log('title:'+title)
+                : null;   
+            if(predict)
+                predictValue = predict.shift();
+            //looping through fixed or variable costs. 
+            const title = categoryType.find(x => x.category_id === predictValue);
             const newObject = {
                 type_title: 'mechanism',
                 text: title 
@@ -206,7 +222,7 @@ class CostCategoriesModal extends Component {
                             <List.Item
                                 key={item.category_id}
                                 extra={<Button type="text" onClick={this.addNewCost.bind(this, item)}><RightOutlined /></Button>} >
-                                <List.Item.Meta style={{ cursor: "pointer" }}
+                                <List.Item.Meta style={{ cursor: "pointer", background: item.tag === 1 ? '#BAE7FF' : 'white' }}
                                     onClick={this.addNewCost.bind(this, item)}
                                     title={item.category_title}
                                     description={item.description}                                    
@@ -214,7 +230,7 @@ class CostCategoriesModal extends Component {
                             </List.Item>
                         )}
                     /> 
-                </Modal >
+                </Modal>
             </>
         )
     }
