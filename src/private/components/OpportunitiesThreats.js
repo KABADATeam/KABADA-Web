@@ -129,7 +129,7 @@ class OpportunitiesThreats extends Component {
                 popoverType: 'no predict'
             })
         } else {
-            const text = this.generateAIHelpText(this.props.list.swotAIPredict, 'opportunities');
+            const text = this.generateAIHelpText(this.props.list.swotAIPredict);
             if (text === undefined) {
                 this.setState({
                     popoverVisibility: visible,
@@ -160,34 +160,60 @@ class OpportunitiesThreats extends Component {
         return newArray;
     }
 
-    generateAIHelpText = (predictsObj, category) => {
+    generateAIHelpText = (predictsObj) => {
         const aiHintTextObject = [];
         console.log(predictsObj)
         const aiObj = undefined ? undefined : predictsObj;
         if (aiObj !== undefined) {
-            const swotAIList = category === 'opportunities' ? aiObj.opportunities : aiObj.strengths;
-            const selected_opportunities_threats_items = category === 'opportunities' ? this.props.list.updates.opportunities.map(e => e.id) : this.props.list.updates.strengths.map(e => e.id);
-            const compared_opportunities_threats_items = this.compareArray(swotAIList, selected_opportunities_threats_items);
-            let opportunities_threats_text = '';
-            if (compared_opportunities_threats_items.length > 1) {
-                for (let i = 0; i < compared_opportunities_threats_items.length; i++) {
-                    const opportunity_threat_title = this.props.list.original.oportunities_threats.find(e => e.id === compared_opportunities_threats_items[i]).title;
-                    opportunities_threats_text += i === compared_opportunities_threats_items.length - 1 ? opportunity_threat_title + '' : opportunity_threat_title + ', ';
+            const swotAIOpportunitiesList = aiObj.opportunities === undefined ? [] : aiObj.opportunities;
+            const swotAIThreatsList = aiObj.threats === undefined ? [] : aiObj.threats;
+            const selected_opportunities_items = this.props.list.updates.opportunities.filter(e => e.value === 3).map(e => e.id);
+            const selected_threats_items = this.props.list.updates.opportunities.filter(e => e.value === 4).map(e => e.id);
+            console.log(selected_opportunities_items);
+            console.log(selected_threats_items);
+            const compared_opportunities_items = this.compareArray(swotAIOpportunitiesList, selected_opportunities_items);
+            let opportunities_text = '';
+            if (compared_opportunities_items.length > 1) {
+                for (let i = 0; i < compared_opportunities_items.length; i++) {
+                    const opportunity_title = this.props.list.original.oportunities_threats.find(e => e.id === compared_opportunities_items[i]).title;
+                    opportunities_text += i === compared_opportunities_items.length - 1 ? opportunity_title + '' : opportunity_title + ', ';
                 }
                 const new_obj = {
-                    type_title: 'Opportunities and threats',
-                    text: opportunities_threats_text
+                    type_title: 'Opportunities',
+                    text: opportunities_text
                 }
                 aiHintTextObject.push(new_obj)
-            } else if (compared_opportunities_threats_items === 1) {
-                const opportunity_threat_title = this.props.list.original.oportunities_threats.find(e => e.id === compared_opportunities_threats_items[0]).title;
-                opportunities_threats_text = opportunity_threat_title;
+            } else if (compared_opportunities_items === 1) {
+                const opportunity_title = this.props.list.original.oportunities_threats.find(e => e.id === compared_opportunities_items[0]).title;
+                opportunities_text = opportunity_title;
                 const new_obj = {
-                    type_title: 'Opportunities and threats',
-                    text: opportunities_threats_text
+                    type_title: 'Opportunities',
+                    text: opportunities_text
                 }
                 aiHintTextObject.push(new_obj)
             }
+            const compared_threats_items = this.compareArray(swotAIThreatsList, selected_threats_items);
+            let threats_text = '';
+            if (compared_threats_items.length > 1) {
+                for (let i = 0; i < compared_threats_items.length; i++) {
+                    const threats_title = this.props.list.original.oportunities_threats.find(e => e.id === compared_threats_items[i]).title;
+                    threats_text += i === compared_threats_items.length - 1 ? threats_title + '' : threats_title + ', ';
+                }
+                const new_obj = {
+                    type_title: 'Threats',
+                    text: threats_text
+                }
+                aiHintTextObject.push(new_obj)
+            } else if (compared_threats_items === 1) {
+                const threats_title = this.props.list.original.oportunities_threats.find(e => e.id === compared_threats_items[0]).title;
+                threats_text = threats_title;
+                const new_obj = {
+                    type_title: 'Threats',
+                    text: threats_text
+                }
+                aiHintTextObject.push(new_obj)
+            }
+
             return aiHintTextObject
         } else {
             this.setState({
@@ -196,36 +222,30 @@ class OpportunitiesThreats extends Component {
         }
     }
     onAIButtonClick = () => {
-        // const newAIPartnerTypeID = this.props.partners.aiPredict[0].partnerType[0];
-        // const aiPartnerTypeObj = this.props.category.title === 'distributor' ? this.props.categories.distributors.find(obj => obj.type_id === newAIPartnerTypeID) :
-        //     this.props.category.title === 'supplier' ? this.props.categories.suppliers.find(obj => obj.type_id === newAIPartnerTypeID) :
-        //         this.props.category.title === 'other' ? this.props.categories.others.find(obj => obj.type_id === newAIPartnerTypeID) : null;
-        // const selectionSuggestObjForReducer = {
-        //     type_id: newAIPartnerTypeID,
-        //     title: aiPartnerTypeObj.title,
-        //     description: aiPartnerTypeObj.description,
-        //     tag: 1
-        // }
-        // this.props.setKeyPartnerCategoryType(selectionSuggestObjForReducer);
-        // this.setState({
-        //     predictActive: true
-        // })
-        //this.props.setSwotOpportunitiesAIPredict();
-        // const swotAIList = this.props.list.swotAIPredict.opportunities
-        // const selected_opportunities_threats_items = this.props.list.updates.opportunities.map(e => e.id);
-        // const compared_opportunities_threats_items = this.compareArray(swotAIList, selected_opportunities_threats_items);
-        // console.log(compared_opportunities_threats_items);
-        // for (let i in compared_opportunities_threats_items) {
-        //     const opportunity_obj = this.props.list.original.oportunities_threats.find(e => e.id === compared_opportunities_threats_items[i]);
-        //     console.log(opportunity_obj);
-        //     const new_item = {
-        //         ...opportunity_obj,
-        //         tag: 1,
-        //         value: 3
-        //     }
-        //     console.log(new_item)
-        //     this.handleStateFromAIButton(new_item);
-        // }
+        const swotAIOpportunitiesList = this.props.list.swotAIPredict.opportunities === undefined ? [] : this.props.swotAIPredict.opportunities;
+        const swotAIThreatsList = this.props.list.swotAIPredict.threats === undefined ? [] : this.props.list.swotAIPredict.threats; 
+        const selected_opportunities_items = this.props.list.updates.opportunities.filter(e => e.value === 3).map(e => e.id);
+        const selected_threats_items = this.props.list.updates.threats.filter(e => e.value === 4).map(e => e.id);
+        const compared_opportunities_items = this.compareArray(swotAIOpportunitiesList, selected_opportunities_items);
+        for (let i in compared_opportunities_items) {
+            const opportunity_obj = this.props.list.original.oportunities_threats.find(e => e.id === compared_opportunities_items[i]);
+            const new_item = {
+                ...opportunity_obj,
+                tag: 1,
+                value: 3
+            }
+            this.handleStateFromAIButton(new_item);
+        }
+        const compared_threats_items = this.compareArray(swotAIThreatsList, selected_threats_items);
+        for (let i in compared_threats_items) {
+            const threats_obj = this.props.list.original.oportunities_threats.find(e => e.id === compared_threats_items[i]);
+            const new_item = {
+                ...threats_obj,
+                tag: 1,
+                value: 4
+            }
+            this.handleStateFromAIButton(new_item);
+        }
         this.hidePopover();
     }
     render() {
