@@ -126,7 +126,7 @@ class CostStructure extends React.Component {
     // AI
     onAddFixedCosts = (e) => {
         const postObj = {
-            "location": 'plan::keyPartners::suppliers::sample',
+            "location": 'plan::costs::fixedCosts::sample',
             "planId": this.props.businessPlan.id
         };
         this.props.getCostStructureAIValues(postObj);
@@ -138,7 +138,7 @@ class CostStructure extends React.Component {
 
     onAddVariableCosts = () => {
         const postObj = {
-            "location": 'plan::keyPartners::suppliers::sample',
+            "location": 'plan::costs::variableCosts::sample',
             "planId": this.props.businessPlan.id
         };
         this.props.getCostStructureAIValues(postObj);
