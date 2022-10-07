@@ -35,9 +35,6 @@ class EditBusinessPlanModal extends Component {
     }
 
     getActivityID = (nace, industryCode, activityCode) => {
-        console.log(activityCode);
-        console.log(industryCode);
-        console.log(nace);
         const firstLevelActivities = nace.find(item => item.code === industryCode);
         if (firstLevelActivities.code === activityCode) {
             return firstLevelActivities.id;
@@ -48,9 +45,7 @@ class EditBusinessPlanModal extends Component {
                     return secondLevelActivities.id;
                 } else {
                     const activity2nd = activityCode.split('.').slice(0, 2).join('.');
-                    console.log(activity2nd);
                     const secondLevelActivities = firstLevelActivities.activities.find(item => item.code === activity2nd);
-                    console.log(secondLevelActivities);
                     if (secondLevelActivities.code === activityCode) {
                         return secondLevelActivities.id;
                     } else {
@@ -194,11 +189,9 @@ class EditBusinessPlanModal extends Component {
             //'industryId': values.industry,
             'countryId': values.country,
             'languageId': values.language,
+            'countryTitle': this.props.countries.find(item => item.id === values.country).title,
+            'countryShortCode': this.props.countries.find(item => item.id === values.country).shortCode
         }
-        console.log(values);
-        console.log(postObject);
-        console.log(reducerObject);
-
         if (Array.isArray(fileList) && fileList.length !== 0 && fileList[0].fileList.length !== 0) {
             fileList.forEach(item => {
                 if (item.file.status !== 'removed') {
@@ -211,7 +204,6 @@ class EditBusinessPlanModal extends Component {
             this.props.uploadFile(formData)
                 .then(
                     () => {
-                        console.log("image changed")
                         postObject = { ...postObject, 'Img': this.props.uploadedFile }
                         reducerObject = { ...reducerObject, 'planImage': this.props.uploadedFile }
                         this.props.updateImage(reducerObject);
@@ -220,7 +212,6 @@ class EditBusinessPlanModal extends Component {
                     });
         }
         else if (Array.isArray(fileList) && fileList.length !== 0 && fileList[0].file.status === 'removed') {
-            console.log("image deleted")
             postObject = { ...postObject, 'Img': '' }
             reducerObject = { ...reducerObject, 'planImage': '', 'coverImage': null }
             if (this.props.updatingPlan.planImage !== null || this.props.updatingPlan.planImage !== undefined) {
@@ -230,7 +221,6 @@ class EditBusinessPlanModal extends Component {
             this.props.onClose();
         }
         else if (Array.isArray(fileList) && fileList.length === 0) {
-            console.log("image unchanged")
             postObject = { ...postObject, 'Img': this.props.updatingPlan.planImage }
             reducerObject = { ...reducerObject, 'planImage': this.props.updatingPlan.planImage }
             this.props.updatePlanData(postObject, reducerObject)
@@ -281,7 +271,6 @@ class EditBusinessPlanModal extends Component {
         const { fileList } = this.state;
         const naceClass = this.props.nace;
         const oldName = this.props.updatingPlan.name;
-        console.log(this.props.updatingPlan);
         const oldActivity = this.getActivityID(this.props.nace, this.props.updatingPlan.overview.nace.industry_code, this.props.updatingPlan.activityCode);
         const oldCountry = this.props.countries.find(item => item.title === this.props.updatingPlan.countryTitle).id;
         const oldLanguage = this.props.planLanguages.find(item => item.title === 'English').id;
@@ -464,7 +453,7 @@ class EditBusinessPlanModal extends Component {
                                     placeholder="Select country"
                                     optionFilterProp="label"
                                     //defaultValue={this.props.updatingPlan.countryTitle}
-                                    value={this.props.updatingPlan.countryTitle}
+                                    //value={this.props.updatingPlan.countryTitle}
                                     filterOption={(input, option) =>
                                         option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                     }>
