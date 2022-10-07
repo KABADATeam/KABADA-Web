@@ -1,19 +1,17 @@
-import React, { Component, PureComponent } from 'react';
-import { Card, Typography, List, Row, Col, Tooltip, Divider, Spin, Button, Input } from 'antd';
+import React, { PureComponent } from 'react';
+import { Card, Typography, List, Row, Col, Divider, Spin } from 'antd';
 import { getSurvivalRate } from '../../../appStore/actions/eurostat/eurostatSurvivalRateAction';
 import { getGreatnessIndustry } from '../../../appStore/actions/eurostat/eurostatGreatnessIndustryAction';
 import { getCostsProductivity } from '../../../appStore/actions/eurostat/eurostatCostsProductivityAction';
 import { getCompanySize } from '../../../appStore/actions/eurostat/eurostatCompanySizeAction.js';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { CaretDownFilled, UserOutlined, InfoCircleFilled, ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from 'recharts';
-import { Tooltip as RechartsTooltip } from 'recharts';
+import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import { Line as ChartjsLine } from 'react-chartjs-2';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import TooltipComponent from '../Tooltip';
-import TextHelper from '../TextHelper';
+
 
 const { Text } = Typography;
 
@@ -57,7 +55,7 @@ class IndustryDataComponent extends PureComponent {
         this.companySize = [];
         this.dividerRef = [];
         //this.testRef = React.createRef();
-        this.getIndustryDataFile = this.getIndustryDataFile.bind(this);
+        //this.getIndustryDataFile = this.getIndustryDataFile.bind(this);
     }
     getIndustryDataFile = async () => {
         const imgWidth = 53.3;
@@ -237,9 +235,6 @@ class IndustryDataComponent extends PureComponent {
         this.props.getGreatnessIndustry();
         this.props.getCostsProductivity();
         this.props.getCompanySize();
-    }
-    click() {
-        console.log('press');
     }
     componentDidMount() {
         this.getChartsData();
@@ -829,7 +824,7 @@ class IndustryDataComponent extends PureComponent {
                                                                 <Text style={{ ...textStyle }}>{item.variableTitle} {item.industry}</Text>
                                                                 {
                                                                     item.variableTitle === 'Persons employed' ? <TooltipComponent code='ovidbci1' type='text' />
-                                                                        : item.variableTitle === 'Gross operating turnover' ? <TooltipComponent code='ovidbci2' type='text' />
+                                                                        : item.variableTitle === 'Gross operating rate' ? <TooltipComponent code='ovidbci2' type='text' />
                                                                             : <></>
                                                                 }
                                                             </div>
