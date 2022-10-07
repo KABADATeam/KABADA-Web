@@ -154,7 +154,7 @@ class StrengthsWeaknesses extends Component {
                     text: strengths_text
                 }
                 aiHintTextObject.push(new_obj)
-            } else {
+            } else if (compared_strengths_items.length === 1) {
                 const strengths_weaknesses_title = this.props.list.original.strengths_weakness_items.find(e => e.id === compared_strengths_items[0]).title;
                 strengths_text = strengths_weaknesses_title;
                 const new_obj = {
@@ -177,7 +177,7 @@ class StrengthsWeaknesses extends Component {
                     text: weakness_text
                 }
                 aiHintTextObject.push(new_obj)
-            } else {
+            } else if (compared_weakness_items.length === 1) {
                 const weaknesses_title = this.props.list.original.strengths_weakness_items.find(e => e.id === compared_weakness_items[0]).title;
                 weakness_text = weaknesses_title;
                 const new_obj = {
@@ -223,15 +223,6 @@ class StrengthsWeaknesses extends Component {
     }
     render() {
         const data = this.props.list.original.strengths_weakness_items.map(item => this.props.list.updates.strengths.find(el => item.id === el.id) || item);
-        
-        // console.log("DATA: ", data);
-        // console.log('Tipo original: ',this.props.list.original.strengths_weakness_items);
-        // console.log('Tipo updates', this.props.list.updates.strengths);
-        // console.log('Tipo filter su isNaN', this.props.list.updates.strengths.filter(x => isNaN(x.id) === false));
-        // const originalData = this.props.list.original.strengths_weakness_items;
-        // const updatedData = this.props.list.updates.strengths;
-        // const dataForTesting = originalData.map( item => updatedData.find(el => item.id === el.id) || item); //[...new Set([...ai_obj.productFeatures, ...selected_product_features])];
-        // console.log('Tipo data for testing: ', dataForTesting)
 
         const columns = [
             {

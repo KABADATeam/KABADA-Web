@@ -172,7 +172,7 @@ class OpportunitiesThreats extends Component {
                     text: opportunities_text
                 }
                 aiHintTextObject.push(new_obj)
-            } else {
+            } else if (compared_opportunities_items.length === 1) {
                 const opportunity_title = this.props.list.original.oportunities_threats.find(e => e.id === compared_opportunities_items[0]).title;
                 opportunities_text = opportunity_title;
                 const new_obj = {
@@ -180,7 +180,8 @@ class OpportunitiesThreats extends Component {
                     text: opportunities_text
                 }
                 aiHintTextObject.push(new_obj)
-            }
+            } 
+
             const compared_threats_items = this.compareArray(swotAIThreatsList, selected_threats_items);
             let threats_text = '';
             if (compared_threats_items.length > 1) {
@@ -193,7 +194,7 @@ class OpportunitiesThreats extends Component {
                     text: threats_text
                 }
                 aiHintTextObject.push(new_obj)
-            } else {
+            } else if (compared_threats_items.length === 1 )  {
                 const threats_title = this.props.list.original.oportunities_threats.find(e => e.id === compared_threats_items[0]).title;
                 threats_text = threats_title;
                 const new_obj = {
