@@ -695,7 +695,7 @@ class PersonalCharacteristics extends React.Component {
                                         <Select
                                             showSearch
                                             style={{ width: '320px' }}
-                                            placeholder="Pasirinkite šalį"
+                                            placeholder="Select country"
                                             optionFilterProp="children"
                                             onChange={(e) => this.onDataChange(e, false)}
                                             defaultValue={element.selection_code}
