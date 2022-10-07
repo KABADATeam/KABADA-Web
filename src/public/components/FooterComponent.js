@@ -11,14 +11,14 @@ class FooterComponent extends Component {
             return (
                 <Footer style={{...footerStyle, textAlign: alignment }}>
                     <Divider style={{marginBottom: 10.5 }}/>
-                    © KABADA {new Date().getFullYear()}
+                    © KABADA {new Date().getFullYear()} | info@kabada.eu
                 </Footer>
             )
         }
         else if (divider === false) {
             return (
                 <Footer style={{...footerStyle, textAlign: alignment }}>
-                    © KABADA {new Date().getFullYear()}
+                    © KABADA {new Date().getFullYear()} | info@kabada.eu
                 </Footer>
             )
         }       
