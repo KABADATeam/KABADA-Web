@@ -264,9 +264,10 @@ class NewProduct extends React.Component {
                     this.props.getQualityLevels();
                     this.props.getDifferentiationLevels();
                     const postObj = {
-                        "location": '',
+                        "location": 'plan::valueProposition::sample',
                         "planId": this.props.businessPlan.id
                     };
+                    console.log(postObj);
                     this.props.getValuePropositionAIPredict(postObj);
                 });
             }
@@ -278,11 +279,6 @@ class NewProduct extends React.Component {
             this.props.getInnovativeLevels();
             this.props.getQualityLevels();
             this.props.getDifferentiationLevels();
-            const postObj = {
-                "location": '',
-                "planId": this.props.businessPlan.id
-            };
-            this.props.getValuePropositionAIPredict(postObj);
         }
     }
 
