@@ -5,6 +5,7 @@ import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { saveRevenue } from "../../../appStore/actions/revenueStreamActions";
 import { getCustomerSegments } from "../../../appStore/actions/customerSegmentAction";
+import TooltipComponent from "../Tooltip";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -364,8 +365,10 @@ class AddSegmentModal extends Component {
                     }
                 >
                     <Form layout="vertical" id="myForm" name="myForm" onFinish={this.handleOk}>
-                        <Form.Item key="name" label="Revenue Stream Name"
-                            validateStatus={this.state.revenueError !== '' ? 'error' : 'success'}>
+                        <Form.Item key="name" 
+                            label={<Space><Text>Revenue Stream Name</Text><TooltipComponent code="revstrem1" type="text" /></Space>}
+                            validateStatus={this.state.revenueError !== '' ? 'error' : 'success'}
+                        >
                             <Select value={consumers}
                                 options={streamOptions}
                                 style={{ width: '100%', background: '#BAE7FF' }}
@@ -375,8 +378,8 @@ class AddSegmentModal extends Component {
                             />
 
                         </Form.Item>
-
-                        <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingRight: "10px" }} key="price" label="Prices"
+                        <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingRight: "10px" }} key="price" //Prices
+                            label={<Space size='small'><Text>Prices</Text><TooltipComponent code="revstrem2" type="text"/></Space>}
                             validateStatus={this.state.priceError !== '' ? 'error' : 'success'}>
                             <Select
                                 options={priceOptions}
@@ -386,10 +389,10 @@ class AddSegmentModal extends Component {
                                 onChange={this.onPriceChange.bind(this)}
                                 className={this.state.isAichangePrice === '2' && "aicolor .ant-select-selector"}
                             />
-
                         </Form.Item>
 
-                        <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingLeft: "10px" }} key="type" label="Types of pricing"
+                        <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingLeft: "10px" }} key="type" 
+                            label={<Space><Text>Types of pricing</Text><TooltipComponent code="revstrem3" type="text" /></Space>}
                             validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
                             <Select
                                 options={priceTypeOptions}
@@ -404,7 +407,8 @@ class AddSegmentModal extends Component {
                         </Form.Item>
 
 
-                        <Form.Item key="names" name="names" label="Segments"
+                        <Form.Item key="names" name="names" 
+                            label={<Space><Text>Segments</Text><TooltipComponent code="revstrem4" type="text" /></Space>}
                         >
                             <Select style={{ width: '100%' }}
                                 placeholder="Choose segment"

@@ -5,6 +5,7 @@ import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { updateRevenue, getStreamTypes, getRevenues } from "../../../appStore/actions/revenueStreamActions";
 import { getCustomerSegments } from "../../../appStore/actions/customerSegmentAction";
+import TooltipComponent from "../Tooltip";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -386,7 +387,9 @@ class EditSegmentModal extends Component {
                     }
                 >
                     <Form layout="vertical" id="myForm" onFinish={this.handleOk}>
-                        <Form.Item key="name" label="Revenue Stream Name">
+                        <Form.Item key="name" 
+                            label={<Space><Text>Revenue Stream Name</Text><TooltipComponent code="revstrem1" type="text" /></Space>}
+                        >
                             <Select
                                 style={{ width: '100%' }}
                                 placeholder="Select revenue stream"
@@ -398,7 +401,11 @@ class EditSegmentModal extends Component {
                             />
                         </Form.Item>
 
-                        <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingRight: "10px" }} key="price" label="Prices">
+                        <Form.Item 
+                            style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingRight: "10px" }} 
+                            key="price" 
+                            label={<Space size='small'><Text>Prices</Text><TooltipComponent code="revstrem2" type="text"/></Space>}
+                        >
                             <Select
                                 style={{ width: '100%' }}
                                 options={priceOptions}
@@ -411,7 +418,8 @@ class EditSegmentModal extends Component {
                             />
                         </Form.Item>
 
-                        <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingLeft: "10px" }} key="type" label="Types of pricing"
+                        <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingLeft: "10px" }} key="type" 
+                            label={<Space><Text>Types of pricing</Text><TooltipComponent code="revstrem3" type="text" /></Space>}
                             validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
                             <Select
                                 style={{ width: '100%' }}
@@ -424,7 +432,8 @@ class EditSegmentModal extends Component {
                             />
                         </Form.Item>
 
-                        <Form.Item key="Segments" label="Segments"
+                        <Form.Item key="Segments" 
+                            label={<Space><Text>Segments</Text><TooltipComponent code="revstrem4" type="text" /></Space>}
                             validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
                             <Select style={{ width: '100%' }} placeholder="Choose segment"
                                 onChange={this.onNgoTypeChange.bind(this)}
