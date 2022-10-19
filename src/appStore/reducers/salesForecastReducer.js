@@ -10,8 +10,7 @@ export const salesForecastReducer = (
         sales_forecast_non_eu: []
     }, action) => {
     switch (action.type) {
-        case "FETCHING_PRODUCTS_SUCCESS":
-            console.log(action.payload);
+        case "FETCHING_SALES_PRODUCTS_SUCCESS":
             return { ...state, "productsTitles": action.payload.products.map(obj => ({ ...obj, key: obj.id, Expoted: true })) };
         case "SETING_PRODUCTS_SUCCESS":
             const productsTitles = state.products;
