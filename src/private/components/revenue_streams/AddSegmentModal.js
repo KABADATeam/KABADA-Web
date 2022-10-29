@@ -252,7 +252,7 @@ class AddSegmentModal extends Component {
 
 
         const streamOptions = this.props.types.stream_types.map((obj) =>
-            ({ label: obj.title, value: obj.id })
+            ({ label: obj.title === 'Asset sale' ? 'Product / Service sale' : obj.title, value: obj.id })
         );
 
         const priceOptions = this.props.types?.prices.map((obj) =>
