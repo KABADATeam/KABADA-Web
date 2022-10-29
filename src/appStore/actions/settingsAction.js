@@ -47,6 +47,7 @@ export const updateUserSettings = (settings, isPhotoChanged) => {
                 response = await kabadaAPI.post('/api/user/updateWithoutPhoto', postObject, { headers: { Authorization: `Bearer ${token}` } });
             }
             dispatch({ type: 'UPDATE_SETTINGS_SUCCESS', payload: response.data });
+            dispatch({ type: 'CHANGE_USERNAME', payload: settings.firstName});
             //callback();
         } catch (error) {
             dispatch({ type: 'ERROR', payload: errorHandler(error) });

@@ -20,6 +20,13 @@ const authenticationReducer = (state = {user: {access_token: null, email: null, 
                 email: null
             };
             return _user;
+        case 'CHANGE_USERNAME':
+            const user_ = {
+                ...state,
+                name: action.payload
+            }
+            saveToStorage(user_);
+            return user_
         default:
             return state;
     }
