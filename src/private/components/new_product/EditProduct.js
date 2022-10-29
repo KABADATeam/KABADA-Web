@@ -59,7 +59,7 @@ const titleButtonStyle = {
 class EditProduct extends React.Component {
 
     state = {
-        originalProduct: null
+        originalProduct: this.props.product
     }
 
     onBackClick() {
@@ -73,7 +73,7 @@ class EditProduct extends React.Component {
 
     discardChanges = () => {
         this.props.discardChanges(JSON.parse(JSON.stringify(this.state.originalProduct)));
-        this.props.onBack();
+        //this.props.onBack();
     };
 
     saveChanges = () => {
@@ -250,13 +250,15 @@ class EditProduct extends React.Component {
                     this.props.refreshPlan(localStorage.getItem("plan"), () => {
                         this.props.getProducts(this.props.businessPlan.id);
                     });
+                    const productId = localStorage.getItem('product-id');
                     const postObj = {
-                        "location": '',
+                        "location": `plan::valueProposition::${productId}`,
                         "planId": this.props.businessPlan.id
                     };
+                    console.log(postObj)
                     this.props.getValuePropositionAIPredict(postObj);
-                    const productId = localStorage.getItem('product-id');
                     this.props.getProduct(productId, (data) => {
+                        console.log("edit product")
                         this.setState({
                             originalProduct: JSON.parse(JSON.stringify(data))
                         });
