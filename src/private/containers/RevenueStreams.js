@@ -77,7 +77,7 @@ class RevenueStreams extends React.Component {
 
     onAddSecondRevenueStream = () => {
         const postObj = {
-            "location": "plan::revenue::consumer::sample",
+            "location": "plan::revenue::business::sample",
             "planId": this.props.businessPlan.id
         };
         this.props.getAIRevenueStreamPredict(postObj);
@@ -88,7 +88,7 @@ class RevenueStreams extends React.Component {
 
     onAddNewOther = () => {
         const postObj = {
-            "location": "plan::revenue::consumer::sample",
+            "location": "plan::revenue::publicNgo::sample",
             "planId": this.props.businessPlan.id
         };
         this.props.getAIRevenueStreamPredict(postObj);

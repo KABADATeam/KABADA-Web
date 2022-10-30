@@ -61,26 +61,19 @@ class EditSegmentModal extends Component {
             "price_type_id": this.state.priceTypeId,
             "segments": this.state.names
         };
-
-        console.log('Price type id:' + this.state.priceTypeId)
-        console.log('Revenue id:' + this.props.item.stream_type_id)
+        console.log(this.state.priceTypeTitle)
         const reducerObj = {
             "id": this.props.item.id,
             "key": this.props.item.id,
             "price_category_id": this.state.PriceId,
             "price_category_name": this.props.types?.prices.find((x) => x.id === this.state.priceId)?.title, //this.state.priceTitle, //Prices
             "price_type_id": this.state.priceTypeId,
-            "price_type_name": this.state.priceTypeTitle, //Types of pricing
+            "price_type_name": price.types.find(x => x.id === this.state.priceTypeId)?.title, //Types of pricing
             "stream_type_id": this.state.revenueID,
             "stream_type_name": this.props.types.stream_types.find(x => x.id === this.state.revenueID)?.title,
             "segment": this.props.item.segment,
             "segments": this.state.names
         }
-
-        //console.log('POST obj:' + JSON.stringify(postObj))
-        console.log(this.props.types.stream_types.find(x => x.id === this.state.revenueID))
-        console.log(this.state.revenueID)
-
         this.props.updateRevenue(postObj, reducerObj)
         console.info({ postObj, reducerObj })
         this.props.onClose();
@@ -97,7 +90,6 @@ class EditSegmentModal extends Component {
     }
 
     onPriceChange(id, isAi, title) {
-        console.log({ id, isAi, title })
         this.setState({
             priceId: id,
             priceTitle: title ?? id,
@@ -107,18 +99,18 @@ class EditSegmentModal extends Component {
 
         });
         console.log(this.state.priceId, this.state.priceTitle)
+        console.log(title)
         console.log(this.props.types?.prices.find((x) => x.id === this.state.priceId).title)
     }
 
     onPriceTypeChange(typeId, isAi, title) {
-
+        console.log('Price type id:' + typeId)
         this.setState({
             priceTypeId: typeId,
             priceTypeTitle: typeId,
-            isAichangePriceType: isAi || '1'
+            isAichangePriceType: isAi || '1',
         });
         console.log(this.state.priceTypeId, this.state.priceTypeTitle)
-
     }
     onNgoTypeChange(value) {
         this.setState({
@@ -130,16 +122,8 @@ class EditSegmentModal extends Component {
         this.props.getRevenues(this.props.businessPlanId);
         this.props.getStreamTypes();
         this.setState({
-            // revenue: { id: this.props.item.stream_type_id, title: this.props.item.stream_type_name },
-            // price: { id: this.props.item.price_category_id, title: this.props.item.price_category_name },
-            // priceType: { id: this.props.item.price_type_id, title: this.props.item.price_type_name },
             priceId: this.props.item.price_category_id
-
         })
-        console.log(this.props.item.price_category_id)
-        console.log(this.state.priceId)
-        console.log(this.props.item.price_category_name)
-        console.log(this.state.priceTitle)
 
         this.props.getCustomerSegments(this.props.businessPlan.id);
         this.setState({
@@ -186,8 +170,7 @@ class EditSegmentModal extends Component {
         let priceType = '';
         if (this.props.item.segment === 1) {
             consumersName = path?.consumer.map((x) => x.category[0])[0]
-
-            // price = path?.consumer.map((x) => x.price[0])
+            //price = path?.consumer.map((x) => x.price[0])
             priceType = path?.consumer.map((x) => x.pricingType[0])[0]
 
         } else if (this.props.item.segment === 2) {
@@ -222,9 +205,7 @@ class EditSegmentModal extends Component {
     }
 
     filterAIValues = () => {
-        console.info(this.props.customerSegments.aiPredict.revenue.consumer)
-        console.info(this.props.number)
-        if (this.props.customerSegments.aiPredict.revenue.consumer) {
+        if (this.props.customerSegments.aiPredict.revenue) {
             const path = this.props.customerSegments.aiPredict.revenue;
             let consumersName = '';
             let price = '';
@@ -246,7 +227,6 @@ class EditSegmentModal extends Component {
             }
 
             if (consumersName || priceType) {
-                //console.info({ consumersName, priceType, price })
                 if (this.state.revenueID !== consumersName) {
                     this.onNameChange(consumersName, '2', this.generateAIText()[0])
                 }
@@ -387,7 +367,7 @@ class EditSegmentModal extends Component {
                     }
                 >
                     <Form layout="vertical" id="myForm" onFinish={this.handleOk}>
-                        <Form.Item key="name" 
+                        <Form.Item key="name"
                             label={<Space><Text>Revenue Stream Name</Text><TooltipComponent code="revstrem1" type="text" /></Space>}
                         >
                             <Select
@@ -401,10 +381,10 @@ class EditSegmentModal extends Component {
                             />
                         </Form.Item>
 
-                        <Form.Item 
-                            style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingRight: "10px" }} 
-                            key="price" 
-                            label={<Space size='small'><Text>Prices</Text><TooltipComponent code="revstrem2" type="text"/></Space>}
+                        <Form.Item
+                            style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingRight: "10px" }}
+                            key="price"
+                            label={<Space size='small'><Text>Prices</Text><TooltipComponent code="revstrem2" type="text" /></Space>}
                         >
                             <Select
                                 style={{ width: '100%' }}
@@ -418,7 +398,7 @@ class EditSegmentModal extends Component {
                             />
                         </Form.Item>
 
-                        <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingLeft: "10px" }} key="type" 
+                        <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingLeft: "10px" }} key="type"
                             label={<Space><Text>Types of pricing</Text><TooltipComponent code="revstrem3" type="text" /></Space>}
                             validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
                             <Select
@@ -432,7 +412,7 @@ class EditSegmentModal extends Component {
                             />
                         </Form.Item>
 
-                        <Form.Item key="Segments" 
+                        <Form.Item key="Segments"
                             label={<Space><Text>Segments</Text><TooltipComponent code="revstrem4" type="text" /></Space>}
                             validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
                             <Select style={{ width: '100%' }} placeholder="Choose segment"

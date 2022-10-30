@@ -85,7 +85,7 @@ class AddSegmentModal extends Component {
             "price_category_id": this.state.price,
             "price_category_name": price.title,
             "price_type_id": this.state.priceType,
-            "price_type_name": price.types.find(x => x.id === this.state.priceType).title,
+            "price_type_name": price.types.find(x => x.id === this.state.priceType)?.title,
             "stream_type_id": this.state.revenue,
             "stream_type_name": this.props.types.stream_types.find(x => x.id === this.state.revenue)?.title,
             "segment": this.props.number,
@@ -177,16 +177,16 @@ class AddSegmentModal extends Component {
         let priceType = '';
         if (this.props.number === 1) {
             consumersName = path.consumer.map((x) => x.category[0])[0]
-            price = path.consumer.map((x) => x.price)[0] !== undefined && path.consumer.map((x) => x.price[0])[0]
+            //price = path.consumer.map((x) => x.price)[0] !== undefined && path.consumer.map((x) => x.price[0])[0]
             priceType = path.consumer.map((x) => x.pricingType[0])[0]
         } else if (this.props.number === 2) {
             consumersName = path.business.map((x) => x.category[0])[0]
-            price = path.business.map((x) => x.price)[0] !== undefined && path.business.map((x) => x.price[0])[0]
+            //price = path.business.map((x) => x.price)[0] !== undefined && path.business.map((x) => x.price[0])[0]
             priceType = path.business.map((x) => x.pricingType[0])[0]
-
         } else {
+            console.log(path.publicNgo)
             consumersName = path.publicNgo.map((x) => x.category[0])[0]
-            price = path.publicNgo.map((x) => x.price)[0] !== undefined && path.publicNgo.map((x) => x.price[0])[0]
+            //price = path.publicNgo.map((x) => x.price)[0] !== undefined && path.publicNgo.map((x) => x.price[0])[0]
             priceType = path.publicNgo.map((x) => x.pricingType[0])[0]
         }
 
@@ -194,8 +194,6 @@ class AddSegmentModal extends Component {
         let revenueName = this.props.types.stream_types.find((x) => x?.id === consumersName)
         let priceName = this.props.types?.prices.find((x) => x?.id === priceType).types.find((y) => y.id === price)
         let priceTypeName = this.props.types.prices.find(x => x?.id === priceType)
-        // console.log(this.state.state.price === priceTypeName.id)
-        // console.log({ id: this.state.price, id1: priceTypeName.id })
         if (this.state.revenue === revenueName.id) {
             revenueName = null
         }
@@ -211,23 +209,26 @@ class AddSegmentModal extends Component {
 
     filterAIValues = () => {
         // to do improve this function
-        if (this.props.customerSegments.aiPredict.revenue.consumer) {
+        if (this.props.customerSegments.aiPredict.revenue) {
             const path = this.props.customerSegments.aiPredict.revenue;
             let consumersName = '';
             let price = '';
             let priceType = '';
+            console.log(this.props)
             if (this.props.number === 1) {
                 consumersName = path.consumer.map((x) => x.category[0])[0]
-                price = path.consumer.map((x) => x.price)
+                //price = path.consumer.map((x) => x.price)
                 priceType = path.consumer.map((x) => x.pricingType[0])[0]
-            } else if (this.props.number === 2) {
+
+            }
+            else if (this.props.number === 2) {
                 consumersName = path.business.map((x) => x.category[0])[0]
-                price = path.business.map((x) => x.price)
+                //price = path.business.map((x) => x.price)
                 priceType = path.business.map((x) => x.pricingType[0])[0]
 
             } else {
                 consumersName = path.publicNgo.map((x) => x.category[0])[0]
-                price = path.publicNgo.map((x) => x.price)
+                //price = path.publicNgo.map((x) => x.price)
                 priceType = path.publicNgo.map((x) => x.pricingType[0])[0]
             }
             if (this.state.revenue !== consumersName) {
@@ -365,7 +366,7 @@ class AddSegmentModal extends Component {
                     }
                 >
                     <Form layout="vertical" id="myForm" name="myForm" onFinish={this.handleOk}>
-                        <Form.Item key="name" 
+                        <Form.Item key="name"
                             label={<Space><Text>Revenue Stream Name</Text><TooltipComponent code="revstrem1" type="text" /></Space>}
                             validateStatus={this.state.revenueError !== '' ? 'error' : 'success'}
                         >
@@ -379,7 +380,7 @@ class AddSegmentModal extends Component {
 
                         </Form.Item>
                         <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingRight: "10px" }} key="price" //Prices
-                            label={<Space size='small'><Text>Prices</Text><TooltipComponent code="revstrem2" type="text"/></Space>}
+                            label={<Space size='small'><Text>Prices</Text><TooltipComponent code="revstrem2" type="text" /></Space>}
                             validateStatus={this.state.priceError !== '' ? 'error' : 'success'}>
                             <Select
                                 options={priceOptions}
@@ -391,7 +392,7 @@ class AddSegmentModal extends Component {
                             />
                         </Form.Item>
 
-                        <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingLeft: "10px" }} key="type" 
+                        <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingLeft: "10px" }} key="type"
                             label={<Space><Text>Types of pricing</Text><TooltipComponent code="revstrem3" type="text" /></Space>}
                             validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
                             <Select
@@ -407,7 +408,7 @@ class AddSegmentModal extends Component {
                         </Form.Item>
 
 
-                        <Form.Item key="names" name="names" 
+                        <Form.Item key="names" name="names"
                             label={<Space><Text>Segments</Text><TooltipComponent code="revstrem4" type="text" /></Space>}
                         >
                             <Select style={{ width: '100%' }}
