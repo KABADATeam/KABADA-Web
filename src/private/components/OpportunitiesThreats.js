@@ -378,8 +378,8 @@ class OpportunitiesThreats extends Component {
 
 
                         <Typography style={{ ...tableDescriptionStyle }}>
-                            List of predefined options for each part, where some of the items can be define for both sides,
-                            some can be simultaneously on both sides, some only for O or T part</Typography>
+                            Select 3 - 6 items in each column. Each of the item can be selected only for one side – O or T
+                        </Typography>
 
                     </>
 
