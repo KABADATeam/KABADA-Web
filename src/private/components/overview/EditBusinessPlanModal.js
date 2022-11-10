@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Modal, Button, Input, Upload, Select, TreeSelect, Space, Typography, Tooltip } from 'antd';
+import { Form, Modal, Button, Input, Upload, Select, TreeSelect, Space, Typography, Tooltip, Anchor } from 'antd';
 import { QuestionCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { buttonStyle, inputStyle } from '../../../styles/customStyles';
 import '../../../css/customModal.css';
@@ -12,6 +12,7 @@ import { getPlanLanguages } from '../../../appStore/actions/planLanguageAction';
 
 const { Option } = Select;
 const { Text } = Typography;
+const { Link } = Anchor;
 
 class EditBusinessPlanModal extends Component {
     constructor(props) {
@@ -339,7 +340,7 @@ class EditBusinessPlanModal extends Component {
                     bodyStyle={{ paddingBottom: '0px' }}
                     centered={true}
                     width={700}
-                    title="New business plan"
+                    title="Edit business plan"
                     visible={true}
                     onCancel={this.handleCancel}
                     footer={
@@ -416,7 +417,7 @@ class EditBusinessPlanModal extends Component {
                             </Select>
                             </Form.Item>
                                 */}
-                        <Form.Item key="activity" name="activity" label="Select NACE Rev. 2 "
+                        <Form.Item key="activity" name="activity" label={<Text>Select industry according NACE Rev. 2 classification (<a href="https://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=LST_NOM_DTL&StrNom=NACE_REV2&StrLanguageCode=EN&IntPcKey=&StrLayoutCode=HIERARCHIC&IntCurrentPage=1" target="_blank" >read more about NACE</a>)</Text>}
                             rules={[
                                 {
                                     validator: async (_, value) => {
