@@ -408,7 +408,7 @@ class KeyPartners extends React.Component {
                         <Col span={8}>
                             <div style={{ marginRight: '40px' }}>
                                 <Typography.Title style={{ ...aboutTitleTextStyle }}>Other</Typography.Title>
-                                <TextHelper code="keypartnerother" type="lefttext"/>
+                                <TextHelper code="keypartnerothertext" type="lefttext"/>
                             </div>
                         </Col>
                         <Col span={16}>
@@ -416,7 +416,7 @@ class KeyPartners extends React.Component {
                                 title={() => <>
                                     <Typography style={{ ...tableTitleStyle }}>
                                         Various other
-                                        <TooltipComponent code="keypartnerother" type="text" />
+                                        <TooltipComponent code="keypartnerothertooltip" type="text" />
                                     </Typography>
                                 </>}
                                 dataSource={this.props.partners.others}
