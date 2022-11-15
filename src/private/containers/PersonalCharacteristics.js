@@ -69,6 +69,7 @@ const questions = [
         answerOptions: [
             { answerText: 'Under 18', optionCode: '11' },
             { answerText: '18-24', optionCode: '12' },
+            { answerText: '25-34', optionCode: '17' },
             { answerText: '35-44', optionCode: '13' },
             { answerText: '45-54', optionCode: '14' },
             { answerText: '55-64', optionCode: '15' },
