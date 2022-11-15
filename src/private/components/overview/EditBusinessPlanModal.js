@@ -465,7 +465,7 @@ class EditBusinessPlanModal extends Component {
                                 </Select>
                             </Form.Item>
 
-                            <Form.Item key="language" name="language" label="Language of bussines plan?"
+                            <Form.Item key="language" name="language" label="Language of business plan?"
                                 rules={[
                                     {
                                         validator: async (_, value) => {

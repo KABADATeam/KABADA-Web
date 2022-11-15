@@ -279,7 +279,7 @@ class NewBusinessPlanModal extends Component {
                                 </Select>
                             </Form.Item>
 
-                            <Form.Item key="language" name="language" label="Language of bussines plan?" initialValue={languages.length > 0 ? languages[0].value : ""}
+                            <Form.Item key="language" name="language" label="Language of business plan?" initialValue={languages.length > 0 ? languages[0].value : ""}
                                 rules={[{ required: true, message: 'Select language' }]}>
                                 <Select
                                     style={{ width: 315 }}
