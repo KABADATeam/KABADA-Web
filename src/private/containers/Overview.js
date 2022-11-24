@@ -282,15 +282,12 @@ class Overview extends React.Component {
         return email[0]
     }
     downloadDOCFile = () => {
-        console.log('ok')
         this.props.downloadDOCFile(this.props.businessPlan.id, this.props.businessPlan.name);
     }
     downloadPDFFile = () => {
-        console.log('ok')
         this.props.downloadPDFFile(this.props.businessPlan.id, this.props.businessPlan.name);
     }
     downloadCashFlow = () => {
-        console.log('ok')
         this.props.downloadCashFlow(this.props.businessPlan.id, this.props.businessPlan.name);
     }
     getTabKey = (key) => {
@@ -332,8 +329,7 @@ class Overview extends React.Component {
         const isVisibleHeader = this.getUpdatesWindowState();
         const membersList = this.props.businessPlan.members === null ? [] : this.props.businessPlan.members;
         const overview = this.props.businessPlan.overview;
-        // const isCashFlowAvatarState = overview.assets.is_completed === true && overview.fixed_and_variables_costs.is_completed === true && overview.sales_forecast.is_completed === true && overview.business_start_up_investments.is_completed === true;
-        // console.log(isCashFlowAvatarState);
+        const personal_characteristics_visibility = this.props.businessPlan.sharedWithMe === true ? 'hidden' : 'visible';
         const exportAsMenu = (
             <Menu>
                 <Menu.Item key="1" onClick={this.downloadDOCFile}>
@@ -856,39 +852,40 @@ class Overview extends React.Component {
                                                 />
                                             </List.Item>
                                         </List>
-                                        <List itemLayout='horizontal' style={{ height: '78px', marginTop: '16px', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
-                                            <List.Item key='17'>
-                                                <List.Item.Meta
-                                                    style={{ padding: '0px 20px 0px' }}
-                                                    avatar={this.props.businessPlan.personal_characteristics_state === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
-                                                    title={
-                                                        <div>
-                                                            <Row>
-                                                                <Col>
-                                                                    <Link to='/personal-characteristics' style={canvasElementTextStyle}>Personal-characteristics</Link>
-                                                                </Col>
-                                                                <Col>
-                                                                    <TooltipComponent code="ovmbp4" type="text" />
-                                                                </Col>
-                                                            </Row>
-                                                            <Row>
-                                                                {/* <Text style={descriptionTextStyle}>{this.props.businessPlan.personal_characteristics_description === "" || this.props.businessPlan.personal_characteristics_description === null ? "Descriptions" : this.props.businessPlan.personal_characteristics_description}</Text> */}
-                                                                {this.props.personalCharacteristics.choices !== undefined && this.props.personalCharacteristics.choices.length > 0 ?
-                                                                    <Text style={descriptionTextStyle}>{this.props.personalCharacteristics.completed_choices} of {this.props.personalCharacteristics.choices.length} questions answered</Text>
-                                                                    :
-                                                                    <Text style={descriptionTextStyle}>{this.props.personalCharacteristics.completed_choices} of 20 questions answered</Text>
-                                                                }
-                                                            </Row>
-                                                        </div>
-                                                    }
-                                                />
-                                                {overview !== null && overview.personal_characteristics !== null ?
-                                                    <div style={{ marginRight: '28px' }}>
-                                                        {/* <EditBusinessPlanItem link={'/personal-characteristics'}
-                                                        isCompleted={overview.personal_characteristics.is_completed}
-                                                    /> */}
-                                                    </div> : null}
-                                            </List.Item>
+                                        <List
+                                            itemLayout='horizontal'
+                                            style={{ height: '78px', marginTop: '16px', borderRadius: '8px', backgroundColor: '#FFFFFF', visibility: personal_characteristics_visibility }}
+                                        >
+                                            {this.props.businessPlan.sharedWithMe === true ? <List.Item key='17'>Hi</List.Item> :
+                                                <List.Item key='17'>
+                                                    <List.Item.Meta
+                                                        style={{ padding: '0px 20px 0px' }}
+                                                        avatar={this.props.businessPlan.personal_characteristics_state === true ? <Avatar src="complete.png" style={avatarStyle} /> : <Avatar src="incomplete.png" style={avatarStyle} />}
+                                                        title={
+                                                            <div>
+                                                                <Row>
+                                                                    <Col>
+                                                                        <Link to='/personal-characteristics' style={canvasElementTextStyle}>Personal-characteristics</Link>
+                                                                    </Col>
+                                                                    <Col>
+                                                                        <TooltipComponent code="ovmbp4" type="text" />
+                                                                    </Col>
+                                                                </Row>
+                                                                <Row>
+                                                                    {this.props.personalCharacteristics.choices !== undefined && this.props.personalCharacteristics.choices.length > 0 ?
+                                                                        <Text style={descriptionTextStyle}>{this.props.personalCharacteristics.completed_choices} of {this.props.personalCharacteristics.choices.length} questions answered</Text>
+                                                                        :
+                                                                        <Text style={descriptionTextStyle}>{this.props.personalCharacteristics.completed_choices} of 20 questions answered</Text>
+                                                                    }
+                                                                </Row>
+                                                            </div>
+                                                        }
+                                                    />
+                                                    {overview !== null && overview.personal_characteristics !== null ?
+                                                        <div style={{ marginRight: '28px' }}>
+                                                        </div> : null}
+                                                </List.Item>
+                                            }
                                         </List>
 
                                     </Col>
@@ -900,7 +897,6 @@ class Overview extends React.Component {
                                                 objectFit: 'cover', backgroundSize: '100% auto', backgroundRepeat: 'no-repeat', backgroundPosition: 'center top',
                                             }}>
                                             <h4 style={{ marginTop: '145px', marginBottom: 0, fontSize: '16px' }}>Cover image</h4>
-                                            {/* <Button type="link" style={{ paddingLeft: '0px', fontWeight: 600, fontSize: '14px' }} onClick={this.onEditBusinessPlan.bind(this)}>Change</Button> */}
                                             <input accept="image/*" type="file" id="select-image" ref={this.fileSelectRef} onChange={e => this.onImageChange(e)} style={{ display: 'none' }} />
                                             <label htmlFor='select-image'>
                                                 <Button type="link" style={{ paddingLeft: '0px', fontWeight: 600, fontSize: '14px' }} onClick={e => this.onFileUpload(e)}>Change</Button>
@@ -1037,6 +1033,6 @@ export default connect(mapStateToProps,
         saveSalesForecastCompleted,
         saveBusinessInvestmentsCompleted,
         savePersonalCharacteristicsCompleted,
-        getCompletedPersonalCharacteristics, 
+        getCompletedPersonalCharacteristics,
         startAItraining
     })(withRouter(Overview))
