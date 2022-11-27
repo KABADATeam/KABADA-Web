@@ -11,9 +11,7 @@ export const customerRelationshipsCategoriesReducer = (
             const selected_category = action.payload;
             return { ...state, "selected_category": selected_category };
         case 'SET_RELATIONSHIP_CATEGORY_SUCCESS':
-            console.log(action.payload);
-            const updated_categories = state.categories.map(x => x.id === action.payload.id ? action.payload : x)
-            console.log(updated_categories);
+            const updated_categories = state.categories.map(x => x.id === action.payload.id ? action.payload : x);
             return { ...state, "categories": updated_categories}
         default:
             return state;

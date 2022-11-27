@@ -51,7 +51,7 @@ class AddCostModal extends Component {
                 selectedTypeError: 'Wrong'
             })
         }*/
-        const typeTitle = this.props.category.types.find(element => element.type_id === this.state.selectedTypeId)
+        const typeTitle = this.props.category.selected_category.types.find(element => element.type_id === this.state.selectedTypeId)
 
         const postObject = {
             //"id": null,
@@ -64,8 +64,8 @@ class AddCostModal extends Component {
 
         //const type_id = this.state.selectedTypeId;
         const reducerObject = {
-            "category_id": this.props.category.category_id,
-            "category_title": this.props.category.category_title,
+            "category_id": this.props.category.selected_category.category_id,
+            "category_title": this.props.category.selected_category.category_title,
             "type_id": this.state.selectedTypeId,
             "type_title": typeTitle.type_title,
             "name": this.state.name,
@@ -92,7 +92,6 @@ class AddCostModal extends Component {
         this.setState({
             selectedTypeId: id
         });
-        console.log(this.state.selectedTypeId)
     }
 
     onChangeName(e) {
@@ -113,15 +112,15 @@ class AddCostModal extends Component {
 
     componentDidMount() {
         // if its only option and if its type title is 'Other' then select it from start and dont show it
-        if (this.props.category.types.length < 2 && this.props.category.types[0].type_title === 'Other') {
+        if (this.props.category.selected_category.types.length < 2 && this.props.category.selected_category.types[0].type_title === 'Other') {
             this.setState({
-                selectedTypeId: this.props.category.types[0].type_id
+                selectedTypeId: this.props.category.selected_category.types[0].type_id
             })
         }
     }
 
     render() {
-        const options = this.props.category.types.map(t =>
+        const options = this.props.category.selected_category.types.map(t =>
             <Option key={t.type_id} value={t.type_id}>{t.type_title}</Option>
         );
         //const defaultValue = this.props.category.types[0].type_id
@@ -142,7 +141,7 @@ class AddCostModal extends Component {
                     width={588}
                 >
                     <Form layout="vertical">
-                        {this.props.category.types.length < 2 && this.props.category.types[0].type_title === 'Other' ?
+                        {this.props.category.selected_category.types.length < 2 && this.props.category.selected_category.types[0].type_title === 'Other' ?
                             null :
                             <Form.Item key={100} label="Type">
                                 <Select placeholder="Select type" value={this.state.selectedTypeId} onChange={this.onSelectionChange.bind(this)} style={{ width: 548 }}>
@@ -178,7 +177,7 @@ class AddCostModal extends Component {
 const mapStateToProps = (state) => {
     return {
         businessPlan: state.selectedBusinessPlan,
-        category: state.selectedCostCategory
+        category: state.costCategoriesList
     };
 }
 

@@ -83,7 +83,7 @@ export default combineReducers({
     revenues: revenuesReducer,
     costStructure: costStructureReducer,
     costCategoriesList: costStructureCategoriesReducer,
-    selectedCostCategory: selectedCostCategoryReducer,
+    //selectedCostCategory: selectedCostCategoryReducer,
     channels: channelsReducer,
     channelTypes: channelTypesReducer,
     customerSegmentProperties: customerSegmentPropertiesReducer,

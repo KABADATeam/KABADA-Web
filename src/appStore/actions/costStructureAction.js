@@ -36,10 +36,9 @@ export const getCategories = () => {
     };
 };
 
-export const selectCostCategory = (item, callback) => {
+export const selectCostCategory = (item) => {
     return async (dispatch, getState) => {
         dispatch({ type: "SELECTING_COST_CATEGORY_SUCCESS", payload: item });
-        callback();
     };
 };
 
@@ -47,7 +46,6 @@ export const saveFixedCost = (postObject, reducerObject) => {
     return async (dispatch, getState) => {
         try {
             const token = getState().user.access_token;
-            console.log(postObject);
             const response = await kabadaAPI.post('api/cost/fixed/save', postObject, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: 'SAVE_COST_SUCCESS', payload: { ...reducerObject, "id": response.data, "key": response.data } })
         } catch (error) {
@@ -142,6 +140,9 @@ export const setCostStructureCategory = (item) => {
 };
 
 export const getCostStructureAIValues = (postObject) => async (dispatch, getState) => {
+    dispatch({ type: "LOADING", payload: true});
+    dispatch({ type: 'ERROR_AI_MESSAGE', payload: false});
+    dispatch({ type: 'RESET_AI_PREDICT'});
     try {
         const token = getState().user.access_token;
         const response = await kabadaAPI.post('api/plans/predict', postObject, { headers: { Authorization: `Bearer ${token}` } });

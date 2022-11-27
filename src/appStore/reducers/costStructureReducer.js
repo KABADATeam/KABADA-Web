@@ -7,7 +7,6 @@ export const costStructureReducer = (
     }, action) => {
     switch (action.type) {
         case 'FETCHING_COST_STRUCTURE_SUCCESS':
-            console.log(action.payload)
             const fixed_costs = action.payload.fixed_costs.map(obj => ({...obj, "key": obj.category_id}))
             const variable_costs = action.payload.variable_costs.map(obj => ({...obj, "key": obj.category_id}))
             return { ...action.payload, "fixed_costs": fixed_costs, "variable_costs": variable_costs};
@@ -56,31 +55,36 @@ export const costStructureCategoriesReducer = (
     state = {
         fixed_categories: [],
         variable_categories: [],
+        selected_category: null
     }, action) => {
     switch (action.type) {
         case 'FETCHING_COST_STRUCTURE_CATEGORIES_SUCCESS':
-            return { ...state, "fixed_categories": action.payload.fixed_categories, "variable_categories": action.payload.variable_categories };
+            const fixed_categories = action.payload.fixed_categories.map(obj => ({ ...obj, "key": obj.id, "tag": 0 }));
+            const variable_categories = action.payload.variable_categories.map(obj => ({ ...obj, "key": obj.id, "tag": 0 }))
+            return { ...state, "fixed_categories": fixed_categories, "variable_categories": variable_categories };
         case 'SET_COST_STRUCTURE_CATEGORY_SUCCESS':
-            console.log(action.payload)
             if(action.payload.costNumber === 1) {
-                const f_costs = state.fixed_categories.map(x => x.category_id === action.payload.id ? { ...x, key: action.payload.key, tag: action.payload.tag } : x)
+                const f_costs = state.fixed_categories.map(x => x.category_id === action.payload.id ? { ...x, key: action.payload.key, tag: action.payload.tag } : x);
                 return { ...state, "fixed_categories": f_costs}
             } else if (action.payload.costNumber === 2) {
-                const v_categories = state.variable_categories.map(x => x.category_id === action.payload.id ? action.payload : x)
+                const v_categories = state.variable_categories.map(x => x.category_id === action.payload.id ? { ...x, key: action.payload.key, tag: action.payload.tag } : x);
                 return { ...state, "variable_categories": v_categories}
             } else {
                 return { ...state }
             }
+        case 'SELECTING_COST_CATEGORY_SUCCESS':
+            return {...state, "selected_category": action.payload };
         default:
             return state;
     }
 }
 
-export const selectedCostCategoryReducer = (state = { title: "", description: "", types: [] }, action) => {
-    switch (action.type) {
-        case 'SELECTING_COST_CATEGORY_SUCCESS':
-            return action.payload;
-        default:
-            return state;
-    }
-}
+// export const selectedCostCategoryReducer = (state = { title: "", description: "", types: [] }, action) => {
+//     switch (action.type) {
+//         case 'SELECTING_COST_CATEGORY_SUCCESS':
+//             console.log('cost structure selected category', action.payload)
+//             return action.payload;
+//         default:
+//             return state;
+//     }
+// }

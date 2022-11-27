@@ -98,7 +98,6 @@ class CostStructure extends React.Component {
         this.props.deleteVariableCost({ "id": item.id, "number": 2 });
     }
     onEditFixedCost(item) {
-        console.log(item);
         this.setState({
             item: { ...item },
             fixedCostNumber: 1
@@ -124,7 +123,8 @@ class CostStructure extends React.Component {
     }
 
     // AI
-    onAddFixedCosts = (e) => {
+    onAddFixedCosts = () => {
+        this.props.getCategories();
         const postObj = {
             "location": 'plan::costs::fixedCosts::sample',
             "planId": this.props.businessPlan.id
@@ -137,6 +137,7 @@ class CostStructure extends React.Component {
     }
 
     onAddVariableCosts = () => {
+        this.props.getCategories();
         const postObj = {
             "location": 'plan::costs::variableCosts::sample',
             "planId": this.props.businessPlan.id
@@ -309,11 +310,11 @@ class CostStructure extends React.Component {
                 {
                     this.state.costNumber !== null && this.props.costs.ai_cost_structure_predict?
                         <CostCategoriesModal 
-                        visibility={true}
-                        number={this.state.fixedCostNumber}
-                        costNumber={this.state.costNumber}
-                        onClose={this.onCloseCostCategoriesModal}
-                        onOpen={this.openAddCostModal}
+                            visibility={true}
+                            number={this.state.fixedCostNumber}
+                            costNumber={this.state.costNumber}
+                            onClose={this.onCloseCostCategoriesModal}
+                            onOpen={this.openAddCostModal}
                          />
                         : null
                 }

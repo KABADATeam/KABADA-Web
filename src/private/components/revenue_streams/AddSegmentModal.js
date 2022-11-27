@@ -249,6 +249,9 @@ class AddSegmentModal extends Component {
         const additionalTitle = this.props.number === 3 ? 'Public bodies & NGO' : this.props.number === 2 ? 'Business' : 'Consumers';
         const Prices = this.state.price !== null ? this.state.price : null
         const PriceType = this.state.priceType !== null ? this.state.priceType : null
+    //     const defaultPriceType = this.state.priceType !== null ? this.props?.types?.prices.types?.find(x => x.id === this.state.priceType)?.map((obj) =>
+    //     ({ label: obj.title , value: obj.id })
+    // ))
         const consumers = this.state.revenue !== null ? this.state.revenue : null;
 
 
@@ -262,7 +265,7 @@ class AddSegmentModal extends Component {
 
         const priceTypeOptions = this.state.price === null ? [] :
             this.props?.types?.prices.find(x => x.id === this.state.price)?.types?.map((obj) =>
-                ({ label: obj.title, value: obj.id })
+                ({ label: <div>{obj.title} <TooltipComponent code="revstrem2" type="text" /> </div>, value: obj.id })
             );
         const consumersNames = this.props.customerSegments.consumers.map((obj) =>
             <Option key={obj.segment_name} value={obj.segment_name}>{obj.segment_name}</Option>
@@ -397,7 +400,7 @@ class AddSegmentModal extends Component {
                             validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
                             <Select
                                 options={priceTypeOptions}
-                                value={PriceType}
+                                defaultValue={PriceType}
                                 style={{ width: '100%' }}
                                 placeholder="Choose type"
                                 disabled={this.state.price === null ? true : false}

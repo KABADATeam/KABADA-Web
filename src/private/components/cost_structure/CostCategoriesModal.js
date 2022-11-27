@@ -77,7 +77,6 @@ class CostCategoriesModal extends Component {
             : this.props.costNumber === 2 ? this.props.categories.variable_categories
             : null;
         const selectionSuggestObj = categories.find(x => x.category_id === suggestedValue);
-        // console.log(selectionSuggestObj)
         const selectionSuggestObjForReducer = {
             id: selectionSuggestObj.category_id,
             title: selectionSuggestObj.category_title,
@@ -85,37 +84,31 @@ class CostCategoriesModal extends Component {
             tag: 1,
             costNumber: this.props.costNumber 
         }
-        // console.log(selectionSuggestObjForReducer)
         this.props.setCostStructureCategory(selectionSuggestObjForReducer);
         this.hidePopover();
     }
 
     addNewCost = (item) => {
-        this.props.selectCostCategory(item, () => {
-            this.props.onOpen()
-        });
-        // console.log(item);
+        this.props.selectCostCategory(item)
+            .then(
+                this.props.onOpen()
+            );
     }
 
     generateAIHelpText = (predictsObj) => {
         const aiHintTextObject = [];
         if (predictsObj) {
-            var predictValue = "";
-            const predict = predictsObj.find(x => x.id === null).subCategory;
+            const predict = predictsObj.find(x => x.id === null).category;
             // there are fixed_categories and variable_categories in categories redux state. 
             // so there will be list of all available fixed categories (rent of office, rent of buildings ....)
             const categoryType = this.props.costNumber === 1 ? this.props.categories.fixed_categories
                 : this.props.costNumber === 2 ? this.props.categories.variable_categories
-                : null;   
-            if(predict)
-                predictValue = predict.shift();
-            //looping through fixed or variable costs. 
-            const title = categoryType.find(x => x.category_id === predictValue);
+                : null; 
+            const title = categoryType.find(x => x.category_id === predict[0]).category_title;
             const newObject = {
                 type_title: 'mechanism',
                 text: title 
             }
-            
             aiHintTextObject.push(newObject);
             return aiHintTextObject
         } else {
