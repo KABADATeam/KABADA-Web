@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Form, Space, Select, Popover, Row, Typography } from 'antd';
+import { Modal, Button, Form, Space, Select, Popover, Row, Typography, Tag } from 'antd';
 import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { saveRevenue } from "../../../appStore/actions/revenueStreamActions";
@@ -77,7 +77,7 @@ class AddSegmentModal extends Component {
             "segment": this.props.number,
             "stream_type_id": this.state.revenue,
             "price_type_id": this.state.priceType,
-            "segments": this.state.names
+            "segments": this.state.segment_names
         };
 
         const price = this.props.types.prices.find(x => x.id === this.state.price);
@@ -89,7 +89,7 @@ class AddSegmentModal extends Component {
             "stream_type_id": this.state.revenue,
             "stream_type_name": this.props.types.stream_types.find(x => x.id === this.state.revenue)?.title,
             "segment": this.props.number,
-            "segments": this.state.names
+            "segments": this.state.segment_names
         }
         console.log('POST OBJECT ON CREATE IS: ' + JSON.stringify(postObj))
         this.props.saveRevenue(postObj, reducerObj);
@@ -125,16 +125,24 @@ class AddSegmentModal extends Component {
 
     componentDidMount() {
         this.props.getCustomerSegments(this.props.businessPlan.id);
-        this.setState({
-            segment_name: this.props.customerSegments.consumers.filter((x, index) => x.segment_name != null)
-        }, () => console.log(this.state.segment_name))
-
-        console.log(this.props.customerSegments.consumers)
-
+        const mappingConsumers = this.props.customerSegments
+        console.log(mappingConsumers)
     }
-    onNgoTypeChange(value) {
+    onSegmentsChange(value) {
+        console.log('pakeista segments reiksme',value);
+        console.log(this.props.number);
+        const segment_names = []
+        const { consumers, business, public_bodies_ngo } = this.props.customerSegments
+        const selectedSegmentElements = this.props.number === 1 ? consumers : this.props.number === 2 ? business : public_bodies_ngo;
+        console.log(selectedSegmentElements);
+        const segment_name = value.forEach(element => {
+            const name = selectedSegmentElements.find(e => e.id === element).segment_name;
+            console.log(name);
+            segment_names.push(name)
+        })
+        console.log(segment_names);
         this.setState({
-            names: value
+            segment_names: segment_names
         });
     }
     hidePopover = () => {
@@ -244,16 +252,18 @@ class AddSegmentModal extends Component {
             this.hidePopover();
         }
     }
+    sortingSegments = () => {
+
+    }
 
     render() {
         const additionalTitle = this.props.number === 3 ? 'Public bodies & NGO' : this.props.number === 2 ? 'Business' : 'Consumers';
         const Prices = this.state.price !== null ? this.state.price : null
         const PriceType = this.state.priceType !== null ? this.state.priceType : null
-    //     const defaultPriceType = this.state.priceType !== null ? this.props?.types?.prices.types?.find(x => x.id === this.state.priceType)?.map((obj) =>
-    //     ({ label: obj.title , value: obj.id })
-    // ))
-        const consumers = this.state.revenue !== null ? this.state.revenue : null;
-
+        //     const defaultPriceType = this.state.priceType !== null ? this.props?.types?.prices.types?.find(x => x.id === this.state.priceType)?.map((obj) =>
+        //     ({ label: obj.title , value: obj.id })
+        // ))
+        
 
         const streamOptions = this.props.types.stream_types.map((obj) =>
             ({ label: obj.title === 'Asset sale' ? 'Product / Service sale' : obj.title, value: obj.id })
@@ -268,16 +278,27 @@ class AddSegmentModal extends Component {
                 ({ label: <div>{obj.title} <TooltipComponent code="revstrem2" type="text" /> </div>, value: obj.id })
             );
         const consumersNames = this.props.customerSegments.consumers.map((obj) =>
-            <Option key={obj.segment_name} value={obj.segment_name}>{obj.segment_name}</Option>
-        )
-
+            ({ label: obj.segment_name, value: obj.id })
+        ).sort((p1, p2) => (p1.label > p2.label) ? 1 : (p1.label < p2.label) ? -1 : 0);
         const businessNames = this.props.customerSegments.business.map((obj) =>
-            <Option key={obj.segment_name} value={obj.segment_name}>{obj.segment_name}</Option>
-        )
-
+            ({ label: obj.segment_name, value: obj.id })
+        ).sort((p1, p2) => (p1.label > p2.label) ? 1 : (p1.label < p2.label) ? -1 : 0);
         const publicsNames = this.props.customerSegments.public_bodies_ngo.map((obj) =>
-            <Option key={obj.segment_name} value={obj.segment_name}>{obj.segment_name}</Option>
-        )
+            ({ label: obj.segment_name, value: obj.id })
+        ).sort((p1, p2) => (p1.label > p2.label) ? 1 : (p1.label < p2.label) ? -1 : 0);
+
+        const segmentTag = (props) => {
+            const { label, value, onClose } = props;
+            return (
+                <Tag
+                    closable
+                    onClose={onClose}
+                    style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                >
+                    {label}
+                </Tag>
+            )
+        }
 
         const popoverContent = (
             <>
@@ -373,7 +394,7 @@ class AddSegmentModal extends Component {
                             label={<Space><Text>Revenue Stream Name</Text><TooltipComponent code="revstrem1" type="text" /></Space>}
                             validateStatus={this.state.revenueError !== '' ? 'error' : 'success'}
                         >
-                            <Select value={consumers}
+                            <Select
                                 options={streamOptions}
                                 style={{ width: '100%', background: '#BAE7FF' }}
                                 placeholder="Select revenue stream"
@@ -417,9 +438,10 @@ class AddSegmentModal extends Component {
                             <Select style={{ width: '100%' }}
                                 placeholder="Choose segment"
                                 mode="multiple"
-                                onChange={this.onNgoTypeChange.bind(this)} >
-                                {additionalTitle === "Consumers" ? consumersNames : additionalTitle === "Business" ? businessNames : additionalTitle === "Public bodies & NGO" && publicsNames}
-                            </Select>
+                                onChange={this.onSegmentsChange.bind(this)}
+                                tagRender={segmentTag}
+                                options={additionalTitle === "Consumers" ? consumersNames : additionalTitle === "Business" ? businessNames : additionalTitle === "Public bodies & NGO" && publicsNames}
+                            />
                         </Form.Item>
                     </Form>
                 </Modal >

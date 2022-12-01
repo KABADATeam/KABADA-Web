@@ -214,9 +214,11 @@ class RevenueStreams extends React.Component {
                 dataIndex: 'segments',
                 key: 'segments',
                 width: '42%',
-                render: (obj, record) => (
-                    <p>{record.segments + ' '}</p>
-                ),
+                render: (value, record) => value.map(function (item, index) {
+                    console.log('Value in consumers',value)
+                    console.log(record)
+                    return (index ? ', ' : '') + item;
+                }),
             },
             {
                 title: '',
@@ -247,12 +249,12 @@ class RevenueStreams extends React.Component {
             },
             {
                 title: 'Business',
-                dataIndex: 'price_type_name',
-                key: 'price_type_name',
+                dataIndex: 'segments',
+                key: 'segments',
                 width: '42%',
-                render: (obj, record) => (
-                    <p>{record.segments + ' '}</p>
-                ),
+                render: (value, record) => value.map(function (item, index) {
+                    return (index ? ', ' : '') + item;
+                }),
             },
             {
                 title: '',
@@ -286,9 +288,9 @@ class RevenueStreams extends React.Component {
                 dataIndex: 'segments',
                 key: 'segments',
                 width: '42%',
-                render: (obj, record) => (
-                    <p>{record.segments + ' '}</p>
-                ),
+                render: (value, row) => value.map(function (item, index) {
+                    return (index ? ', ' : '') + item;
+                }),
             },
             {
                 title: '',
@@ -410,7 +412,6 @@ class RevenueStreams extends React.Component {
                         <AddSegmentModal visibility={true} number={this.state.segmentNumber} onClose={this.onCloseAddSegmentModal} />
                         : null
                 }
-                {console.info({ Number: this.state.segmentNumber })}
                 {
                     this.state.item !== null ?
                         <EditSegmentModal visibility={true} AIObject={this.state.AIObject} item={this.state.item} businessPlanId={this.props.businessPlan.id} onClose={this.onCloseEditSegmentModal} />
