@@ -91,15 +91,12 @@ class AddSegmentModal extends Component {
             "segment": this.props.number,
             "segments": this.state.segment_names
         }
-        console.log('POST OBJECT ON CREATE IS: ' + JSON.stringify(postObj))
         this.props.saveRevenue(postObj, reducerObj);
 
         this.props.onClose();
     }
 
     onNameChange(id, isAi) {
-
-        console.log('Revenue stream name id:' + id)
         this.setState({
             revenue: id,
             isAichangeName: isAi || '1'
@@ -107,7 +104,6 @@ class AddSegmentModal extends Component {
     }
 
     onPriceChange(id, isAi) {
-        console.log('Price id:' + id)
         this.setState({
             price: id,
             priceType: null,
@@ -116,7 +112,6 @@ class AddSegmentModal extends Component {
     }
 
     onPriceTypeChange(id, isAi) {
-        console.log('Price type id:' + id)
         this.setState({
             priceType: id,
             isAichangePriceType: isAi || '1'
@@ -125,22 +120,15 @@ class AddSegmentModal extends Component {
 
     componentDidMount() {
         this.props.getCustomerSegments(this.props.businessPlan.id);
-        const mappingConsumers = this.props.customerSegments
-        console.log(mappingConsumers)
     }
     onSegmentsChange(value) {
-        console.log('pakeista segments reiksme',value);
-        console.log(this.props.number);
         const segment_names = []
         const { consumers, business, public_bodies_ngo } = this.props.customerSegments
         const selectedSegmentElements = this.props.number === 1 ? consumers : this.props.number === 2 ? business : public_bodies_ngo;
-        console.log(selectedSegmentElements);
-        const segment_name = value.forEach(element => {
+        value.forEach(element => {
             const name = selectedSegmentElements.find(e => e.id === element).segment_name;
-            console.log(name);
             segment_names.push(name)
         })
-        console.log(segment_names);
         this.setState({
             segment_names: segment_names
         });
@@ -263,7 +251,6 @@ class AddSegmentModal extends Component {
         //     const defaultPriceType = this.state.priceType !== null ? this.props?.types?.prices.types?.find(x => x.id === this.state.priceType)?.map((obj) =>
         //     ({ label: obj.title , value: obj.id })
         // ))
-        
 
         const streamOptions = this.props.types.stream_types.map((obj) =>
             ({ label: obj.title === 'Asset sale' ? 'Product / Service sale' : obj.title, value: obj.id })
@@ -391,7 +378,7 @@ class AddSegmentModal extends Component {
                 >
                     <Form layout="vertical" id="myForm" name="myForm" onFinish={this.handleOk}>
                         <Form.Item key="name"
-                            label={<Space><Text>Revenue Stream Name</Text><TooltipComponent code="revstrem1" type="text" /></Space>}
+                            label={<div><Text>Revenue Stream Name</Text><TooltipComponent code="revstrem1" type="text" /></div>}
                             validateStatus={this.state.revenueError !== '' ? 'error' : 'success'}
                         >
                             <Select
@@ -404,7 +391,7 @@ class AddSegmentModal extends Component {
 
                         </Form.Item>
                         <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingRight: "10px" }} key="price" //Prices
-                            label={<Space size='small'><Text>Prices</Text><TooltipComponent code="revstrem2" type="text" /></Space>}
+                            label={<div><Text>Prices</Text><TooltipComponent code="revstrem2" type="text" /></div>}
                             validateStatus={this.state.priceError !== '' ? 'error' : 'success'}>
                             <Select
                                 options={priceOptions}
@@ -417,7 +404,7 @@ class AddSegmentModal extends Component {
                         </Form.Item>
 
                         <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingLeft: "10px" }} key="type"
-                            label={<Space><Text>Types of pricing</Text><TooltipComponent code="revstrem3" type="text" /></Space>}
+                            label={<div><Text>Types of pricing</Text><TooltipComponent code="revstrem3" type="text" /></div>}
                             validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
                             <Select
                                 options={priceTypeOptions}
@@ -433,7 +420,7 @@ class AddSegmentModal extends Component {
 
 
                         <Form.Item key="names" name="names"
-                            label={<Space><Text>Segments</Text><TooltipComponent code="revstrem4" type="text" /></Space>}
+                            label={<div><Text>Segments</Text><TooltipComponent code="revstrem4" type="text"/></div>}
                         >
                             <Select style={{ width: '100%' }}
                                 placeholder="Choose segment"

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Form, Space, Select, Popover, Row, Typography } from 'antd';
+import { Modal, Button, Form, Space, Select, Popover, Row, Typography, Tag } from 'antd';
 import '../../../css/customModal.css';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { updateRevenue, getStreamTypes, getRevenues } from "../../../appStore/actions/revenueStreamActions";
@@ -21,7 +21,8 @@ class EditSegmentModal extends Component {
             priceTypeId: this.props.item.price_type_id,
             priceTypeTitle: this.props.item.price_type_name,
             priceTypeError: '',
-            names: this.props.item.segments,
+            segment_names: this.props.item.segments,
+            segment_ids: this.getSegmentsIds(),
             aIObject: this.props.AIObject,
             isAichangeName: '',
             isAichangePrice: '',
@@ -40,8 +41,6 @@ class EditSegmentModal extends Component {
     }
     onOK = () => {
         const price = this.props.types.prices.find(x => x.id === this.state.PriceId);
-        console.log('Price type id:' + this.state.priceTypeTitle)
-        console.log({ price })
         if (this.state.priceTypeId === null) {
             this.setState({
                 priceTypeError: 'Select price type'
@@ -59,9 +58,8 @@ class EditSegmentModal extends Component {
             "segment": this.props.item.segment,
             "stream_type_id": this.state.revenueID,
             "price_type_id": this.state.priceTypeId,
-            "segments": this.state.names
+            "segments": this.state.segment_names
         };
-        console.log(this.state.priceTypeTitle)
         const reducerObj = {
             "id": this.props.item.id,
             "key": this.props.item.id,
@@ -72,10 +70,9 @@ class EditSegmentModal extends Component {
             "stream_type_id": this.state.revenueID,
             "stream_type_name": this.props.types.stream_types.find(x => x.id === this.state.revenueID)?.title,
             "segment": this.props.item.segment,
-            "segments": this.state.names
+            "segments": this.state.segment_names
         }
         this.props.updateRevenue(postObj, reducerObj)
-        console.info({ postObj, reducerObj })
         this.props.onClose();
     }
 
@@ -85,8 +82,6 @@ class EditSegmentModal extends Component {
             revenueTitle: title ?? typeId,
             isAichangeName: isAi || '1'
         });
-        console.log(this.state.revenueID, this.state.revenueTitle)
-        console.log(this.props.types.stream_types.find(x => x.id === this.state.revenueID))
     }
 
     onPriceChange(id, isAi, title) {
@@ -98,24 +93,38 @@ class EditSegmentModal extends Component {
             priceTypeTitle: null
 
         });
-        console.log(this.state.priceId, this.state.priceTitle)
-        console.log(title)
-        console.log(this.props.types?.prices.find((x) => x.id === this.state.priceId).title)
     }
 
     onPriceTypeChange(typeId, isAi, title) {
-        console.log('Price type id:' + typeId)
         this.setState({
             priceTypeId: typeId,
             priceTypeTitle: typeId,
             isAichangePriceType: isAi || '1',
         });
-        console.log(this.state.priceTypeId, this.state.priceTypeTitle)
     }
-    onNgoTypeChange(value) {
+    onSegmentsChange(value) {
+        const segment_names = [];
+        const { consumers, business, public_bodies_ngo } = this.props.customerSegments;
+        const selectedSegmentElements = this.props.item.segment === 1 ? consumers : this.props.item.segment === 2 ? business : public_bodies_ngo;
+        value.forEach(element => {
+            const name = selectedSegmentElements.find(e => e.id === element).segment_name;
+            segment_names.push(name)
+        })
         this.setState({
-            names: value
+            segment_ids: value,
+            segment_names: segment_names
         });
+    }
+
+    getSegmentsIds() {
+        const { consumers, business, public_bodies_ngo } = this.props.customerSegments
+        const selectedSegmentElements = this.props.item.segment === 1 ? consumers : this.props.item.segment === 2 ? business : public_bodies_ngo;
+        const segment_ids = []
+        this.props.item.segments.forEach(element => {
+            const id = selectedSegmentElements.find(e => e.segment_name === element).id;
+            segment_ids.push(id);
+        }) 
+        return segment_ids
     }
 
     componentDidMount() {
@@ -124,11 +133,7 @@ class EditSegmentModal extends Component {
         this.setState({
             priceId: this.props.item.price_category_id
         })
-
         this.props.getCustomerSegments(this.props.businessPlan.id);
-        this.setState({
-            segment_name: this.props.customerSegments.consumers.filter((x, index) => x.segment_name != null)
-        })
     }
 
     handlePopoverVisibilityChange = (visible) => {
@@ -214,7 +219,6 @@ class EditSegmentModal extends Component {
                 consumersName = path.consumer.map((x) => x.category[0])[0]
                 //price = path.consumer.map((x) => x.price[0])
                 priceType = path.consumer.map((x) => x.pricingType[0])[0]
-                console.log(priceType)
             } else if (this.props.item.segment === 2) {
                 consumersName = path.business.map((x) => x.category[0])[0]
                 //price = path.business.map((x) => x.price[0])
@@ -235,7 +239,6 @@ class EditSegmentModal extends Component {
                 }
                 // if (this.state.priceTypeId !== price[0]) {
                 //     this.onPriceTypeChange(price[0], '2', this.generateAIText()[2])
-                //     console.info(price[0])
                 // }
             }
 
@@ -259,16 +262,30 @@ class EditSegmentModal extends Component {
             );
 
         const consumersNames = this.props.customerSegments.consumers.map((obj) =>
-            <Option key={obj.id} value={obj.segment_name}>{obj.segment_name}</Option>
-        )
-
+            ({ label: obj.segment_name, value: obj.id })
+        ).sort((p1, p2) => (p1.label > p2.label) ? 1 : (p1.label < p2.label) ? -1 : 0);
         const businessNames = this.props.customerSegments.business.map((obj) =>
-            <Option key={obj.segment_name} value={obj.segment_name}>{obj.segment_name}</Option>
-        )
-
+            ({ label: obj.segment_name, value: obj.id })
+        ).sort((p1, p2) => (p1.label > p2.label) ? 1 : (p1.label < p2.label) ? -1 : 0);
         const publicsNames = this.props.customerSegments.public_bodies_ngo.map((obj) =>
-            <Option key={obj.segment_name} value={obj.segment_name}>{obj.segment_name}</Option>
-        )
+            ({ label: obj.segment_name, value: obj.id })
+        ).sort((p1, p2) => (p1.label > p2.label) ? 1 : (p1.label < p2.label) ? -1 : 0);
+
+        
+
+        const segmentTag = (props) => {
+            const { label, value, onClose } = props;
+            return (
+                <Tag
+                    closable
+                    onClose={onClose}
+                    style={{ fontSize: '14px', lineHeight: '22px', background: '#F5F5F5' }}
+                >
+                    {label}
+                </Tag>
+            )
+        }
+        
         const popoverContent = (
             <>
                 {
@@ -368,7 +385,7 @@ class EditSegmentModal extends Component {
                 >
                     <Form layout="vertical" id="myForm" onFinish={this.handleOk}>
                         <Form.Item key="name"
-                            label={<Space><Text>Revenue Stream Name</Text><TooltipComponent code="revstrem1" type="text" /></Space>}
+                            label={<div><Text>Revenue Stream Name</Text><TooltipComponent code="revstrem1" type="text" /></div>}
                         >
                             <Select
                                 style={{ width: '100%' }}
@@ -384,7 +401,7 @@ class EditSegmentModal extends Component {
                         <Form.Item
                             style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingRight: "10px" }}
                             key="price"
-                            label={<Space size='small'><Text>Prices</Text><TooltipComponent code="revstrem2" type="text" /></Space>}
+                            label={<div><Text>Prices</Text><TooltipComponent code="revstrem2" type="text" /></div>}
                         >
                             <Select
                                 style={{ width: '100%' }}
@@ -399,7 +416,7 @@ class EditSegmentModal extends Component {
                         </Form.Item>
 
                         <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingLeft: "10px" }} key="type"
-                            label={<Space><Text>Types of pricing</Text><TooltipComponent code="revstrem3" type="text" /></Space>}
+                            label={<div><Text>Types of pricing</Text><TooltipComponent code="revstrem3" type="text" /></div>}
                             validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
                             <Select
                                 style={{ width: '100%' }}
@@ -413,16 +430,16 @@ class EditSegmentModal extends Component {
                         </Form.Item>
 
                         <Form.Item key="Segments"
-                            label={<Space><Text>Segments</Text><TooltipComponent code="revstrem4" type="text" /></Space>}
+                            label={<div><Text>Segments</Text><TooltipComponent code="revstrem4" type="text" /></div>}
                             validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
-                            <Select style={{ width: '100%' }} placeholder="Choose segment"
-                                onChange={this.onNgoTypeChange.bind(this)}
+                            <Select style={{ width: '100%' }}
+                                placeholder="Choose segment"
                                 mode="multiple"
-                                defaultValue={this.state.names}
-                                value={this.state.names}
-                            >
-                                {additionalTitle === "Consumers" ? consumersNames : additionalTitle === "Business" ? businessNames : additionalTitle === "Public bodies & NGO" && publicsNames}
-                            </Select>
+                                onChange={this.onSegmentsChange.bind(this)}
+                                tagRender={segmentTag}
+                                value={this.state.segment_ids}
+                                options={additionalTitle === "Consumers" ? consumersNames : additionalTitle === "Business" ? businessNames : additionalTitle === "Public bodies & NGO" && publicsNames}
+                            />
                         </Form.Item>
 
                     </Form>

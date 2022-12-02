@@ -8,6 +8,7 @@ import AddSegmentModal from '../components/revenue_streams/AddSegmentModal';
 import EditSegmentModal from '../components/revenue_streams/EditSegmentModal';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getStreamTypes, getPrices, getRevenues, saveState, deleteRevenue, getAIRevenueStreamPredict } from "../../appStore/actions/revenueStreamActions";
+import { getCustomerSegments } from "../../appStore/actions/customerSegmentAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
 import TooltipComponent from "../components/Tooltip";
@@ -134,9 +135,6 @@ class RevenueStreams extends React.Component {
             item: { ...item, "segment": 1 },
             AIObject: { postObj, "segment": 1 }
         });
-        //console.info({ ID: item.id })
-        //console.info({ postObj })
-
     }
 
     onEditSecondSegment(item) {
@@ -148,8 +146,6 @@ class RevenueStreams extends React.Component {
         this.setState({
             item: { ...item, "segment": 2 }
         });
-        console.info({ postObj })
-        console.info({ item })
     }
 
     onEditOther(item) {
@@ -161,8 +157,6 @@ class RevenueStreams extends React.Component {
         this.setState({
             item: { ...item, "segment": 3 }
         });
-        console.info({ postObj })
-        console.info({ item })
     }
 
     onCompletedChange(state) {
@@ -181,13 +175,14 @@ class RevenueStreams extends React.Component {
                         this.props.getRevenues(this.props.businessPlan.id);
                         this.props.getStreamTypes();
                         this.props.getPrices();
-
+                        this.props.getCustomerSegments(this.props.businessPlan.id);
                     });
                 }
             } else {
                 this.props.getRevenues(this.props.businessPlan.id);
                 this.props.getStreamTypes();
                 this.props.getPrices();
+                this.props.getCustomerSegments(this.props.businessPlan.id);
             }
         } else {
             this.props.logout()
@@ -215,8 +210,6 @@ class RevenueStreams extends React.Component {
                 key: 'segments',
                 width: '42%',
                 render: (value, record) => value.map(function (item, index) {
-                    console.log('Value in consumers',value)
-                    console.log(record)
                     return (index ? ', ' : '') + item;
                 }),
             },
@@ -430,4 +423,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPlan, logout, getAIRevenueStreamPredict })(withRouter(RevenueStreams));
+export default connect(mapStateToProps, { getSelectedPlanOverview, getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPlan, logout, getAIRevenueStreamPredict, getCustomerSegments })(withRouter(RevenueStreams));
