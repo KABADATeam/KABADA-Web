@@ -1,9 +1,9 @@
 const computeLongLoanValue = (investments, own_assets, my_money) => {
-    const loan_amount = investments - own_assets - my_money;
+    const loan_amount = (investments - own_assets - my_money) < 0 ? 0 : investments - own_assets - my_money;
     return loan_amount;
 }
 const computeShortLoanValue = (workings_amount, my_money) => {
-    const loan_amount = workings_amount - my_money;
+    const loan_amount = (workings_amount - my_money) < 0 ? 0 : workings_amount - my_money;
     return loan_amount;
 }
 
@@ -77,7 +77,6 @@ export const businessStartUpInvestmentReducer = (
     }, action) => {
     switch (action.type) {
         case 'FETCHING_INVESTMENT_SUCCESS':
-            console.log(action.payload);
             const working_capitals = action.payload.grace_period_short === null ? null : dataWorkingCapital(action.payload.grace_period_short, action.payload.working_capital);
             const obj = {
                 period: action.payload.period === null ? 12 : action.payload.period,
@@ -447,7 +446,6 @@ export const necessaryCapitalReducer = (
     }, action) => {
     switch (action.type) {
         case 'FETCHING_NECESSARY_CAPITAL_SUCCESS':
-            console.log(action.payload);
             return {
                 ...state,
                 necessaryCapital: action.payload
