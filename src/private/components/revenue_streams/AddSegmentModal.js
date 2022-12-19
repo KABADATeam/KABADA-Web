@@ -180,7 +180,6 @@ class AddSegmentModal extends Component {
             //price = path.business.map((x) => x.price)[0] !== undefined && path.business.map((x) => x.price[0])[0]
             priceType = path.business.map((x) => x.pricingType[0])[0]
         } else {
-            console.log(path.publicNgo)
             consumersName = path.publicNgo.map((x) => x.category[0])[0]
             //price = path.publicNgo.map((x) => x.price)[0] !== undefined && path.publicNgo.map((x) => x.price[0])[0]
             priceType = path.publicNgo.map((x) => x.pricingType[0])[0]
@@ -210,7 +209,6 @@ class AddSegmentModal extends Component {
             let consumersName = '';
             let price = '';
             let priceType = '';
-            console.log(this.props)
             if (this.props.number === 1) {
                 consumersName = path.consumer.map((x) => x.category[0])[0]
                 //price = path.consumer.map((x) => x.price)
@@ -233,7 +231,6 @@ class AddSegmentModal extends Component {
             if (this.state.price !== priceType) {
                 this.onPriceChange(priceType, '2')
             }
-            console.log(price)
             if (this.state.priceType !== price[0] && price[0]) {
                 this.onPriceTypeChange(price[0], '2')
             }
@@ -246,24 +243,10 @@ class AddSegmentModal extends Component {
 
     render() {
         const additionalTitle = this.props.number === 3 ? 'Public bodies & NGO' : this.props.number === 2 ? 'Business' : 'Consumers';
-        const Prices = this.state.price !== null ? this.state.price : null
-        const PriceType = this.state.priceType !== null ? this.state.priceType : null
-        //     const defaultPriceType = this.state.priceType !== null ? this.props?.types?.prices.types?.find(x => x.id === this.state.priceType)?.map((obj) =>
-        //     ({ label: obj.title , value: obj.id })
-        // ))
+        const streamName = this.state.revenue !== null ? (<>{this.props.types.stream_types.find(x => x.id === this.state.revenue).title}</>) : null
+        const Prices = this.state.price !== null ? (<>{this.props?.types?.prices.find(x => x.id === this.state.price).title}</>) : null
+        const PriceType = this.state.priceType !== null ? (<>{this.props?.types?.prices.find(x => x.id === this.state.price)?.types.find(x => x.id === this.state.priceType)?.title}</> ): null;
 
-        const streamOptions = this.props.types.stream_types.map((obj) =>
-            ({ label: obj.title === 'Asset sale' ? 'Product / Service sale' : obj.title, value: obj.id })
-        );
-
-        const priceOptions = this.props.types?.prices.map((obj) =>
-            ({ label: obj.title, value: obj.id })
-        );
-
-        const priceTypeOptions = this.state.price === null ? [] :
-            this.props?.types?.prices.find(x => x.id === this.state.price)?.types?.map((obj) =>
-                ({ label: <div>{obj.title} <TooltipComponent code="revstrem2" type="text" /> </div>, value: obj.id })
-            );
         const consumersNames = this.props.customerSegments.consumers.map((obj) =>
             ({ label: obj.segment_name, value: obj.id })
         ).sort((p1, p2) => (p1.label > p2.label) ? 1 : (p1.label < p2.label) ? -1 : 0);
@@ -315,9 +298,9 @@ class AddSegmentModal extends Component {
 
                                             :
                                             <Text>
-                                                Based on your input KABADA AI recommends that you consider adding {this.generateAIText()[0] && ' "Revenue Stream Name" : ' + this.generateAIText()[0] + '; for'}
+                                                Based on your input KABADA AI recommends that you consider adding {this.generateAIText()[0] && ' "Revenue Stream Name": ' + this.generateAIText()[0] + '; for '}
 
-                                                {this.generateAIText()[1] && '" Pric"' + this.generateAIText()[1] + '.'} {this.generateAIText()[2] && '" Type of Pricing"' + this.generateAIText()[2] + '.'}
+                                                {this.generateAIText()[1] && '"Price": ' + this.generateAIText()[1] + '.'} {this.generateAIText()[2] && '"Type of Pricing"' + this.generateAIText()[2] + '.'}
                                             </Text>
                                     }
                                 </Row>
@@ -338,7 +321,6 @@ class AddSegmentModal extends Component {
                 }
             </>
         )
-        // console.info(this.state.isAichange)
         return (
             <>
                 <Modal
@@ -378,49 +360,71 @@ class AddSegmentModal extends Component {
                 >
                     <Form layout="vertical" id="myForm" name="myForm" onFinish={this.handleOk}>
                         <Form.Item key="name"
-                            label={<div><Text>Revenue Stream Name</Text><TooltipComponent code="revstrem1" type="text" /></div>}
+                            label={
+                                <div>
+                                    <Text>Revenue Stream Name</Text>
+                                    {/* <TooltipComponent code="revstrem1" type="text" /> */}
+                                </div>}
                             validateStatus={this.state.revenueError !== '' ? 'error' : 'success'}
                         >
                             <Select
-                                options={streamOptions}
+                                value={streamName}
                                 style={{ width: '100%', background: '#BAE7FF' }}
                                 placeholder="Select revenue stream"
                                 onChange={this.onNameChange.bind(this)}
                                 className={this.state.isAichangeName === '2' && "aicolor .ant-select-selector"}
-                            />
+                            >
+                                {this.props.types.stream_types.map((item) => (
+                                    <Option key={item.id} value={item.id}>{item.title} <TooltipComponent code={item.tooltipCode} type="text" /></Option>
+                                ))}
+                            </Select>
 
                         </Form.Item>
                         <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingRight: "10px" }} key="price" //Prices
-                            label={<div><Text>Prices</Text><TooltipComponent code="revstrem2" type="text" /></div>}
+                            label={
+                                <div>
+                                    <Text>Prices</Text>
+                                    {/* <TooltipComponent code="revstrem2" type="text" /> */}
+                                </div>}
                             validateStatus={this.state.priceError !== '' ? 'error' : 'success'}>
                             <Select
-                                options={priceOptions}
                                 value={Prices}
                                 style={{ width: '100%' }}
                                 placeholder="Select price"
                                 onChange={this.onPriceChange.bind(this)}
                                 className={this.state.isAichangePrice === '2' && "aicolor .ant-select-selector"}
-                            />
+                            >
+                                {this.props?.types?.prices.map((item) => (
+                                    <Option key={item.id} value={item.id}>{item.title} <TooltipComponent code={item.tooltipCode} type="text" /></Option>
+                                ))}
+                            </Select>
                         </Form.Item>
 
                         <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingLeft: "10px" }} key="type"
-                            label={<div><Text>Types of pricing</Text><TooltipComponent code="revstrem3" type="text" /></div>}
+                            label={
+                                <div>
+                                    <Text>Types of pricing</Text>
+                                    {/* <TooltipComponent code="revstrem3" type="text" /> */}
+                                </div>}
                             validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
                             <Select
-                                options={priceTypeOptions}
-                                defaultValue={PriceType}
                                 style={{ width: '100%' }}
                                 placeholder="Choose type"
+                                value={PriceType}
                                 disabled={this.state.price === null ? true : false}
                                 onChange={this.onPriceTypeChange.bind(this)}
                                 className={this.state.isAichangePriceType === '2' && "aicolor .ant-select-selector"}
-                            />
+                            >
+                                {this.props?.types?.prices.find(x => x.id === this.state.price)?.types?.map((item) => (
+                                    <Option key={item.id} value={item.id}>{item.title} <TooltipComponent code={item.tooltipCode} type="text" /></Option>
+                                ))}
+                            </Select>
 
                         </Form.Item>
 
 
                         <Form.Item key="names" name="names"
-                            label={<div><Text>Segments</Text><TooltipComponent code="revstrem4" type="text"/></div>}
+                            label={<div><Text>Segments</Text><TooltipComponent code="revstrem4" type="text" /></div>}
                         >
                             <Select style={{ width: '100%' }}
                                 placeholder="Choose segment"

@@ -15,11 +15,8 @@ class EditSegmentModal extends Component {
         super(props);
         this.state = {
             revenueID: this.props.item.stream_type_id,
-            revenueTitle: this.props.item.stream_type_name,
-            PriceId: this.props.item.price_category_id,
-            priceTitle: this.props.item.price_category_name,
+            priceId: this.props.item.price_category_id,
             priceTypeId: this.props.item.price_type_id,
-            priceTypeTitle: this.props.item.price_type_name,
             priceTypeError: '',
             segment_names: this.props.item.segments,
             segment_ids: this.getSegmentsIds(),
@@ -40,7 +37,7 @@ class EditSegmentModal extends Component {
         this.props.onClose();
     }
     onOK = () => {
-        const price = this.props.types.prices.find(x => x.id === this.state.PriceId);
+        const price = this.props.types.prices.find(x => x.id === this.state.priceId);
         if (this.state.priceTypeId === null) {
             this.setState({
                 priceTypeError: 'Select price type'
@@ -63,7 +60,7 @@ class EditSegmentModal extends Component {
         const reducerObj = {
             "id": this.props.item.id,
             "key": this.props.item.id,
-            "price_category_id": this.state.PriceId,
+            "price_category_id": this.state.priceId,
             "price_category_name": this.props.types?.prices.find((x) => x.id === this.state.priceId)?.title, //this.state.priceTitle, //Prices
             "price_type_id": this.state.priceTypeId,
             "price_type_name": price.types.find(x => x.id === this.state.priceTypeId)?.title, //Types of pricing
@@ -79,7 +76,6 @@ class EditSegmentModal extends Component {
     onNameChange(typeId, isAi, title) {
         this.setState({
             revenueID: typeId,
-            revenueTitle: title ?? typeId,
             isAichangeName: isAi || '1'
         });
     }
@@ -87,10 +83,8 @@ class EditSegmentModal extends Component {
     onPriceChange(id, isAi, title) {
         this.setState({
             priceId: id,
-            priceTitle: title ?? id,
             isAichangePrice: isAi || '1',
             priceTypeId: null,
-            priceTypeTitle: null
 
         });
     }
@@ -98,7 +92,6 @@ class EditSegmentModal extends Component {
     onPriceTypeChange(typeId, isAi, title) {
         this.setState({
             priceTypeId: typeId,
-            priceTypeTitle: typeId,
             isAichangePriceType: isAi || '1',
         });
     }
@@ -123,7 +116,7 @@ class EditSegmentModal extends Component {
         this.props.item.segments.forEach(element => {
             const id = selectedSegmentElements.find(e => e.segment_name === element).id;
             segment_ids.push(id);
-        }) 
+        })
         return segment_ids
     }
 
@@ -202,7 +195,7 @@ class EditSegmentModal extends Component {
         // if (this.state.PriceTypeId === priceName?.id) {
         //     priceName = null
         // }
-        if (this.state.PriceId === priceTypeName?.id) {
+        if (this.state.priceId === priceTypeName?.id) {
             priceTypeName = null
         }
 
@@ -248,18 +241,12 @@ class EditSegmentModal extends Component {
 
     render() {
         const additionalTitle = this.props.item.segment === 3 ? 'Public bodies & NGO' : this.props.item.segment === 2 ? 'Business' : 'Consumers';
+        const streamName = this.state.revenueID !== null ? (<>{this.props.types.stream_types.find(x => x.id === this.state.revenueID).title}</>) : null
+        const prices = this.state.priceId !== null ? (<>{this.props.types.prices.find(x => x.id === this.state.priceId)?.title}</>) : null;
+        const PriceType = this.state.priceTypeId !== null ? (<>{this.props?.types?.prices.find(x => x.id === this.state.priceId)?.types.find(x => x.id === this.state.priceTypeId)?.title}</>) : null;
         const streamOptions = this.props.types.stream_types.map((obj) =>
             ({ label: obj.title, value: obj.id })
         );
-
-        const priceOptions = this.props.types?.prices.map((obj) =>
-            ({ label: obj.title, value: obj.id })
-        );
-
-        const priceTypeOptions = this.state.priceId === null ? [] :
-            this.props?.types?.prices.find(x => x.id === this.state.priceId)?.types?.map((obj) =>
-                ({ label: obj.title, value: obj.id })
-            );
 
         const consumersNames = this.props.customerSegments.consumers.map((obj) =>
             ({ label: obj.segment_name, value: obj.id })
@@ -271,7 +258,7 @@ class EditSegmentModal extends Component {
             ({ label: obj.segment_name, value: obj.id })
         ).sort((p1, p2) => (p1.label > p2.label) ? 1 : (p1.label < p2.label) ? -1 : 0);
 
-        
+
 
         const segmentTag = (props) => {
             const { label, value, onClose } = props;
@@ -285,7 +272,7 @@ class EditSegmentModal extends Component {
                 </Tag>
             )
         }
-        
+
         const popoverContent = (
             <>
                 {
@@ -384,49 +371,66 @@ class EditSegmentModal extends Component {
                     }
                 >
                     <Form layout="vertical" id="myForm" onFinish={this.handleOk}>
-                        <Form.Item key="name"
-                            label={<div><Text>Revenue Stream Name</Text><TooltipComponent code="revstrem1" type="text" /></div>}
+                        <Form.Item
+                            key="name"
+                            label={
+                                <div>
+                                    <Text>Revenue Stream Name</Text>
+                                </div>
+                            }
                         >
                             <Select
                                 style={{ width: '100%' }}
                                 placeholder="Select revenue stream"
-                                options={streamOptions}
-                                defaultValue={this.state.revenueTitle}
-                                value={this.state.revenueTitle}
+                                value={streamName}
                                 onChange={(e) => this.onNameChange(e)}
                                 className={this.state.isAichangeName === '2' && "aicolor .ant-select-selector"}
-                            />
+                            >
+                                {this.props.types.stream_types.map((item) => (
+                                    <Option key={item.id} value={item.id}>{item.title} <TooltipComponent code={item.tooltipCode} type="text" /></Option>
+                                ))}
+                            </Select>
                         </Form.Item>
 
                         <Form.Item
                             style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingRight: "10px" }}
                             key="price"
-                            label={<div><Text>Prices</Text><TooltipComponent code="revstrem2" type="text" /></div>}
+                            label={
+                                <div>
+                                    <Text>Prices</Text>
+                                </div>
+                            }
                         >
                             <Select
                                 style={{ width: '100%' }}
-                                options={priceOptions}
                                 placeholder="Select price"
-                                defaultValue={this.state.priceTitle}
-                                value={this.state.priceTitle}
+                                value={prices}
                                 onChange={(e) => this.onPriceChange(e)}
-                                //onChange={this.onPriceChange.bind(this)}
                                 className={this.state.isAichangePrice === '2' && "aicolor .ant-select-selector"}
-                            />
+                            >
+                                {this.props.types?.prices.map((item) => (
+                                    <Option key={item.id} value={item.id}>{item.title} <TooltipComponent code={item.tooltipCode} type="text" /></Option>
+                                ))}
+                            </Select>
                         </Form.Item>
 
-                        <Form.Item style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingLeft: "10px" }} key="type"
-                            label={<div><Text>Types of pricing</Text><TooltipComponent code="revstrem3" type="text" /></div>}
-                            validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}>
+                        <Form.Item
+                            style={{ display: 'inline-block', width: 'calc(50% - 0px)', paddingLeft: "10px" }}
+                            key="type"
+                            label={<div><Text>Types of pricing</Text></div>}
+                            validateStatus={this.state.priceTypeError !== '' ? 'error' : 'success'}
+                        >
                             <Select
                                 style={{ width: '100%' }}
-                                options={priceTypeOptions}
                                 placeholder="Choose type"
-                                defaultValue={this.state.priceTypeTitle}
-                                value={this.state.priceTypeTitle}
+                                value={PriceType}
                                 onChange={(e) => this.onPriceTypeChange(e)}
                                 className={this.state.isAichangePriceType === '2' && "aicolor .ant-select-selector"}
-                            />
+                            >
+                                {this.props?.types?.prices.find(x => x.id === this.state.priceId)?.types?.map((item) => (
+                                    <Option key={item.id} value={item.id}>{item.title} <TooltipComponent code={item.tooltipCode} type="text" /></Option>
+                                ))}
+                            </Select>
                         </Form.Item>
 
                         <Form.Item key="Segments"
