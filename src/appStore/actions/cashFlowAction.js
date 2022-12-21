@@ -8,7 +8,6 @@ export const getCashFlow = (planId) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/plans/cashflow/' + planId, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response.data)
             dispatch({ type: "FETCHING_CASHFLOW_SUCCESS", payload: response.data });
         } catch (error) {
             if (error.response === undefined) {

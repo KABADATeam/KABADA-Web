@@ -19,11 +19,9 @@ export const cashFlowReducer = (state = [], action) => {
             dataForTable.concat(dataForTable_variableCosts);
             const dataForTable_balances = tableDataFormation(cash.balances, dataForTable);
             dataForTable.concat(dataForTable_balances);
-            console.log(dataForTable);
 
             let res = []
             const monthsCount = keyExists(action.payload, 'monthlyValue', res);
-            console.log(monthsCount)
             const renderContent = (value, row, index) => {
                 const obj = {
                     children: <p style={{ marginBottom: 0, float: 'right' }}>{(typeof value === 'number') ? value : '-'}</p>,

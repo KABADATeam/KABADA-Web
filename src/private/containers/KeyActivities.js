@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getKeyActivitiesList, getCategories, saveState } from "../../appStore/actions/keyActivitiesAction";
 import { logout } from '../../appStore/actions/authenticationActions';
+import { getTooltips } from '../../appStore/actions/tooltipsAction';
 import ProductComponent from "../components/key_activities/ProductComponent";
 import KeyActivityTypesModal from "../components/key_activities/KeyActivityTypesModal";
 import AddKeyActivityModal from "../components/key_activities/AddKeyActivityModal";
@@ -98,8 +99,8 @@ class KeyActivities extends React.Component {
                     this.props.refreshPlan(localStorage.getItem("plan"), () => {
                         this.props.getKeyActivitiesList(this.props.businessPlan.id, () => {
                             this.props.getCategories()
-                        })
-
+                        });
+                        this.props.getTooltips();
                     });
                 }
             } else {
@@ -184,4 +185,11 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { refreshPlan, getCategories, getKeyActivitiesList, saveState,logout })(KeyActivities);
+export default connect(mapStateToProps, { 
+    refreshPlan, 
+    getCategories, 
+    getKeyActivitiesList, 
+    saveState,
+    logout,
+    getTooltips
+})(KeyActivities);

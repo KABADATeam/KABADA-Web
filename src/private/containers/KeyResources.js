@@ -10,6 +10,7 @@ import { getResourcesList, getResourcesCategoriesList, deleteItem, saveEditable,
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
+import { getTooltips } from '../../appStore/actions/tooltipsAction';
 import TooltipComponent from "../components/Tooltip";
 import TextHelper from '../components/TextHelper';
 import Cookies from 'js-cookie';
@@ -113,6 +114,7 @@ class KeyResources extends React.Component {
                     this.props.refreshPlan(localStorage.getItem("plan"), () => {
                         this.props.getResourcesList(this.props.businessPlan.id);
                         this.props.getResourcesCategoriesList();
+                        this.props.getTooltips();
                     });
                 }
             } else {
@@ -251,4 +253,14 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getResourcesList, getResourcesCategoriesList, deleteItem, saveChanges, saveEditable, logout, refreshPlan })(withRouter(KeyResources));
+export default connect(mapStateToProps, { 
+    getSelectedPlanOverview, 
+    getResourcesList, 
+    getResourcesCategoriesList, 
+    deleteItem, 
+    saveChanges, 
+    saveEditable, 
+    logout, 
+    refreshPlan,
+    getTooltips 
+})(withRouter(KeyResources));

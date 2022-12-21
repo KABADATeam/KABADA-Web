@@ -36,6 +36,7 @@ import { UserOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
 import IndustryRisks from '../components/Industry_Risks/IndustryRisks'
 import { getCountryShortCodeV2 } from '../../appStore/actions/countriesActions'
 import { logout } from '../../appStore/actions/authenticationActions';
+import { getTooltips } from '../../appStore/actions/tooltipsAction';
 import IndustryDataComponent from '../components/industry_data/IndustryDataComponent';
 import html2canvas from 'html2canvas';
 import TooltipComponent from '../components/Tooltip';
@@ -291,7 +292,6 @@ class Overview extends React.Component {
         this.props.downloadCashFlow(this.props.businessPlan.id, this.props.businessPlan.name);
     }
     getTabKey = (key) => {
-        console.log(key);
         this.setState({
             activeTabKey: key
         })
@@ -307,7 +307,7 @@ class Overview extends React.Component {
                         this.props.getMembers(this.props.businessPlan.id);
                         this.props.getSelectedPlanDetails(this.props.businessPlan.id);
                         this.props.getSelectedPlanOverview(this.props.businessPlan.id);
-
+                        this.props.getTooltips();
                     });
 
                 }
@@ -1034,5 +1034,6 @@ export default connect(mapStateToProps,
         saveBusinessInvestmentsCompleted,
         savePersonalCharacteristicsCompleted,
         getCompletedPersonalCharacteristics,
-        startAItraining
+        startAItraining,
+        getTooltips
     })(withRouter(Overview))

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Typography, Space, Card, Divider, Select, Checkbox } from 'antd';
 import { cardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
 import { setProductPriceLevel, setIncomeSources, getProduct, getProductPriceLevels, getAditionalIncomeSources } from "../../../appStore/actions/productActions";
+import TooltipComponent from "../Tooltip";
 import '../../../css/publicBusinessPlans.css';
 
 const { Text } = Typography;
@@ -87,7 +88,9 @@ class EditPriceLevelComponent extends Component {
         return (
             <>
                 <Card style={{ ...cardStyle, padding: 20 }} bodyStyle={{ ...tableCardBodyStyle, padding: 0 }}>
-                    <Text style={infoTextStyle}>Price Level</Text>
+                    <Text style={infoTextStyle}>
+                        Price Level<TooltipComponent code="vpnp1" type="text" />
+                    </Text>
                     <Select 
                         style={{ width: '100%', marginTop: '20px' }} 
                         value={priceLevelValue}
@@ -99,7 +102,7 @@ class EditPriceLevelComponent extends Component {
 
                     <Divider />
                     <Space direction="vertical">
-                        <Text style={infoTextStyle}>Additional income sources</Text>
+                        <Text style={infoTextStyle}>Additional income sources<TooltipComponent code="vpnp2" type="text" /></Text>
                         <Text style={descriptionTextStyle}>Select up to 5 sources</Text>
                         <Checkbox.Group onChange={this.onChange} value={incomeSourcesValues}>
                             <Space direction="vertical">

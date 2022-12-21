@@ -183,7 +183,7 @@ class CostCategoriesModal extends Component {
                     centered={true}
                     title={<Space><ArrowLeftOutlined onClick={this.onCancel} />{title}
                     <Popover
-                        placement='topLeft'
+                        placement='bottomLeft'
                         title='AI Hint'
                         content={popoverContent}
                         overlayStyle={{ width: "328px" }}

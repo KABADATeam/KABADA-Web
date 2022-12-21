@@ -10,6 +10,7 @@ import ProductInfoComponent from './ProductInfoComponent';
 import PriceLevelComponent from './PriceLevelComponent';
 import ProductFeaturesComponent from './ProductFeaturesComponent';
 import { refreshPlan } from "../../../appStore/actions/refreshAction";
+import { getTooltips } from '../../../appStore/actions/tooltipsAction';
 import { getProductTypes, getProductPriceLevels, getAditionalIncomeSources, getProductFeatures, saveProduct, getInnovativeLevels, getQualityLevels, getDifferentiationLevels, getValuePropositionAIPredict } from "../../../appStore/actions/productActions";
 
 const { Text } = Typography;
@@ -267,8 +268,8 @@ class NewProduct extends React.Component {
                         "location": 'plan::valueProposition::sample',
                         "planId": this.props.businessPlan.id
                     };
-                    console.log(postObj);
                     this.props.getValuePropositionAIPredict(postObj);
+                    this.props.getTooltips();
                 });
             }
         } else {
@@ -393,5 +394,6 @@ export default connect(
         getInnovativeLevels,
         getQualityLevels,
         getDifferentiationLevels,
-        getValuePropositionAIPredict
+        getValuePropositionAIPredict,
+        getTooltips
     })(NewProduct);

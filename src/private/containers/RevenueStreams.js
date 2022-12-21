@@ -11,6 +11,7 @@ import { getStreamTypes, getPrices, getRevenues, saveState, deleteRevenue, getAI
 import { getCustomerSegments } from "../../appStore/actions/customerSegmentAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
+import { getTooltips } from '../../appStore/actions/tooltipsAction';
 import TooltipComponent from "../components/Tooltip";
 import TextHelper from '../components/TextHelper';
 import Cookies from 'js-cookie';
@@ -176,6 +177,7 @@ class RevenueStreams extends React.Component {
                         this.props.getStreamTypes();
                         this.props.getPrices();
                         this.props.getCustomerSegments(this.props.businessPlan.id);
+                        this.props.getTooltips();
                     });
                 }
             } else {
@@ -423,4 +425,16 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getRevenues, getStreamTypes, getPrices, saveState, deleteRevenue, refreshPlan, logout, getAIRevenueStreamPredict, getCustomerSegments })(withRouter(RevenueStreams));
+export default connect(mapStateToProps, {  
+    getSelectedPlanOverview, 
+    getRevenues, 
+    getStreamTypes, 
+    getPrices, 
+    saveState, 
+    deleteRevenue, 
+    refreshPlan, 
+    logout, 
+    getAIRevenueStreamPredict, 
+    getCustomerSegments, 
+    getTooltips 
+})(withRouter(RevenueStreams));

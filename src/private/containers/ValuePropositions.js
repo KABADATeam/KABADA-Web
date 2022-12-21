@@ -5,10 +5,11 @@ import { Button, Breadcrumb, Row, Col, Typography, Switch, Space, Result, Image,
 import { ArrowLeftOutlined, InfoCircleFilled, DeleteOutlined } from '@ant-design/icons';
 import { buttonStyle, leftButtonStyle, rightButtonStyle } from '../../styles/customStyles';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
-import { getProducts, deleteProduct, saveState, getValuePropositionAIPredict } from "../../appStore/actions/productActions";
+import { getProduct, getProducts, deleteProduct, saveState, getValuePropositionAIPredict } from "../../appStore/actions/productActions";
 import EditProduct from "../components/new_product/EditProduct";
 import '../../css/customTable.css';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import { getTooltips } from '../../appStore/actions/tooltipsAction';
 import TooltipComponent from "../components/Tooltip";
 import { logout } from '../../appStore/actions/authenticationActions';
 import Cookies from 'js-cookie';
@@ -72,7 +73,6 @@ class ValuePropositions extends React.Component {
     }
 
     deleteItem = (item) => {
-        console.log(item);
         this.props.deleteProduct(item.id);
     }
 
@@ -86,7 +86,6 @@ class ValuePropositions extends React.Component {
             selectedProduct: item.id
         });
         localStorage.setItem('product-id', item.id);
-        console.log(item.id)
         let linkHash = MD5(item.id).toString();
         this.props.history.push(`/value-propositions/${linkHash}`);
     }
@@ -100,6 +99,7 @@ class ValuePropositions extends React.Component {
                 } else {
                     this.props.refreshPlan(localStorage.getItem("plan"), () => {
                         this.props.getProducts(this.props.businessPlan.id);
+                        this.props.getTooltips();
                     });
     
                 }
@@ -242,4 +242,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, refreshPlan, getProducts, deleteProduct, saveState, logout, getValuePropositionAIPredict})(ValuePropositions);
+export default connect(mapStateToProps, { getSelectedPlanOverview, refreshPlan, getProducts, deleteProduct, saveState, logout, getValuePropositionAIPredict, getProduct, getTooltips})(ValuePropositions);

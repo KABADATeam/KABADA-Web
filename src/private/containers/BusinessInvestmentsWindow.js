@@ -10,6 +10,7 @@ import BusinessFinancing from '../components/businessFinancialInvestments/Busine
 import { getBusinessStartUpInvestmentInformation, changeVisibility, saveChanges, getNecessaryCapitalInformation, saveState, recalculateInvestment, discardChanges } from "../../appStore/actions/businessInvestmentAction";
 import { getCountryShortCode } from '../../appStore/actions/countriesActions';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import { getTooltips } from '../../appStore/actions/tooltipsAction';
 import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import '../../css/BusinessInvestment.css';
 import Cookies from 'js-cookie';
@@ -104,6 +105,7 @@ class BusinessInvestmentsWindow extends React.Component {
                         this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);
                         this.props.getNecessaryCapitalInformation(this.props.businessPlan.id);
                     });
+                    this.props.getTooltips();
                 }
             } else {
                 this.props.getBusinessStartUpInvestmentInformation(this.props.businessPlan.id);
@@ -179,4 +181,16 @@ const mapStateToProps = (state) => {
         totalNecessary: state.necessaryCapital,
     };
 }
-export default connect(mapStateToProps, { refreshPlan, logout,getBusinessStartUpInvestmentInformation, getCountryShortCode, changeVisibility, saveChanges, getNecessaryCapitalInformation, saveState, getSelectedPlanOverview, recalculateInvestment, discardChanges })(BusinessInvestmentsWindow);
+export default connect(mapStateToProps, { 
+    refreshPlan, 
+    logout,
+    getBusinessStartUpInvestmentInformation, 
+    getCountryShortCode, 
+    changeVisibility, 
+    saveChanges, 
+    getNecessaryCapitalInformation, 
+    saveState, getSelectedPlanOverview, 
+    recalculateInvestment, 
+    discardChanges,
+    getTooltips 
+})(BusinessInvestmentsWindow);

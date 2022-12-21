@@ -12,6 +12,7 @@ import EditCostModal from "../components/cost_structure/EditCostModal"
 import AddCostModal from "../components/cost_structure/AddCostModal";
 import { logout } from '../../appStore/actions/authenticationActions';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import { getTooltips } from '../../appStore/actions/tooltipsAction';
 import TooltipComponent from "../components/Tooltip";
 import TextHelper from '../components/TextHelper';
 import Cookies from 'js-cookie';
@@ -159,7 +160,7 @@ class CostStructure extends React.Component {
                         this.props.getCostStructureList(this.props.businessPlan.id, () => {
                             this.props.getCategories();
                         });
-
+                        this.props.getTooltips();
                     });
                 }
             } else {
@@ -343,4 +344,16 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview,logout, deleteFixedCost, deleteVariableCost, getCategories, getCostStructureList, refreshPlan, saveState, selectCostCategory, getCostStructureAIValues })(CostStructure);
+export default connect(mapStateToProps, { 
+    getSelectedPlanOverview,
+    logout, 
+    deleteFixedCost, 
+    deleteVariableCost, 
+    getCategories, 
+    getCostStructureList, 
+    refreshPlan, 
+    saveState, 
+    selectCostCategory, 
+    getCostStructureAIValues,
+    getTooltips 
+})(CostStructure);

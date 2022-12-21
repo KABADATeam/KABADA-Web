@@ -89,8 +89,6 @@ class ProductComponent extends React.Component {
                 ),
             }
         ];
-
-        console.log('Data:' + JSON.stringify('Data:' + JSON.stringify(this.props.data)))
         return (
             <>
                 <Col offset={2} span={20}>

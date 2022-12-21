@@ -10,6 +10,7 @@ import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getChannelTypes, getChannels, deleteChannel, saveState, getAIChannelsPredict } from "../../appStore/actions/channelActions";
 import { getProducts } from "../../appStore/actions/productActions";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
+import { getTooltips } from '../../appStore/actions/tooltipsAction';
 import { logout } from '../../appStore/actions/authenticationActions';
 import TooltipComponent from "../components/Tooltip";
 import TextHelper from '../components/TextHelper';
@@ -124,6 +125,7 @@ class Channels extends React.Component {
                         this.props.getChannelTypes();
                         this.props.getChannels(this.props.businessPlan.id);
                         this.props.getProducts(this.props.businessPlan.id);
+                        this.props.getTooltips();
                     });
                 }
             } else {
@@ -268,4 +270,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { logout, getChannelTypes, getProducts, getChannels, deleteChannel, saveState, refreshPlan, getSelectedPlanOverview, getAIChannelsPredict })(withRouter(Channels));
+export default connect(mapStateToProps, { logout, getChannelTypes, getProducts, getChannels, deleteChannel, saveState, refreshPlan, getSelectedPlanOverview, getAIChannelsPredict, getTooltips })(withRouter(Channels));

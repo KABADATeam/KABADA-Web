@@ -11,6 +11,7 @@ import AddCustomerRelationshipModal from '../components/customer_relationships/A
 import EditCustomerRelationshipModal from '../components/customer_relationships/EditCustomerRelationshipModal';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
+import { getTooltips } from '../../appStore/actions/tooltipsAction';
 import TooltipComponent from '../components/Tooltip';
 import TextHelper from '../components/TextHelper';
 import Cookies from 'js-cookie';
@@ -204,6 +205,7 @@ class CustomerRelationships extends React.Component {
                     this.props.refreshPlan(localStorage.getItem("plan"), () => {
                         this.props.getCustomerRelationshipsCategories();
                         this.props.getCustomerRelationships(this.props.businessPlan.id);
+                        this.props.getTooltips();
                     });
                 }
             } else {
@@ -448,4 +450,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, logout, getCustomerRelationshipsCategories, getCustomerRelationships, refreshPlan, saveState, selectRelationshipCategory, deleteCustomerRelationship, getAICustomerRelationshipsPredict })(withRouter(CustomerRelationships));
+export default connect(mapStateToProps, { getSelectedPlanOverview, logout, getCustomerRelationshipsCategories, getCustomerRelationships, refreshPlan, saveState, selectRelationshipCategory, deleteCustomerRelationship, getAICustomerRelationshipsPredict, getTooltips })(withRouter(CustomerRelationships));

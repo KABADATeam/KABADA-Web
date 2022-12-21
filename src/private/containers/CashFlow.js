@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getCashFlow } from "../../appStore/actions/cashFlowAction"
 import { logout } from '../../appStore/actions/authenticationActions';
+import { getTooltips } from '../../appStore/actions/tooltipsAction';
 import { tableTitleStyle } from '../../styles/customStyles';
 import TooltipComponent from '../components/Tooltip';
 import Cookies from 'js-cookie';
@@ -59,6 +60,7 @@ class CashFlow extends React.Component {
                     this.props.refreshPlan(localStorage.getItem("plan"), () => {
                         this.props.getCashFlow(this.props.businessPlan.id);
                     });
+                    this.props.getTooltips();
                 }
             } else {
                 this.props.getCashFlow(this.props.businessPlan.id);
@@ -69,12 +71,8 @@ class CashFlow extends React.Component {
 
     }
     render() {
-        console.log(this.props.cashFlowData)
-
         const months = this.props.cashFlowData.tableColumns;
         const data = this.props.cashFlowData.dataForTable;
-
-        console.log("data {0}", months)
 
         const renderContent = (value, row, index) => {
             const obj = {
@@ -230,4 +228,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { refreshPlan, getCashFlow,logout })(CashFlow);
+export default connect(mapStateToProps, { refreshPlan, getCashFlow,logout, getTooltips })(CashFlow);

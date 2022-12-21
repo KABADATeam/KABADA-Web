@@ -9,7 +9,6 @@ export const getAssets = (planId) => {
         try {
             const token = getState().user.access_token;
             const defaultVATValue = getState().vat.defaultVAT;
-            console.log(defaultVATValue);
             const response = await kabadaAPI.get('api/kres/assets/' + planId, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: "FETCHING_ASSETS_SUCCESS", payload: {data: response.data, defaultVAT: defaultVATValue} });
         } catch (error) {

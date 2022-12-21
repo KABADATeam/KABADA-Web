@@ -13,6 +13,7 @@ import UnsavedChangesHeader from '../components/UnsavedChangesHeader';
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
 import { conditionalExpression } from '@babel/types';
+import { getTooltips } from '../../appStore/actions/tooltipsAction';
 import TooltipComponent from '../components/Tooltip';
 import TextHelper from '../components/TextHelper';
 import '../../css/Assets.css';
@@ -98,15 +99,14 @@ class AssetsWindow extends React.Component {
                     this.props.history.push(`/`);
                 } else {
                     this.props.refreshPlan(localStorage.getItem("plan"), () => {
-                        console.log(this.props.businessPlan.countryShortCode);
                         this.props.getCountryVats(this.props.businessPlan.countryShortCode, () => {
                             this.props.getAssets(this.props.businessPlan.id);
                         });
                         //this.props.getAssets(this.props.businessPlan.id);
+                        this.props.getTooltips();
                     });
                 }
             } else {
-                console.log(this.props.businessPlan.countryShortCode);
                 // this.props.getCountryVats(this.props.businessPlan.countryShortCode);
                 // this.props.getAssets(this.props.businessPlan.id);
                 this.props.getCountryVats(this.props.businessPlan.countryShortCode, () => {
@@ -121,9 +121,6 @@ class AssetsWindow extends React.Component {
     }
 
     render() {
-        console.log(this.props.assets)
-        console.log(this.props.vat);
-        console.log(this.props.businessPlan.countryShortCode);
         const isVisibleHeader = this.getUpdatesWindowState();
         const vatOptions = this.props.vat.vat.map((v, index) => (
             <Option value={v.vatValue} key={index}>{v.vatValue + "%"}</Option>
@@ -325,4 +322,17 @@ const mapStateToProps = (state) => {
         assets: state.assets,
     };
 }
-export default connect(mapStateToProps, { refreshPlan, logout, getAssets, saveChanges, discardChanges, getCountryShortCode, getCountryVats, saveState, getSelectedPlanOverview, updateAssetsItemVat, updateAssetsItemAmount })(AssetsWindow);
+export default connect(mapStateToProps, { 
+    refreshPlan, 
+    logout, 
+    getAssets, 
+    saveChanges, 
+    discardChanges, 
+    getCountryShortCode, 
+    getCountryVats, 
+    saveState, 
+    getSelectedPlanOverview, 
+    updateAssetsItemVat, 
+    updateAssetsItemAmount,
+    getTooltips 
+})(AssetsWindow);

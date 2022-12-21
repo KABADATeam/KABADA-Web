@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Typography, Space, Card, Checkbox } from 'antd';
 import { cardStyle, tableCardBodyStyle } from '../../../styles/customStyles';
 import { setProductFeatures, getProduct, getProductFeatures } from "../../../appStore/actions/productActions";
+import TooltipComponent from "../Tooltip";
 import { thisExpression } from '@babel/types';
 
 const { Text } = Typography;
@@ -71,7 +72,7 @@ class EditProductFeaturesComponent extends Component {
             <>
                 <Card style={{ ...cardStyle, padding: 20 }} bodyStyle={{ ...tableCardBodyStyle, padding: 0 }}>
                     <Space direction="vertical">
-                        <Text style={infoTextStyle}>Product features</Text>
+                        <Text style={infoTextStyle}>Product features<TooltipComponent code="vpnp3" type="text" /></Text>
                         <Text style={descriptionTextStyle}>Up to 9 of mixed characteristics</Text>
                         <Checkbox.Group onChange={this.onChange} value={productFeaturesValues}>
                             <Space direction="vertical">

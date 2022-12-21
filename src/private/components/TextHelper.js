@@ -28,7 +28,6 @@ class TextHelper extends Component {
     render() {
         const { code, type } = this.props;
         const title = this.title(this.props.tooltips.tooltips, code);
-        console.log(this.props.tooltips);
         if (title !== undefined) {
             if (type === 'lefttext' && title.tooltip !== null) {
                 return (

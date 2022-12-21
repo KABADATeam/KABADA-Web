@@ -10,6 +10,7 @@ import { getSwotList, discardChanges, saveChanges, saveState, getSwotAI } from "
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
+import { getTooltips } from '../../appStore/actions/tooltipsAction';
 import Cookies from 'js-cookie';
 import TooltipComponent from '../components/Tooltip';
 import TextHelper from '../components/TextHelper';
@@ -184,6 +185,7 @@ class SwotWindow extends React.Component {
                         };
                         this.props.getSwotAI(postObj);
                     });
+                    this.props.getTooltips();
                 }
             } else {
                 this.props.getSwotList(this.props.businessPlan.id, () => {
@@ -306,4 +308,14 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getSwotList, discardChanges, saveChanges, saveState, refreshPlan,logout, getSwotAI })(withRouter(SwotWindow));
+export default connect(mapStateToProps, { 
+    getSelectedPlanOverview, 
+    getSwotList, 
+    discardChanges, 
+    saveChanges, 
+    saveState, 
+    refreshPlan,
+    logout, 
+    getSwotAI,
+    getTooltips 
+})(withRouter(SwotWindow));

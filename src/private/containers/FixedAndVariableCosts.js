@@ -12,6 +12,7 @@ import { getCountryVat } from '../../appStore/actions/vatsActions'
 import { getCountryShortCode } from '../../appStore/actions/countriesActions'
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
+import { getTooltips } from '../../appStore/actions/tooltipsAction';
 import '../../css/FixedAndVarStyles.css'
 import TooltipComponent from '../components/Tooltip';
 import TextHelper from '../components/TextHelper';
@@ -210,7 +211,7 @@ class FixedAndVariableCosts extends React.Component {
 
                         });
                         this.monthsSet();
-
+                       this.props.getTooltips(); 
                     });
                 }
             } else {
@@ -539,4 +540,19 @@ const mapStateToProps = (state) => {
 }
 //connect function connect react component to redux store
 //the functions it can use to dispatch actions to the store.
-export default connect(mapStateToProps, { getSelectedPlanOverview, updateFixedCosts, updateVariableCosts, getCountryShortCode, getFinancialProjectionsCosts, getCountryVat, updateFixedAndVarCosts, saveState, refreshPlan, logout, discardChanges,setItemsForSave,getWindowsState })(withRouter(FixedAndVariableCosts));
+export default connect(mapStateToProps, { 
+    getSelectedPlanOverview, 
+    updateFixedCosts, 
+    updateVariableCosts, 
+    getCountryShortCode, 
+    getFinancialProjectionsCosts, 
+    getCountryVat, 
+    updateFixedAndVarCosts, 
+    saveState, 
+    refreshPlan, 
+    logout, 
+    discardChanges,
+    setItemsForSave,
+    getWindowsState,
+    getTooltips 
+})(withRouter(FixedAndVariableCosts));

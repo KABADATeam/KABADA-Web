@@ -10,6 +10,7 @@ import { tableCardStyle } from '../../styles/customStyles'
 import KeyPartnersPopUp from '../components/personal_characteristics/KeyPartnersPopUp';
 import { getPersonalCharacteristics, savePersonalCharacteristics } from '../../appStore/actions/personalCharacteristicsActions';
 import { logout } from '../../appStore/actions/authenticationActions';
+import { getTooltips } from '../../appStore/actions/tooltipsAction';
 import TooltipComponent from '../components/Tooltip';
 import Cookies from 'js-cookie';
 
@@ -599,6 +600,7 @@ class PersonalCharacteristics extends React.Component {
                         this.props.getPersonalCharacteristics(this.props.businessPlan.id, () => {
                             this.setQuestionsAnswers();
                         });
+                        this.props.getTooltips();
                     });
                 }
             } else {
@@ -789,4 +791,11 @@ const mapStateToProps = (state) => {
     }
 }
 //to connect passing mapStateToProps and all actions that we will be dispatching
-export default connect(mapStateToProps, { getSelectedPlanOverview, getPersonalCharacteristics, savePersonalCharacteristics, logout, refreshPlan })(withRouter(PersonalCharacteristics));
+export default connect(mapStateToProps, { 
+    getSelectedPlanOverview, 
+    getPersonalCharacteristics, 
+    savePersonalCharacteristics, 
+    logout, 
+    refreshPlan,
+    getTooltips 
+})(withRouter(PersonalCharacteristics));

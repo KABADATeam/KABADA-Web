@@ -11,6 +11,7 @@ import { getPartners, getPartnersCategories, selectCategory, deleteDistributor, 
 import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
+import { getTooltips } from '../../appStore/actions/tooltipsAction';
 import TooltipComponent from "../components/Tooltip";
 import TextHelper from '../components/TextHelper';
 import Cookies from 'js-cookie';
@@ -221,6 +222,7 @@ class KeyPartners extends React.Component {
                         this.props.getPartners(this.props.businessPlan.id);
                         this.props.getPartnersCategories();
                     });
+                    this.props.getTooltips();
                 }
             } else {
                 this.props.getPartners(this.props.businessPlan.id);
@@ -447,4 +449,17 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, getPartners, getPartnersCategories, selectCategory, deleteDistributor, deleteSupplier, deleteOther, saveState, refreshPlan, logout, getKeyPartnersAIPredict })(withRouter(KeyPartners));
+export default connect(mapStateToProps, { 
+    getSelectedPlanOverview, 
+    getPartners, 
+    getPartnersCategories, 
+    selectCategory, 
+    deleteDistributor, 
+    deleteSupplier, 
+    deleteOther, 
+    saveState, 
+    refreshPlan, 
+    logout, 
+    getKeyPartnersAIPredict, 
+    getTooltips 
+})(withRouter(KeyPartners));

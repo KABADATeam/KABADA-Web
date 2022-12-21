@@ -14,6 +14,7 @@ import { refreshPlan } from "../../appStore/actions/refreshAction";
 import { getCustomerSegmentProperties, getCustomerSegments, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState, getAIValues } from "../../appStore/actions/customerSegmentAction";
 import { getSelectedPlanOverview } from "../../appStore/actions/planActions";
 import { logout } from '../../appStore/actions/authenticationActions';
+import { getTooltips } from '../../appStore/actions/tooltipsAction';
 import TooltipComponent from "../components/Tooltip";
 import TextHelper from '../components/TextHelper';
 import Cookies from 'js-cookie';
@@ -186,6 +187,7 @@ class CustomerSegments extends React.Component {
                     this.props.refreshPlan(localStorage.getItem("plan"), () => {
                         this.props.getCustomerSegmentProperties();
                         this.props.getCustomerSegments(this.props.businessPlan.id);
+                        this.props.getTooltips();
                     });
                 }
             } else {
@@ -448,4 +450,4 @@ const mapStateToProps = (state) => {
     };
 }
 
-export default connect(mapStateToProps, { getSelectedPlanOverview, logout, getCustomerSegmentProperties, getCustomerSegments, refreshPlan, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState, getAIValues })(withRouter(CustomerSegments));
+export default connect(mapStateToProps, { getSelectedPlanOverview, logout, getCustomerSegmentProperties, getCustomerSegments, refreshPlan, deleteConsumerSegment, deleteBusinessSegment, deleteNgoSegment, saveState, getAIValues, getTooltips })(withRouter(CustomerSegments));

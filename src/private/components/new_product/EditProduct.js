@@ -10,6 +10,7 @@ import EditProductInfoComponent from './EditProductInfoComponent';
 import EditPriceLevelComponent from './EditPriceLevelComponent';
 import EditProductFeaturesComponent from './EditProductFeaturesComponent';
 import { refreshPlan } from "../../../appStore/actions/refreshAction";
+import { getTooltips } from '../../../appStore/actions/tooltipsAction';
 import { getProduct, getProducts, getProductTypes, getProductPriceLevels, getAditionalIncomeSources, getProductFeatures, 
     updateProduct, getInnovativeLevels, getQualityLevels, getDifferentiationLevels, discardChanges, resetProducState,
     getValuePropositionAIPredict } from "../../../appStore/actions/productActions";
@@ -273,7 +274,7 @@ class EditProduct extends React.Component {
                         this.props.getQualityLevels();
                         this.props.getDifferentiationLevels();
                     }
-
+                    this.props.getTooltips();
                 }
             } else {
                 const productId = localStorage.getItem('product-id')
@@ -416,5 +417,6 @@ export default connect(mapStateToProps,
         discardChanges, 
         refreshPlan,
         getValuePropositionAIPredict, 
-        resetProducState
+        resetProducState,
+        getTooltips
     })(EditProduct);
