@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter as Router, Route, Switch } from 'react-router-dom';
+import { HashRouter as Router, BrowserRouter, Route, Switch } from 'react-router-dom';
 import ResetPassword from './components/ResetPassword';
 import SetPassword from './components/SetPassword';
 import Register from './components/Register';
@@ -11,7 +11,7 @@ import Login from './components/Login';
 class PublicApp extends React.Component {
     render() {
         return (
-            <Router>
+            <BrowserRouter>
                 <Switch>
                     <Route exact path="/login" render={(props) => <AuthenticationWindow> <Login /> </AuthenticationWindow> } /> 
                     <Route exact path="/" render={(props) => <HomeWindow /> } />
@@ -20,7 +20,7 @@ class PublicApp extends React.Component {
                     <Route exact path="/set-password" render={(props) => <AuthenticationWindow> <SetPassword /> </AuthenticationWindow> } />
                     <Route exact path="/register" render={(props) => <AuthenticationWindow> <Register /> </AuthenticationWindow> }/>
                 </Switch>
-            </Router>
+            </BrowserRouter>
            
         )
     }

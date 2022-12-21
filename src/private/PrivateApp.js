@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter as Router, Route, Switch } from 'react-router-dom';
+import { HashRouter as Router, BrowserRouter, Route, Switch } from 'react-router-dom';
 import SiteHeader from './containers/SiteHeader';
 import MainWindow from './containers/MainWindow';
 import PublicBusinessPlans from './containers/PublicBusinessPlans';
@@ -47,14 +47,15 @@ import Home from '../public/components/Home';
 class PrivateApp extends React.Component {
     constructor(props) {
         super(props);
-        if (window.location.hash === '#/login') {
-            window.location.replace("#/");
+        if (window.location.pathname === '/login') {
+            window.location.replace("/");
         }
     }
 
     render() {
+        console.log(window.location)
         return (
-            <Router>
+            <BrowserRouter>
                 <SiteHeader />
 
                 <Switch>
@@ -98,7 +99,7 @@ class PrivateApp extends React.Component {
                     <Route exact path="/assets" render={(props) => <MainWindow {...props}> <Assets {...props} /> </MainWindow>} />
                     <Route exact path="/personal-characteristics" render={(props) => <MainWindow {...props}> <PersonalCharacteristics {...props} /> </MainWindow>} />
                 </Switch>
-            </Router>
+            </BrowserRouter>
 
         )
     }
