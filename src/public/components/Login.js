@@ -5,6 +5,7 @@ import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login";
 import { connect } from 'react-redux';
 import { login, googleLogin, facebookLogin } from '../../appStore/actions/authenticationActions';
+import { setMessage } from "../../appStore/actions/messageActions";
 import { withRouter } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import '../../css/customButtons.css';
@@ -58,7 +59,9 @@ class Login extends React.Component {
 		//this.setState({ submited: true });
 		this.props.login(values.username, values.password);
 	};
-
+	componentDidMount(){
+		this.props.setMessage();
+	}
 	render() {
 		console.log(this.props)
 		return (
@@ -191,4 +194,4 @@ const mapStateToProps = (state) => {
 	};
 }
 
-export default connect(mapStateToProps, { login, googleLogin, facebookLogin })(withRouter(Login));
+export default connect(mapStateToProps, { login, googleLogin, facebookLogin, setMessage })(withRouter(Login));
