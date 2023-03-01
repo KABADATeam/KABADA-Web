@@ -297,6 +297,7 @@ class Overview extends React.Component {
         })
     }
     componentDidMount() {
+        window.scrollTo(0,0);
         if (Cookies.get('access_token') !== undefined && Cookies.get('access_token') !== null) {
             if (this.props.businessPlan.id === null) {
                 if (localStorage.getItem("plan") === undefined || localStorage.getItem("plan") === null) {
