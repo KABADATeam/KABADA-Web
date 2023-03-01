@@ -24,10 +24,10 @@ export const salesForecastReducer = (
 
         case 'FETCHING_SALES_FORECASR_SUCCESS':
             //console.log('Reducer gauna:' + JSON.stringify(action.payload));
-            const produktai = action.payload.products;
+            const products = action.payload.products;
             console.log(JSON.stringify(action.payload) + " just one")
             const is_sales_forecast_completed = action.payload.is_sales_forecast_completed;
-            return { ...state, "products": produktai, "is_sales_forecast_completed": is_sales_forecast_completed };
+            return { ...state, "products": products, "is_sales_forecast_completed": is_sales_forecast_completed };
 
         case "UPDATE_SALES_FORECAST_SUCCESS":
             const prodoct = state.products;
@@ -46,7 +46,6 @@ export const salesForecastReducer = (
             })
             return { ...state, 'products': state.products };
         case "SAVE_STATE_SUCCESS":
-            console.log(action.payload + "Master")
             return { ...state, "is_sales_completed": action.payload };
 
         default:

@@ -1092,9 +1092,7 @@ class SalesForecast extends React.Component {
                                                                 <div style={{ marginRight: '40px', position: "absolute" }}>
                                                                     <Typography.Title className="about-Title-heading-Style">{x.name}</Typography.Title>
                                                                     <Typography.Text className="text-Style">
-                                                                        Product description Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
-                                                                        Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                                                                        You can add products at Value proposition
+                                                                        {x.description}
                                                                     </Typography.Text>
                                                                 </div>
                                                             </Col>
