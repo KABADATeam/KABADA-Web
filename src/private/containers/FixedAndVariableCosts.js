@@ -517,7 +517,7 @@ class FixedAndVariableCosts extends React.Component {
                 </Col>
 
                 {this.state.variablePopUp.visible !== false ?
-                    <VariableCostPopUp category_title={this.state.variablePopUp.category_title === null ? 'Yes' : this.state.variablePopUp.category_title}
+                    <VariableCostPopUp
                         visible={this.state.variablePopUp.visible} handleOk={this.handleOk} handleCancel={this.handleModalCancel} monthly_expenses={this.state.variablePopUp.values} record={this.state.variablePopUp.record}
                         businessPlanId={this.props.businessPlan.id} onVariableChange={this.onVariableChange} saveChanges={this.saveChanges} />
                     : null

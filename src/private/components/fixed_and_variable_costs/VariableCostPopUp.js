@@ -187,7 +187,7 @@ class VariableCostPopUp extends React.Component {
                         </div>
                     }
                 >
-                    <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
+                    {/* <Card size={'small'} style={{ ...tableCardStyle }} bodyStyle={{ ...tableCardBodyStyle }}>
                         <div style={{ display: 'flex' }}>
                             <Col span={12}>
                                 <div style={{ marginTop: 24, marginLeft: 16 }}>
@@ -209,14 +209,13 @@ class VariableCostPopUp extends React.Component {
                                 </div>
                             </Col>
                         </div>
-                    </Card>
-                    <div style={{ marginTop: "15px" }}></div>
+                    </Card> */}
                     <Table
                         rowKey="id"
                         columns={columns}
                         dataSource={this.state.data}
                         pagination={false}
-                        title={() => this.props.category_title}
+                        style={{marginTop: "15px"}}
                     />
                 </Modal>
             </>

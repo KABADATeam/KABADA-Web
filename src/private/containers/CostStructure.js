@@ -309,7 +309,7 @@ class CostStructure extends React.Component {
                 </Col>
 
                 {
-                    this.state.costNumber !== null && this.props.costs.ai_cost_structure_predict?
+                    this.state.costNumber !== null?
                         <CostCategoriesModal 
                             visibility={true}
                             number={this.state.fixedCostNumber}
