@@ -141,6 +141,7 @@ export const getProduct = (productId, callback) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/products/product/' + productId, { headers: { Authorization: `Bearer ${token}` } });
+            console.log('get product value prop',response.data);
             dispatch({ type: 'FETCHING_PRODUCT_SUCCESS', payload: response.data });
             if (callback !== null) {
                 callback(response.data);

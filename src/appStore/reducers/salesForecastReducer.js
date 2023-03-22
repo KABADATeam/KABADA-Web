@@ -11,6 +11,8 @@ export const salesForecastReducer = (
     }, action) => {
     switch (action.type) {
         case "FETCHING_SALES_PRODUCTS_SUCCESS":
+            const test = action.payload.products.map(obj => ({ ...obj, key: obj.id, Expoted: true }));
+            console.log('reducer', test);
             return { ...state, "productsTitles": action.payload.products.map(obj => ({ ...obj, key: obj.id, Expoted: true })) };
         case "SETING_PRODUCTS_SUCCESS":
             const productsTitles = state.products;

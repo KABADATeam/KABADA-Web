@@ -6,6 +6,7 @@ export const getProducts = (planId) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/products/' + planId, { headers: { Authorization: `Bearer ${token}` } });
+            console.log('get products',response.data);
             dispatch({ type: "FETCHING_SALES_PRODUCTS_SUCCESS", payload: response.data });
         } catch (error) {
             if (error.response === undefined) {
@@ -28,6 +29,7 @@ export const getProductByID = (id, callback) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/products/salesforecasts/' + id, { headers: { Authorization: `Bearer ${token}` } });
+            console.log('get product by id',response.data)
             dispatch({ type: "FETCHING_SALES_FORECASR_SUCCESS", payload: response.data });
             callback();
         } catch (error) {

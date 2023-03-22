@@ -20,13 +20,13 @@ export const getSurvivalRate = () => {
             const tableCode = queryData[0].tableCode;
             const variable = queryData[0].variable[0];
             try {
-                var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=" + activityCode);
+                var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=" + activityCode);
                 dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_EUROSTATDATA_SUCCESS', payload: {"data": response.data, "geoTitle": geoTitle, "industry": activityCode} });   
             } catch (error){
                 //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
             }
             try {
-                var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
+                var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
                 if(response.data.source === "Eurostat"){
                     dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_TOTAL_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: geoTitle } });
                 }  else {
@@ -35,7 +35,7 @@ export const getSurvivalRate = () => {
                 //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
             }
             try {
-                var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
+                var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
                 if(response.data.source === "Eurostat"){
                     dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_ALL_EUROPE_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: 'Europe' } });
                 } else {
@@ -52,13 +52,13 @@ export const getSurvivalRate = () => {
             const industryCode = queryData[0].industries[0];
             if (activityCode === 'C10' || activityCode === 'C11' || activityCode === 'C12') {
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=C10-C12");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=C10-C12");
                     dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_EUROSTATDATA_SUCCESS', payload: {"data": response.data, "geoTitle": geoTitle, "industry": 'C10-C12'} });   
                 } catch (error){
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
                     if(response.data.source === "Eurostat"){
                         dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_TOTAL_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: geoTitle } });
                     }  else {
@@ -67,7 +67,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
                     if(response.data.source === "Eurostat"){
                         dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_ALL_EUROPE_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: 'Europe' } });
                     } else {
@@ -79,13 +79,13 @@ export const getSurvivalRate = () => {
                 dispatch({ type: 'SURVIVAL_RATE_LOADING', payload: true})
             } else if (activityCode === 'C13' || activityCode === 'C14') {
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=C13_C14");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=C13_C14");
                     dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_EUROSTATDATA_SUCCESS', payload: {"data": response.data, "geoTitle": geoTitle, "industry": 'C13-C14'} });   
                 } catch (error){
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
                     if(response.data.source === "Eurostat"){
                         dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_TOTAL_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: geoTitle } });
                     }  else {
@@ -94,7 +94,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
                     console.log(response.data)
                     if(response.data.source === "Eurostat"){
                         dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_ALL_EUROPE_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: 'Europe' } });
@@ -107,13 +107,13 @@ export const getSurvivalRate = () => {
                 dispatch({ type: 'SURVIVAL_RATE_LOADING', payload: true})
             } else if (activityCode === 'C17' || activityCode === 'C18') {
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=C17_C18");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=C17_C18");
                     dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_EUROSTATDATA_SUCCESS', payload: {"data": response.data, "geoTitle": geoTitle, "industry": 'C17-C18'} });   
                 } catch (error){
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
                     if(response.data.source === "Eurostat"){                        
                         dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_TOTAL_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: geoTitle } });
                     }  else {
@@ -122,7 +122,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
                     if(response.data.source === "Eurostat"){
                         dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_ALL_EUROPE_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: 'Europe' } });
                     } else {
@@ -134,13 +134,13 @@ export const getSurvivalRate = () => {
                 dispatch({ type: 'SURVIVAL_RATE_LOADING', payload: true})
             } else if (activityCode === 'C20' || activityCode === 'C21') {
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=C20_C21");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=C20_C21");
                     dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_EUROSTATDATA_SUCCESS', payload: {"data": response.data, "geoTitle": geoTitle, "industry": 'C20-C21'} });   
                 } catch (error){
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
                     if(response.data.source === "Eurostat"){
                         dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_TOTAL_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: geoTitle } });
                     }  else {
@@ -149,7 +149,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
                     if(response.data.source === "Eurostat"){
                         dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_ALL_EUROPE_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: 'Europe' } });
                     } else {
@@ -161,13 +161,13 @@ export const getSurvivalRate = () => {
                 dispatch({ type: 'SURVIVAL_RATE_LOADING', payload: true})
             } else if (activityCode === 'C24' || activityCode === 'C25') {
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=C24_C25");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=C24_C25");
                     dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_EUROSTATDATA_SUCCESS', payload: {"data": response.data, "geoTitle": geoTitle, "industry": 'C24-C25'} });   
                 } catch (error){
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
                     if(response.data.source === "Eurostat"){
                         dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_TOTAL_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: geoTitle } });
                     }  else {
@@ -176,7 +176,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
                     if(response.data.source === "Eurostat"){
                         dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_ALL_EUROPE_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: 'Europe' } });
                     } else {
@@ -188,13 +188,13 @@ export const getSurvivalRate = () => {
                 dispatch({ type: 'SURVIVAL_RATE_LOADING', payload: true})
             } else if (activityCode === 'C26' || activityCode === 'C27') {
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=C26_C27");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=C26_C27");
                     dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_EUROSTATDATA_SUCCESS', payload: {"data": response.data, "geoTitle": geoTitle, "industry": 'C26-C27'} });   
                 } catch (error){
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
                     if(response.data.source === "Eurostat"){
                         dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_TOTAL_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: geoTitle } });
                     }  else {
@@ -203,7 +203,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
                     if(response.data.source === "Eurostat"){
                         dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_ALL_EUROPE_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: 'Europe' } });
                     } else {
@@ -215,13 +215,13 @@ export const getSurvivalRate = () => {
                 dispatch({ type: 'SURVIVAL_RATE_LOADING', payload: true})
             }else if (activityCode === 'C29' || activityCode === 'C30') {
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=C29_C30");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=C29_C30");
                     dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_EUROSTATDATA_SUCCESS', payload: {"data": response.data, "geoTitle": geoTitle, "industry": 'C29-C30'} });   
                 } catch (error){
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
                     if(response.data.source === "Eurostat"){
                         dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_TOTAL_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: geoTitle } });
                     }  else {
@@ -230,7 +230,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
                     if(response.data.source === "Eurostat"){
                         dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_ALL_EUROPE_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: 'Europe' } });
                     } else {
@@ -243,13 +243,13 @@ export const getSurvivalRate = () => {
             }
             else if (activityCode === 'C31' || activityCode === 'C32') {
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=C31_C32");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=C31_C32");
                     dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_EUROSTATDATA_SUCCESS', payload: {"data": response.data, "geoTitle": geoTitle, "industry": 'C31-C32'} });   
                 } catch (error){
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-S_X_K642");
                     if(response.data.source === "Eurostat"){
                         dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_TOTAL_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: geoTitle } });
                     }  else {
@@ -258,7 +258,7 @@ export const getSurvivalRate = () => {
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
                 }
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
+                    var response = await eurostatAPI.get(tableCode + "??format=JSON&lang=EN&sinceTimePeriod=2008&geo=EU27_2020&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=B-N_X_K642");
                     if(response.data.source === "Eurostat"){
                         dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_ALL_EUROPE_EUROSTATDATA_SUCCESS', payload: {data: response.data, geoTitle: 'Europe' } });
                     } else {
@@ -272,7 +272,7 @@ export const getSurvivalRate = () => {
             
             else {
                 try {
-                    var response = await eurostatAPI.get(tableCode + "?sinceTimePeriod=2008&precision=1&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=" + industryCode);
+                    var response = await eurostatAPI.get(tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2008&geo=" + geo + "&indic_sb=" + variable + "&sizeclas=TOTAL&nace_r2=" + industryCode);
                     dispatch({ type: 'FETCHING_SURVIVAL_RATE_FOR_COUNTRY_EUROSTATDATA_SUCCESS', payload: {"data": response.data, "geoTitle": geoTitle, "industry": industryCode} });   
                 } catch (error){
                     //dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });

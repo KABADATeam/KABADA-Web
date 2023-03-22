@@ -21,7 +21,7 @@ export const getEurostatData = () => {
 
             for (var variable of data.variables) {
                 try {
-                    var response = await eurostatAPI.get(data.tableCode + "?sinceTimePeriod=2010&precision=1&size_emp=TOTAL&geo=" + geo + "&indic_sb=" + variable + "&nace_r2=" + activityCode);
+                    var response = await eurostatAPI.get(data.tableCode + "?format=JSON&lang=EN&sinceTimePeriod=2010&size_emp=TOTAL&geo=" + geo + "&indic_sb=" + variable + "&nace_r2=" + activityCode);
                     dispatch({ type: 'FETCHING_EUROSTATDATA_SUCCESS', payload: response.data });   
                 } catch (error){
                     dispatch({ type: 'ERROR', payload: "Not all the data could be taken from the Eurostat" });
