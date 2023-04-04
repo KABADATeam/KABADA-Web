@@ -363,6 +363,7 @@ class Overview extends React.Component {
 
 
         const moreActionsMenu = (
+            this.props.userInf.email === "janis.hermanis@gmail.com" ? 
             <Menu >
                 <Menu.Item key="1">
                     <Popconfirm
@@ -378,11 +379,26 @@ class Overview extends React.Component {
                     <Text>Start AI training</Text>
                 </Menu.Item>
             </Menu>
+            :
+            <Menu >
+                <Menu.Item key="1">
+                    <Popconfirm
+                        title="Are you sure to delete this business plan?"
+                        onConfirm={this.onMoreActionsMenuClick}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <a href="#">Delete</a>
+                    </Popconfirm>
+                </Menu.Item>
+            </Menu>
+        
         );
 
         if (this.props.businessPlan.overview === undefined) {
             return (<div></div>)
         } else {
+        console.log('user info: ', this.props.userInf)
             return (
                 <>
                     <UnsavedChangesHeader
