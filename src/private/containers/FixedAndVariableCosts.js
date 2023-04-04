@@ -250,7 +250,7 @@ class FixedAndVariableCosts extends React.Component {
                 width: '25.3%'
             },
             {
-                title: 'Euro/mo. without Labor taxes',
+                title: 'Euro/mo. without VAT',
                 dataIndex: 'price',
                 width: '16.2%',
                 render: (text, record, index) => (
@@ -374,7 +374,7 @@ class FixedAndVariableCosts extends React.Component {
                 width: '33.5%'
             },
             {
-                title: 'Euro/mo. without Labor taxes',
+                title: 'Euro/mo. without VAT',
                 dataIndex: 'monthly_expenses',
                 width: '24%',
                 render: (text, record, index) => {
