@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col } from 'antd';
+import { Row, Col, Button } from 'antd';
 import KabadaIcon from '../../private/components/KabadaIcon';
 import '../../css/Home.css';
+import {buttonStyle} from '../../styles/customStyles';
 import HomeScreen from '../components/HomeScreen';
 
 const headerStyles = {
@@ -14,7 +15,12 @@ const headerStyles = {
 
 class SiteHeader extends React.Component {
 
-
+    onHowToUseKabada = () => {
+        window.open("https://kabada.eu/how-to-use-kabada/");
+    };
+    onLoginClick = () =>  {
+        <Link to='/login '/>
+    }
 
     render() {
         return (
@@ -27,11 +33,34 @@ class SiteHeader extends React.Component {
 
                     </Col>
                     <Col span={20} >
+                        {/* <Button
+                                type="text"
+                                onClick={() => this.onHowToUseKabada()}
+                                style={{...buttonStyle, cursor: 'pointer'}}
+                            >
+                                How To Use KABADA
+                        </Button> */}
+                        
                         <div style={{ float: 'right', marginRight: 24 }}>
-                            <Link to='/login'>
+                            {/* <Link to='/login'>
                                 <h4>Login</h4>
+                            </Link> */}
+                        <Button
+                                type="text"
+                                onClick={() => this.onHowToUseKabada()}
+                                style={{...buttonStyle, cursor: 'pointer'}}
+                            >
+                                How To Use KABADA
+                        </Button>
+                        <Button
+                                type="text"
+                                //onClick={() => this.onLoginClick()}
+                                style={{...buttonStyle, cursor: 'pointer'}}
+                            >
+                                <Link to='/login'>
+                                Login
                             </Link>
-
+                        </Button>
                         </div>
 
 

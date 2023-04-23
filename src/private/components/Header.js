@@ -39,6 +39,9 @@ class Header extends Component {
     onHomeClick() {
         this.props.history.push(`/`);
     }
+    onHowToUseKabada = () => {
+        window.open("https://kabada.eu/how-to-use-kabada/");
+    };
 
     render() {  
         const name = this.props.user.name === null || this.props.user.name === '' ? this.props.user.email.substring(0, this.props.user.email.indexOf("@")) : this.props.user.name;
@@ -63,7 +66,7 @@ class Header extends Component {
         return (
             <>
                 <Row style={headerStyles} align="middle">
-                    <Col span={12}>
+                    <Col span={10}>
                     <div style={{paddingLeft:24, display: 'flex', alignItems: 'center'}}>
                         <KabadaIcon onClick={() => this.onHomeClick()}/>
                         <Button 
@@ -83,8 +86,15 @@ class Header extends Component {
                     </div>
                         
                     </Col>
-                    <Col span={4} offset={8} >
+                    <Col span={7} offset={7} >
                         <div style={{float: 'right', marginRight: 24}}>
+                            <Button
+                                type="text"
+                                onClick={() => this.onHowToUseKabada()}
+                                style={{...buttonStyle, cursor: 'pointer'}}
+                            >
+                                How To Use KABADA
+                            </Button>
                             <Avatar size={32} icon={<UserOutlined />}/>
                             
                             <Dropdown overlay={menu} >
