@@ -48,7 +48,6 @@ export const saveActivity = (postObject, reducerObject) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.post('api/activities/save', postObject, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response.data)
             dispatch({ type: 'SAVE_KEY_ACTIVITY_SUCCESS', payload: { ...reducerObject, "id": response.data, "key": response.data } })
         } catch (error) {
             dispatch({ type: 'LOADING', payload: false })

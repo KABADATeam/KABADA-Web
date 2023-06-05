@@ -55,7 +55,6 @@ class InviteMemberModal extends Component {
 
 
     onEmailChange = (e) => {
-        console.log(this.props.businessPlan.members);
         if (this.props.businessPlan.members === null) {
             if (e.target.value !== this.props.user.email) {
                 this.setState({
@@ -102,8 +101,6 @@ class InviteMemberModal extends Component {
     }
 
     render() {
-        console.log(this.state);
-        console.log(invitationLink);
         return (
             <>
                 <Modal

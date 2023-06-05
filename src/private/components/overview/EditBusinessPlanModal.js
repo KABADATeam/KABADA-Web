@@ -87,9 +87,6 @@ class EditBusinessPlanModal extends Component {
     //         'countryId': values.country,
     //         'languageId': values.language,
     //     }
-    //     // console.log(values)
-    //     // console.log(postObject)
-    //     // console.log(reducerObject)
 
 
     //     if (Array.isArray(fileList) && fileList.length !== 0 && fileList[0].fileList.length !== 0) {
@@ -104,7 +101,6 @@ class EditBusinessPlanModal extends Component {
     //         this.props.uploadFile(formData)
     //             .then(
     //                 () => {
-    //                     console.log("image changed")
     //                     postObject = { ...postObject, 'Img': this.props.uploadedFile }
     //                     reducerObject = { ...reducerObject, 'planImage': this.props.uploadedFile }
     //                     this.props.updateImage(reducerObject);
@@ -113,7 +109,6 @@ class EditBusinessPlanModal extends Component {
     //                 });
     //     }
     //     else if (Array.isArray(fileList) && fileList.length !== 0 && fileList[0].file.status === 'removed') {
-    //         console.log("image deleted")
     //         postObject = { ...postObject, 'Img': '' }
     //         reducerObject = { ...reducerObject, 'planImage': '', 'coverImage': null }
     //         if (this.props.updatingPlan.planImage !== null || this.props.updatingPlan.planImage !== undefined) {
@@ -123,7 +118,6 @@ class EditBusinessPlanModal extends Component {
     //         this.props.onClose();
     //     }
     //     else if (Array.isArray(fileList) && fileList.length === 0) {
-    //         console.log("image unchanged")
     //         postObject = { ...postObject, 'Img': this.props.updatingPlan.planImage }
     //         reducerObject = { ...reducerObject, 'planImage': this.props.updatingPlan.planImage }
     //         this.props.updatePlanData(postObject, reducerObject)
@@ -174,7 +168,6 @@ class EditBusinessPlanModal extends Component {
         const { fileList } = this.state;
         const formData = new FormData();
         const activityCode = this.getActivityCode(this.props.nace, values.activity);
-        console.log(activityCode);
         let postObject = {
             "Id": this.props.updatingPlan.id,
             'Title': values.name,
@@ -470,7 +463,6 @@ class EditBusinessPlanModal extends Component {
                                     {
                                         validator: async (_, value) => {
                                             if (!value || value.length < 1) {
-                                                console.log(value)
                                                 return Promise.reject(new Error('Select language of bussines plan'));
                                             }
                                         },

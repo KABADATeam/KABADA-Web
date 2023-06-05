@@ -48,11 +48,9 @@ class Login extends React.Component {
 	};
 
 	responseFailGoogle = (response) => {
-		//console.log(response);
 	};
 
 	responseFacebook = (response) => {
-		console.log(response)
 		this.props.facebookLogin(response.email,response.accessToken);
 	};
 	onFinish = (values) => {
@@ -63,7 +61,6 @@ class Login extends React.Component {
 		this.props.setMessage();
 	}
 	render() {
-		console.log(this.props)
 		return (
 			<>
 			<Card style={cardStyle} bodyStyle={{ padding: "0" }}>

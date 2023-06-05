@@ -106,7 +106,6 @@ class VariableCostPopUp extends React.Component {
             } else if (this.props.monthly_expenses.length === 12 || this.props.monthly_expenses.length === 24) {
                 //this.props.monthly_expenses.length
                 for (var i = 0; i < 12; i++) {
-                    // console.log('Monthly expenses at index' + i + ' ,and element is:' + this.props.monthly_expenses[i])
                     duom.push({ id: i + 1, month: i + 1, price: this.props.monthly_expenses[i] })
                 }
             }

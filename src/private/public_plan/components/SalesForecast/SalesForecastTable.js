@@ -5,7 +5,6 @@ import TooltipComponent from '../../../components/Tooltip';
 const { Text } = Typography;
 
 function SalesForecastTable({ columns, dataSource, title }) {
-    console.log(title);
     if (title === 'Sales forecast in EU') {
         return (
             <div>

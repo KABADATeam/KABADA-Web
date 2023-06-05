@@ -35,7 +35,6 @@ class PublicBusinessPlans extends React.Component {
     }
 
     onFinish = (values) => {
-        console.log(values);
 
     };
 
@@ -72,7 +71,6 @@ class PublicBusinessPlans extends React.Component {
                     }
                 }
                 if (key === "industry" || key === "name" || key === "country") {
-                    //console.log(`key=${key}  value=${changedValues[key]}`)
                     filteredData = filteredData.filter(item => {
                         return (
                             item[key].toLowerCase().indexOf(changedValues[key].toLowerCase()) >= 0
@@ -96,8 +94,6 @@ class PublicBusinessPlans extends React.Component {
     }
 
     downloadDOCFile = () => {
-        console.log(this.state.selectedPlan);
-        console.log('downloadDoc')
         this.props.downloadPDFFile(this.state.selectedPlan.id, this.state.selectedPlan.name);
     }
 
@@ -127,7 +123,6 @@ class PublicBusinessPlans extends React.Component {
                 </Menu.Item>
             </Menu>
         );
-        console.log(this.state.selectedPlan);
         const columns = [
             {
                 title: 'Name',

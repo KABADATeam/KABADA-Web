@@ -50,7 +50,6 @@ export const saveChanges = (planId, callback) => {
                 investment_amount: dataToObj.investment_amount,
                 working_capitals: dataToObj.temporary.working_capital === null ? null : dataToObj.updates.working_capital,
             }
-            console.log(postObject)
             await kabadaAPI.post('/api/kres/investment/update', postObject, { headers: { Authorization: `Bearer ${token}` } });
             if (callback !== null) {
                 callback();
@@ -87,7 +86,6 @@ export const recalculateInvestment = (planId, callback) => {
                 investment_amount: dataToObj.investment_amount,
                 working_capitals: dataToObj.updates.working_capital
             }
-            console.log(postObject);
             await kabadaAPI.post('/api/plans/investmentSaveRecalc', postObject, { headers: { Authorization: `Bearer ${token}` } });
             if (callback !== null) {
                 callback();
@@ -187,7 +185,6 @@ export const saveState = (planId, is_completed, callback) => {
         try {
             const token = getState().user.access_token;
             await kabadaAPI.post('/api/plans/changeBusinessInvestmentsCompleted', { "business_plan_id": planId, "is_business_investments_completed": is_completed }, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(is_completed);
             dispatch({ type: 'SAVE_STATE_SUCCESS', payload: is_completed });
             callback();
         } finally {
@@ -198,7 +195,6 @@ export const saveState = (planId, is_completed, callback) => {
 export const discardChanges = (callback) => {
     return async (dispatch, getState) => {
         try {
-            console.log('test');
             dispatch({ type: 'DISCARD_INVESTMENTS_CHANGES_SUCCESS', payload: {} });
             callback();
         } catch (error) {
@@ -212,7 +208,6 @@ export const updateWorkingCapitalMyMoney = (value, record) => {
     return async (dispatch, getState) => {
         try {
             const my_money_value = Number(value);
-            console.log(value);
             dispatch({ type: 'UPDATE_WORKING_CAPITAL_ITEM_MY_MONEY', payload: {"value": my_money_value, "record": record}})
         } catch (error) {
             dispatch({ type: 'ERROR', payload: errorHandler(error)})

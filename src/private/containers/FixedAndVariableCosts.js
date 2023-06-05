@@ -236,8 +236,6 @@ class FixedAndVariableCosts extends React.Component {
 
 
     render() {
-        // console.log(this.state.variable);
-        // console.log(this.state.fixed);
         const fixed_costs_columns = [
             {
                 title: 'Type',

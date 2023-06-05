@@ -122,7 +122,6 @@ class EditConsumerSegmentModal extends Component {
                 }
             }
         }
-        console.log(resultArray)
         return resultArray;
     }
 

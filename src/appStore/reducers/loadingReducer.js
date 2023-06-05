@@ -38,45 +38,38 @@ export const chartsLoadingReducer = (
     }, action) => {
     switch (action.type) {
         case 'SURVIVAL_RATE_LOADING':
-            console.log(action.payload);
             return {
                 ...state,
                 "survival_rate": action.payload
             }
         case 'GREATNESS_INDUSTRY_LOADING':
-            console.log(action.payload);
             return {
                 ...state,
                 "greatness_industry": action.payload
             }
         case 'COSTS_PRODUCTIVITY_INDUSTRY_LOADING':
-            console.log(action.payload);
             return {
                 ...state,
                 "costs_productivity": action.payload
             }
         case 'COMPANY_SIZE_LOADING':
-            console.log(action.payload);
             return {
                 ...state,
                 "company_size": action.payload
             }
         case 'SURVIVAL_RATE_ERROR':
-            console.log(action.payload);
             return {
                 ...state,
                 "survival_rate": action.payload.state,
                 "survival_error": action.payload.error
             }
         case 'COMPANY_SIZE_ERROR':
-            console.log(action.payload);
             return {
                 ...state,
                 "company_size": action.payload.state,
                 "company_size_error": action.payload.error
             }
         case 'GREATNESS_INDUSTRY_ERROR':
-            console.log(action.payload);
             return {
                 ...state,
                 "greatness_industry": action.payload.state,

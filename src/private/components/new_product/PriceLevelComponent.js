@@ -64,7 +64,6 @@ class PriceLevelComponent extends Component {
         
     }
     getClassName = (obj) => {
-        console.log(obj)
         if(obj.tag === 0) {
             const className = "simplecolor .ant-select-selector"
             return className

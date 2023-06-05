@@ -212,12 +212,6 @@ class EditKeyResourceModal extends Component {
         }
     }
     componentDidMount() {
-        console.log('Selected item id:' + this.state.selectedItemId + 'props id:' + this.props.resource.type_id)
-        // if(this.state.selectedItemId === null){
-        //     this.setState({
-        //         selectedItemId: this.props.resource.type_id
-        //     }, () => console.log('Selected item id set to:'+this.state.selectedItemId))
-        // }
 
         // if options length is only 2 then its raw material selected
         if (this.props.resource.selections[0].options.length === 2) {
@@ -237,7 +231,6 @@ class EditKeyResourceModal extends Component {
                 // if we are editing Physical or Intelectual recourses. which structure is basically same
                 // if selected ownership type is Buy or Own we have to disable Frequencies
                 if (this.props.resource.selections[0].options[1].selected === true || this.props.resource.selections[0].options[2].selected === true) {
-                    console.log('Disable')
                     this.setState({
                         disable: true
                     })

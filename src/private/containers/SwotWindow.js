@@ -100,13 +100,8 @@ class SwotWindow extends React.Component {
         // var equals = modified.length === original.length && modified.every((e, i) => e.id === original[i].id && e.value === original[i].value);
 
         // }
-
-        // console.log('are equal or not:'+equals)
         // for (var i = 0; i < modified.length; i++) {
-        //     console.log('fuck')
         //     if (original[i].value !== modified[i].value) {
-        //         console.log('original item value NOT equals' + JSON.stringify(original[i]))
-        //         console.log('modified item value NOT equals' + JSON.stringify(modified[i]))
         //         return false;
                 
         //     } 
@@ -129,8 +124,6 @@ class SwotWindow extends React.Component {
                 return 'visible'
             }
         }
-        // console.log(JSON.stringify(this.props.swot.original_updates.strengths))
-        // console.log(JSON.stringify(this.props.swot.updates.strengths))
         // const originalStrengths = JSON.stringify(this.props.swot.original_updates.strengths)
         // const modifiedStrengths = JSON.stringify(this.props.swot.updates.strengths)
         // const originalOpportunities = JSON.stringify(this.props.swot.original_updates.opportunities)

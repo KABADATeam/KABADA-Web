@@ -16,7 +16,6 @@ export const financialProjectionsReducer = (
         case 'FETCHING_INVESTMENT_SUCCESS':
             return { ...state, "period": action.payload.period, "payment_period": action.payload.payment_period }
         case 'FETCHING_FINANCIAL_PROJECTION_SUCCESS':
-            console.log('fixed_costs'+JSON.stringify(action.payload))
             // console.log('variable_costs'+JSON.stringify(fixed_costs))
             const fixed_costs = action.payload.fixed ? action.payload.fixed.map(obj => ({ ...obj, "key": obj.category_id })):[];
             const variable_costs = action.payload.variable?action.payload.variable.map(obj => ({ ...obj, "key": obj.category_id })):[];

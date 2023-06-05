@@ -17,10 +17,7 @@ class WorkingCapitalScenario2 extends React.Component {
     }
 
     dataWorkingCapitalTest = (data) => {
-        const newMonthsArray = []
-        console.log(data.original.grace_period_short);
-        console.log(data.original.working_capital);
-        console.log(this.props.totalNecessary);
+        const newMonthsArray = [];
         if (data.original.grace_period_short > 0 && data.original.working_capital === null) {
             const objUnique = {
                 month: 'Startup',

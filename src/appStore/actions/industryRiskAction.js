@@ -29,8 +29,6 @@ export const getSelectedPlanActiveKey = (planId, callback) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.post("api/plans/fetch", { "Id": planId }, { headers: { Authorization: `Bearer ${token}` } });
-
-            console.log(response.data.activityID)
             dispatch({ type: "FETCHING_RISKS_ACTIVE_KEY", payload: response.data.activityID });
             callback();
         } finally {

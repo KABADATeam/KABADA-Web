@@ -38,7 +38,6 @@ export const saveChanges = (planId, callback) => {
                 investment_amount: updates.investment_amount,
                 physical_assets: updates.physical_assets_updated
             }
-            console.log(postObject);
             await kabadaAPI.post('/api/kres/assets/save', postObject, { headers: { Authorization: `Bearer ${token}` } })
             if (callback !== null) {
                 callback();

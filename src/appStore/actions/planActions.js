@@ -277,7 +277,6 @@ export const downloadCashFlow = (planId, planName) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get("api/plans/xlsx/" + planId, { headers: { Authorization: `Bearer ${token}` }, responseType: 'blob' });
-            console.log(response);
             dispatch({ type: "DOWNLOAD_LOADING", payload: false})
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');

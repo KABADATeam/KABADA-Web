@@ -124,7 +124,6 @@ class AddPublicBodiesSegmentModal extends Component {
             })
         } else {
             const text = this.generateAIHelpText(this.props.customerSegments.aiPredict.custSegs.publicNgo, this.props.categories.customer_segments_types)
-            console.log(text);
             this.setState({
                 popoverVisibility: visible,
                 popoverTextObject: text

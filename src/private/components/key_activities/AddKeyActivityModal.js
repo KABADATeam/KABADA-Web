@@ -80,10 +80,6 @@ class AddKeyActivityModal extends Component {
             description: ''
         })
         this.props.saveActivity(postObject, reducerObject);
-        console.log(postObject, reducerObject);
-        console.log(this.state.selectedSubTypeId);
-        console.log(this.props.activity_category.subtypes.find(x => x.id === this.state.selectedSubTypeId));
-        console.log(subTypeTitle.title);
         this.props.onClose();
     }
 

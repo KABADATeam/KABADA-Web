@@ -138,9 +138,6 @@ class Overview extends React.Component {
         this.fileSelectRef = React.createRef();
     }
     getActivityID = (nace, industryCode, activityCode) => {
-        console.log(activityCode);
-        console.log(industryCode);
-        console.log(nace);
         const firstLevelActivities = nace.find(item => item.code === industryCode);
         if (firstLevelActivities.code === activityCode) {
             return firstLevelActivities.id;
@@ -151,9 +148,7 @@ class Overview extends React.Component {
                     return secondLevelActivities.id;
                 } else {
                     const activity2nd = activityCode.split('.').slice(0, 2).join('.');
-                    console.log(activity2nd);
                     const secondLevelActivities = firstLevelActivities.activities.find(item => item.code === activity2nd);
-                    console.log(secondLevelActivities);
                     if (secondLevelActivities.code === activityCode) {
                         return secondLevelActivities.id;
                     } else {
@@ -201,8 +196,6 @@ class Overview extends React.Component {
         this.props.uploadFile(formData)
             .then(
                 () => {
-                    console.log("image changed");
-                    console.log(this.props.uploadedFile)
                     postObject = { ...postObject, 'Img': this.props.uploadedFile }
                     reducerObject = { ...reducerObject, 'planImage': this.props.uploadedFile }
                     this.props.updateImage(reducerObject);
@@ -398,7 +391,6 @@ class Overview extends React.Component {
         if (this.props.businessPlan.overview === undefined) {
             return (<div></div>)
         } else {
-        console.log('user info: ', this.props.userInf)
             return (
                 <>
                     <UnsavedChangesHeader

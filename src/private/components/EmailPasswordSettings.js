@@ -51,7 +51,6 @@ class EmailPasswordSettings extends Component {
     };
 
     resendVerificationEmail = () => {
-        console.log("resend")
     }
 
     render() {

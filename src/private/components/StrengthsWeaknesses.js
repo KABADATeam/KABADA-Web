@@ -78,7 +78,6 @@ class StrengthsWeaknesses extends Component {
     }
 
     isWeaknessDisabled = (id) => {
-        // console.log(JSON.stringify(this.props.list.checked_weakness))
         const index = this.props.list.checked_weakness.findIndex(w => w.id === id)
         const strengthIndex = this.props.list.checked_strengths.findIndex(s => s.id === id)
         //if index is -1 that means there is no item with that id in array 
@@ -164,12 +163,10 @@ class StrengthsWeaknesses extends Component {
                 aiHintTextObject.push(new_obj)
             }
             const compared_weakness_items = this.compareArray(swotAIWeaknessList, selected_weakness_items);
-            console.log('Palyginimas', compared_weakness_items);
             let weakness_text = '';
             if (compared_weakness_items.length > 1) {
                 for (let i = 0; i < compared_weakness_items.length; i++) {
                     const weaknesses_title = this.props.list.original.strengths_weakness_items.find(e => e.id === compared_weakness_items[i]).title;
-                    console.log('title name: ', weaknesses_title);
                     weakness_text += i === compared_strengths_items.length - 1 ? weaknesses_title + '' : weaknesses_title + ', ';
                 }
                 const new_obj = {

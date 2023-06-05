@@ -12,30 +12,24 @@ export const salesForecastReducer = (
     switch (action.type) {
         case "FETCHING_SALES_PRODUCTS_SUCCESS":
             const test = action.payload.products.map(obj => ({ ...obj, key: obj.id, Expoted: true }));
-            console.log('reducer', test);
             return { ...state, "productsTitles": action.payload.products.map(obj => ({ ...obj, key: obj.id, Expoted: true })) };
         case "SETING_PRODUCTS_SUCCESS":
             const productsTitles = state.products;
             productsTitles.forEach(element => {
                 if (element.id === action.payload) {
-                    console.log(element.id)
                     element.Expoted = !element.Expoted
                 }
             });
             return { ...state, "productsTitles": productsTitles };
 
         case 'FETCHING_SALES_FORECASR_SUCCESS':
-            //console.log('Reducer gauna:' + JSON.stringify(action.payload));
             const products = action.payload.products;
-            console.log(JSON.stringify(action.payload) + " just one")
             const is_sales_forecast_completed = action.payload.is_sales_forecast_completed;
             return { ...state, "products": products, "is_sales_forecast_completed": is_sales_forecast_completed };
 
         case "UPDATE_SALES_FORECAST_SUCCESS":
             const prodoct = state.products;
             const productsaction = action.payload.products;
-            //console.log('labas' + JSON.stringify(prodoct))
-            //console.log('labas action' + JSON.stringify(productsaction))
             prodoct.map((element, index) => {
                 productsaction.map((element2, index2) => {
                     if (element.product_id === element2.product_id) {

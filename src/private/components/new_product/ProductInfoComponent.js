@@ -162,7 +162,6 @@ class ProductInfoComponent extends Component {
         );
         const typeValue = this.props.product.product_type.type_id;
         // const testText = this.generateAIHelpText();
-        // console.log(testText);
         const popoverContent = (
             <>
                 {

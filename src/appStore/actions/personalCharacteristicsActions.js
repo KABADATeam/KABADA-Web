@@ -66,7 +66,6 @@ export const savePersonalCharacteristics = (postObject,callback) => async(dispat
             type: 'SAVE_PERSONAL_CHARACTERISTICS_SUCCESS',
             payload: response.data
         });
-        console.log('Added personal characteristics:'+JSON.stringify(response.data))
         callback();
     }catch (error) {
         if (error.response === undefined) {

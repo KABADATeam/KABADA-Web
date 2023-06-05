@@ -35,7 +35,6 @@ class EditKeyActivity extends Component {
         this.props.onClose()
     }
     onOK = () => {
-        console.log(this.props.item)
         const postObject = {
             "id": this.props.item.id,
             "product_id": this.props.productID,
@@ -43,7 +42,6 @@ class EditKeyActivity extends Component {
             "name": this.state.name,
             "description": this.state.description,
         }
-        console.log(postObject)
         const Data = this.props.categories.activity_categories.find(x => x.id === this.props.item.type_id); 
         const sub_title = Data.subtypes.find(x => x.id === this.state.sub_type_id);
         const reducerObject = {
@@ -57,8 +55,6 @@ class EditKeyActivity extends Component {
             "name": this.state.name,
             "description": this.state.description,
         };
-        console.log(this.props.productID);
-        console.log(reducerObject);
         this.props.updateKeyActivity(postObject, reducerObject);
         this.props.onClose();
     }
@@ -67,7 +63,6 @@ class EditKeyActivity extends Component {
         this.setState({
             sub_type_id: id
         });
-        console.log(id)
     }
 
     onChangeName(e) {

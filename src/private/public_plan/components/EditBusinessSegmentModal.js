@@ -81,7 +81,6 @@ class EditBusinessSegmentModal extends Component {
         const locationOptions = this.props.categories.customer_segments_types.geographic_locations.map((obj) =>
             <Option key={obj.id} value={obj.id}>{obj.title}</Option>
         );
-        console.log(this.state)
 
         return (
             <>

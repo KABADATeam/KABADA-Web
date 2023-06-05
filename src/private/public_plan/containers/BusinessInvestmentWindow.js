@@ -90,8 +90,6 @@ class BusinessInvestmentsWindow extends React.Component {
 
 
     render() {
-        console.log(this.props.investments.updates);
-        console.log(this.props.investments.original);
         const isVisibleHeader = this.getUpdatesWindowState();
         return (
             <>

@@ -73,7 +73,6 @@ class AssetsWindow extends React.Component {
                     });
                 }
             } else {
-                console.log(this.props.businessPlan.id);
                 //this.props.getCountryVats(this.props.businessPlan.countryShortCode);
                 this.props.getAssets(this.props.businessPlan.id);
             }
@@ -85,9 +84,6 @@ class AssetsWindow extends React.Component {
     }
 
     render() {
-        console.log(this.props.assets)
-        console.log(this.props.vat);
-        console.log(this.props.businessPlan.countryShortCode);
         const vatOptions = this.props.vat.vat.map((v, index) => (
             <Option value={v.vatValue} key={index}>{v.vatValue + "%"}</Option>
         ))

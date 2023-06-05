@@ -21,7 +21,6 @@ class KeyActivityTypesModal extends Component {
         this.props.selectActivityCategory(item, () => {
             this.props.onOpen()
         });
-        console.log(item);
     }
 
     setDataSource = () =>{

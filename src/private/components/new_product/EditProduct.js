@@ -256,10 +256,8 @@ class EditProduct extends React.Component {
                         "location": `plan::valueProposition::${productId}`,
                         "planId": this.props.businessPlan.id
                     };
-                    console.log(postObj)
                     this.props.getValuePropositionAIPredict(postObj);
                     this.props.getProduct(productId, (data) => {
-                        console.log("edit product")
                         this.setState({
                             originalProduct: JSON.parse(JSON.stringify(data))
                         });

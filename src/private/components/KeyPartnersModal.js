@@ -22,18 +22,12 @@ class KeyPartnersModal extends Component {
     };
 
     onAddNewPartner = (item) => {
-        console.log('item', item);
-        console.log(this.state.predictActive)
-        console.log(this.props.partners)
         const newItem = this.props.partners.aiPredict === null ? item : this.props.partners.aiPredict[0].partnerType[0] === item.type_id && this.state.predictActive === true ? {...item, tag: 1 } : item;
-        console.log('newItem', newItem);
         const priority = this.props.partners.aiPredict === null ? 'true': this.props.partners.aiPredict[0].partnerType[0] === item.type_id && this.state.predictActive === true ?  this.props.partners.aiPredict[0].priority[0].toLowerCase() : 'false';
-        console.log('priority',priority)
         const priorityObject = {
             value: priority === 'true',
             tag: this.props.partners.aiPredict === null ? 0 : this.props.partners.aiPredict[0].partnerType[0] === item.type_id && this.state.predictActive === true ? 1 : 0
         }
-        console.log('priority object',priorityObject)
         this.props.selectCategoryType(this.props.category.title, newItem, () => {
             if (item.title === "Self distribution" || item.title === "Highly diversified distributors") {
                 const postObj = {

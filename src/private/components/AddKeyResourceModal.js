@@ -57,7 +57,6 @@ class AddKeyResourceModal extends Component {
             "name": this.state.description,
             "selections": selections
         };
-        console.log('post obj:'+JSON.stringify(postObject))
 
         this.props.saveResource(postObject, this.props.category);
         this.setState({
@@ -159,7 +158,6 @@ class AddKeyResourceModal extends Component {
     }
 
     componentDidMount() {
-        console.log('Resource type came to add:' + this.props.resourceType)
     }
 
     render() {

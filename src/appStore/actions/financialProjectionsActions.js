@@ -112,7 +112,6 @@ export const updateFixedAndVarCosts = (postObject,callback) => {
                 ...postObject,
                 "cost_items":cost_items
             }
-            console.log(JSON.stringify(obj))
             const token = getState().user.access_token;
             await kabadaAPI.post('api/cost/costsvf/save', obj, { headers: { Authorization: `Bearer ${token}` } });
             dispatch({ type: 'UPDATE_FIXED_AND_VAR_COSTS_SUCCESS', payload: { obj } });
@@ -146,7 +145,6 @@ export const getBusinessStartUpInvestmentInformation = (planId, callback) => {
         try {
             const token = getState().user.access_token;
             const response = await kabadaAPI.get('api/kres/investment/' + planId, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(response);
             dispatch({ type: "FETCHING_INVESTMENT_SUCCESS", payload: response.data });
             callback();
         } catch (error) {

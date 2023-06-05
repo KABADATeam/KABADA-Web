@@ -68,12 +68,9 @@ class CashFlow extends React.Component {
 
     }
     render() {
-        console.log(this.props.cashFlowData)
 
         const months = this.props.cashFlowData.tableColumns;
         const data = this.props.cashFlowData.dataForTable;
-
-        console.log("data {0}", months)
 
         const renderContent = (value, row, index) => {
             const obj = {

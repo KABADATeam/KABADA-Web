@@ -10,7 +10,6 @@ const { Text } = Typography;
 class ChangeEmailModal extends Component {
 
     handleOk = (values) => {
-        console.log(values);
         this.props.changeUserEmail(values.newEmail, values.currentPassword);
         this.props.handleClose();
     };

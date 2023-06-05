@@ -438,7 +438,6 @@ class PersonalCharacteristics extends React.Component {
             "choices": choices,
             "is_personal_characteristics_completed": isCompleted
         }
-        console.log('Post obj:' + JSON.stringify(postObject))
         this.props.savePersonalCharacteristics(postObject, () => {
             this.props.getPersonalCharacteristics(this.props.businessPlan.id, () => {
                 this.setQuestionsAnswers();

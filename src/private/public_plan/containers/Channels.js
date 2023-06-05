@@ -122,9 +122,7 @@ class PublicChannels extends React.Component {
     }
 
     render() {
-        console.log(this.props)
-            ;
-        const data = this.props.channels.channels.map(item => {
+            const data = this.props.channels.channels.map(item => {
             const channel_name = item.channel_type.name;
             const distribution_names = item.distribution_channels === null ? [] : item.distribution_channels.map(item => item.name);
             const distribution_name = distribution_names.length === 0 ? "-" : distribution_names.join();

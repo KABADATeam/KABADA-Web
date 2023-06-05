@@ -129,7 +129,6 @@ class KeyResources extends React.Component {
 
     render() {
         const data = this.props.resources.key_resources.map(obj => ({ ...obj, type: obj.category.description }));
-        console.log('Data is:' + JSON.stringify(data))
         const columns = [
             {
                 title: 'Type',

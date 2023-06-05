@@ -26,8 +26,6 @@ class CostCategoriesModal extends Component {
         });
     }*/
     handlePopoverVisibilityChange = (visible) => {
-        // console.log('hanlde')
-        // console.log(this.props.costs)
         // if ai_predict is undefined or null
         if (!this.props.costs.ai_cost_structure_predict) {
             this.setState({
@@ -39,8 +37,6 @@ class CostCategoriesModal extends Component {
             const costStructureType = this.props.costNumber === 1 ? this.props.costs.ai_cost_structure_predict.fixedCosts
                 : this.props.costNumber === 2 ? this.props.costs.ai_cost_structure_predict.variableCosts
                 : null;
-            // console.log('ĄĄ costs: ' + JSON.stringify(this.props.costs));
-            // console.log('coststructure: ' + JSON.stringify(costStructureType));
             const text = this.generateAIHelpText(costStructureType);
             if (text === undefined) {
                 this.setState({

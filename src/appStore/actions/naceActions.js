@@ -5,7 +5,6 @@ export const getIndustries = () => {
         dispatch({ type: 'LOADING', payload: true });
         try {
             const response = await kabadaAPI.get('api/nace/industries');
-            console.log("industries {0}", response.data)
             dispatch({ type: 'FETCHING_INDUSTRIES_SUCCESS', payload: response.data });
         } catch (error) {
             if (error.response === undefined) {
@@ -24,7 +23,6 @@ export const getActivities = (industry) => {
         dispatch({ type: 'LOADING', payload: true });
         try {
             const response = await kabadaAPI.get('/api/nace/industries/' + industry + '/activities');
-            console.log("activities {0}", response.data)
             dispatch({ type: 'FETCHING_ACTIVITIES_SUCCESS', payload: response.data });
         } catch (error) {
             if (error.response === undefined) {

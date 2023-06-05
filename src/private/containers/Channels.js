@@ -99,7 +99,6 @@ class Channels extends React.Component {
             "planId": this.props.businessPlan.id
         };
         this.props.getAIChannelsPredict(postObj);
-        console.log('Pasirinktas elementas ', item.item);
         this.setState({
             item: item.item
         });

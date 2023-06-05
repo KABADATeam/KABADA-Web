@@ -22,7 +22,6 @@ class KeyPartnersPopUp extends React.Component {
     save = () => {
         if(this.state.planId === this.props.planId){
             this.onCancel();
-            console.log('Selected plan is same')
         }else{
             this.props.save(this.state.planId)
         }

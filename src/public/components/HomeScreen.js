@@ -25,8 +25,6 @@ class HomeScreen extends React.Component {
     }
     componentDidMount() {
         this.props.getPosts(() => {
-            console.log(this.props.homeReducer)
-
         });
         this.checkLoginStatus()
     }

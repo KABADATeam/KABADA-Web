@@ -29,7 +29,6 @@ export const resourcesReducer = (
             const resources_ = state.key_resources.filter(x => x.resource_id !== action.payload);
             return { ...state, "key_resources": resources_ };
         case "UPDATE_RESOURCE_SUCCESS":
-            console.log(action.payload)
             const _resources_ = state.key_resources.map(x => x.resource_id === action.payload.resource_id ? { ...action.payload, "ownership": getOwnership(action.payload) } : x);
             return { ...state, "key_resources": _resources_ };
         case "SAVE_CHANGES_SUCCESS":

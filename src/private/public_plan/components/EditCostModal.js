@@ -43,7 +43,6 @@ class EditCostModal extends Component {
             "name": this.state.name,
             "description": this.state.description,
         }
-        console.log(postObject);
         const optionsData = this.props.number === 1 ? this.props.categories.fixed_categories.find(x => x.category_id === this.props.item.category_id) : this.props.categories.variable_categories.find(x => x.category_id === this.props.item.category_id)
         const typeTitle = optionsData.types.find(x => x.type_id === this.state.cost)
         const reducerObject = {
@@ -57,7 +56,6 @@ class EditCostModal extends Component {
             "description": this.state.description,
             "number": this.props.number
         }
-        console.log(reducerObject);
         if (this.props.number === 1) {
             this.props.updateFixedCost(postObject, reducerObject);
             this.props.onClose();
@@ -75,7 +73,6 @@ class EditCostModal extends Component {
         this.setState({
             cost: id
         });
-        console.log(id)
     }
 
     onChangeName(e) {
@@ -99,7 +96,6 @@ class EditCostModal extends Component {
         const options = optionsData.types.map(t =>
             <Option key={t.type_id} value={t.type_id}>{t.type_title}</Option>
         );
-        console.log(options)
         const defaultValue = optionsData.types.find(x => x.type_id === this.props.item.type_id)
         return (
             <>
